@@ -2,7 +2,7 @@
 silmaril.trade_engine.plans — Build full trade plans from debate output.
 
 A trade plan is the difference between a signal and an actionable idea.
-STOX gave you "BUY AAPL." SILMARIL gives you:
+A raw "BUY AAPL" is not tradeable. SILMARIL gives you:
 
     BUY AAPL @ $180.22
     Stop:   $174.85  (–2.98%,  1.5 ATR)
