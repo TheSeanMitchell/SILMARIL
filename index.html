@@ -1,0 +1,1469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SILMARIL — Financial Intelligence Operating System</title>
+  <meta name="description" content="A transparent, multi-agent financial intelligence simulation. Educational only." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    /* ═══════════════════════════════════════════════════════════
+       SILMARIL — Observatory meets Jeweler's Workshop
+       Dark void foundation. Gold (Laurelin) + Silver (Telperion).
+       Classical Roman display, editorial serif body, mono for data.
+    ═══════════════════════════════════════════════════════════════ */
+
+    :root {
+      /* The Midnight Ink — Silmarillion blue saturated to dashboard-dark */
+      --bg:           #0a1628;      /* deep ink-blue, echoes the book cover at midnight */
+      --bg-deeper:    #060f1c;
+      --surface:      #122238;
+      --surface-2:    #1a2e4a;
+      --surface-3:    #253c5d;
+      --border:       #2a3d5e;
+      --border-lit:   #3d5680;
+
+      /* Cover-blue accent — for featured panels, dividers, gleams */
+      --cover-blue:   #4a7cb0;      /* the Silmarillion cover itself */
+      --cover-blue-soft: rgba(95, 145, 205, 0.12);
+
+      /* The Two Lights */
+      --gold:         #e9c876;      /* Laurelin — warm illuminated-manuscript gold */
+      --gold-deep:    #b8923d;
+      --gold-glow:    rgba(233, 200, 118, 0.16);
+      --silver:       #d4dfef;      /* Telperion — cool leaf-silver */
+      --silver-deep:  #8fa2bd;
+      --silver-glow:  rgba(212, 223, 239, 0.12);
+
+      /* Signal colors (muted to sit well with gold/silver) */
+      --pos:          #7db580;
+      --pos-strong:   #a5d2a5;
+      --neg:          #d77675;
+      --neg-strong:   #e89a99;
+      --warn:         #e89e4a;
+      --hold:         #9a8fb0;
+
+      /* Text */
+      --text:         #ebe4d8;      /* warm off-white, aged parchment */
+      --text-dim:     #a9a098;
+      --muted:        #6c6478;
+      --muted-dim:    #4a4558;
+
+      /* Typography */
+      --display:      'Cinzel', serif;
+      --body:         'Fraunces', Georgia, serif;
+      --mono:         'JetBrains Mono', 'SF Mono', Consolas, monospace;
+
+      /* Rhythm */
+      --ring:         0 0 0 1px var(--border);
+      --ring-lit:     0 0 0 1px var(--border-lit);
+      --shadow:       0 6px 28px rgba(0, 0, 0, 0.4);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 15px; }
+    @media (min-width: 2400px) { html { font-size: 17px; } }   /* 4K upscale */
+    @media (min-width: 3400px) { html { font-size: 19px; } }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--body);
+      font-weight: 400;
+      min-height: 100vh;
+      overflow-x: hidden;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Faceted gem-background pattern — echoes the illuminated-manuscript filigree
+       of the book's inside cover; subtle, never tiled-looking */
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background:
+        radial-gradient(ellipse at 15% 25%, rgba(74, 124, 176, 0.10) 0%, transparent 50%),
+        radial-gradient(ellipse at 85% 75%, rgba(233, 200, 118, 0.06) 0%, transparent 45%),
+        linear-gradient(135deg, transparent 49.5%, rgba(233, 200, 118, 0.025) 50%, transparent 50.5%),
+        linear-gradient(45deg,  transparent 49.5%, rgba(212, 223, 239, 0.02) 50%, transparent 50.5%);
+      background-size: 100% 100%, 100% 100%, 320px 320px, 320px 320px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    #app { position: relative; z-index: 1; }
+
+    /* ─── TOPBAR ─────────────────────────────────────────────── */
+    .topbar {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      align-items: center;
+      gap: 2rem;
+      padding: 0 2.5rem;
+      height: 64px;
+      background: linear-gradient(180deg, var(--surface) 0%, rgba(20, 12, 32, 0.92) 100%);
+      border-bottom: 1px solid var(--border);
+      backdrop-filter: blur(8px);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .brand {
+      font-family: var(--display);
+      font-size: 1.25rem;
+      font-weight: 600;
+      letter-spacing: 0.32em;
+      color: var(--text);
+      display: flex; align-items: center; gap: 0.7rem;
+    }
+
+    .brand .glyph {
+      width: 28px; height: 28px;
+      display: inline-block;
+    }
+
+    .brand .jewel {
+      color: var(--gold);
+      text-shadow: 0 0 18px var(--gold-glow);
+    }
+
+    .regime-pill {
+      display: flex; align-items: center; gap: 1rem;
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      color: var(--text-dim);
+      letter-spacing: 0.08em;
+    }
+
+    .regime-pill .label { color: var(--muted); }
+    .regime-pill .regime-risk-on  { color: var(--pos); }
+    .regime-pill .regime-risk-off { color: var(--neg); }
+    .regime-pill .regime-neutral  { color: var(--silver); }
+
+    .topbar-right {
+      display: flex; align-items: center; gap: 1.2rem;
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      color: var(--muted);
+    }
+
+    .pulse {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--pos);
+      box-shadow: 0 0 12px var(--pos);
+      animation: pulse 2.2s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(0.85); }
+    }
+
+    /* ─── NAV ────────────────────────────────────────────────── */
+    nav.nav {
+      display: flex;
+      gap: 0;
+      padding: 0 2.5rem;
+      background: var(--bg-deeper);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-btn {
+      background: none;
+      border: none;
+      color: var(--text-dim);
+      padding: 0.95rem 1.5rem;
+      font-family: var(--body);
+      font-size: 0.85rem;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      transition: all 0.2s ease;
+    }
+    .nav-btn:hover { color: var(--gold); border-bottom-color: var(--gold-deep); }
+    .nav-btn.active {
+      color: var(--gold);
+      border-bottom-color: var(--gold);
+    }
+
+    /* ─── LAYOUT ─────────────────────────────────────────────── */
+    .main {
+      display: grid;
+      grid-template-columns: 300px 1fr 340px;
+      gap: 1.5rem;
+      padding: 1.5rem 2.5rem;
+      max-width: 2400px;
+      margin: 0 auto;
+    }
+
+    @media (min-width: 2800px) {
+      .main { grid-template-columns: 360px 1fr 400px; max-width: 2800px; }
+    }
+    @media (max-width: 1280px) {
+      .main { grid-template-columns: 260px 1fr; }
+      .sidebar-r { display: none; }
+    }
+    @media (max-width: 900px) {
+      .main { grid-template-columns: 1fr; padding: 1rem; }
+      .sidebar-l { display: none; }
+    }
+
+    aside { display: flex; flex-direction: column; gap: 1.5rem; }
+    main { display: flex; flex-direction: column; gap: 2rem; }
+
+    /* ─── PANEL (sidebar blocks) ─────────────────────────────── */
+    .panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      overflow: hidden;
+    }
+    .panel-title {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      padding: 0.85rem 1rem;
+      border-bottom: 1px solid var(--border);
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .panel-title .count {
+      color: var(--gold);
+      font-weight: 500;
+    }
+    .panel-body { padding: 0.85rem 1rem; }
+
+    /* ─── AGENT ROSTER ───────────────────────────────────────── */
+    .roster { display: flex; flex-direction: column; gap: 0.4rem; }
+
+    .agent-chip {
+      display: grid;
+      grid-template-columns: 32px 1fr auto;
+      gap: 0.75rem;
+      align-items: center;
+      padding: 0.5rem 0.6rem;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background 0.15s ease;
+    }
+    .agent-chip:hover { background: var(--surface-2); }
+
+    .agent-avatar {
+      width: 32px; height: 32px;
+      border-radius: 4px;
+      background: var(--surface-2);
+      display: grid; place-items: center;
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 0.7rem;
+      letter-spacing: 0;
+      border: 1px solid var(--border-lit);
+    }
+
+    /* Two featured agents get gold/silver borders */
+    .agent-chip[data-featured="aegis"]  .agent-avatar {
+      border-color: var(--silver);
+      color: var(--silver);
+      box-shadow: 0 0 8px var(--silver-glow);
+    }
+    .agent-chip[data-featured="forge"]  .agent-avatar {
+      border-color: var(--gold);
+      color: var(--gold);
+      box-shadow: 0 0 8px var(--gold-glow);
+    }
+
+    .agent-name {
+      font-family: var(--display);
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      color: var(--text);
+    }
+    .agent-spec {
+      font-size: 0.68rem;
+      color: var(--muted);
+      font-style: italic;
+      margin-top: 2px;
+    }
+    .agent-status {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--pos);
+    }
+
+    /* ─── SIGNAL BARS ────────────────────────────────────────── */
+    .sig-bars { display: flex; flex-direction: column; gap: 0.55rem; }
+    .sig-row {
+      display: grid;
+      grid-template-columns: 80px 1fr 32px;
+      gap: 0.5rem;
+      align-items: center;
+      font-family: var(--mono);
+      font-size: 0.72rem;
+    }
+    .sig-label { color: var(--text-dim); letter-spacing: 0.05em; }
+    .sig-track {
+      height: 4px;
+      background: var(--surface-2);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+    .sig-fill {
+      height: 100%;
+      background: var(--muted);
+      border-radius: 2px;
+    }
+    .sig-fill.strong-buy { background: var(--pos-strong); box-shadow: 0 0 8px var(--pos); }
+    .sig-fill.buy        { background: var(--pos); }
+    .sig-fill.hold       { background: var(--hold); }
+    .sig-fill.sell       { background: var(--neg); }
+    .sig-fill.strong-sell{ background: var(--neg-strong); box-shadow: 0 0 8px var(--neg); }
+    .sig-count { text-align: right; color: var(--text); font-weight: 500; }
+
+    /* ─── HERO DEBATE ────────────────────────────────────────── */
+    .hero-debate {
+      background: linear-gradient(135deg, var(--surface) 0%, var(--surface-2) 100%);
+      border: 1px solid var(--border-lit);
+      border-radius: 8px;
+      padding: 2rem 2.5rem;
+      position: relative;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+
+    /* Subtle gold shimmer at top edge */
+    .hero-debate::before {
+      content: '';
+      position: absolute;
+      inset: 0 0 auto 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent 0%, var(--gold) 50%, transparent 100%);
+      opacity: 0.6;
+    }
+
+    .hero-eyebrow {
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.3em;
+      color: var(--gold);
+      text-transform: uppercase;
+      margin-bottom: 0.75rem;
+    }
+
+    .hero-header {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 2rem;
+      align-items: start;
+      margin-bottom: 2rem;
+    }
+
+    .hero-asset-name {
+      font-family: var(--display);
+      font-size: 2.4rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      color: var(--text);
+      line-height: 1.1;
+    }
+    .hero-asset-name .ticker { color: var(--gold); }
+    .hero-asset-full {
+      font-family: var(--body);
+      font-size: 0.92rem;
+      color: var(--text-dim);
+      font-style: italic;
+      margin-top: 0.4rem;
+    }
+
+    .hero-price {
+      font-family: var(--mono);
+      font-size: 1.8rem;
+      font-weight: 500;
+      color: var(--text);
+      text-align: right;
+    }
+    .hero-change {
+      font-family: var(--mono);
+      font-size: 0.88rem;
+      margin-top: 0.2rem;
+    }
+    .hero-change.pos { color: var(--pos); }
+    .hero-change.neg { color: var(--neg); }
+
+    /* Consensus + agreement dial */
+    .hero-consensus {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 1.5rem;
+      align-items: center;
+      padding: 1.25rem 1.5rem;
+      background: var(--bg-deeper);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      margin-bottom: 2rem;
+    }
+
+    .consensus-ring {
+      position: relative;
+      width: 88px; height: 88px;
+    }
+    .consensus-ring svg {
+      transform: rotate(-90deg);
+      width: 100%; height: 100%;
+    }
+    .consensus-ring .track { fill: none; stroke: var(--surface-3); stroke-width: 6; }
+    .consensus-ring .fill  { fill: none; stroke: var(--gold); stroke-width: 6; stroke-linecap: round; transition: stroke-dasharray 0.8s ease; }
+    .consensus-ring .pct {
+      position: absolute; inset: 0;
+      display: grid; place-items: center;
+      font-family: var(--mono);
+      font-size: 1.15rem;
+      font-weight: 500;
+      color: var(--gold);
+    }
+
+    .consensus-label {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      color: var(--muted);
+      text-transform: uppercase;
+    }
+    .consensus-signal {
+      font-family: var(--display);
+      font-size: 1.6rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      color: var(--text);
+      margin: 0.2rem 0 0.5rem;
+    }
+    .consensus-signal.strong-buy { color: var(--pos-strong); text-shadow: 0 0 20px rgba(125, 181, 128, 0.3); }
+    .consensus-signal.buy        { color: var(--pos); }
+    .consensus-signal.hold       { color: var(--hold); }
+    .consensus-signal.sell       { color: var(--neg); }
+    .consensus-signal.strong-sell { color: var(--neg-strong); }
+    .consensus-detail {
+      font-size: 0.85rem;
+      color: var(--text-dim);
+      font-style: italic;
+    }
+
+    .consensus-meta {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      color: var(--muted);
+      text-align: right;
+      line-height: 1.6;
+    }
+    .consensus-meta strong { color: var(--text); font-weight: 500; }
+
+    /* Verdict cards */
+    .verdicts-title {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.24em;
+      color: var(--muted);
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+
+    .verdicts-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 0.75rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .verdict-card {
+      padding: 1rem 1.1rem;
+      background: var(--bg-deeper);
+      border: 1px solid var(--border);
+      border-radius: 5px;
+      position: relative;
+    }
+
+    .verdict-card.dissent {
+      border-color: var(--warn);
+      box-shadow: inset 3px 0 0 var(--warn);
+    }
+    .verdict-card.backer {
+      border-left: 3px solid var(--gold);
+    }
+
+    .verdict-head {
+      display: flex; justify-content: space-between; align-items: baseline;
+      margin-bottom: 0.5rem;
+    }
+    .verdict-agent {
+      font-family: var(--display);
+      font-size: 0.85rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      color: var(--text);
+    }
+    .verdict-signal {
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      font-weight: 500;
+      padding: 0.15rem 0.5rem;
+      border-radius: 3px;
+      letter-spacing: 0.1em;
+    }
+    .verdict-signal.strong-buy  { background: rgba(125, 181, 128, 0.15); color: var(--pos-strong); }
+    .verdict-signal.buy         { background: rgba(125, 181, 128, 0.1);  color: var(--pos); }
+    .verdict-signal.hold        { background: rgba(154, 143, 176, 0.12); color: var(--hold); }
+    .verdict-signal.sell        { background: rgba(215, 118, 117, 0.1);  color: var(--neg); }
+    .verdict-signal.strong-sell { background: rgba(215, 118, 117, 0.15); color: var(--neg-strong); }
+
+    .verdict-conviction {
+      display: flex; align-items: center; gap: 0.5rem;
+      font-family: var(--mono);
+      font-size: 0.66rem;
+      color: var(--muted);
+      margin-bottom: 0.6rem;
+    }
+    .conv-bar {
+      flex: 1;
+      height: 3px;
+      background: var(--surface-2);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+    .conv-fill {
+      height: 100%;
+      background: var(--gold);
+      border-radius: 2px;
+    }
+
+    .verdict-rationale {
+      font-family: var(--body);
+      font-size: 0.82rem;
+      color: var(--text-dim);
+      line-height: 1.5;
+    }
+
+    /* Trade plan stripe */
+    .trade-plan-stripe {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr) auto;
+      gap: 1.5rem;
+      padding: 1.1rem 1.5rem;
+      background: var(--bg-deeper);
+      border: 1px solid var(--gold-deep);
+      border-radius: 5px;
+      margin-bottom: 1.5rem;
+      align-items: center;
+    }
+    .trade-cell {
+      display: flex; flex-direction: column; gap: 0.2rem;
+    }
+    .trade-cell-label {
+      font-family: var(--mono);
+      font-size: 0.62rem;
+      letter-spacing: 0.2em;
+      color: var(--muted);
+      text-transform: uppercase;
+    }
+    .trade-cell-value {
+      font-family: var(--mono);
+      font-size: 1rem;
+      font-weight: 500;
+      color: var(--text);
+    }
+    .trade-cell-value.entry  { color: var(--gold); }
+    .trade-cell-value.stop   { color: var(--neg); }
+    .trade-cell-value.target { color: var(--pos); }
+
+    .trade-invalidation {
+      font-size: 0.78rem;
+      color: var(--text-dim);
+      font-style: italic;
+      padding: 0.8rem 1rem;
+      background: rgba(245, 194, 101, 0.05);
+      border-left: 2px solid var(--gold-deep);
+      margin-bottom: 1.5rem;
+    }
+    .trade-invalidation strong {
+      color: var(--gold);
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.15em;
+      display: block;
+      margin-bottom: 0.3rem;
+    }
+
+    /* ─── HANDOFF BLOCK ──────────────────────────────────────── */
+    .handoff {
+      padding: 1.5rem;
+      background: linear-gradient(135deg, var(--surface-2) 0%, var(--surface-3) 100%);
+      border: 1px solid var(--silver-deep);
+      border-radius: 6px;
+      position: relative;
+    }
+    .handoff::before {
+      content: '';
+      position: absolute;
+      inset: 0 0 auto 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent 0%, var(--silver) 50%, transparent 100%);
+      opacity: 0.7;
+    }
+
+    .handoff-title {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.9rem;
+    }
+    .handoff-title-text {
+      font-family: var(--display);
+      font-size: 0.88rem;
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      color: var(--silver);
+      text-transform: uppercase;
+    }
+    .handoff-subtitle {
+      font-family: var(--body);
+      font-size: 0.78rem;
+      color: var(--text-dim);
+      font-style: italic;
+      margin-bottom: 1rem;
+    }
+
+    .handoff-prompt {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      color: var(--text-dim);
+      background: var(--bg-deeper);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 0.9rem 1rem;
+      max-height: 160px;
+      overflow-y: auto;
+      white-space: pre-wrap;
+      line-height: 1.55;
+      margin-bottom: 1rem;
+    }
+    .handoff-prompt::-webkit-scrollbar { width: 6px; }
+    .handoff-prompt::-webkit-scrollbar-thumb { background: var(--border-lit); border-radius: 3px; }
+
+    .handoff-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      align-items: center;
+    }
+
+    .handoff-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.55rem 0.9rem;
+      background: var(--bg-deeper);
+      border: 1px solid var(--border-lit);
+      border-radius: 4px;
+      color: var(--text-dim);
+      font-family: var(--mono);
+      font-size: 0.74rem;
+      letter-spacing: 0.05em;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.15s ease;
+    }
+    .handoff-btn:hover {
+      background: var(--surface-2);
+      border-color: var(--silver);
+      color: var(--silver);
+      transform: translateY(-1px);
+    }
+    .handoff-btn svg { width: 14px; height: 14px; }
+    .handoff-btn-copy {
+      border-color: var(--gold-deep);
+      color: var(--gold);
+      background: rgba(245, 194, 101, 0.05);
+    }
+    .handoff-btn-copy:hover {
+      background: rgba(245, 194, 101, 0.12);
+      color: var(--gold);
+    }
+
+    .copied-toast {
+      position: fixed;
+      bottom: 2rem; right: 2rem;
+      padding: 0.8rem 1.4rem;
+      background: var(--surface-3);
+      border: 1px solid var(--gold);
+      border-radius: 4px;
+      font-family: var(--mono);
+      font-size: 0.8rem;
+      color: var(--gold);
+      box-shadow: var(--shadow);
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.3s ease;
+      z-index: 1000;
+      pointer-events: none;
+    }
+    .copied-toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ─── DEBATE LIST ────────────────────────────────────────── */
+    .section-title {
+      font-family: var(--display);
+      font-size: 1.3rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      color: var(--text);
+      margin-bottom: 1.25rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+    }
+    .section-title .meta {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      color: var(--muted);
+      letter-spacing: 0.05em;
+    }
+
+    .debate-row {
+      display: grid;
+      grid-template-columns: 80px 1fr auto 140px auto;
+      gap: 1.5rem;
+      align-items: center;
+      padding: 1rem 1.5rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 5px;
+      margin-bottom: 0.6rem;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .debate-row:hover {
+      background: var(--surface-2);
+      border-color: var(--border-lit);
+      transform: translateX(2px);
+    }
+    .debate-row.vetoed {
+      border-color: var(--warn);
+      box-shadow: inset 3px 0 0 var(--warn);
+    }
+
+    .debate-ticker {
+      font-family: var(--display);
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      color: var(--gold);
+    }
+    .debate-name {
+      font-family: var(--body);
+      font-size: 0.9rem;
+      color: var(--text);
+    }
+    .debate-name .sub {
+      display: block;
+      font-size: 0.72rem;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+    .debate-price {
+      font-family: var(--mono);
+      font-size: 0.95rem;
+      color: var(--text);
+    }
+    .debate-change {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      margin-top: 2px;
+    }
+    .debate-change.pos { color: var(--pos); }
+    .debate-change.neg { color: var(--neg); }
+
+    .debate-signal-cell {
+      display: flex; align-items: center; gap: 0.6rem;
+    }
+    .debate-signal-pill {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      font-weight: 600;
+      padding: 0.28rem 0.6rem;
+      border-radius: 3px;
+      letter-spacing: 0.1em;
+    }
+    .debate-signal-pill.strong-buy  { background: rgba(125, 181, 128, 0.18); color: var(--pos-strong); border: 1px solid rgba(125, 181, 128, 0.3); }
+    .debate-signal-pill.buy         { background: rgba(125, 181, 128, 0.1);  color: var(--pos);        border: 1px solid rgba(125, 181, 128, 0.2); }
+    .debate-signal-pill.hold        { background: rgba(154, 143, 176, 0.12); color: var(--hold);       border: 1px solid rgba(154, 143, 176, 0.2); }
+    .debate-signal-pill.sell        { background: rgba(215, 118, 117, 0.1);  color: var(--neg);        border: 1px solid rgba(215, 118, 117, 0.2); }
+    .debate-signal-pill.strong-sell { background: rgba(215, 118, 117, 0.18); color: var(--neg-strong); border: 1px solid rgba(215, 118, 117, 0.3); }
+
+    .debate-agreement {
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      color: var(--muted);
+    }
+    .debate-agreement strong { color: var(--gold); }
+
+    .debate-arrow {
+      font-family: var(--mono);
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    /* ─── RIGHT SIDEBAR ─ SCROOGE ────────────────────────────── */
+    .scrooge-panel {
+      background: linear-gradient(180deg, var(--surface) 0%, var(--surface-2) 100%);
+      border: 1px solid var(--gold-deep);
+      border-radius: 6px;
+      overflow: hidden;
+    }
+    .scrooge-panel .panel-title {
+      background: rgba(245, 194, 101, 0.05);
+      color: var(--gold);
+    }
+    .scrooge-panel .panel-title .count { color: var(--gold); }
+
+    .scrooge-hero {
+      padding: 1.5rem 1rem;
+      text-align: center;
+      border-bottom: 1px solid var(--border);
+    }
+    .scrooge-balance {
+      font-family: var(--display);
+      font-size: 2.4rem;
+      font-weight: 700;
+      color: var(--gold);
+      letter-spacing: 0.02em;
+      line-height: 1.1;
+    }
+    .scrooge-sub {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      color: var(--muted);
+      margin-top: 0.4rem;
+      letter-spacing: 0.1em;
+    }
+    .scrooge-life {
+      display: inline-block;
+      margin-top: 0.8rem;
+      padding: 0.25rem 0.7rem;
+      background: var(--bg-deeper);
+      border: 1px solid var(--gold-deep);
+      border-radius: 3px;
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      color: var(--gold);
+      letter-spacing: 0.1em;
+    }
+
+    .scrooge-stats {
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+    .scrooge-stat {
+      display: flex;
+      justify-content: space-between;
+      font-family: var(--mono);
+      font-size: 0.72rem;
+    }
+    .scrooge-stat .label { color: var(--muted); letter-spacing: 0.05em; }
+    .scrooge-stat .val   { color: var(--text); font-weight: 500; }
+
+    .scrooge-position {
+      margin: 0 1rem 1rem;
+      padding: 0.8rem;
+      background: var(--bg-deeper);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      font-family: var(--mono);
+      font-size: 0.7rem;
+    }
+    .scrooge-position .pos-label {
+      color: var(--muted);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      font-size: 0.6rem;
+      margin-bottom: 0.3rem;
+    }
+    .scrooge-position .pos-ticker {
+      color: var(--gold);
+      font-size: 1rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+    }
+    .scrooge-position .pos-detail {
+      color: var(--text-dim);
+      margin-top: 0.3rem;
+      font-size: 0.68rem;
+    }
+
+    /* ─── DISCLAIMER ─────────────────────────────────────────── */
+    .disclaimer {
+      padding: 1.5rem 2.5rem;
+      background: var(--bg-deeper);
+      border-top: 1px solid var(--border);
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 0.66rem;
+      letter-spacing: 0.04em;
+      text-align: center;
+      line-height: 1.7;
+    }
+
+    /* ─── LOADING ────────────────────────────────────────────── */
+    .loading {
+      padding: 3rem;
+      text-align: center;
+      font-family: var(--mono);
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    /* ─── UTIL ───────────────────────────────────────────────── */
+    .hidden { display: none !important; }
+  </style>
+</head>
+<body>
+<div id="app">
+
+  <!-- TOPBAR -->
+  <header class="topbar">
+    <div class="brand">
+      <svg class="glyph" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Two Trees of Valinor">
+        <!-- Ground line -->
+        <path d="M3 21 L21 21" stroke="currentColor" stroke-width="0.5" opacity="0.5"/>
+        <!-- Telperion — silver tree, left -->
+        <g stroke="#d4dfef" stroke-width="0.85" stroke-linecap="round">
+          <path d="M7 21 L7 11"/>
+          <path d="M7 11 L4.5 8 M7 11 L9.5 8 M7 11 L6 5.5 M7 11 L8 5.5 M7 11 L3 12 M7 11 L11 12"/>
+          <circle cx="7" cy="4.5" r="1" fill="#d4dfef" stroke="none"/>
+          <circle cx="4" cy="8.5" r="0.4" fill="#d4dfef" stroke="none"/>
+          <circle cx="10" cy="8.5" r="0.4" fill="#d4dfef" stroke="none"/>
+        </g>
+        <!-- Laurelin — gold tree, right -->
+        <g stroke="#e9c876" stroke-width="0.85" stroke-linecap="round">
+          <path d="M17 21 L17 11"/>
+          <path d="M17 11 L14.5 8 M17 11 L19.5 8 M17 11 L16 5.5 M17 11 L18 5.5 M17 11 L13 12 M17 11 L21 12"/>
+          <circle cx="17" cy="4.5" r="1" fill="#e9c876" stroke="none"/>
+          <circle cx="14" cy="8.5" r="0.4" fill="#e9c876" stroke="none"/>
+          <circle cx="20" cy="8.5" r="0.4" fill="#e9c876" stroke="none"/>
+        </g>
+      </svg>
+      <span class="jewel">SILMARIL</span>
+    </div>
+    <div class="regime-pill">
+      <span class="label">MARKET REGIME:</span>
+      <span id="regime" class="regime-risk-on">RISK-ON</span>
+      <span class="label">VIX:</span>
+      <span id="vix">16.8</span>
+    </div>
+    <div class="topbar-right">
+      <div class="pulse"></div>
+      <span id="lastUpdate">—</span>
+    </div>
+  </header>
+
+  <!-- NAV -->
+  <nav class="nav">
+    <button class="nav-btn active" data-page="dashboard">Dashboard</button>
+    <button class="nav-btn" data-page="debates">All Debates</button>
+    <button class="nav-btn" data-page="agents">Agent Roster</button>
+    <button class="nav-btn" data-page="plans">Trade Plans</button>
+    <button class="nav-btn" data-page="scrooge">Scrooge</button>
+    <button class="nav-btn" data-page="leaderboard">Leaderboard</button>
+  </nav>
+
+  <div class="main">
+
+    <!-- LEFT SIDEBAR -->
+    <aside class="sidebar-l">
+
+      <div class="panel">
+        <div class="panel-title">
+          <span>Agent Roster</span>
+          <span class="count" id="agentCount">—</span>
+        </div>
+        <div class="panel-body">
+          <div class="roster" id="roster">
+            <div class="loading">Loading...</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-title">
+          <span>Signal Distribution</span>
+          <span class="count" id="totalCount">—</span>
+        </div>
+        <div class="panel-body">
+          <div class="sig-bars" id="sigBars">
+            <div class="loading">Loading...</div>
+          </div>
+        </div>
+      </div>
+
+    </aside>
+
+    <!-- CENTER -->
+    <main>
+      <!-- Hero debate will render here -->
+      <section id="heroDebate">
+        <div class="loading">Loading featured debate...</div>
+      </section>
+
+      <!-- Debate list -->
+      <section>
+        <h2 class="section-title">
+          <span>The Full Debate</span>
+          <span class="meta" id="debateListMeta">—</span>
+        </h2>
+        <div id="debateList">
+          <div class="loading">Loading debates...</div>
+        </div>
+      </section>
+    </main>
+
+    <!-- RIGHT SIDEBAR -->
+    <aside class="sidebar-r">
+
+      <!-- SCROOGE -->
+      <div class="scrooge-panel">
+        <div class="panel-title">
+          <span>✦ SCROOGE</span>
+          <span class="count">$1 Compounder</span>
+        </div>
+        <div id="scroogePanel">
+          <div class="loading">—</div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-title">
+          <span>Active Plans</span>
+          <span class="count" id="planCount">—</span>
+        </div>
+        <div class="panel-body">
+          <div id="planSummary" style="font-family: var(--mono); font-size: 0.72rem; color: var(--text-dim); line-height: 1.7;">
+            —
+          </div>
+        </div>
+      </div>
+
+    </aside>
+
+  </div>
+
+  <div class="disclaimer">
+    SILMARIL IS AN EDUCATIONAL SIMULATION. ALL PORTFOLIOS, TRADE PLANS, AND LEADERBOARD FIGURES ARE HYPOTHETICAL.
+    NOT FINANCIAL ADVICE. PAST SIMULATED PERFORMANCE DOES NOT PREDICT FUTURE RESULTS.
+    CONSULT A LICENSED PROFESSIONAL BEFORE PUTTING REAL MONEY ANYWHERE.
+  </div>
+
+</div>
+
+<div class="copied-toast" id="copiedToast">✓ Copied to clipboard — paste into your LLM</div>
+
+<script>
+/* ═══════════════════════════════════════════════════════════
+   SILMARIL — Frontend runtime
+═══════════════════════════════════════════════════════════ */
+
+const DATA_BASE = './data/';
+
+// LLM icons (inline SVG, simple + stylized — no branded logos to respect trademarks)
+const LLM_ICONS = {
+  chatgpt: '<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.4"/><path d="M8 12 L11 15 L16 9" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+  claude:  '<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6 8 C6 6 8 4 12 4 C16 4 18 6 18 8 L18 14 C18 17 16 20 12 20 C8 20 6 17 6 14 Z" stroke="currentColor" stroke-width="1.4"/><path d="M9 11 L10 13 M15 11 L14 13" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>',
+  gemini:  '<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2 L14 10 L22 12 L14 14 L12 22 L10 14 L2 12 L10 10 Z" stroke="currentColor" stroke-width="1.2" fill="none"/></svg>',
+  perplexity: '<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 6 L12 2 L20 6 L20 18 L12 22 L4 18 Z" stroke="currentColor" stroke-width="1.4"/><path d="M12 2 L12 22 M4 6 L20 18 M20 6 L4 18" stroke="currentColor" stroke-width="0.7" opacity="0.6"/></svg>',
+  grok:    '<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 5 L19 19 M19 5 L5 19" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.2" opacity="0.5"/></svg>',
+};
+
+async function loadData() {
+  // If data was inlined into the page (preview / standalone mode), use it
+  if (window.__SILMARIL_DATA__) return window.__SILMARIL_DATA__;
+
+  // Otherwise fetch from relative data/ (normal GitHub Pages deployment)
+  const [signals, plans, scrooge, handoffs] = await Promise.all([
+    fetch(DATA_BASE + 'signals.json').then(r => r.json()),
+    fetch(DATA_BASE + 'trade_plans.json').then(r => r.json()),
+    fetch(DATA_BASE + 'scrooge.json').then(r => r.json()),
+    fetch(DATA_BASE + 'handoff_blocks.json').then(r => r.json()),
+  ]);
+  return { signals, plans, scrooge, handoffs };
+}
+
+function fmtTime(iso) {
+  const d = new Date(iso);
+  return d.toISOString().replace('T', ' ').slice(0, 16) + ' UTC';
+}
+
+function sigClass(signal) {
+  return signal.toLowerCase().replace('_', '-');
+}
+
+function renderRoster(roster) {
+  const featured = { AEGIS: 'aegis', FORGE: 'forge' };
+  const host = document.getElementById('roster');
+  host.innerHTML = roster.map(a => `
+    <div class="agent-chip" data-featured="${featured[a.codename] || ''}" title="${a.temperament.replace(/"/g,'&quot;')}">
+      <div class="agent-avatar">${a.codename.slice(0,3)}</div>
+      <div>
+        <div class="agent-name">${a.codename}</div>
+        <div class="agent-spec">${a.specialty}</div>
+      </div>
+      <div class="agent-status"></div>
+    </div>
+  `).join('');
+  document.getElementById('agentCount').textContent = roster.length + ' active';
+}
+
+function renderSigBars(summary) {
+  const total = summary.total_tracked || 1;
+  const rows = [
+    { key: 'strong_buy_count',  label: 'STRONG BUY',  cls: 'strong-buy' },
+    { key: 'buy_count',         label: 'BUY',         cls: 'buy' },
+    { key: 'hold_count',        label: 'HOLD',        cls: 'hold' },
+    { key: 'sell_count',        label: 'SELL',        cls: 'sell' },
+    { key: 'strong_sell_count', label: 'STRONG SELL', cls: 'strong-sell' },
+  ];
+  document.getElementById('sigBars').innerHTML = rows.map(r => {
+    const n = summary[r.key] || 0;
+    const pct = total ? (n / total) * 100 : 0;
+    return `
+      <div class="sig-row">
+        <div class="sig-label">${r.label}</div>
+        <div class="sig-track"><div class="sig-fill ${r.cls}" style="width:${pct}%"></div></div>
+        <div class="sig-count">${n}</div>
+      </div>
+    `;
+  }).join('');
+  document.getElementById('totalCount').textContent = total + ' tracked';
+}
+
+function renderHeroDebate(debate, plan, handoff) {
+  if (!debate) return;
+  const c = debate.consensus;
+  const changeCls = (debate.change_pct || 0) >= 0 ? 'pos' : 'neg';
+  const changeSign = (debate.change_pct || 0) >= 0 ? '+' : '';
+  const agreementPct = Math.round(c.agreement_score * 100);
+  const circumference = 2 * Math.PI * 38;   // radius 38 in SVG
+  const dash = (agreementPct / 100) * circumference;
+
+  // Plans may be attached per-plan-id; we pass the first matching plan if present
+  const activeplan = plan;
+
+  const voting = debate.verdicts.filter(v => v.signal !== 'ABSTAIN');
+  const consensusBullish = ['BUY', 'STRONG_BUY'].includes(c.signal);
+
+  const verdictCards = voting.map(v => {
+    const opposes = consensusBullish
+      ? ['SELL', 'STRONG_SELL', 'HOLD'].includes(v.signal)
+      : ['BUY', 'STRONG_BUY'].includes(v.signal);
+    const cls = opposes ? 'dissent' : (consensusBullish && ['BUY','STRONG_BUY'].includes(v.signal) ? 'backer' : '');
+    return `
+      <div class="verdict-card ${cls}">
+        <div class="verdict-head">
+          <span class="verdict-agent">${v.agent}</span>
+          <span class="verdict-signal ${sigClass(v.signal)}">${v.signal.replace('_',' ')}</span>
+        </div>
+        <div class="verdict-conviction">
+          <span>CONV</span>
+          <div class="conv-bar"><div class="conv-fill" style="width:${Math.round(v.conviction*100)}%"></div></div>
+          <span>${Math.round(v.conviction*100)}%</span>
+        </div>
+        <div class="verdict-rationale">${v.rationale}</div>
+      </div>
+    `;
+  }).join('');
+
+  const tradeStripe = activeplan ? `
+    <div class="trade-plan-stripe">
+      <div class="trade-cell">
+        <div class="trade-cell-label">Entry</div>
+        <div class="trade-cell-value entry">$${activeplan.entry.toFixed(2)}</div>
+      </div>
+      <div class="trade-cell">
+        <div class="trade-cell-label">Stop</div>
+        <div class="trade-cell-value stop">$${activeplan.stop.toFixed(2)}</div>
+      </div>
+      <div class="trade-cell">
+        <div class="trade-cell-label">Target</div>
+        <div class="trade-cell-value target">$${activeplan.target.toFixed(2)}</div>
+      </div>
+      <div class="trade-cell">
+        <div class="trade-cell-label">Size</div>
+        <div class="trade-cell-value">${activeplan.shares.toFixed(2)} sh</div>
+      </div>
+      <div class="trade-cell" style="text-align:right">
+        <div class="trade-cell-label">R:R</div>
+        <div class="trade-cell-value" style="color:var(--gold)">${activeplan.reward_risk_ratio.toFixed(2)}</div>
+      </div>
+    </div>
+    <div class="trade-invalidation">
+      <strong>INVALIDATION</strong>
+      ${activeplan.invalidation}
+    </div>
+  ` : '';
+
+  const handoffHTML = handoff ? renderHandoffBlock(handoff, `Deep-dive on ${debate.ticker}`) : '';
+
+  document.getElementById('heroDebate').innerHTML = `
+    <div class="hero-debate">
+      <div class="hero-eyebrow">✦ Featured Debate</div>
+      <div class="hero-header">
+        <div>
+          <div class="hero-asset-name"><span class="ticker">${debate.ticker}</span></div>
+          <div class="hero-asset-full">${debate.name}</div>
+        </div>
+        <div>
+          <div class="hero-price">$${(debate.price||0).toFixed(2)}</div>
+          <div class="hero-change ${changeCls}">${changeSign}${(debate.change_pct||0).toFixed(2)}%</div>
+        </div>
+      </div>
+
+      <div class="hero-consensus">
+        <div class="consensus-ring">
+          <svg viewBox="0 0 88 88">
+            <circle class="track" cx="44" cy="44" r="38" />
+            <circle class="fill"  cx="44" cy="44" r="38"
+                    stroke-dasharray="${dash} ${circumference}" />
+          </svg>
+          <div class="pct">${agreementPct}%</div>
+        </div>
+        <div>
+          <div class="consensus-label">Team Consensus</div>
+          <div class="consensus-signal ${sigClass(c.signal)}">${c.signal.replace('_',' ')}</div>
+          <div class="consensus-detail">${debate.dissent_summary || 'Full agreement across the team.'}</div>
+        </div>
+        <div class="consensus-meta">
+          <div>strength <strong>${c.score.toFixed(2)}</strong></div>
+          <div>avg conviction <strong>${Math.round(c.avg_conviction*100)}%</strong></div>
+          <div>voting <strong>${voting.length}/${debate.verdicts.length}</strong></div>
+        </div>
+      </div>
+
+      ${tradeStripe}
+
+      <div class="verdicts-title">Individual Verdicts</div>
+      <div class="verdicts-grid">${verdictCards}</div>
+
+      ${handoffHTML}
+    </div>
+  `;
+}
+
+function renderHandoffBlock(handoff, subtitleOverride) {
+  const safePrompt = handoff.context_text.replace(/</g, '&lt;');
+  const btns = handoff.handoffs.map(h => `
+    <button class="handoff-btn" data-llm="${h.llm}" data-url="${h.url}" data-strategy="${h.strategy}">
+      ${LLM_ICONS[h.llm] || ''}
+      <span>${h.display_name}</span>
+    </button>
+  `).join('');
+
+  return `
+    <div class="handoff" data-prompt-id="${handoff.template}">
+      <div class="handoff-title">
+        <div class="handoff-title-text">↗ Handoff to your LLM</div>
+      </div>
+      <div class="handoff-subtitle">${subtitleOverride || 'Copy this context into any LLM to continue the research.'} SILMARIL never sends your prompts anywhere.</div>
+      <div class="handoff-prompt" data-full-prompt="${encodeURIComponent(handoff.context_text)}">${safePrompt}</div>
+      <div class="handoff-actions">
+        <button class="handoff-btn handoff-btn-copy" data-action="copy">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="9" y="9" width="11" height="11" rx="2" stroke="currentColor" stroke-width="1.5"/><path d="M5 15 L5 5 C5 3.9 5.9 3 7 3 L15 3" stroke="currentColor" stroke-width="1.5"/></svg>
+          <span>Copy prompt</span>
+        </button>
+        ${btns}
+      </div>
+    </div>
+  `;
+}
+
+function renderDebateList(debates, featuredTicker) {
+  const others = debates.filter(d => d.ticker !== featuredTicker);
+  document.getElementById('debateList').innerHTML = others.map(d => {
+    const c = d.consensus;
+    const changeCls = (d.change_pct || 0) >= 0 ? 'pos' : 'neg';
+    const changeSign = (d.change_pct || 0) >= 0 ? '+' : '';
+    const agreementPct = Math.round(c.agreement_score * 100);
+    return `
+      <div class="debate-row ${d.aegis_veto ? 'vetoed' : ''}" data-ticker="${d.ticker}">
+        <div class="debate-ticker">${d.ticker}</div>
+        <div class="debate-name">
+          ${d.name}
+          <span class="sub">${d.dissent_summary || 'No dissent.'}</span>
+        </div>
+        <div>
+          <div class="debate-price">$${(d.price||0).toFixed(2)}</div>
+          <div class="debate-change ${changeCls}">${changeSign}${(d.change_pct||0).toFixed(2)}%</div>
+        </div>
+        <div class="debate-signal-cell">
+          <span class="debate-signal-pill ${sigClass(c.signal)}">${c.signal.replace('_',' ')}</span>
+          <span class="debate-agreement"><strong>${agreementPct}%</strong> agree</span>
+        </div>
+        <div class="debate-arrow">→</div>
+      </div>
+    `;
+  }).join('');
+  document.getElementById('debateListMeta').textContent = `${others.length} more assets`;
+}
+
+function renderScrooge(s) {
+  const host = document.getElementById('scroogePanel');
+  const balance = (s.balance || 0).toFixed(4);
+  const pos = s.current_position;
+  const deaths = (s.deaths || []).length;
+
+  host.innerHTML = `
+    <div class="scrooge-hero">
+      <div class="scrooge-balance">$${balance}</div>
+      <div class="scrooge-sub">Current Balance</div>
+      <div class="scrooge-life">LIFE #${s.current_life} — ${s.days_alive || 0}d</div>
+    </div>
+    <div class="scrooge-stats">
+      <div class="scrooge-stat"><span class="label">PEAK</span><span class="val">$${(s.lifetime_peak||0).toFixed(4)}</span></div>
+      <div class="scrooge-stat"><span class="label">DEATHS</span><span class="val">${deaths}</span></div>
+      <div class="scrooge-stat"><span class="label">ACTIONS</span><span class="val">${(s.history||[]).length}</span></div>
+    </div>
+    ${pos ? `
+      <div class="scrooge-position">
+        <div class="pos-label">CURRENT POSITION</div>
+        <div class="pos-ticker">${pos.ticker}</div>
+        <div class="pos-detail">${pos.shares.toFixed(6)} shares @ $${pos.entry_price}</div>
+      </div>
+    ` : `
+      <div class="scrooge-position">
+        <div class="pos-label">CASH</div>
+        <div class="pos-detail">No position today.</div>
+      </div>
+    `}
+  `;
+}
+
+function renderPlans(plans) {
+  const n = plans.length;
+  document.getElementById('planCount').textContent = `${n} active`;
+  if (!n) {
+    document.getElementById('planSummary').textContent = 'No active plans today.';
+    return;
+  }
+  document.getElementById('planSummary').innerHTML = plans.map(p => `
+    <div style="margin-bottom:0.9rem;">
+      <div style="color:var(--gold); font-weight:500; letter-spacing:0.05em">${p.ticker}</div>
+      <div style="color:var(--text-dim); font-size:0.68rem; margin-top:2px">
+        entry $${p.entry} · stop $${p.stop} · tgt $${p.target}
+      </div>
+      <div style="color:var(--muted); font-size:0.66rem">
+        R:R ${p.reward_risk_ratio} · ${p.shares.toFixed(2)} sh
+      </div>
+    </div>
+  `).join('');
+}
+
+/* ── Handoff Block interaction ──────────────────────────── */
+function wireHandoffs() {
+  document.addEventListener('click', (e) => {
+    const btn = e.target.closest('.handoff-btn');
+    if (!btn) return;
+
+    const handoff = btn.closest('.handoff');
+    if (!handoff) return;
+    const promptEncoded = handoff.querySelector('.handoff-prompt').getAttribute('data-full-prompt');
+    const promptText = decodeURIComponent(promptEncoded);
+
+    // Copy button
+    if (btn.dataset.action === 'copy') {
+      navigator.clipboard.writeText(promptText).then(showToast);
+      return;
+    }
+
+    // LLM button
+    const strategy = btn.dataset.strategy;
+    const url = btn.dataset.url;
+    if (strategy === 'copy_and_go') {
+      navigator.clipboard.writeText(promptText).then(() => {
+        showToast();
+        window.open(url, '_blank');
+      });
+    } else {
+      window.open(url, '_blank');
+    }
+  });
+}
+
+let toastTimer;
+function showToast() {
+  const t = document.getElementById('copiedToast');
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 2400);
+}
+
+/* ── Row click → scroll to top and swap hero ─────────────── */
+function wireDebateRowClicks(data) {
+  document.addEventListener('click', (e) => {
+    const row = e.target.closest('.debate-row');
+    if (!row) return;
+    const ticker = row.dataset.ticker;
+    const debate = data.signals.debates.find(d => d.ticker === ticker);
+    if (!debate) return;
+    const plan = data.plans.plans.find(p => p.ticker === ticker) || null;
+    const handoff = data.handoffs.per_asset[ticker];
+    renderHeroDebate(debate, plan, handoff);
+    renderDebateList(data.signals.debates, ticker);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+}
+
+/* ── Bootstrap ───────────────────────────────────────────── */
+async function init() {
+  try {
+    const data = await loadData();
+    window._silmaril = data; // for dev inspection
+
+    document.getElementById('lastUpdate').textContent = fmtTime(data.signals.meta.generated_at);
+    document.getElementById('regime').textContent = data.signals.market_state.regime.replace('_','-');
+    document.getElementById('vix').textContent = data.signals.market_state.vix;
+
+    renderRoster(data.signals.agent_roster);
+    renderSigBars(data.signals.summary);
+
+    // Featured debate = the highest-consensus-score actionable debate
+    const featured = data.signals.debates[0];
+    const featuredPlan = data.plans.plans.find(p => p.ticker === featured.ticker) || null;
+    const featuredHandoff = data.handoffs.per_asset[featured.ticker];
+    renderHeroDebate(featured, featuredPlan, featuredHandoff);
+
+    renderDebateList(data.signals.debates, featured.ticker);
+    renderScrooge(data.scrooge);
+    renderPlans(data.plans.plans);
+
+    wireHandoffs();
+    wireDebateRowClicks(data);
+
+  } catch (e) {
+    console.error('Failed to load data:', e);
+    document.getElementById('heroDebate').innerHTML = `
+      <div class="loading" style="color:var(--neg)">
+        Failed to load data. Check that data/*.json files exist.<br>
+        <span style="font-size:0.7rem">${e.message}</span>
+      </div>
+    `;
+  }
+}
+
+init();
+</script>
+</body>
+</html>
