@@ -42,11 +42,11 @@ silmaril/
 │   ├── trade_engine/
 │   │   └── plans.py            ✓ built — full plans with entry/stop/target/R:R
 │   │
-│   ├── ingestion/              ○ to port from STOX (fetcher, sources, cache)
-│   ├── analytics/              ○ to build — technicals, regime, correlations
-│   ├── universe/               ○ to build — 3-layer asset management
+│   ├── ingestion/              ✓ built — yfinance prices, Google News RSS, SEC EDGAR
+│   ├── analytics/              ✓ built — technicals, sentiment, regime classifier
+│   ├── universe/               ✓ built — ~100-ticker core universe across 8 asset classes
 │   ├── risk_engine/            ○ to build — drawdown, regime filters
-│   ├── leaderboard/            ○ to build — per-agent P&L, git-replay backfill
+│   ├── leaderboard/            ○ to build — per-agent P&L tracking
 │   └── output/                 ○ to build — JSON schema validation + writer
 │
 ├── data/                       ✓ built — real output from demo run
@@ -58,7 +58,7 @@ silmaril/
 ├── docs/                       ✓ built — GitHub Pages site
 │   └── index.html                  — the full dashboard, self-contained
 │
-└── .github/workflows/          ○ to adapt from STOX (hourly/daily/weekend)
+└── .github/workflows/          ✓ built — daily.yml (post-close + weekend keepalive)
 ```
 
 Legend:  ✓ built (working code)   ○ scaffolded (directory exists, implementation TBD)
@@ -67,62 +67,45 @@ Legend:  ✓ built (working code)   ○ scaffolded (directory exists, implementa
 
 ## What works today
 
-You can run `python run_demo.py` and get a complete debate produced by three
-agents (AEGIS, FORGE, SCROOGE) over eight realistic sample asset contexts. The
-output is real JSON in the exact schema the frontend consumes. Opening
-`docs/index.html` in a browser (with `docs/data/` containing copies of the
-four JSON files) renders the full dashboard.
+You can run `python -m silmaril --demo` and get a complete debate produced
+by all 16 agents (AEGIS, FORGE, THUNDERHEAD, JADE, VEIL, KESTREL, OBSIDIAN,
+ZENITH, WEAVER, HEX, SYNTH, SPECK, VESPA, MAGUS, TALON, and SCROOGE) over
+realistic sample asset contexts. The output is real JSON in the exact
+schema the frontend consumes. Opening `docs/index.html` in a browser
+(with `docs/data/` containing the four JSON files) renders the full dashboard.
+
+Run `python -m silmaril --live` to fetch real market data: prices from
+yfinance, news from Google News RSS and SEC EDGAR, and technicals/sentiment
+computed per-ticker. This is what the GitHub Actions workflow runs daily.
 
 **The proven path through the system:**
 
-1. AssetContexts enter the arbiter
-2. Each agent's `_judge(ctx)` produces a Verdict with conviction and rationale
-3. Arbiter computes conviction-weighted consensus + agreement score + dissent
-4. AEGIS's veto downgrades bullish consensus when its defensive conviction is high
-5. Trade plans build from BUY-consensus debates using backer-weighted entry/stop/target
-6. SCROOGE rolls his balance into the single highest-consensus pick
-7. Handoff Blocks generate copy-ready LLM prompts with deep-links
+1. Universe → ingestion fetches prices + news for ~100 tickers
+2. Analytics layer computes SMA, RSI, ATR, Bollinger width, sentiment, regime
+3. AssetContexts assemble from the analytics output
+4. Each agent's `_judge(ctx)` produces a Verdict with conviction and rationale
+5. Arbiter computes conviction-weighted consensus + agreement score + dissent
+6. AEGIS's veto downgrades bullish consensus when its defensive conviction is high
+7. Trade plans build from BUY-consensus debates using backer-weighted entry/stop/target
+8. SCROOGE rolls his balance into the single highest-consensus pick
+9. Handoff Blocks generate copy-ready LLM prompts with deep-links
 
 ---
 
-## Remaining work to reach full production
+## Remaining work
 
-### 1. Scale agents from 3 to 16
+### 1. Leaderboard with historical tracking
 
-Each new agent is one file following the pattern in `aegis.py` or `forge.py`:
-define metadata, override `_judge(ctx)`, return a Verdict. The arbiter and
-trade engine require zero changes. Rough effort: ~1–2 hours per agent.
+Per-agent P&L tracking over time. The agents and output schema are ready; this
+is a pure bookkeeping module that reads the daily signals.json files as they
+accumulate and computes cumulative returns per agent.
 
-### 2. Real data ingestion
+### 2. Discovered-ticker universe layer
 
-Port STOX's existing fetcher/normalizer/deduplicator/cache and news sources.
-Add `silmaril/analytics/technicals.py` for SMA/RSI/ATR/BB computation over
-yfinance price history. The AssetContext dataclass already has every field
-these produce.
+`universe/discovered.py` — tickers pulled from news that aren't in the core
+universe, tracked for 7 days then either graduated to core or aged out.
 
-### 3. Universe management (3-layer)
-
-- `universe/core.py` — the ~100 always-tracked tickers (indices, sector ETFs,
-  mega-caps, BTC/ETH, DXY, gold, oil, 10Y yield)
-- `universe/discovered.py` — tickers pulled from news; tracked for 7 days then
-  graduate to core or age out
-- `universe/registry.py` — unified interface
-
-### 4. Leaderboard with historical bootstrap
-
-The one-time backfill walks the existing STOX repo's git history of
-`signals.json` commits, replays what each of the 16 new agents *would have
-said* on each past day, and seeds the leaderboard. The site launches with a
-real track record instead of an empty scoreboard.
-
-### 5. GitHub Actions workflows
-
-Adapt the three existing STOX workflows for SILMARIL:
-- `hourly.yml` — market-hours refresh (9:30–16:00 ET)
-- `daily.yml` — post-close full run with SCROOGE action
-- `weekend.yml` — minimal keepalive
-
-### 6. Additional frontend pages
+### 3. Additional frontend pages
 
 The dashboard page (`index.html`) is complete. Additional views to add:
 - `/debates/` — all debates with filtering

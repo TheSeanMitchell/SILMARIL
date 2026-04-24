@@ -81,10 +81,12 @@ git clone https://github.com/YOUR/silmaril
 cd silmaril
 pip install -r requirements.txt
 
-python -m silmaril.cli --mode hourly   # market-hours refresh
-python -m silmaril.cli --mode daily    # post-close full run
-python -m silmaril.cli --mode backfill # one-time: seed leaderboard from git history
+python -m silmaril --demo    # sample contexts, offline (great for dev)
+python -m silmaril --live    # fetch real prices + news, write docs/data/*.json
 ```
+
+The GitHub Actions workflow (`.github/workflows/daily.yml`) runs `--live`
+automatically after every US market close and commits fresh data to the repo.
 
 ---
 
