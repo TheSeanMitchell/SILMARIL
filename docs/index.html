@@ -16,40 +16,40 @@
     ═══════════════════════════════════════════════════════════════ */
 
     :root {
-      /* The Midnight Ink — Silmarillion blue saturated to dashboard-dark */
-      --bg:           #0a1628;      /* deep ink-blue, echoes the book cover at midnight */
-      --bg-deeper:    #060f1c;
-      --surface:      #122238;
-      --surface-2:    #1a2e4a;
-      --surface-3:    #253c5d;
-      --border:       #2a3d5e;
-      --border-lit:   #3d5680;
+      /* The Cover Blue — lifted directly from the Silmarillion hardcover */
+      --bg:           #3d6fa0;      /* the book itself */
+      --bg-deeper:    #2d5684;      /* the spine */
+      --surface:      #2d5684;      /* card surface — recessed from the cover */
+      --surface-2:    #386697;
+      --surface-3:    #4478a8;
+      --border:       #4e85b5;
+      --border-lit:   rgba(245, 212, 120, 0.5);     /* gold-foil emphasis borders */
 
-      /* Cover-blue accent — for featured panels, dividers, gleams */
-      --cover-blue:   #4a7cb0;      /* the Silmarillion cover itself */
-      --cover-blue-soft: rgba(95, 145, 205, 0.12);
+      /* Cover-blue accents for highlights */
+      --cover-blue:   #5289bd;
+      --cover-blue-soft: rgba(140, 180, 220, 0.14);
 
-      /* The Two Lights */
-      --gold:         #e9c876;      /* Laurelin — warm illuminated-manuscript gold */
-      --gold-deep:    #b8923d;
-      --gold-glow:    rgba(233, 200, 118, 0.16);
-      --silver:       #d4dfef;      /* Telperion — cool leaf-silver */
-      --silver-deep:  #8fa2bd;
-      --silver-glow:  rgba(212, 223, 239, 0.12);
+      /* The Two Lights — warmer gold, cleaner silver, to sing against blue */
+      --gold:         #f5d478;      /* Laurelin — warm illuminated-manuscript gold */
+      --gold-deep:    #d4ac3f;
+      --gold-glow:    rgba(245, 212, 120, 0.22);
+      --silver:       #edf2f7;      /* Telperion — cool leaf-silver */
+      --silver-deep:  #aec0d8;
+      --silver-glow:  rgba(237, 242, 247, 0.18);
 
-      /* Signal colors (muted to sit well with gold/silver) */
-      --pos:          #7db580;
-      --pos-strong:   #a5d2a5;
-      --neg:          #d77675;
-      --neg-strong:   #e89a99;
-      --warn:         #e89e4a;
-      --hold:         #9a8fb0;
+      /* Signal colors — tuned to read well on blue */
+      --pos:          #8cc67a;
+      --pos-strong:   #a8d89a;
+      --neg:          #e88e8e;
+      --neg-strong:   #f2a8a8;
+      --warn:         #f0b860;
+      --hold:         #c8d2e2;
 
-      /* Text */
-      --text:         #ebe4d8;      /* warm off-white, aged parchment */
-      --text-dim:     #a9a098;
-      --muted:        #6c6478;
-      --muted-dim:    #4a4558;
+      /* Text — warm parchment cream, like aged book pages on blue cloth */
+      --text:         #fdf6e3;
+      --text-dim:     #e5d9b8;
+      --muted:        #b8a98a;
+      --muted-dim:    #8a7c63;
 
       /* Typography */
       --display:      'Cinzel', serif;
@@ -59,7 +59,7 @@
       /* Rhythm */
       --ring:         0 0 0 1px var(--border);
       --ring-lit:     0 0 0 1px var(--border-lit);
-      --shadow:       0 6px 28px rgba(0, 0, 0, 0.4);
+      --shadow:       0 6px 28px rgba(0, 0, 0, 0.28);
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -584,7 +584,7 @@
       color: var(--text-dim);
       font-style: italic;
       padding: 0.8rem 1rem;
-      background: rgba(245, 194, 101, 0.05);
+      background: rgba(245, 212, 120, 0.05);
       border-left: 2px solid var(--gold-deep);
       margin-bottom: 1.5rem;
     }
@@ -686,10 +686,10 @@
     .handoff-btn-copy {
       border-color: var(--gold-deep);
       color: var(--gold);
-      background: rgba(245, 194, 101, 0.05);
+      background: rgba(245, 212, 120, 0.05);
     }
     .handoff-btn-copy:hover {
-      background: rgba(245, 194, 101, 0.12);
+      background: rgba(245, 212, 120, 0.12);
       color: var(--gold);
     }
 
@@ -826,7 +826,7 @@
       overflow: hidden;
     }
     .scrooge-panel .panel-title {
-      background: rgba(245, 194, 101, 0.05);
+      background: rgba(245, 212, 120, 0.05);
       color: var(--gold);
     }
     .scrooge-panel .panel-title .count { color: var(--gold); }
