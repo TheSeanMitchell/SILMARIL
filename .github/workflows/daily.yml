@@ -1,0 +1,56 @@
+name: SILMARIL Daily Run
+
+# Runs every weekday evening after US market close (21:00 UTC ≈ 5pm ET / 4pm CT),
+# plus a once-daily weekend keepalive so the dashboard never shows stale data.
+#
+# You can also trigger it manually from the Actions tab (workflow_dispatch).
+
+on:
+  schedule:
+    - cron: '0 21 * * 1-5'   # Mon-Fri 21:00 UTC (post-close)
+    - cron: '0 14 * * 6'     # Saturday 14:00 UTC (weekend keepalive)
+  workflow_dispatch:          # manual trigger from the Actions tab
+
+permissions:
+  contents: write              # so the workflow can commit the updated JSON
+
+concurrency:
+  group: silmaril-daily
+  cancel-in-progress: false
+
+jobs:
+  run-silmaril:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Check out repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run SILMARIL (live data)
+        run: |
+          python -m silmaril --live --output docs/data --verbose
+
+      - name: Commit updated data
+        run: |
+          git config --local user.email "silmaril-bot@users.noreply.github.com"
+          git config --local user.name "SILMARIL Bot"
+          git add docs/data/
+          # Only commit if there are actual changes
+          if git diff --staged --quiet; then
+            echo "No changes to commit."
+          else
+            git commit -m "✦ SILMARIL data refresh — $(date -u +%Y-%m-%d)"
+            git push
+          fi
