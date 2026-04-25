@@ -2626,20 +2626,19 @@
       return `<a class="${cls}" href="${esc(h.url)}" target="_blank" rel="noopener">${label} ↗</a>`;
     }).join('');
 
-    // Stash the prompt on the document so the copy_and_go handler can find it
-    // (Inlining prompts in the data-prompt attribute would balloon HTML; we
-    //  keep them in a hidden <script type="application/json"> instead.)
-    const safePrompt = promptText.replace(/<\/script>/gi, '<\\/script>');
+    // Store the prompt as a data attribute on the card itself, not as a
+    // nested script tag (which would terminate the outer script block
+    // regardless of type attribute). HTML-escape so attribute parsing is clean.
+    const promptForAttr = esc(promptText);
 
     return `
-      <div class="handoff-card">
+      <div class="handoff-card" data-handoff-prompt="${promptForAttr}">
         <div class="handoff-title">${esc(title)}</div>
         ${compact ? '' : `<div class="handoff-prompt">${esc(promptText)}</div>`}
         <div class="handoff-actions">
-          <button class="handoff-btn" onclick="copyPrompt(this)" data-prompt-idx="next">Copy prompt</button>
+          <button class="handoff-btn" onclick="copyPrompt(this)">Copy prompt</button>
           ${buttons}
         </div>
-        <script type="application/json" class="handoff-prompt-data">${safePrompt}</script>
       </div>
     `;
   }
@@ -2647,8 +2646,7 @@
   // Helper: when a copy_and_go LLM button is clicked, copy + open
   window.copyGoLLM = function(btn) {
     const card = btn.closest('.handoff-card');
-    const dataEl = card && card.querySelector('script.handoff-prompt-data');
-    const text = dataEl ? dataEl.textContent : '';
+    const text = card ? (card.dataset.handoffPrompt || '') : '';
     if (text && navigator.clipboard) {
       navigator.clipboard.writeText(text).catch(() => {});
     }
@@ -2657,8 +2655,7 @@
 
   window.copyPrompt = function(btn) {
     const card = btn.closest('.handoff-card');
-    const dataEl = card && card.querySelector('script.handoff-prompt-data');
-    const text = dataEl ? dataEl.textContent : '';
+    const text = card ? (card.dataset.handoffPrompt || '') : '';
     if (text && navigator.clipboard) {
       navigator.clipboard.writeText(text).then(() => {
         const orig = btn.textContent;
