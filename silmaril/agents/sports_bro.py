@@ -21,16 +21,16 @@ from ..execution.detail import build_execution
 
 
 MAX_TRADES_PER_DAY = 8
-DEATH_THRESHOLD = 0.05
+DEATH_THRESHOLD = 0.50
 HALF_KELLY = 0.5
 
 
 @dataclass
 class SportsBroState:
-    balance: float = 1.0
+    balance: float = 10.0
     open_bets: List[Dict] = field(default_factory=list)
     history: List[Dict] = field(default_factory=list)
-    lifetime_peak: float = 1.0
+    lifetime_peak: float = 10.0
     current_life: int = 1
     life_start_date: str = field(
         default_factory=lambda: datetime.now(timezone.utc).date().isoformat()
@@ -116,11 +116,11 @@ def sports_bro_act(state: SportsBroState, candidates: List[Dict]) -> SportsBroSt
             "peak_balance": round(state.lifetime_peak, 6),
             "epitaph": f"Sports Bro busted on Life #{state.current_life}. Even with discipline, prediction markets are hard.",
         })
-        state.balance = 1.0
+        state.balance = 10.0
         state.open_bets = []
         state.current_life += 1
         state.life_start_date = today
-        state.lifetime_peak = 1.0
+        state.lifetime_peak = 10.0
         state.trades_today = 0
         return state
 

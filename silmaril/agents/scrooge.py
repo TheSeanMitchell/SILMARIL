@@ -30,8 +30,8 @@ from .base import Agent, AssetContext, Signal, Verdict
 from ..execution.detail import build_execution
 
 
-STARTING_CAPITAL = 1.00  # One US dollar. That's the whole idea.
-REINCARNATION_THRESHOLD = 0.05  # Below $0.05 we call it a reset (rounding / fee realism)
+STARTING_CAPITAL = 10.00  # $10 starting capital
+REINCARNATION_THRESHOLD = 0.50  # Below $0.50 = reset
 
 
 @dataclass

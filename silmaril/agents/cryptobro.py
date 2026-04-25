@@ -44,7 +44,7 @@ CRYPTOBRO_UNIVERSE: Dict[str, str] = {
 # a single run if his vibe-meter says different things on different coins.
 MAX_TRADES_PER_DAY = 5
 
-DEATH_THRESHOLD = 0.05  # below 5 cents → reincarnation
+DEATH_THRESHOLD = 0.50  # below 5 cents → reincarnation
 
 
 # ─────────────────────────────────────────────────────────────────
@@ -54,9 +54,9 @@ DEATH_THRESHOLD = 0.05  # below 5 cents → reincarnation
 @dataclass
 class CryptoBroState:
     """Persistent state for CryptoBro across runs."""
-    balance: float = 1.00
+    balance: float = 10.00
     current_position: Optional[Dict] = None
-    lifetime_peak: float = 1.00
+    lifetime_peak: float = 10.00
     current_life: int = 1
     life_start_date: str = field(
         default_factory=lambda: datetime.now(timezone.utc).date().isoformat()
@@ -194,11 +194,11 @@ def cryptobro_act(
                 f"He'll be back, ser. He always comes back."
             ),
         })
-        state.balance = 1.00
+        state.balance = 10.00
         state.current_position = None
         state.current_life += 1
         state.life_start_date = today
-        state.lifetime_peak = 1.00
+        state.lifetime_peak = 10.00
         state.history.append({
             "date": today,
             "action": "REINCARNATION",

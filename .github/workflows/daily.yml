@@ -7,9 +7,11 @@ name: SILMARIL Daily Run
 
 on:
   schedule:
-    - cron: '0 21 * * 1-5'   # Mon-Fri 21:00 UTC (post-close)
-    - cron: '0 14 * * 6'     # Saturday 14:00 UTC (weekend keepalive)
-  workflow_dispatch:          # manual trigger from the Actions tab
+    # Every 30 minutes during US market hours (Mon-Fri 13:30-21:00 UTC = 9:30am-5pm ET)
+    - cron: '*/30 13-21 * * 1-5'
+    # Crypto-only refresh on weekends, 4x daily
+    - cron: '0 0,6,12,18 * * 0,6'
+  workflow_dispatch:
 
 permissions:
   contents: write              # so the workflow can commit the updated JSON
@@ -39,6 +41,9 @@ jobs:
           pip install -r requirements.txt
 
       - name: Run SILMARIL (live data)
+        env:
+          FINNHUB_API_KEY: ${{ secrets.FINNHUB_API_KEY }}
+          EIA_API_KEY: ${{ secrets.EIA_API_KEY }}
         run: |
           python -m silmaril --live --output docs/data --verbose
 

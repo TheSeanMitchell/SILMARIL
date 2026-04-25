@@ -117,9 +117,9 @@ midas = Midas()
 
 @dataclass
 class MidasState:
-    balance: float = 1.0
+    balance: float = 10.0
     current_position: Optional[Dict] = None
-    lifetime_peak: float = 1.0
+    lifetime_peak: float = 10.0
     current_life: int = 1
     life_start_date: str = field(
         default_factory=lambda: datetime.now(timezone.utc).date().isoformat()
@@ -128,6 +128,12 @@ class MidasState:
     deaths: List[Dict] = field(default_factory=list)
 
     def to_dict(self) -> Dict:
+        try:
+            start = datetime.fromisoformat(self.life_start_date).date()
+            today = datetime.now(timezone.utc).date()
+            days_alive = max(0, (today - start).days)
+        except Exception:
+            days_alive = 0
         return {
             "codename": "MIDAS",
             "style": "hard-currency compounder",
@@ -138,6 +144,7 @@ class MidasState:
             "current_life": self.current_life,
             "life_start_date": self.life_start_date,
             "actions_this_life": len(self.history),
+            "days_alive": days_alive,
             "history": self.history[-30:],
             "deaths": self.deaths,
             "universe": list(MIDAS_UNIVERSE.keys()),
@@ -255,7 +262,7 @@ def midas_act(
             "peak": state.lifetime_peak,
         })
         state.current_life += 1
-        state.balance = 1.0
+        state.balance = 10.0
         state.life_start_date = today
         state.history = []
 

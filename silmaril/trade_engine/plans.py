@@ -107,15 +107,33 @@ def build_plan_from_debate(
 
     if not voting:
         # No agent provided concrete levels — synthesize conservative ones
+        # Tight, technical-anchor inspired levels
         entry = price
         stop = price * 0.97          # 3% stop
-        target = price * 1.06        # 6% target (2:1)
+        target = price * 1.045       # 4.5% target (1.5:1)
     else:
         # Conviction-weighted averaging across backers
         total_w = sum(v["conviction"] for v in voting) or 1.0
         entry = sum(v["suggested_entry"] * v["conviction"] for v in voting) / total_w
         stop = sum(v["suggested_stop"] * v["conviction"] for v in voting) / total_w
         target = sum(v["suggested_target"] * v["conviction"] for v in voting) / total_w
+
+    # ── Realism cap: target cannot exceed +12% in any single plan ──
+    # Prevents agents that suggested aggressive ATR multiples from producing
+    # targets that require fresh all-time-highs. Real day-trading targets
+    # rarely justify more than ~10% above entry.
+    max_target_pct = 0.12
+    if target > entry * (1 + max_target_pct):
+        target = entry * (1 + max_target_pct)
+
+    # ── Realism cap: stop cannot be tighter than 1.5% (fees + spread eat it) ──
+    # And cannot be wider than 6% (then it's not a stop, it's a hope)
+    min_stop_pct = 0.015
+    max_stop_pct = 0.06
+    if (entry - stop) / entry < min_stop_pct:
+        stop = entry * (1 - min_stop_pct)
+    if (entry - stop) / entry > max_stop_pct:
+        stop = entry * (1 - max_stop_pct)
 
     # Sanity checks
     if stop >= entry or target <= entry:

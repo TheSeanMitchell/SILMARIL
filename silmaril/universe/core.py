@@ -151,11 +151,25 @@ for tkr, _, _ in BONDS_RATES + FX_MACRO:
 # ─────────────────────────────────────────────────────────────────
 
 def all_entries() -> List[Tuple[str, str, str]]:
-    """Return every (ticker, name, sector) entry in the core universe."""
-    return (
+    """Return every (ticker, name, sector) entry across the core + expanded
+    universes. Deduped by ticker."""
+    base = (
         INDICES + SECTOR_ETFS + MEGA_CAPS + TECH_GROWTH +
         CRYPTO + COMMODITIES + BONDS_RATES + FX_MACRO
     )
+    try:
+        from .expanded import build_expanded_universe
+        expanded = build_expanded_universe()
+    except Exception:
+        expanded = []
+    seen = set()
+    out = []
+    for entry in base + expanded:
+        if entry[0] in seen:
+            continue
+        seen.add(entry[0])
+        out.append(entry)
+    return out
 
 
 def all_tickers() -> List[str]:

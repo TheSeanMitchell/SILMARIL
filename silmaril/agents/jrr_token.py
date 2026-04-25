@@ -53,7 +53,7 @@ OVER_100M_TOKENS: Dict[str, str] = {
 JRR_UNIVERSE = {**SUB_100M_TOKENS, **OVER_100M_TOKENS}
 
 MAX_TRADES_PER_DAY = 12
-DEATH_THRESHOLD = 0.05
+DEATH_THRESHOLD = 0.50
 TIER_BUDGET_PCT = 0.50  # 50/50 split
 
 
@@ -61,7 +61,7 @@ TIER_BUDGET_PCT = 0.50  # 50/50 split
 class TierState:
     """Per-tier state inside JRR Token."""
     name: str                            # 'SUB_100M' or 'OVER_100M'
-    balance: float = 0.50                # half of $1.00
+    balance: float = 5.00                # half of $1.00
     current_position: Optional[Dict] = None
     history: List[Dict] = field(default_factory=list)
 
@@ -69,9 +69,9 @@ class TierState:
 @dataclass
 class JRRTokenState:
     """Persistent two-tier state for JRR Token."""
-    sub_tier: TierState = field(default_factory=lambda: TierState(name="SUB_100M", balance=0.50))
-    over_tier: TierState = field(default_factory=lambda: TierState(name="OVER_100M", balance=0.50))
-    lifetime_peak: float = 1.00
+    sub_tier: TierState = field(default_factory=lambda: TierState(name="SUB_100M", balance=5.00))
+    over_tier: TierState = field(default_factory=lambda: TierState(name="OVER_100M", balance=5.00))
+    lifetime_peak: float = 10.00
     current_life: int = 1
     life_start_date: str = field(
         default_factory=lambda: datetime.now(timezone.utc).date().isoformat()
@@ -255,11 +255,11 @@ def jrr_token_act(
                         f"Tokens taketh away."),
         })
         # Reset both tiers to 50/50 of fresh $1
-        state.sub_tier = TierState(name="SUB_100M", balance=0.50)
-        state.over_tier = TierState(name="OVER_100M", balance=0.50)
+        state.sub_tier = TierState(name="SUB_100M", balance=5.00)
+        state.over_tier = TierState(name="OVER_100M", balance=5.00)
         state.current_life += 1
         state.life_start_date = today
-        state.lifetime_peak = 1.00
+        state.lifetime_peak = 10.00
         state.trades_today = 0
         return state
 

@@ -178,7 +178,13 @@
       color: var(--gold);
       letter-spacing: 0.06em;
       text-shadow: 0 2px 20px var(--gold-glow);
+      display: flex;
+      align-items: center;
+      gap: 6px;
     }
+    .featured-ticker .asset-logo { width: 32px; height: 32px; }
+    .featured-ticker .asset-letter { width: 32px; height: 32px; font-size: 18px; }
+    .featured-ticker .asset-tag { font-size: 11px; padding: 3px 8px; }
     .featured-name { font-size: 15px; color: var(--text-dim); margin-top: 2px; }
     .featured-price-row {
       display: flex;
@@ -913,7 +919,9 @@
     /* Chart panel */
     .chart-panel { margin-top: 16px; padding: 14px; background: rgba(0,0,0,0.18); border: 1px solid var(--border); border-radius: 8px; }
     .chart-head { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 10px; }
-    .chart-ticker { font-family: var(--display); font-size: 18px; color: var(--gold); letter-spacing: 0.05em; font-weight: 600; }
+    .chart-ticker { font-family: var(--display); font-size: 18px; color: var(--gold); letter-spacing: 0.05em; font-weight: 600; display: inline-flex; align-items: center; gap: 6px; }
+    .chart-ticker .asset-logo { width: 22px; height: 22px; }
+    .chart-ticker .asset-letter { width: 22px; height: 22px; font-size: 12px; }
     .chart-price { font-family: var(--mono); font-size: 16px; color: var(--text); margin-left: 12px; }
     .chart-ytd { font-family: var(--mono); font-size: 12px; margin-left: 10px; }
     .chart-ytd.positive { color: var(--pos); }
@@ -930,11 +938,190 @@
     .catalyst-card { margin-top: 24px; }
     .cat-section-h { font-family: var(--mono); font-size: 10px; letter-spacing: 0.15em; color: var(--gold); text-transform: uppercase; margin: 14px 0 8px; }
     .cat-list { display: flex; flex-direction: column; gap: 5px; }
-    .cat-row { display: grid; grid-template-columns: 110px 70px 110px 1fr; gap: 10px; padding: 8px 10px; background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 4px; font-size: 12px; align-items: center; }
+    .cat-row { display: grid; grid-template-columns: 110px 70px 110px 1fr; gap: 10px; padding: 10px 12px; background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 4px; font-size: 12px; align-items: start; }
     .cat-row .time { font-family: var(--mono); font-size: 10px; color: var(--muted); }
     .cat-row .tk { font-family: var(--display); color: var(--gold); font-weight: 600; letter-spacing: 0.05em; font-size: 11px; }
     .cat-row .type { font-family: var(--mono); font-size: 9px; padding: 2px 6px; border-radius: 3px; background: rgba(255, 214, 110, 0.1); color: var(--gold); border: 1px solid var(--gold-glow); text-align: center; }
     .cat-row .note { color: var(--text-dim); font-size: 11px; line-height: 1.4; }
+    .cat-row .note-block { display: flex; flex-direction: column; gap: 4px; }
+    .cat-row .cat-links { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 4px; }
+    .cat-link {
+      font-family: var(--mono);
+      font-size: 10px;
+      padding: 2px 7px;
+      background: rgba(255, 214, 110, 0.08);
+      color: var(--gold);
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      text-decoration: none;
+      transition: all 0.15s;
+    }
+    .cat-link:hover { background: var(--gold-glow); border-color: var(--gold); }
+
+    /* Asset-class color tags shown next to ticker symbols */
+    .asset-tag {
+      display: inline-block;
+      padding: 1px 5px;
+      border-radius: 3px;
+      font-size: 9px;
+      font-family: var(--mono);
+      letter-spacing: 0.05em;
+      margin-left: 5px;
+      vertical-align: middle;
+    }
+    .asset-tag.equity { background: rgba(255, 214, 110, 0.15); color: var(--gold); border: 1px solid rgba(255, 214, 110, 0.3); }
+    .asset-tag.etf { background: rgba(159, 199, 230, 0.15); color: #9fc7e6; border: 1px solid rgba(159, 199, 230, 0.3); }
+    .asset-tag.crypto { background: rgba(110, 232, 211, 0.15); color: #6ee8d3; border: 1px solid rgba(110, 232, 211, 0.3); }
+    .asset-tag.token { background: rgba(243, 150, 179, 0.15); color: #f396b3; border: 1px solid rgba(243, 150, 179, 0.3); }
+    .asset-tag.fx { background: rgba(208, 218, 232, 0.12); color: var(--silver); border: 1px solid rgba(208, 218, 232, 0.3); }
+    .asset-tag.commodities { background: rgba(226, 167, 106, 0.15); color: #e2a76a; border: 1px solid rgba(226, 167, 106, 0.3); }
+    .asset-tag.energy { background: rgba(226, 167, 106, 0.15); color: #e2a76a; border: 1px solid rgba(226, 167, 106, 0.3); }
+    .asset-tag.prediction { background: rgba(184, 138, 224, 0.15); color: #b88be0; border: 1px solid rgba(184, 138, 224, 0.3); }
+
+    /* Asset logo (Clearbit + letter fallback) */
+    .asset-logo {
+      display: inline-block;
+      width: 18px;
+      height: 18px;
+      border-radius: 3px;
+      vertical-align: middle;
+      margin-right: 5px;
+      object-fit: contain;
+      background: rgba(255, 255, 255, 0.06);
+    }
+    .asset-letter {
+      display: inline-flex;
+      width: 18px;
+      height: 18px;
+      border-radius: 3px;
+      vertical-align: middle;
+      margin-right: 5px;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--mono);
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--bg-deeper);
+    }
+
+    .specialists-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-top: 12px;
+    }
+    @media (max-width: 900px) { .specialists-grid { grid-template-columns: 1fr; } }
+    .specialist-card.baron-theme { border-color: #c98c4e; }
+    .specialist-card.baron-theme .balance { color: #e2a76a; text-shadow: 0 2px 24px rgba(226, 167, 106, 0.35); }
+    .specialist-card.baron-theme .card-title { color: #e2a76a; }
+    .specialist-card.baron-theme .card-title .diamond { background: #e2a76a; box-shadow: 0 0 10px rgba(226, 167, 106, 0.5); }
+    .specialist-card.steadfast-theme { border-color: #7fb1da; }
+    .specialist-card.steadfast-theme .balance { color: #9fc7e6; text-shadow: 0 2px 24px rgba(159, 199, 230, 0.35); }
+    .specialist-card.steadfast-theme .card-title { color: #9fc7e6; }
+    .specialist-card.steadfast-theme .card-title .diamond { background: #9fc7e6; box-shadow: 0 0 10px rgba(159, 199, 230, 0.5); }
+    .specialist-card .balance { font-size: 36px; }
+    .specialist-card .pos-ticker { display: flex; align-items: center; gap: 4px; }
+
+    .player-stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 4px;
+      margin: 8px 0;
+      padding: 6px;
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 4px;
+    }
+    .player-stats.empty {
+      display: block;
+      text-align: center;
+      font-size: 10px;
+      color: var(--muted);
+      font-style: italic;
+      padding: 8px;
+    }
+    .ps-cell { text-align: center; }
+    .ps-lbl { font-size: 8px; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; }
+    .ps-val { font-family: var(--mono); font-size: 12px; font-weight: 700; color: var(--text); }
+    .ps-val.positive { color: var(--pos); }
+    .ps-val.negative { color: var(--neg); }
+
+    .player-portfolio {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      padding: 8px 10px;
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 4px;
+      margin-bottom: 8px;
+    }
+    .pp-equity { font-family: var(--mono); font-size: 14px; font-weight: 700; color: var(--text); }
+    .pp-return { font-family: var(--mono); font-size: 12px; font-weight: 600; }
+    .pp-equity.positive, .pp-return.positive { color: var(--pos); }
+    .pp-equity.negative, .pp-return.negative { color: var(--neg); }
+
+    /* Asset Table */
+    .at-controls {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr auto;
+      gap: 8px;
+      margin-bottom: 14px;
+      align-items: center;
+    }
+    @media (max-width: 800px) { .at-controls { grid-template-columns: 1fr 1fr; } }
+    .at-search, .at-select {
+      padding: 7px 10px;
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      color: var(--text);
+      font-family: var(--mono);
+      font-size: 12px;
+    }
+    .at-search:focus, .at-select:focus { outline: none; border-color: var(--gold); }
+    .at-count { font-family: var(--mono); font-size: 10px; color: var(--muted); letter-spacing: 0.05em; padding: 0 6px; }
+    .at-head, .at-row {
+      display: grid;
+      grid-template-columns: 24px 130px 60px 90px 70px 90px 1fr;
+      gap: 10px;
+      align-items: center;
+      padding: 7px 10px;
+      font-size: 11.5px;
+    }
+    .at-head {
+      background: rgba(0, 0, 0, 0.25);
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      border-radius: 4px 4px 0 0;
+    }
+    .at-list { display: flex; flex-direction: column; gap: 2px; max-height: 600px; overflow-y: auto; }
+    .at-row {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      cursor: pointer;
+      transition: all 0.12s;
+    }
+    .at-row:hover { background: var(--gold-glow); border-color: var(--gold); }
+    .at-watch { cursor: pointer; color: var(--muted); font-size: 14px; }
+    .at-watch:hover { color: var(--gold); }
+    .at-tk { font-family: var(--display); color: var(--gold); font-weight: 600; letter-spacing: 0.05em; display: flex; align-items: center; gap: 4px; }
+    .at-px { font-family: var(--mono); text-align: right; color: var(--text); }
+    .at-chg { font-family: var(--mono); text-align: right; font-weight: 600; }
+    .at-chg.positive { color: var(--pos); }
+    .at-chg.negative { color: var(--neg); }
+    .at-sg { font-family: var(--mono); font-size: 10px; padding: 2px 6px; border-radius: 3px; text-align: center; font-weight: 600; }
+    .at-sg.STRONG_BUY { background: rgba(156, 224, 138, 0.2); color: var(--pos); }
+    .at-sg.BUY { background: rgba(156, 224, 138, 0.12); color: var(--pos); }
+    .at-sg.HOLD { background: rgba(208, 218, 232, 0.1); color: var(--muted); }
+    .at-sg.SELL { background: rgba(255, 144, 144, 0.12); color: var(--neg); }
+    .at-sg.STRONG_SELL { background: rgba(255, 144, 144, 0.2); color: var(--neg); }
+    .at-agr { font-family: var(--mono); font-size: 10px; color: var(--text-dim); display: flex; align-items: center; gap: 6px; }
+    .at-agr .agr-bar { flex: 1; height: 4px; background: rgba(255, 255, 255, 0.06); border-radius: 2px; overflow: hidden; }
+    .at-agr .agr-fill { height: 100%; background: linear-gradient(90deg, var(--gold), var(--silver)); }
+    .at-truncated { padding: 12px; text-align: center; color: var(--muted); font-style: italic; font-size: 12px; }
     .cat-row.weekly { background: rgba(0, 0, 0, 0.18); }
 
     /* Prediction Markets */
@@ -1443,6 +1630,67 @@
   const fmtMoney = (n, d = 2) => n == null ? '—' : '$' + Number(n).toLocaleString('en-US', { minimumFractionDigits: d, maximumFractionDigits: d });
   const fmtPct = n => n == null ? '—' : (n > 0 ? '+' : '') + Number(n).toFixed(2) + '%';
   const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c]);
+
+  // Detect asset class from ticker
+  function detectAssetClass(ticker) {
+    if (!ticker) return 'equity';
+    const t = String(ticker).toUpperCase();
+    if (t.endsWith('-USD')) {
+      // crypto majors vs lower-cap tokens
+      const tokens = ['PEPE-USD','FLOKI-USD','BONK-USD','WIF-USD','MOG-USD','TURBO-USD','BRETT-USD','POPCAT-USD','SHIB-USD','JTO-USD','ENA-USD','PYTH-USD','TIA-USD','DYM-USD','ALT-USD','STRK-USD','MEW-USD','PNUT-USD','ARB-USD'];
+      return tokens.includes(t) ? 'token' : 'crypto';
+    }
+    const fxList = ['UUP','UDN','FXE','FXY','FXF','FXB','FXC','FXA'];
+    if (fxList.includes(t)) return 'fx';
+    const commodityList = ['GLD','IAU','GDX','GDXJ','SLV','SIVR','PPLT','PALL','CPER'];
+    if (commodityList.includes(t)) return 'commodities';
+    const energyList = ['USO','BNO','UCO','SCO','DRIP','UNG','BOIL','KOLD','XLE','XOP','OIH','GUSH','AMLP'];
+    if (energyList.includes(t)) return 'energy';
+    const etfPrefix = ['SPY','QQQ','IWM','DIA','VTI','EFA','EEM','XL','XOP','VTI','VOO','BND','TLT','HYG','LQD','IBB','XBI','IYR','SMH','SOXX','ARKK'];
+    if (etfPrefix.some(p => t.startsWith(p))) return 'etf';
+    return 'equity';
+  }
+
+  function assetTag(ticker) {
+    const cls = detectAssetClass(ticker);
+    const labels = { equity: 'STOCK', etf: 'ETF', crypto: 'CRYPTO', token: 'TOKEN', fx: 'FX', commodities: 'METAL', energy: 'OIL', prediction: 'BET' };
+    return `<span class="asset-tag ${cls}">${labels[cls] || cls.toUpperCase()}</span>`;
+  }
+
+  // Asset logo: Clearbit (equities) + letter fallback (crypto/tokens/etc)
+  const ASSET_LOGO_DOMAINS = {
+    AAPL: 'apple.com', MSFT: 'microsoft.com', NVDA: 'nvidia.com', AMZN: 'amazon.com', GOOGL: 'google.com', GOOG: 'google.com', META: 'meta.com', TSLA: 'tesla.com',
+    JPM: 'jpmorganchase.com', BAC: 'bankofamerica.com', WFC: 'wellsfargo.com', GS: 'goldmansachs.com', MS: 'morganstanley.com', V: 'visa.com', MA: 'mastercard.com',
+    XOM: 'exxonmobil.com', CVX: 'chevron.com', COP: 'conocophillips.com', OXY: 'oxy.com', SLB: 'slb.com', VLO: 'valero.com', PSX: 'phillips66.com', MPC: 'marathonpetroleum.com',
+    KO: 'coca-cola.com', PEP: 'pepsico.com', PG: 'pg.com', JNJ: 'jnj.com', WMT: 'walmart.com', COST: 'costco.com', MCD: 'mcdonalds.com', DIS: 'disney.com', NKE: 'nike.com',
+    HD: 'homedepot.com', LOW: 'lowes.com', SBUX: 'starbucks.com', TGT: 'target.com', CAT: 'cat.com', BA: 'boeing.com', GE: 'ge.com', DE: 'deere.com', MMM: '3m.com',
+    F: 'ford.com', GM: 'gm.com', RTX: 'rtx.com', LMT: 'lockheedmartin.com', NOC: 'northropgrumman.com', UPS: 'ups.com', FDX: 'fedex.com',
+    PFE: 'pfizer.com', MRK: 'merck.com', LLY: 'lilly.com', ABBV: 'abbvie.com', BMY: 'bms.com', ABT: 'abbott.com', UNH: 'unitedhealthgroup.com',
+    T: 'att.com', VZ: 'verizon.com', TMUS: 'tmobile.com', CMCSA: 'comcast.com', NFLX: 'netflix.com', SPOT: 'spotify.com',
+    INTC: 'intel.com', AMD: 'amd.com', QCOM: 'qualcomm.com', AVGO: 'broadcom.com', ORCL: 'oracle.com', CRM: 'salesforce.com', ADBE: 'adobe.com', CSCO: 'cisco.com',
+    UBER: 'uber.com', LYFT: 'lyft.com', ABNB: 'airbnb.com', BKNG: 'booking.com', PYPL: 'paypal.com', SHOP: 'shopify.com',
+    'BRK-B': 'berkshirehathaway.com', BLK: 'blackrock.com', AXP: 'americanexpress.com', SCHW: 'schwab.com',
+  };
+
+  function assetLogo(ticker) {
+    if (!ticker) return '';
+    const t = String(ticker).toUpperCase();
+    const domain = ASSET_LOGO_DOMAINS[t];
+    if (domain) {
+      // Use Clearbit logo CDN
+      return `<img class="asset-logo" src="https://logo.clearbit.com/${domain}" alt="" onerror="this.outerHTML = window.assetLetterFallback('${t}')"/>`;
+    }
+    return assetLetterFallback(t);
+  }
+
+  function assetLetterFallback(ticker) {
+    const t = String(ticker || '?').toUpperCase().replace('-USD', '');
+    const ch = t.charAt(0) || '?';
+    const colors = ['#ffd66e', '#9fc7e6', '#6ee8d3', '#f396b3', '#e2a76a', '#b88be0', '#9ce0a0'];
+    const color = colors[ch.charCodeAt(0) % colors.length];
+    return `<span class="asset-letter" style="background:${color}">${esc(ch)}</span>`;
+  }
+  window.assetLetterFallback = assetLetterFallback;
   const dt = iso => { if (!iso) return '—'; const d = new Date(iso); return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) + ' ' + d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }); };
 
   function renderTopbar(signals) {
@@ -1516,7 +1764,7 @@
             <div class="card-subtitle">Highest consensus · Full transcript</div>
           </div>
         </div>
-        <div class="featured-ticker">${esc(debate.ticker)}</div>
+        <div class="featured-ticker">${assetLogo(debate.ticker)}${esc(debate.ticker)}${assetTag(debate.ticker)}</div>
         <div class="featured-name">${esc(debate.name || '')}</div>
         <div class="featured-price-row">
           <span class="featured-price">${fmtMoney(debate.price)}</span>
@@ -1531,6 +1779,7 @@
         </div>
         <div class="verdicts">${verdicts}</div>
         ${renderHeadlines(debate.recent_headlines)}
+        ${renderChartPanel(debate.ticker)}
         ${renderConsensusDebug(debate.consensus_debug, c.signal)}
       </div>
     `;
@@ -1604,7 +1853,7 @@
       const dissent = (d.dissenters || []).length;
       return `
         <div class="debate-row ${d.ticker === featuredTicker ? 'featured' : ''}" onclick="selectFeatured('${esc(d.ticker)}')">
-          <div class="tk">${esc(d.ticker)}</div>
+          <div class="tk">${assetLogo(d.ticker)}${esc(d.ticker)}${assetTag(d.ticker)}</div>
           <div class="sg ${c.signal}">${c.signal.replace('_', ' ')}</div>
           <div class="agree-bar"><div class="fill" style="width: ${(c.agreement_score * 100).toFixed(0)}%"></div></div>
           <div class="rat">${esc((d.dissent_summary || 'All agree').slice(0, 100))}</div>
@@ -1682,7 +1931,8 @@
         <div class="compounder-stats">
           <div class="row"><span class="k">Peak</span><span class="v">${fmtMoney(s.lifetime_peak, 4)}</span></div>
           <div class="row"><span class="k">Deaths</span><span class="v">${(s.deaths || []).length}</span></div>
-          <div class="row"><span class="k">Actions</span><span class="v">${(s.history || []).length}</span></div>
+          <div class="row"><span class="k">Lifetime trades</span><span class="v">${(s.history || []).length}</span></div>
+          ${s.max_trades_per_day ? `<div class="row"><span class="k">Daily cap</span><span class="v">${s.trades_today || 0} / ${s.max_trades_per_day}</span></div>` : ''}
         </div>
         ${tiersHtml || (pos ? renderPosition(pos, variant) : '<div class="empty-track" style="margin-top:14px">No position today</div>')}
         ${narrative ? `<div class="narrative-bubble">"${esc(narrative)}"</div>` : ''}
@@ -1736,10 +1986,10 @@
       { variant: 'jrr_token', label: 'JRR TOKEN', data: jrrToken },
     ].filter(r => r.data);
 
-    // Compute return % from inception ($1 starting capital for all three)
+    // Compute return % from inception ($10 starting capital for all compounders)
     const returns = rows.map(r => ({
       ...r,
-      ret: ((r.data.balance / 1.00) - 1) * 100,
+      ret: ((r.data.balance / 10.00) - 1) * 100,
     }));
 
     // Bar scale: symmetric, anchored at 0%, expand to whatever extreme is largest
@@ -1825,13 +2075,23 @@
   // Persisted in localStorage so it survives across page loads.
   // ──────────────────────────────────────────────────────────
 
-  const CAREER_KEY = 'silmaril_careers_v1';
+  const CAREER_KEY = 'silmaril_careers_v2';
   const CAREER_STARTING_CAPITAL = 5000.00;
 
   function loadCareers() {
     try {
       const raw = localStorage.getItem(CAREER_KEY);
-      if (raw) return JSON.parse(raw);
+      if (raw) {
+        const data = JSON.parse(raw);
+        // Migration: ensure exactly 10 slots
+        while (data.slots && data.slots.length < 10) {
+          data.slots.push(_freshSlot(`Profile ${data.slots.length + 1}`));
+        }
+        if (data.slots && data.slots.length > 10) {
+          data.slots = data.slots.slice(0, 10);
+        }
+        return data;
+      }
     } catch (e) {}
     return _freshCareers();
   }
@@ -1844,11 +2104,7 @@
   function _freshCareers() {
     return {
       active_slot: 0,
-      slots: [
-        _freshSlot('Profile 1'),
-        _freshSlot('Profile 2'),
-        _freshSlot('Profile 3'),
-      ],
+      slots: Array.from({ length: 10 }, (_, i) => _freshSlot(`Profile ${i + 1}`)),
     };
   }
 
@@ -2137,7 +2393,7 @@
         <div class="card-header">
           <div>
             <div class="card-title"><span class="diamond"></span>Career Mode</div>
-            <div class="card-subtitle">3 profiles · $5,000 each · trade against agents · stored in your browser</div>
+            <div class="card-subtitle">10 profiles · $5,000 each · trade against the agents · stored in your browser</div>
           </div>
         </div>
         <div class="career-tabs">${tabs}</div>
@@ -2237,12 +2493,19 @@
         is_user: false, starting_cap: 10000,
       });
     });
-    [['SCROOGE', STATE.scrooge], ['MIDAS', STATE.midas], ['CRYPTOBRO', STATE.cryptobro], ['JRR_TOKEN', STATE.jrr_token]].forEach(([name, s]) => {
+    [
+      ['SCROOGE', STATE.scrooge],
+      ['MIDAS', STATE.midas],
+      ['CRYPTOBRO', STATE.cryptobro],
+      ['JRR_TOKEN', STATE.jrr_token],
+      ['SPORTS_BRO', STATE.sports_bro],
+    ].forEach(([name, s]) => {
       if (!s) return;
+      const startingCap = 10.0;  // all $1 → $10 reset
       rows.push({
         name, equity: s.balance,
-        ret: ((s.balance / 1.0) - 1) * 100,
-        is_user: false, starting_cap: 1.0,
+        ret: ((s.balance / startingCap) - 1) * 100,
+        is_user: false, starting_cap: startingCap,
       });
     });
     rows.sort((a, b) => b.ret - a.ret);
@@ -2441,6 +2704,223 @@
   }
 
   // ── Phase G/H/I: Sports Bro card ──────────────────────────
+  // ── Filterable / sortable asset table ──────────────────────
+  function renderAssetTable() {
+    const debates = (STATE.signals && STATE.signals.debates) || [];
+    if (!debates.length) return '';
+    const f = STATE.assetTableFilter || { signal: 'ALL', class: 'ALL', search: '', sort: 'consensus' };
+
+    let rows = debates.slice();
+
+    // Filter by signal
+    if (f.signal !== 'ALL') {
+      rows = rows.filter(d => d.consensus.signal === f.signal);
+    }
+    // Filter by asset class
+    if (f.class !== 'ALL') {
+      rows = rows.filter(d => detectAssetClass(d.ticker) === f.class);
+    }
+    // Search filter
+    if (f.search && f.search.trim()) {
+      const q = f.search.toLowerCase();
+      rows = rows.filter(d =>
+        d.ticker.toLowerCase().includes(q) ||
+        (d.name || '').toLowerCase().includes(q) ||
+        (d.sector || '').toLowerCase().includes(q)
+      );
+    }
+    // Sort
+    rows.sort((a, b) => {
+      switch (f.sort) {
+        case 'consensus': return (b.consensus.score || 0) - (a.consensus.score || 0);
+        case 'agreement': return (b.consensus.agreement_score || 0) - (a.consensus.agreement_score || 0);
+        case 'change': return (b.change_pct || 0) - (a.change_pct || 0);
+        case 'ticker': return a.ticker.localeCompare(b.ticker);
+        default: return 0;
+      }
+    });
+
+    const tableRows = rows.slice(0, 100).map(d => {
+      const c = d.consensus;
+      const cls = detectAssetClass(d.ticker);
+      const chg = d.change_pct || 0;
+      const isWatched = (STATE.watchlist || []).includes(d.ticker);
+      return `
+        <div class="at-row" onclick="selectFeatured('${esc(d.ticker)}')">
+          <span class="at-watch" onclick="event.stopPropagation(); toggleWatchlist('${esc(d.ticker)}')" title="Watchlist">${isWatched ? '★' : '☆'}</span>
+          <span class="at-tk">${assetLogo(d.ticker)}${esc(d.ticker)}</span>
+          <span class="at-cls">${assetTag(d.ticker)}</span>
+          <span class="at-px">${fmtMoney(d.price, d.price < 1 ? 4 : 2)}</span>
+          <span class="at-chg ${chg >= 0 ? 'positive' : 'negative'}">${chg >= 0 ? '+' : ''}${chg.toFixed(2)}%</span>
+          <span class="at-sg ${c.signal}">${c.signal.replace('_', ' ')}</span>
+          <span class="at-agr">
+            <div class="agr-bar"><div class="agr-fill" style="width:${(c.agreement_score * 100).toFixed(0)}%"></div></div>
+            ${(c.agreement_score * 100).toFixed(0)}%
+          </span>
+        </div>
+      `;
+    }).join('');
+
+    const sigOptions = ['ALL', 'STRONG_BUY', 'BUY', 'HOLD', 'SELL', 'STRONG_SELL'];
+    const sigDropdown = sigOptions.map(s =>
+      `<option value="${s}" ${f.signal === s ? 'selected' : ''}>${s.replace('_', ' ')}</option>`
+    ).join('');
+    const clsOptions = ['ALL', 'equity', 'etf', 'crypto', 'token', 'fx', 'commodities', 'energy'];
+    const clsDropdown = clsOptions.map(c =>
+      `<option value="${c}" ${f.class === c ? 'selected' : ''}>${c.toUpperCase()}</option>`
+    ).join('');
+    const sortOptions = [
+      ['consensus', 'Consensus Score'],
+      ['agreement', 'Agreement %'],
+      ['change', 'Change %'],
+      ['ticker', 'Ticker A-Z'],
+    ];
+    const sortDropdown = sortOptions.map(([v, l]) =>
+      `<option value="${v}" ${f.sort === v ? 'selected' : ''}>${l}</option>`
+    ).join('');
+
+    return `
+      <div class="card asset-table-card" style="margin-top:24px">
+        <div class="card-header">
+          <div>
+            <div class="card-title"><span class="diamond"></span>All Tracked Assets</div>
+            <div class="card-subtitle">${debates.length} assets in today's debate · filter, sort, search</div>
+          </div>
+        </div>
+        <div class="at-controls">
+          <input class="at-search" type="text" placeholder="Search ticker, name, sector…" value="${esc(f.search || '')}" oninput="window.assetTableUpdate('search', this.value)"/>
+          <select class="at-select" onchange="window.assetTableUpdate('signal', this.value)">${sigDropdown}</select>
+          <select class="at-select" onchange="window.assetTableUpdate('class', this.value)">${clsDropdown}</select>
+          <select class="at-select" onchange="window.assetTableUpdate('sort', this.value)">${sortDropdown}</select>
+          <span class="at-count">${rows.length} of ${debates.length}</span>
+        </div>
+        <div class="at-head">
+          <span></span>
+          <span>Ticker</span>
+          <span>Type</span>
+          <span style="text-align:right">Price</span>
+          <span style="text-align:right">Change</span>
+          <span>Signal</span>
+          <span>Agreement</span>
+        </div>
+        <div class="at-list">${tableRows || '<div class="empty-track" style="padding:30px">No assets match the filter.</div>'}</div>
+        ${rows.length > 100 ? `<div class="at-truncated">Showing first 100 of ${rows.length} matches. Refine your filter for more.</div>` : ''}
+      </div>
+    `;
+  }
+
+  window.assetTableUpdate = function(field, value) {
+    if (!STATE.assetTableFilter) STATE.assetTableFilter = { signal: 'ALL', class: 'ALL', search: '', sort: 'consensus' };
+    STATE.assetTableFilter[field] = value;
+    render();
+  };
+
+  function renderSpecialists() {
+    const portfolios = (STATE.agent_portfolios && STATE.agent_portfolios.portfolios) || {};
+    const baron = portfolios.BARON;
+    const steadfast = portfolios.STEADFAST;
+    if (!baron && !steadfast) return '';
+
+    const buildCard = (p, label, sub, theme) => {
+      if (!p) return '';
+      const pos = p.current_position;
+      const mark = pos ? (_markPrice(pos.ticker) || pos.entry_price) : 0;
+      const equity = (p.balance || 0) + (pos ? pos.shares * mark : 0);
+      const ret = ((equity / 10000) - 1) * 100;
+      const retCls = ret > 0.05 ? 'positive' : ret < -0.05 ? 'negative' : '';
+      const lifetimeFees = (p.history || []).reduce((sum, h) => {
+        const f = h.execution && h.execution.fees && h.execution.fees.total;
+        return sum + (f || 0);
+      }, 0);
+      const lastNarrative = (p.history || []).slice().reverse().find(h => h.thesis || h.reason);
+      const narrative = lastNarrative ? (lastNarrative.thesis || lastNarrative.reason) : '';
+      return `
+        <div class="card specialist-card ${theme}">
+          <div class="card-header">
+            <div>
+              <div class="card-title"><span class="diamond"></span>${esc(label)}</div>
+              <div class="card-subtitle">${esc(sub)}</div>
+            </div>
+          </div>
+          <div class="balance">${fmtMoney(equity, 2)}</div>
+          <div class="balance-label">$10,000 career portfolio · ${ret >= 0 ? '+' : ''}${ret.toFixed(2)}% lifetime</div>
+          <div class="compounder-stats">
+            <div class="row"><span class="k">Cash</span><span class="v">${fmtMoney(p.balance || 0, 2)}</span></div>
+            <div class="row"><span class="k">Trades</span><span class="v">${p.trades_count || (p.history || []).length}</span></div>
+            <div class="row"><span class="k">Realized</span><span class="v ${(p.realized_pnl || 0) >= 0 ? 'positive' : 'negative'}">${fmtMoney(p.realized_pnl || 0, 2)}</span></div>
+          </div>
+          ${pos ? `
+            <div class="position-card">
+              <div class="pos-ticker">${assetLogo(pos.ticker)}${esc(pos.ticker)}${assetTag(pos.ticker)}</div>
+              <div class="pos-line"><span class="lbl">Shares</span><span class="val">${fmt(pos.shares, 2)}</span></div>
+              <div class="pos-line"><span class="lbl">Entry</span><span class="val">${fmtMoney(pos.entry_price)}</span></div>
+              <div class="pos-line"><span class="lbl">Mark</span><span class="val">${fmtMoney(mark)}</span></div>
+              <div class="pos-line"><span class="lbl">P&L</span><span class="val ${mark >= pos.entry_price ? 'positive' : 'negative'}">${((mark / pos.entry_price - 1) * 100).toFixed(2)}%</span></div>
+            </div>
+          ` : '<div class="empty-track" style="margin-top:14px">Currently in cash · waiting for setup</div>'}
+          ${narrative ? `<div class="narrative-bubble">"${esc(narrative)}"</div>` : ''}
+          ${lifetimeFees > 0 ? `
+            <div class="fees-line">
+              <span class="lbl">Lifetime fees paid</span>
+              <span class="val">${fmtMoney(lifetimeFees, 2)}</span>
+            </div>
+          ` : ''}
+        </div>
+      `;
+    };
+
+    return `
+      <div class="card" style="margin-top:24px">
+        <div class="card-header">
+          <div>
+            <div class="card-title"><span class="diamond"></span>Specialists</div>
+            <div class="card-subtitle">$10K career operators · narrow expertise · vote on consensus output, not in the debate itself</div>
+          </div>
+        </div>
+        <div class="specialists-grid">
+          ${buildCard(baron, 'THE BARON', 'Oil & energy specialist · long/short · EIA Wednesday + OPEC catalyst-aware', 'baron-theme')}
+          ${buildCard(steadfast, 'STEADFAST', 'American blue-chip patriot · Crown Jewels universe · 30-day minimum hold', 'steadfast-theme')}
+        </div>
+      </div>
+    `;
+  }
+
+  function renderSportsBroCompact(sb, markets) {
+    if (!sb) return '<div class="card compounder sports-bro"><div class="card-title"><span class="diamond"></span>SPORTS BRO</div><div class="empty-track" style="margin-top:14px">Awaiting first run</div></div>';
+    const open = sb.open_bets || [];
+    const lifetimeFees = 0;
+    const peak = sb.lifetime_peak || 10.0;
+    const daysAlive = sb.days_alive != null ? sb.days_alive : 0;
+    const bestMkt = markets && markets.best_edge;
+    const bestHtml = bestMkt
+      ? `<div class="position-card sports-best-mini">
+          <div class="pos-ticker">${esc(bestMkt.venue)} · best edge</div>
+          <div class="pos-line" style="font-size:11px">${esc(bestMkt.market.slice(0, 60))}</div>
+          <div class="pos-line"><span class="lbl">M</span><span class="val">${(bestMkt.market_prob * 100).toFixed(0)}%</span></div>
+          <div class="pos-line"><span class="lbl">Mod</span><span class="val">${(bestMkt.model_prob * 100).toFixed(0)}%</span></div>
+          <div class="pos-line"><span class="lbl">Edge</span><span class="val" style="color:var(--pos)">+${(bestMkt.edge * 100).toFixed(1)}pp</span></div>
+        </div>`
+      : '<div class="empty-track" style="margin-top:14px">No edge today</div>';
+    return `
+      <div class="card compounder sports-bro">
+        <div class="card-header">
+          <div>
+            <div class="card-title"><span class="diamond"></span>SPORTS BRO<span class="trades-pill">${sb.trades_today || 0}/${sb.max_trades_per_day || 8} BETS TODAY</span></div>
+            <div class="card-subtitle">Polymarket + Kalshi · half-Kelly</div>
+          </div>
+        </div>
+        <div class="balance">${fmtMoney(sb.balance, 2)}</div>
+        <div class="balance-label">Current Balance · ${open.length} open bet${open.length === 1 ? '' : 's'}</div>
+        <div class="life-pill">LIFE #${sb.current_life} · ${daysAlive}d</div>
+        <div class="compounder-stats">
+          <div class="row"><span class="k">Peak</span><span class="v">${fmtMoney(peak, 2)}</span></div>
+          <div class="row"><span class="k">Deaths</span><span class="v">${(sb.deaths || []).length}</span></div>
+          <div class="row"><span class="k">Trades</span><span class="v">${(sb.history || []).length}</span></div>
+        </div>
+        ${bestHtml}
+      </div>
+    `;
+  }
   function renderSportsBro(sb, markets) {
     if (!sb) return '';
     const open = sb.open_bets || [];
@@ -2493,90 +2973,149 @@
     if (!ticker || !STATE.charts || !STATE.charts.charts) return '';
     const bundle = STATE.charts.charts[ticker];
     if (!bundle) return '';
-    const series = bundle.series || [];
+    let series = bundle.series || [];
     if (series.length < 2) return '';
 
-    const w = 760, h = 220, pad = 30;
+    // Apply timeframe filter
+    const tf = STATE.chartTimeframe || '1M';
+    const tfDays = { '1D': 1, '5D': 5, '1M': 22, '3M': 65, '6M': 130, 'YTD': 200, '1Y': 250, 'ALL': series.length };
+    const wantDays = tfDays[tf] || 22;
+    if (series.length > wantDays) series = series.slice(series.length - wantDays);
+
+    const w = 760, h = 240, padL = 50, padR = 50, padT = 20, padB = 30;
+    const innerW = w - padL - padR;
+    const innerH = h - padT - padB;
     const closes = series.map(s => s.c);
     const minP = Math.min(...closes);
     const maxP = Math.max(...closes);
-    const range = (maxP - minP) || 1;
-    const xStep = (w - pad * 2) / (series.length - 1);
+    const range = (maxP - minP) || (minP * 0.01);
+    const pmin = minP - range * 0.05;
+    const pmax = maxP + range * 0.05;
+    const yScale = p => padT + innerH * (1 - (p - pmin) / (pmax - pmin));
+    const xStep = innerW / Math.max(1, series.length - 1);
 
-    // Build the area path
-    let pathD = '';
-    let areaD = '';
+    let pathD = '', areaD = '';
     series.forEach((s, i) => {
-      const x = pad + i * xStep;
-      const y = pad + (h - pad * 2) * (1 - (s.c - minP) / range);
+      const x = padL + i * xStep;
+      const y = yScale(s.c);
       if (i === 0) {
         pathD = `M ${x.toFixed(2)} ${y.toFixed(2)}`;
-        areaD = `M ${x.toFixed(2)} ${(h - pad).toFixed(2)} L ${x.toFixed(2)} ${y.toFixed(2)}`;
+        areaD = `M ${x.toFixed(2)} ${(padT + innerH).toFixed(2)} L ${x.toFixed(2)} ${y.toFixed(2)}`;
       } else {
         pathD += ` L ${x.toFixed(2)} ${y.toFixed(2)}`;
         areaD += ` L ${x.toFixed(2)} ${y.toFixed(2)}`;
       }
     });
-    areaD += ` L ${(pad + (series.length - 1) * xStep).toFixed(2)} ${(h - pad).toFixed(2)} Z`;
+    areaD += ` L ${(padL + (series.length - 1) * xStep).toFixed(2)} ${(padT + innerH).toFixed(2)} Z`;
 
-    // Agent vote markers
+    // Y-axis tick labels (5 ticks)
+    const yTicks = [];
+    for (let i = 0; i <= 4; i++) {
+      const p = pmin + ((pmax - pmin) * i / 4);
+      const y = yScale(p);
+      yTicks.push(`<text x="${(padL - 6).toFixed(2)}" y="${(y + 3).toFixed(2)}" text-anchor="end" fill="var(--muted)" font-size="9" font-family="ui-monospace,monospace">${p.toFixed(p < 1 ? 4 : 2)}</text>`);
+      yTicks.push(`<line x1="${padL}" y1="${y.toFixed(2)}" x2="${(padL + innerW).toFixed(2)}" y2="${y.toFixed(2)}" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>`);
+    }
+
+    // X-axis date labels (5 ticks)
+    const xTicks = [];
+    const xTickCount = 5;
+    for (let i = 0; i < xTickCount; i++) {
+      const idx = Math.floor((series.length - 1) * i / (xTickCount - 1));
+      const x = padL + idx * xStep;
+      const dt = series[idx].t || '';
+      const lbl = dt.length >= 10 ? `${dt.slice(5, 7)}/${dt.slice(8, 10)}` : dt;
+      xTicks.push(`<text x="${x.toFixed(2)}" y="${(padT + innerH + 16).toFixed(2)}" text-anchor="middle" fill="var(--muted)" font-size="9" font-family="ui-monospace,monospace">${esc(lbl)}</text>`);
+    }
+
+    // Previous close dotted line (use first close as reference)
+    const prevClose = series[0].c;
+    const prevY = yScale(prevClose);
+    const prevDotted = `<line x1="${padL}" y1="${prevY.toFixed(2)}" x2="${(padL + innerW).toFixed(2)}" y2="${prevY.toFixed(2)}" stroke="var(--muted)" stroke-width="1" stroke-dasharray="4 4" opacity="0.6"/>
+      <text x="${(padL + innerW + 4).toFixed(2)}" y="${(prevY + 3).toFixed(2)}" fill="var(--muted)" font-size="9" font-family="ui-monospace,monospace">prev ${prevClose.toFixed(prevClose < 1 ? 4 : 2)}</text>`;
+
+    // Last close indicator
+    const lastY = yScale(closes[closes.length - 1]);
+    const lastClose = closes[closes.length - 1];
+    const lastIndicator = `<line x1="${padL}" y1="${lastY.toFixed(2)}" x2="${(padL + innerW).toFixed(2)}" y2="${lastY.toFixed(2)}" stroke="var(--gold)" stroke-width="1" stroke-dasharray="2 4" opacity="0.5"/>
+      <rect x="${(padL + innerW + 4).toFixed(2)}" y="${(lastY - 7).toFixed(2)}" width="42" height="14" fill="var(--gold)" rx="2"/>
+      <text x="${(padL + innerW + 25).toFixed(2)}" y="${(lastY + 3).toFixed(2)}" text-anchor="middle" fill="var(--bg-deeper)" font-size="9" font-weight="700" font-family="ui-monospace,monospace">${lastClose.toFixed(lastClose < 1 ? 4 : 2)}</text>`;
+
+    // Agent vote markers — overlay on the right edge
     const debate = (STATE.signals.debates || []).find(d => d.ticker === ticker);
     const verdicts = debate ? (debate.verdicts || []) : [];
-    const agentColors = {
-      AEGIS: '#ffd66e', FORGE: '#9fc7e6', THUNDERHEAD: '#a76ee2',
-      JADE: '#9ce0a0', VEIL: '#d8a8e0', KESTREL: '#e0a878',
-      OBSIDIAN: '#aaaaaa', ZENITH: '#ffe89c', WEAVER: '#7ed3c8',
-      HEX: '#888', SYNTH: '#e09cb6', SPECK: '#cccccc',
-      VESPA: '#ffaa66', MAGUS: '#b88be0', TALON: '#e08888',
-      BARON: '#e2a76a', STEADFAST: '#9fc7e6',
-    };
-    const lastY = pad + (h - pad * 2) * (1 - (series[series.length - 1].c - minP) / range);
-    const lastX = pad + (series.length - 1) * xStep;
-    const markers = verdicts.filter(v => v.signal && v.signal !== 'ABSTAIN').slice(0, 8).map((v, i) => {
-      const x = lastX - 8;
-      const y = lastY + (i - 4) * 9;
-      const color = agentColors[v.agent] || '#ffd66e';
-      const sym = v.signal === 'STRONG_BUY' ? '▲' :
-                  v.signal === 'BUY' ? '△' :
-                  v.signal === 'SELL' ? '▽' :
-                  v.signal === 'STRONG_SELL' ? '▼' : '·';
-      return `<text x="${(w - pad + 6).toFixed(2)}" y="${(y + 3).toFixed(2)}" fill="${color}" font-size="10" font-family="ui-monospace,monospace">${sym} ${esc(v.agent.slice(0, 6))}</text>`;
-    }).join('');
+    const agentColors = AGENT_COLORS;
+    const lastX = padL + (series.length - 1) * xStep;
+    const markers = verdicts
+      .filter(v => v.signal && v.signal !== 'ABSTAIN')
+      .slice(0, 10)
+      .map((v, i) => {
+        const y = padT + 12 + i * 14;
+        const color = agentColors[v.agent] || '#ffd66e';
+        const sym = v.signal === 'STRONG_BUY' ? '▲' :
+                    v.signal === 'BUY' ? '△' :
+                    v.signal === 'SELL' ? '▽' :
+                    v.signal === 'STRONG_SELL' ? '▼' :
+                    v.signal === 'HOLD' ? '◌' : '·';
+        return `<text x="${lastX.toFixed(2)}" y="${y.toFixed(2)}" fill="${color}" font-size="10" font-family="ui-monospace,monospace" text-anchor="end">${sym} ${esc(v.agent.slice(0, 8))}</text>`;
+      }).join('');
 
-    const tfButtons = ['1D', '5D', '1M', '3M', '6M', 'YTD', '1Y', 'ALL'].map(tf => `
-      <button class="tf-btn ${STATE.chartTimeframe === tf ? 'active' : ''}" onclick="window.setTimeframe('${tf}')">${tf}</button>
+    const tfButtons = ['1D', '5D', '1M', '3M', '6M', 'YTD', '1Y', 'ALL'].map(t => `
+      <button class="tf-btn ${tf === t ? 'active' : ''}" onclick="window.setTimeframe('${t}')">${t}</button>
     `).join('');
+
+    const change = closes[closes.length - 1] - closes[0];
+    const changePct = (change / closes[0]) * 100;
+    const changeCls = change >= 0 ? 'positive' : 'negative';
 
     return `
       <div class="chart-panel">
         <div class="chart-head">
           <div>
-            <span class="chart-ticker">${esc(ticker)}</span>
-            <span class="chart-price">${fmtMoney(bundle.current_price, 4)}</span>
-            <span class="chart-ytd ${bundle.ytd_change_pct >= 0 ? 'positive' : 'negative'}">${bundle.ytd_change_pct >= 0 ? '+' : ''}${bundle.ytd_change_pct.toFixed(2)}% YTD</span>
+            <span class="chart-ticker">${assetLogo(ticker)}${esc(ticker)}</span>
+            <span class="chart-price">${fmtMoney(bundle.current_price, bundle.current_price < 1 ? 4 : 2)}</span>
+            <span class="chart-ytd ${changeCls}">${change >= 0 ? '+' : ''}${change.toFixed(bundle.current_price < 1 ? 4 : 2)} (${changePct >= 0 ? '+' : ''}${changePct.toFixed(2)}%) ${tf}</span>
           </div>
           <div class="tf-row">${tfButtons}</div>
         </div>
         <svg viewBox="0 0 ${w} ${h}" class="chart-svg" preserveAspectRatio="none">
           <defs>
-            <linearGradient id="chart-grad" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stop-color="var(--gold)" stop-opacity="0.3"/>
+            <linearGradient id="chart-grad-${esc(ticker.replace(/[^A-Za-z0-9]/g, ''))}" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="var(--gold)" stop-opacity="0.35"/>
               <stop offset="100%" stop-color="var(--gold)" stop-opacity="0.02"/>
             </linearGradient>
           </defs>
-          <path d="${areaD}" fill="url(#chart-grad)"/>
-          <path d="${pathD}" stroke="var(--gold)" stroke-width="1.5" fill="none"/>
-          <line x1="${pad}" y1="${lastY.toFixed(2)}" x2="${(w - pad).toFixed(2)}" y2="${lastY.toFixed(2)}" stroke="var(--gold)" stroke-width="0.5" stroke-dasharray="3 3" opacity="0.5"/>
+          ${yTicks.join('')}
+          <path d="${areaD}" fill="url(#chart-grad-${esc(ticker.replace(/[^A-Za-z0-9]/g, ''))})"/>
+          ${prevDotted}
+          <path d="${pathD}" stroke="var(--gold)" stroke-width="1.8" fill="none"/>
+          ${lastIndicator}
+          ${xTicks.join('')}
           ${markers}
         </svg>
         <div class="chart-stats">
-          <span><span class="lbl">High</span> ${fmtMoney(bundle.high_52w, 4)}</span>
-          <span><span class="lbl">Low</span> ${fmtMoney(bundle.low_52w, 4)}</span>
-          <span><span class="lbl">Range</span> ${series.length}d</span>
+          <span><span class="lbl">Open</span> ${fmtMoney(series[0].o, bundle.current_price < 1 ? 4 : 2)}</span>
+          <span><span class="lbl">High</span> ${fmtMoney(Math.max(...series.map(s => s.h)), bundle.current_price < 1 ? 4 : 2)}</span>
+          <span><span class="lbl">Low</span> ${fmtMoney(Math.min(...series.map(s => s.l)), bundle.current_price < 1 ? 4 : 2)}</span>
+          <span><span class="lbl">52W H</span> ${fmtMoney(bundle.high_52w, bundle.current_price < 1 ? 4 : 2)}</span>
+          <span><span class="lbl">52W L</span> ${fmtMoney(bundle.low_52w, bundle.current_price < 1 ? 4 : 2)}</span>
+          <span><span class="lbl">YTD</span> ${bundle.ytd_change_pct >= 0 ? '+' : ''}${bundle.ytd_change_pct.toFixed(2)}%</span>
         </div>
       </div>
     `;
   }
+
+  // Agent color palette — used everywhere
+  const AGENT_COLORS = {
+    AEGIS: '#ffd66e', FORGE: '#9fc7e6', THUNDERHEAD: '#a76ee2',
+    JADE: '#9ce0a0', VEIL: '#d8a8e0', KESTREL: '#e0a878',
+    OBSIDIAN: '#aaaaaa', ZENITH: '#ffe89c', WEAVER: '#7ed3c8',
+    HEX: '#888888', SYNTH: '#e09cb6', SPECK: '#cccccc',
+    VESPA: '#ffaa66', MAGUS: '#b88be0', TALON: '#e08888',
+    BARON: '#e2a76a', STEADFAST: '#9fc7e6',
+    SCROOGE: '#ffd66e', MIDAS: '#d0dae8', CRYPTOBRO: '#6ee8d3',
+    JRR_TOKEN: '#f396b3', SPORTS_BRO: '#b88be0',
+  };
 
   window.setTimeframe = function(tf) {
     STATE.chartTimeframe = tf;
@@ -2587,22 +3126,36 @@
   function renderCatalysts() {
     const c = STATE.catalysts;
     if (!c) return '';
-    const dailyHtml = (c.daily || []).map(d => `
+    const dailyHtml = (c.daily || []).map(d => {
+      const links = (d.links || []).map(l =>
+        `<a class="cat-link" href="${esc(l.url)}" target="_blank" rel="noopener">${esc(l.label)} ↗</a>`
+      ).join('');
+      return `
       <div class="cat-row">
         <span class="time">${esc(d.time || '')}</span>
         <span class="tk">${esc(d.ticker || '')}</span>
         <span class="type ${esc(d.type || '').replace(/\s+/g, '-')}">${esc(d.type || '')}</span>
-        <span class="note">${esc(d.note || '')}</span>
+        <div class="note-block">
+          <div class="note">${esc(d.note || '')}</div>
+          ${links ? `<div class="cat-links">${links}</div>` : ''}
+        </div>
       </div>
-    `).join('');
-    const weeklyHtml = (c.weekly || []).map(w => `
+    `;}).join('');
+    const weeklyHtml = (c.weekly || []).map(w => {
+      const links = (w.links || []).map(l =>
+        `<a class="cat-link" href="${esc(l.url)}" target="_blank" rel="noopener">${esc(l.label)} ↗</a>`
+      ).join('');
+      return `
       <div class="cat-row weekly">
         <span class="time">${esc(w.date || '')}</span>
         <span class="tk">${esc(w.ticker || '')}</span>
         <span class="type ${esc(w.type || '').replace(/\s+/g, '-')}">${esc(w.type || '')}</span>
-        <span class="note">${esc(w.note || '')}</span>
+        <div class="note-block">
+          <div class="note">${esc(w.note || '')}</div>
+          ${links ? `<div class="cat-links">${links}</div>` : ''}
+        </div>
       </div>
-    `).join('');
+    `;}).join('');
     return `
       <div class="card catalyst-card">
         <div class="card-header">
@@ -2800,29 +3353,68 @@
     const roster = signals.agent_roster || [];
     const portfolios = (STATE.agent_portfolios && STATE.agent_portfolios.portfolios) || {};
     const riskAgents = (STATE.risk_state && STATE.risk_state.agents) || {};
+    const scoringRows = (STATE.scoring && STATE.scoring.summary && STATE.scoring.summary.leaderboard) || [];
+    const scoringByAgent = {};
+    scoringRows.forEach(r => { scoringByAgent[r.agent] = r; });
 
     const cards = roster.map(a => {
       const p = portfolios[a.codename];
-      const portfolioStrip = p ? renderPortfolioStrip(p) : '';
-      const isDollarCompounder = ['SCROOGE', 'MIDAS', 'CRYPTOBRO', 'JRR_TOKEN'].includes(a.codename);
-      const compounderHint = isDollarCompounder
-        ? `<div class="portfolio-strip"><div class="pos-line cash">$1 compounder · see card above</div></div>`
-        : portfolioStrip;
+      const sc = scoringByAgent[a.codename];
+      const isDollarCompounder = ['SCROOGE', 'MIDAS', 'CRYPTOBRO', 'JRR_TOKEN', 'SPORTS_BRO'].includes(a.codename);
       const isFrozen = riskAgents[a.codename] && riskAgents[a.codename].frozen;
       const variantClass = a.codename === 'MIDAS' ? 'is-midas'
                          : a.codename === 'CRYPTOBRO' ? 'is-cryptobro'
                          : a.codename === 'JRR_TOKEN' ? 'is-jrr-token'
                          : a.codename === 'BARON' ? 'is-baron'
                          : a.codename === 'STEADFAST' ? 'is-steadfast'
+                         : a.codename === 'SPORTS_BRO' ? 'is-jrr-token'
                          : '';
       const cssClass = `${variantClass} ${isFrozen ? 'frozen' : ''}`.trim();
+
+      // Portfolio block
+      let portfolioBlock = '';
+      if (isDollarCompounder) {
+        portfolioBlock = `<div class="portfolio-strip"><div class="pos-line cash">$10 compounder · see card above</div></div>`;
+      } else if (p) {
+        const mark = p.current_position ? (_markPrice(p.current_position.ticker) || p.current_position.entry_price) : 0;
+        const equity = (p.balance || 0) + (p.current_position ? p.current_position.shares * mark : 0);
+        const ret = ((equity / 10000) - 1) * 100;
+        const retCls = ret > 0.05 ? 'positive' : ret < -0.05 ? 'negative' : '';
+        portfolioBlock = `
+          <div class="player-portfolio">
+            <div class="pp-equity ${retCls}">${fmtMoney(equity, 0)}</div>
+            <div class="pp-return ${retCls}">${ret >= 0 ? '+' : ''}${ret.toFixed(2)}%</div>
+          </div>
+        `;
+      }
+
+      // Stats block — win rate, EV, weight, scored calls
+      let statsBlock = '';
+      if (sc && sc.scored_calls > 0) {
+        const wrCls = (sc.win_rate || 0) >= 0.55 ? 'positive' : (sc.win_rate || 0) < 0.45 ? 'negative' : '';
+        const evCls = (sc.expected_value || 0) > 0.05 ? 'positive' : (sc.expected_value || 0) < -0.05 ? 'negative' : '';
+        const wt = sc.weight_multiplier || 1.0;
+        const wtCls = wt > 1.05 ? 'positive' : wt < 0.95 ? 'negative' : '';
+        statsBlock = `
+          <div class="player-stats">
+            <div class="ps-cell"><div class="ps-lbl">WIN</div><div class="ps-val ${wrCls}">${((sc.win_rate || 0) * 100).toFixed(0)}%</div></div>
+            <div class="ps-cell"><div class="ps-lbl">EV</div><div class="ps-val ${evCls}">${(sc.expected_value || 0) >= 0 ? '+' : ''}${(sc.expected_value || 0).toFixed(2)}</div></div>
+            <div class="ps-cell"><div class="ps-lbl">WT</div><div class="ps-val ${wtCls}">${wt.toFixed(2)}×</div></div>
+            <div class="ps-cell"><div class="ps-lbl">N</div><div class="ps-val">${sc.scored_calls}</div></div>
+          </div>
+        `;
+      } else {
+        statsBlock = `<div class="player-stats empty">No scored calls yet</div>`;
+      }
+
       return `
         <div class="agent-card ${cssClass}" onclick="openAgentDrawer('${esc(a.codename)}')">
           <div class="click-hint">VIEW ▸</div>
           <div class="codename">${esc(a.codename)}</div>
           <div class="specialty">${esc(a.specialty)}</div>
+          ${statsBlock}
+          ${portfolioBlock}
           <div class="temperament">${esc(a.temperament)}</div>
-          ${compounderHint}
         </div>
       `;
     }).join('');
@@ -2832,7 +3424,7 @@
         <div class="card-header">
           <div>
             <div class="card-title"><span class="diamond"></span>Agent Roster</div>
-            <div class="card-subtitle">${roster.length} agents · 15 main agents run their own $10K career portfolios</div>
+            <div class="card-subtitle">${roster.length} agents · stats appear after first scored cycle</div>
           </div>
         </div>
         <div class="roster-grid">${cards}</div>
@@ -3268,19 +3860,20 @@
         ${renderCompounder(midas, 'midas')}
         ${renderCompounder(cryptobro, 'cryptobro')}
         ${renderCompounder(jrr_token, 'jrr_token')}
+        ${renderSportsBroCompact(STATE.sports_bro, STATE.sports_markets)}
       </div>
 
       ${renderMatchup(scrooge, midas, cryptobro, jrr_token)}
 
-      ${renderSportsBro(STATE.sports_bro, STATE.sports_markets)}
-
-      ${featured ? renderChartPanel(featured.ticker) : ''}
+      ${renderSpecialists()}
 
       ${renderRiskDashboard()}
 
       ${renderCareerMode()}
 
       ${renderTruthDashboard(STATE.scoring)}
+
+      ${renderAssetTable()}
 
       ${renderPredictionMarkets()}
 
