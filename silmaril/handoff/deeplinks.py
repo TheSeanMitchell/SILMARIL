@@ -43,50 +43,87 @@ class Handoff:
 def build_handoffs(prompt: str) -> List[Dict[str, str]]:
     """
     Build the full set of deep-links for a given prompt.
-    Returns a list of serialized Handoff dicts, ready to embed in JSON.
+
+    Strategy field tells the frontend whether the LLM accepts a URL-param
+    pre-fill (instant) or whether the user must paste from clipboard.
     """
     encoded = quote(prompt)
 
     handoffs: List[Handoff] = [
-        # ChatGPT: supports ?q= pre-fill via https://chatgpt.com/?q=...
+        # ── Tier 1: full URL pre-fill ────────────────────────────
         Handoff(
-            llm="chatgpt",
-            display_name="ChatGPT",
+            llm="chatgpt", display_name="ChatGPT",
             icon="assets/icons/chatgpt.svg",
             url=f"https://chatgpt.com/?q={encoded}",
             strategy="url_param",
         ),
-        # Claude: no reliable URL pre-fill; clipboard + open
         Handoff(
-            llm="claude",
-            display_name="Claude",
-            icon="assets/icons/claude.svg",
-            url="https://claude.ai/new",
-            strategy="copy_and_go",
-        ),
-        # Gemini: no reliable URL pre-fill; clipboard + open
-        Handoff(
-            llm="gemini",
-            display_name="Gemini",
-            icon="assets/icons/gemini.svg",
-            url="https://gemini.google.com/app",
-            strategy="copy_and_go",
-        ),
-        # Perplexity: supports ?q= pre-fill
-        Handoff(
-            llm="perplexity",
-            display_name="Perplexity",
+            llm="perplexity", display_name="Perplexity",
             icon="assets/icons/perplexity.svg",
             url=f"https://www.perplexity.ai/?q={encoded}",
             strategy="url_param",
         ),
-        # Grok: supports ?q= pre-fill on x.com/i/grok
         Handoff(
-            llm="grok",
-            display_name="Grok",
+            llm="grok", display_name="Grok",
             icon="assets/icons/grok.svg",
             url=f"https://x.com/i/grok?text={encoded}",
             strategy="url_param",
+        ),
+        Handoff(
+            llm="duckai", display_name="DuckDuckGo AI",
+            icon="assets/icons/duckai.svg",
+            url=f"https://duckduckgo.com/?q={encoded}&ia=chat",
+            strategy="url_param",
+        ),
+
+        # ── Tier 2: copy-and-go (open homepage, paste from clipboard) ─
+        Handoff(
+            llm="claude", display_name="Claude",
+            icon="assets/icons/claude.svg",
+            url="https://claude.ai/new",
+            strategy="copy_and_go",
+        ),
+        Handoff(
+            llm="gemini", display_name="Gemini",
+            icon="assets/icons/gemini.svg",
+            url="https://gemini.google.com/app",
+            strategy="copy_and_go",
+        ),
+        Handoff(
+            llm="copilot", display_name="Copilot",
+            icon="assets/icons/copilot.svg",
+            url="https://copilot.microsoft.com/",
+            strategy="copy_and_go",
+        ),
+        Handoff(
+            llm="meta_ai", display_name="Meta AI",
+            icon="assets/icons/meta.svg",
+            url="https://www.meta.ai/",
+            strategy="copy_and_go",
+        ),
+        Handoff(
+            llm="mistral", display_name="Le Chat",
+            icon="assets/icons/mistral.svg",
+            url="https://chat.mistral.ai/chat",
+            strategy="copy_and_go",
+        ),
+        Handoff(
+            llm="deepseek", display_name="DeepSeek",
+            icon="assets/icons/deepseek.svg",
+            url="https://chat.deepseek.com/",
+            strategy="copy_and_go",
+        ),
+        Handoff(
+            llm="qwen", display_name="Qwen",
+            icon="assets/icons/qwen.svg",
+            url="https://chat.qwen.ai/",
+            strategy="copy_and_go",
+        ),
+        Handoff(
+            llm="kimi", display_name="Kimi",
+            icon="assets/icons/kimi.svg",
+            url="https://www.kimi.com/",
+            strategy="copy_and_go",
         ),
     ]
     return [h.to_dict() for h in handoffs]

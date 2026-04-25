@@ -216,3 +216,76 @@ def build_debate_summary(
         "handoffs": build_handoffs(context_text),
         "generated_at": datetime.now(timezone.utc).isoformat(),
     }
+
+
+# ─────────────────────────────────────────────────────────────────
+# Per-trade-plan handoff (Phase A addition)
+# ─────────────────────────────────────────────────────────────────
+
+TRADE_PLAN_TEMPLATE = """I'm evaluating a specific trade idea. SILMARIL (an educational multi-agent simulation, not a financial advisor) generated this plan:
+
+{ticker} ({name}) — {direction} @ ${entry:.2f}
+Stop: ${stop:.2f}  ·  Target: ${target:.2f}  ·  Reward/Risk: {rr:.2f}:1
+Position: {shares:.2f} shares  ·  ${position_value:,.0f} notional  ·  {risk_pct:.2f}% portfolio risk
+
+Backers among the agents:
+{backers_block}
+
+Dissent against this trade:
+{dissenters_block}
+
+Invalidation rule: {invalidation}
+
+I want your independent stress test of this plan. Specifically:
+1. Is the stop placement reasonable for {ticker}'s recent volatility, or is it too tight/loose?
+2. Is the {rr:.1f}:1 reward/risk realistic given current market structure?
+3. What single piece of news or price action would make you abandon this thesis tomorrow?
+4. Are the agent rationales above logically consistent, or are any of them weak?
+5. Is there a SAFER variation of this trade (different entry, different size, hedge) that captures the same edge with less risk?
+
+Be skeptical. Assume I'm prone to overconfidence."""
+
+
+def build_trade_plan_handoff(plan: Dict[str, Any]) -> Dict[str, Any]:
+    """Build a Handoff Block for a single trade plan."""
+    backers = plan.get("backers", []) or []
+    dissenters = plan.get("dissenters", []) or []
+
+    if backers:
+        backers_block = "\n".join(
+            f"  - {b['agent']} (conv {b['conviction']:.2f}): {b.get('rationale', '')[:140]}"
+            for b in backers
+        )
+    else:
+        backers_block = "  - (none — speculative idea)"
+
+    if dissenters:
+        dissenters_block = "\n".join(
+            f"  - {d['agent']} ({d['signal']}, conv {d.get('conviction', 0):.2f}): {d.get('rationale', '')[:140]}"
+            for d in dissenters
+        )
+    else:
+        dissenters_block = "  - (no dissent)"
+
+    context_text = TRADE_PLAN_TEMPLATE.format(
+        ticker=plan["ticker"],
+        name=plan.get("name", plan["ticker"]),
+        direction=plan.get("direction", "LONG"),
+        entry=plan["entry"],
+        stop=plan["stop"],
+        target=plan["target"],
+        rr=plan["reward_risk_ratio"],
+        shares=plan["shares"],
+        position_value=plan["position_value"],
+        risk_pct=plan["risk_pct_of_portfolio"] * 100,
+        backers_block=backers_block,
+        dissenters_block=dissenters_block,
+        invalidation=plan.get("invalidation", "Stop hit"),
+    )
+
+    return {
+        "template": "trade_plan",
+        "context_text": context_text,
+        "handoffs": build_handoffs(context_text),
+        "generated_at": datetime.now(timezone.utc).isoformat(),
+    }

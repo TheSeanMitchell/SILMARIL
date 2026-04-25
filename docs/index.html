@@ -292,6 +292,52 @@
     .debug-thresholds .th { padding: 4px 6px; background: rgba(255, 255, 255, 0.03); border-radius: 3px; text-align: center; border: 1px solid var(--border); }
     .debug-thresholds .th.hit { border-color: var(--gold); background: var(--gold-glow); color: var(--gold); font-weight: 600; }
 
+    .headlines-panel {
+      background: rgba(0, 0, 0, 0.18);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--silver);
+      padding: 12px 14px;
+      border-radius: 6px;
+      margin-top: 14px;
+    }
+    .headlines-title { font-family: var(--mono); font-size: 11px; color: var(--silver); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 8px; }
+    .headlines-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 6px; }
+    .headline { display: flex; justify-content: space-between; gap: 12px; align-items: flex-start; padding: 5px 0; border-bottom: 1px dashed rgba(255,255,255,0.06); font-size: 12.5px; }
+    .headline:last-child { border-bottom: none; }
+    .headline a, .headline span:first-child { color: var(--text-dim); line-height: 1.45; flex: 1; text-decoration: none; }
+    .headline a:hover { color: var(--gold); text-decoration: underline; }
+    .headline .src { color: var(--muted); font-family: var(--mono); font-size: 10px; flex-shrink: 0; padding-top: 1px; letter-spacing: 0.04em; }
+
+    /* Abstention explainer (small footer of Full Debate) */
+    .abstention-note {
+      font-family: var(--body);
+      font-size: 11px;
+      color: var(--muted);
+      font-style: italic;
+      padding: 10px 12px;
+      margin-top: 10px;
+      background: rgba(0, 0, 0, 0.12);
+      border-radius: 4px;
+      border-left: 2px solid var(--silver-deep);
+    }
+
+    /* First-run banner */
+    .first-run-banner {
+      background: linear-gradient(90deg, rgba(255, 215, 124, 0.1), rgba(240, 244, 250, 0.06));
+      border: 1px solid var(--gold);
+      border-radius: 8px;
+      padding: 14px 18px;
+      margin-bottom: 24px;
+      font-size: 13px;
+      color: var(--text-dim);
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .first-run-banner .icon { font-size: 22px; color: var(--gold); }
+    .first-run-banner .text { flex: 1; line-height: 1.55; }
+    .first-run-banner strong { color: var(--gold); }
+
     .summary-signals { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-bottom: 16px; }
     .summary-signal { padding: 12px 8px; border-radius: 8px; text-align: center; border: 1px solid var(--border); background: rgba(0, 0, 0, 0.12); }
     .summary-signal .count { font-family: var(--mono); font-size: 22px; font-weight: 600; }
@@ -337,11 +383,573 @@
 
     .compounders-grid {
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 24px;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 18px;
       margin-bottom: 24px;
     }
-    @media (max-width: 900px) { .compounders-grid { grid-template-columns: 1fr; } }
+    @media (max-width: 1200px) { .compounders-grid { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 800px) { .compounders-grid { grid-template-columns: 1fr; } }
+
+    /* CryptoBro neon teal — third color, distinct from gold/silver */
+    .compounder.cryptobro { border-color: #4dd6c1; }
+    .compounder.cryptobro .balance { color: #6ee8d3; text-shadow: 0 2px 24px rgba(110, 232, 211, 0.4); }
+    .compounder.cryptobro .life-pill { border-color: #6ee8d3; color: #6ee8d3; }
+    .compounder.cryptobro .position-card { border-left-color: #6ee8d3; }
+    .compounder.cryptobro .position-card .pos-ticker { color: #6ee8d3; }
+    .compounder.cryptobro .card-title { color: #6ee8d3; }
+    .compounder.cryptobro .card-title .diamond { background: #6ee8d3; box-shadow: 0 0 10px rgba(110, 232, 211, 0.5); }
+    .compounder.cryptobro .narrative-bubble {
+      margin-top: 12px;
+      padding: 10px 12px;
+      background: rgba(110, 232, 211, 0.08);
+      border: 1px solid rgba(110, 232, 211, 0.3);
+      border-radius: 6px;
+      font-style: italic;
+      color: #b8e8dd;
+      font-size: 12.5px;
+      line-height: 1.5;
+    }
+    .compounder.cryptobro .trades-pill {
+      display: inline-block;
+      padding: 2px 8px;
+      border: 1px solid rgba(110, 232, 211, 0.5);
+      border-radius: 10px;
+      font-family: var(--mono);
+      font-size: 10px;
+      color: #6ee8d3;
+      letter-spacing: 0.05em;
+      margin-left: 8px;
+    }
+
+    /* Three-way matchup chart */
+    .matchup-card { margin-bottom: 24px; }
+    .matchup-rows { display: flex; flex-direction: column; gap: 14px; padding: 4px 0; }
+    .matchup-row { display: grid; grid-template-columns: 110px 1fr 110px; gap: 14px; align-items: center; }
+    .matchup-row .name { font-family: var(--display); font-size: 14px; letter-spacing: 0.1em; font-weight: 600; }
+    .matchup-row.scrooge .name { color: var(--gold); }
+    .matchup-row.midas .name { color: var(--silver); }
+    .matchup-row.cryptobro .name { color: #6ee8d3; }
+    .matchup-row .bar-container {
+      position: relative;
+      height: 22px;
+      background: rgba(0, 0, 0, 0.25);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .matchup-row .bar-fill {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      transition: width 0.3s;
+    }
+    .matchup-row.scrooge .bar-fill { background: linear-gradient(90deg, var(--gold-deep), var(--gold)); }
+    .matchup-row.midas .bar-fill { background: linear-gradient(90deg, var(--silver-deep), var(--silver)); }
+    .matchup-row.cryptobro .bar-fill { background: linear-gradient(90deg, #2db8a0, #6ee8d3); }
+    .matchup-row .bar-zero { position: absolute; top: 0; bottom: 0; width: 1px; background: var(--muted); opacity: 0.5; }
+    .matchup-row .stats { font-family: var(--mono); font-size: 13px; text-align: right; }
+    .matchup-row .stats .ret { font-weight: 600; }
+    .matchup-row .stats .ret.positive { color: var(--pos); }
+    .matchup-row .stats .ret.negative { color: var(--neg); }
+    .matchup-row .stats .bal { color: var(--muted); font-size: 11px; }
+    .matchup-legend { font-size: 11px; color: var(--muted); font-family: var(--mono); text-align: center; padding-top: 12px; border-top: 1px dashed var(--border); margin-top: 8px; letter-spacing: 0.05em; }
+
+    /* Per-agent portfolio mini-card (in roster) */
+    .agent-card .portfolio-strip {
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px dashed rgba(255, 255, 255, 0.1);
+      font-family: var(--mono);
+      font-size: 11px;
+    }
+    .agent-card .portfolio-strip .equity-line {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 4px;
+    }
+    .agent-card .portfolio-strip .equity-line .eq {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+    }
+    .agent-card .portfolio-strip .equity-line .ret { font-size: 12px; font-weight: 600; }
+    .agent-card .portfolio-strip .equity-line .ret.positive { color: var(--pos); }
+    .agent-card .portfolio-strip .equity-line .ret.negative { color: var(--neg); }
+    .agent-card .portfolio-strip .equity-line .ret.flat { color: var(--muted); }
+    .agent-card .portfolio-strip .pos-line {
+      color: var(--text-dim);
+      font-size: 10px;
+      letter-spacing: 0.04em;
+    }
+    .agent-card .portfolio-strip .pos-line .ticker {
+      color: var(--gold);
+      font-weight: 600;
+    }
+    .agent-card .portfolio-strip .pos-line.cash {
+      color: var(--muted);
+      font-style: italic;
+    }
+    .agent-card .portfolio-strip .sparkline {
+      margin-top: 4px;
+      height: 18px;
+      width: 100%;
+    }
+
+    /* Equity curve (in drawer) */
+    .equity-curve-card {
+      background: rgba(0, 0, 0, 0.2);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 14px;
+      margin-bottom: 14px;
+    }
+    .equity-curve-card .curve-stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+    .equity-curve-card .curve-stats .cell {
+      text-align: center;
+      padding: 8px;
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 4px;
+    }
+    .equity-curve-card .curve-stats .cell .n { font-family: var(--mono); font-size: 16px; font-weight: 600; }
+    .equity-curve-card .curve-stats .cell .l { font-size: 9px; color: var(--muted); letter-spacing: 0.08em; text-transform: uppercase; margin-top: 3px; }
+    .equity-curve-card svg.equity-svg { width: 100%; height: 80px; }
+
+    /* ── Truth Dashboard (scoring) ─────────────────────────── */
+    .truth-card { margin-top: 24px; }
+    .truth-summary {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    @media (max-width: 700px) { .truth-summary { grid-template-columns: 1fr 1fr; } }
+    .truth-cell {
+      padding: 12px;
+      background: rgba(0, 0, 0, 0.18);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      text-align: center;
+    }
+    .truth-cell .n { font-family: var(--mono); font-size: 22px; font-weight: 600; color: var(--gold); }
+    .truth-cell .l { font-size: 10px; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; margin-top: 4px; }
+
+    .truth-table {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      max-height: 480px;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+    .truth-row {
+      display: grid;
+      grid-template-columns: 110px 60px 60px 65px 80px 60px 1fr;
+      gap: 10px;
+      align-items: center;
+      padding: 8px 12px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border);
+      border-radius: 5px;
+      font-family: var(--mono);
+      font-size: 11.5px;
+    }
+    .truth-row.head {
+      background: rgba(0, 0, 0, 0.25);
+      color: var(--muted);
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 7px 12px;
+      position: sticky;
+      top: 0;
+      z-index: 1;
+    }
+    .truth-row .agent { font-family: var(--display); font-weight: 600; color: var(--gold); letter-spacing: 0.05em; font-size: 12.5px; }
+    .truth-row .n { color: var(--text); text-align: right; }
+    .truth-row .wr.pos { color: var(--pos); }
+    .truth-row .wr.neg { color: var(--neg); }
+    .truth-row .ev.pos { color: var(--pos); font-weight: 600; }
+    .truth-row .ev.neg { color: var(--neg); font-weight: 600; }
+    .truth-row .wt {
+      padding: 2px 8px;
+      border-radius: 10px;
+      text-align: center;
+      font-size: 10px;
+      font-weight: 600;
+    }
+    .truth-row .wt.boosted { background: rgba(156, 224, 138, 0.18); color: var(--pos); border: 1px solid var(--pos); }
+    .truth-row .wt.reduced { background: rgba(255, 144, 144, 0.18); color: var(--neg); border: 1px solid var(--neg); }
+    .truth-row .wt.neutral { background: rgba(208, 218, 232, 0.1); color: var(--muted); border: 1px solid var(--border); }
+    .truth-row .expl { color: var(--text-dim); font-family: var(--body); font-size: 11px; line-height: 1.4; }
+
+    .truth-empty {
+      padding: 24px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 13px;
+      font-style: italic;
+      background: rgba(0, 0, 0, 0.15);
+      border: 1px dashed var(--border);
+      border-radius: 6px;
+    }
+
+    /* Regime breakdown inside agent drawer */
+    .regime-breakdown {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 8px;
+    }
+    @media (max-width: 600px) { .regime-breakdown { grid-template-columns: 1fr; } }
+    .regime-dim {
+      padding: 10px;
+      background: rgba(0, 0, 0, 0.18);
+      border: 1px solid var(--border);
+      border-radius: 5px;
+    }
+    .regime-dim h5 { font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; color: var(--muted); text-transform: uppercase; margin-bottom: 6px; }
+    .regime-bucket { display: flex; justify-content: space-between; font-family: var(--mono); font-size: 11px; padding: 3px 0; border-bottom: 1px dashed rgba(255,255,255,0.06); }
+    .regime-bucket:last-child { border-bottom: none; }
+    .regime-bucket .lbl { color: var(--text-dim); }
+    .regime-bucket .stats { color: var(--text); }
+    .regime-bucket .stats .pos { color: var(--pos); }
+    .regime-bucket .stats .neg { color: var(--neg); }
+
+    /* ── Career Mode (Phase D) ─────────────────────────────── */
+    .career-card { margin-top: 24px; }
+    .career-tabs {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 16px;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 0;
+    }
+    .career-tab {
+      padding: 10px 18px;
+      background: rgba(0, 0, 0, 0.15);
+      border: 1px solid var(--border);
+      border-bottom: none;
+      border-radius: 6px 6px 0 0;
+      cursor: pointer;
+      font-family: var(--display);
+      font-size: 12px;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+      transition: all 0.15s;
+      position: relative;
+      top: 1px;
+    }
+    .career-tab:hover { color: var(--text); }
+    .career-tab.active {
+      background: linear-gradient(180deg, var(--surface-2), var(--surface));
+      color: var(--gold);
+      border-bottom: 1px solid var(--surface-2);
+      box-shadow: 0 -3px 10px rgba(0, 0, 0, 0.2);
+    }
+    .career-tab .ret-mini {
+      display: inline-block;
+      margin-left: 8px;
+      font-family: var(--mono);
+      font-size: 10px;
+      font-weight: 600;
+    }
+    .career-tab .ret-mini.positive { color: var(--pos); }
+    .career-tab .ret-mini.negative { color: var(--neg); }
+
+    .career-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+      padding: 14px 18px;
+      background: rgba(0, 0, 0, 0.18);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+    }
+    .career-header .equity-display {
+      display: flex;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+    .career-header .equity-display .item .lbl { font-family: var(--mono); font-size: 10px; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; }
+    .career-header .equity-display .item .val { font-family: var(--mono); font-size: 18px; font-weight: 600; color: var(--gold); margin-top: 2px; }
+    .career-header .equity-display .item .val.positive { color: var(--pos); }
+    .career-header .equity-display .item .val.negative { color: var(--neg); }
+    .career-header .actions { display: flex; gap: 8px; flex-wrap: wrap; }
+    .career-action-btn {
+      padding: 8px 14px;
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.05em;
+      background: transparent;
+      color: var(--gold);
+      border: 1px solid var(--gold);
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .career-action-btn:hover { background: var(--gold); color: var(--bg-deeper); box-shadow: 0 0 12px var(--gold-glow); }
+    .career-action-btn.secondary { color: var(--silver); border-color: var(--silver-deep); }
+    .career-action-btn.secondary:hover { background: var(--silver); color: var(--bg-deeper); }
+    .career-action-btn.danger { color: var(--neg); border-color: var(--neg); }
+    .career-action-btn.danger:hover { background: var(--neg); color: var(--bg-deeper); }
+
+    .career-trade-form {
+      padding: 14px 18px;
+      background: rgba(0, 0, 0, 0.18);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      margin-bottom: 16px;
+    }
+    .career-trade-form .form-row {
+      display: grid;
+      grid-template-columns: 1fr 110px 110px 110px;
+      gap: 10px;
+      align-items: end;
+    }
+    @media (max-width: 700px) {
+      .career-trade-form .form-row { grid-template-columns: 1fr 1fr; }
+    }
+    .career-trade-form .field label { display: block; font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; color: var(--muted); text-transform: uppercase; margin-bottom: 4px; }
+    .career-trade-form .field input,
+    .career-trade-form .field select {
+      width: 100%;
+      padding: 8px 10px;
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      color: var(--text);
+      font-family: var(--mono);
+      font-size: 13px;
+    }
+    .career-trade-form .field input:focus,
+    .career-trade-form .field select:focus {
+      outline: none;
+      border-color: var(--gold);
+      box-shadow: 0 0 0 1px var(--gold-glow);
+    }
+
+    .career-positions {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-bottom: 14px;
+    }
+    .career-position {
+      display: grid;
+      grid-template-columns: 80px 90px 100px 1fr 80px;
+      gap: 12px;
+      padding: 10px 12px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border);
+      border-radius: 5px;
+      align-items: center;
+      font-family: var(--mono);
+      font-size: 12px;
+    }
+    .career-position .tk { font-family: var(--display); color: var(--gold); font-weight: 600; letter-spacing: 0.05em; }
+    .career-position .pnl.positive { color: var(--pos); }
+    .career-position .pnl.negative { color: var(--neg); }
+    .career-position .sell-btn {
+      padding: 5px 10px;
+      font-family: var(--mono);
+      font-size: 11px;
+      background: transparent;
+      color: var(--neg);
+      border: 1px solid var(--neg);
+      border-radius: 3px;
+      cursor: pointer;
+    }
+    .career-position .sell-btn:hover { background: var(--neg); color: var(--bg-deeper); }
+
+    .career-history {
+      max-height: 280px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      padding-right: 4px;
+    }
+
+    .career-leaderboard {
+      margin-top: 16px;
+      padding: 14px 18px;
+      background: rgba(0, 0, 0, 0.18);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+    }
+    .career-leaderboard h4 { font-family: var(--display); font-size: 12px; letter-spacing: 0.15em; color: var(--gold); text-transform: uppercase; margin-bottom: 12px; }
+    .leader-row {
+      display: grid;
+      grid-template-columns: 30px 1fr 100px 80px;
+      gap: 10px;
+      padding: 7px 0;
+      font-family: var(--mono);
+      font-size: 12px;
+      border-bottom: 1px dashed rgba(255,255,255,0.06);
+    }
+    .leader-row:last-child { border-bottom: none; }
+    .leader-row.you { background: linear-gradient(90deg, var(--gold-glow), transparent); padding-left: 10px; padding-right: 10px; border-radius: 4px; border: 1px solid var(--gold); border-bottom: 1px solid var(--gold); }
+    .leader-row .rank { color: var(--muted); }
+    .leader-row .name { color: var(--text); letter-spacing: 0.04em; }
+    .leader-row.you .name { color: var(--gold); font-weight: 600; }
+    .leader-row .equity { text-align: right; color: var(--text); }
+    .leader-row .ret { text-align: right; }
+    .leader-row .ret.positive { color: var(--pos); }
+    .leader-row .ret.negative { color: var(--neg); }
+
+    .career-empty {
+      text-align: center;
+      padding: 30px;
+      color: var(--muted);
+      font-style: italic;
+      font-family: var(--body);
+      font-size: 13px;
+      background: rgba(0, 0, 0, 0.15);
+      border: 1px dashed var(--border);
+      border-radius: 6px;
+    }
+
+    .career-flash {
+      padding: 10px 14px;
+      border-radius: 5px;
+      margin-bottom: 12px;
+      font-family: var(--mono);
+      font-size: 12px;
+      animation: flashFade 3s forwards;
+    }
+    .career-flash.success { background: rgba(156, 224, 138, 0.15); color: var(--pos); border: 1px solid var(--pos); }
+    .career-flash.error { background: rgba(255, 144, 144, 0.15); color: var(--neg); border: 1px solid var(--neg); }
+    @keyframes flashFade {
+      0%, 80% { opacity: 1; }
+      100% { opacity: 0; height: 0; padding: 0; margin: 0; border: none; }
+    }
+
+    /* ── Risk Engine (Phase E) ──────────────────────────────── */
+    .risk-card { margin-top: 24px; }
+    .safe-mode-banner {
+      background: linear-gradient(90deg, rgba(255, 144, 144, 0.15), rgba(255, 144, 144, 0.06));
+      border: 2px solid var(--neg);
+      border-radius: 8px;
+      padding: 16px 20px;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .safe-mode-banner .icon { font-size: 24px; color: var(--neg); flex-shrink: 0; }
+    .safe-mode-banner .text { flex: 1; line-height: 1.5; font-size: 13px; color: var(--text); }
+    .safe-mode-banner strong { color: var(--neg-strong); font-weight: 700; letter-spacing: 0.05em; }
+
+    .risk-summary { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 16px; }
+    @media (max-width: 700px) { .risk-summary { grid-template-columns: 1fr 1fr; } }
+    .risk-summary .cell {
+      padding: 12px; text-align: center;
+      background: rgba(0, 0, 0, 0.18);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+    }
+    .risk-summary .cell .n { font-family: var(--mono); font-size: 22px; font-weight: 600; }
+    .risk-summary .cell .l { font-size: 10px; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; margin-top: 4px; }
+    .risk-summary .cell .n.frozen { color: var(--neg); }
+    .risk-summary .cell .n.healthy { color: var(--pos); }
+
+    .frozen-list { display: flex; flex-direction: column; gap: 6px; }
+    .frozen-row {
+      display: grid;
+      grid-template-columns: 110px 80px 1fr;
+      gap: 12px;
+      padding: 10px 12px;
+      background: rgba(255, 144, 144, 0.06);
+      border: 1px solid var(--neg);
+      border-left: 3px solid var(--neg);
+      border-radius: 5px;
+      font-size: 12px;
+      align-items: center;
+    }
+    .frozen-row .agent {
+      font-family: var(--display);
+      color: var(--neg-strong);
+      font-weight: 600;
+      letter-spacing: 0.05em;
+    }
+    .frozen-row .since { font-family: var(--mono); font-size: 10px; color: var(--muted); }
+    .frozen-row .reason { color: var(--text-dim); line-height: 1.45; font-size: 12px; }
+
+    .risk-config-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+      margin-top: 14px;
+      padding-top: 14px;
+      border-top: 1px dashed var(--border);
+      font-family: var(--mono);
+      font-size: 11px;
+    }
+    .risk-config-grid .row {
+      display: flex;
+      justify-content: space-between;
+      padding: 4px 0;
+      color: var(--text-dim);
+    }
+    .risk-config-grid .row .lbl { color: var(--muted); }
+
+    .rejected-plans-section {
+      margin-top: 16px;
+      padding: 12px 14px;
+      background: rgba(255, 192, 112, 0.05);
+      border: 1px solid var(--warn);
+      border-left: 3px solid var(--warn);
+      border-radius: 5px;
+      font-size: 12px;
+    }
+    .rejected-plans-section h4 {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--warn);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    .rejected-plan-row {
+      padding: 6px 0;
+      border-bottom: 1px dashed rgba(255,255,255,0.06);
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .rejected-plan-row:last-child { border-bottom: none; }
+    .rejected-plan-row .tk { color: var(--gold); font-family: var(--mono); font-weight: 600; }
+    .rejected-plan-row .reason { color: var(--text-dim); font-style: italic; flex: 1; text-align: right; font-size: 11px; }
+
+    /* Frozen agent card overlay */
+    .agent-card.frozen {
+      opacity: 0.55;
+      position: relative;
+    }
+    .agent-card.frozen::before {
+      content: 'FROZEN';
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: 0.1em;
+      color: var(--neg);
+      background: rgba(0, 0, 0, 0.5);
+      padding: 3px 7px;
+      border: 1px solid var(--neg);
+      border-radius: 3px;
+      z-index: 1;
+    }
 
     .compounder .balance {
       font-family: var(--display);
@@ -441,6 +1049,8 @@
       box-shadow: var(--glow-gold);
     }
     .agent-card.is-midas:hover { border-color: var(--silver); box-shadow: 0 0 20px var(--silver-glow), var(--shadow); }
+    .agent-card.is-cryptobro:hover { border-color: #6ee8d3; box-shadow: 0 0 20px rgba(110, 232, 211, 0.4), var(--shadow); }
+    .agent-card.is-cryptobro .codename { color: #6ee8d3; }
     .agent-card .codename {
       font-family: var(--display);
       font-size: 15px;
@@ -517,6 +1127,9 @@
       letter-spacing: 0.1em;
     }
     .drawer.is-midas .head h2 { color: var(--silver); }
+    .drawer.is-cryptobro .head h2 { color: #6ee8d3; }
+    .drawer.is-cryptobro { border-left-color: #6ee8d3; }
+    .drawer.is-cryptobro .bio-section h3 { color: #6ee8d3; }
     .drawer .head .title-tag {
       font-family: var(--body);
       font-size: 15px;
@@ -658,15 +1271,19 @@
 
   async function loadData() {
     if (window.__SILMARIL_DATA__) return window.__SILMARIL_DATA__;
-    const [signals, trade_plans, scrooge, midas, handoff_blocks, history] = await Promise.all([
+    const [signals, trade_plans, scrooge, midas, cryptobro, agent_portfolios, scoring, risk_state, handoff_blocks, history] = await Promise.all([
       fetch(DATA_BASE + 'signals.json').then(r => r.json()),
       fetch(DATA_BASE + 'trade_plans.json').then(r => r.json()),
       fetch(DATA_BASE + 'scrooge.json').then(r => r.json()),
       fetch(DATA_BASE + 'midas.json').then(r => r.json()).catch(() => null),
+      fetch(DATA_BASE + 'cryptobro.json').then(r => r.json()).catch(() => null),
+      fetch(DATA_BASE + 'agent_portfolios.json').then(r => r.json()).catch(() => null),
+      fetch(DATA_BASE + 'scoring.json').then(r => r.json()).catch(() => null),
+      fetch(DATA_BASE + 'risk_state.json').then(r => r.json()).catch(() => null),
       fetch(DATA_BASE + 'handoff_blocks.json').then(r => r.json()),
       fetch(DATA_BASE + 'history.json').then(r => r.json()).catch(() => ({ runs: [] })),
     ]);
-    return { signals, trade_plans, scrooge, midas, handoff_blocks, history };
+    return { signals, trade_plans, scrooge, midas, cryptobro, agent_portfolios, scoring, risk_state, handoff_blocks, history };
   }
 
   const fmt = (n, d = 2) => n == null ? '—' : Number(n).toFixed(d);
@@ -760,7 +1377,24 @@
           ${debate.aegis_veto ? `<div class="item"><span class="lbl">AEGIS</span><span class="val" style="color:var(--neg)">VETO</span></div>` : ''}
         </div>
         <div class="verdicts">${verdicts}</div>
+        ${renderHeadlines(debate.recent_headlines)}
         ${renderConsensusDebug(debate.consensus_debug, c.signal)}
+      </div>
+    `;
+  }
+
+  function renderHeadlines(headlines) {
+    if (!headlines || !headlines.length) return '';
+    const items = headlines.slice(0, 5).map(h => `
+      <li class="headline">
+        ${h.url ? `<a href="${esc(h.url)}" target="_blank" rel="noopener">${esc(h.title)}</a>` : `<span>${esc(h.title)}</span>`}
+        <span class="src">${esc(h.source || '')}</span>
+      </li>
+    `).join('');
+    return `
+      <div class="headlines-panel">
+        <div class="headlines-title">📰 Recent Headlines</div>
+        <ul class="headlines-list">${items}</ul>
       </div>
     `;
   }
@@ -835,6 +1469,9 @@
         </div>
         ${renderSummary(signals)}
         <div class="debate-table">${rows}</div>
+        <div class="abstention-note">
+          ✦ <strong>Why don't all 17 agents vote on every asset?</strong> Each agent has a specialty. TALON only votes on indices, OBSIDIAN only on commodities, MAGUS only on the major index ETFs, MIDAS only on hard currencies. When an asset is outside an agent's expertise, they <em>abstain</em> — that silence is a vote that says "this is not my domain." Forcing them to vote outside their lane would generate noise, not signal. The consensus debug panel on the Featured Debate shows exactly how many voted vs. abstained, and how the math worked out.
+        </div>
       </div>
     `;
   }
@@ -842,33 +1479,45 @@
   function renderCompounder(s, variant) {
     if (!s) return `<div class="card"><div class="card-title"><span class="diamond"></span>${variant.toUpperCase()}</div><div class="empty-track" style="margin-top:14px">Data unavailable</div></div>`;
     const isMidas = variant === 'midas';
-    const label = isMidas ? 'KING MIDAS' : 'SCROOGE';
-    const sub = isMidas ? 'Hard Currency Compounder' : '$1 Compounder';
+    const isBro = variant === 'cryptobro';
+    const label = isMidas ? 'KING MIDAS' : isBro ? 'CRYPTOBRO' : 'SCROOGE';
+    const sub = isMidas ? 'Hard Currency Compounder'
+              : isBro ? 'Multi-Trade Crypto Compounder'
+              : '$1 Compounder';
     const pos = s.current_position;
     const daysAlive = s.days_alive != null ? s.days_alive : (s.actions_this_life != null ? s.actions_this_life : 0);
+    const variantClass = isMidas ? 'midas' : isBro ? 'cryptobro' : '';
+
+    // CryptoBro extras: latest narrative bubble + trade-counter pill
+    const lastAction = (s.history || []).slice().reverse().find(h => h.narrative || h.reason);
+    const narrative = lastAction ? (lastAction.narrative || lastAction.reason) : null;
+    const tradesBadge = isBro
+      ? `<span class="trades-pill">${s.trades_today || 0}/${s.max_trades_per_day || 5} TRADES TODAY</span>`
+      : '';
 
     return `
-      <div class="card compounder ${isMidas ? 'midas' : ''}">
+      <div class="card compounder ${variantClass}">
         <div class="card-header">
           <div>
-            <div class="card-title"><span class="diamond"></span>${label}</div>
+            <div class="card-title"><span class="diamond"></span>${label}${tradesBadge}</div>
             <div class="card-subtitle">${sub}</div>
           </div>
         </div>
-        <div class="balance">${fmtMoney(s.balance, 4)}</div>
-        <div class="balance-label">Current Balance</div>
+        <div class="balance">${fmtMoney(s.balance, 2)}</div>
+        <div class="balance-label">Current Balance · exact: ${fmtMoney(s.balance, 4)}</div>
         <div class="life-pill">LIFE #${s.current_life} · ${daysAlive}d</div>
         <div class="compounder-stats">
           <div class="row"><span class="k">Peak</span><span class="v">${fmtMoney(s.lifetime_peak, 4)}</span></div>
           <div class="row"><span class="k">Deaths</span><span class="v">${(s.deaths || []).length}</span></div>
           <div class="row"><span class="k">Actions</span><span class="v">${(s.history || []).length}</span></div>
         </div>
-        ${pos ? renderPosition(pos, isMidas) : '<div class="empty-track" style="margin-top:14px">No position today</div>'}
+        ${pos ? renderPosition(pos, variant) : '<div class="empty-track" style="margin-top:14px">No position today</div>'}
+        ${isBro && narrative ? `<div class="narrative-bubble">"${esc(narrative)}"</div>` : ''}
       </div>
     `;
   }
 
-  function renderPosition(pos, isMidas) {
+  function renderPosition(pos, variant) {
     const exec = pos.execution;
     return `
       <div class="position-card">
@@ -877,6 +1526,62 @@
         <div class="pos-detail">${fmt(pos.shares, 6)} shares @ ${fmtMoney(pos.entry_price, 4)}</div>
         <div class="pos-detail" style="color: var(--muted); margin-top: 4px;">Entered ${esc(pos.entry_date || '—')}</div>
         ${exec ? renderExecution(exec) : ''}
+      </div>
+    `;
+  }
+
+  // ── Three-way compounder matchup chart ─────────────────────
+  function renderMatchup(scrooge, midas, cryptobro) {
+    if (!scrooge && !midas && !cryptobro) return '';
+    const rows = [
+      { variant: 'scrooge',   label: 'SCROOGE',   data: scrooge },
+      { variant: 'midas',     label: 'KING MIDAS', data: midas },
+      { variant: 'cryptobro', label: 'CRYPTOBRO', data: cryptobro },
+    ].filter(r => r.data);
+
+    // Compute return % from inception ($1 starting capital for all three)
+    const returns = rows.map(r => ({
+      ...r,
+      ret: ((r.data.balance / 1.00) - 1) * 100,
+    }));
+
+    // Bar scale: symmetric, anchored at 0%, expand to whatever extreme is largest
+    const absMax = Math.max(50, ...returns.map(r => Math.abs(r.ret)));
+    const range = absMax * 1.1; // 10% headroom
+
+    const rowsHtml = returns.map(r => {
+      const positive = r.ret >= 0;
+      const widthPct = Math.min(50, (Math.abs(r.ret) / range) * 50);
+      // Bar starts at center (50%) and grows left for negative or right for positive
+      const fillStyle = positive
+        ? `left: 50%; width: ${widthPct}%;`
+        : `right: 50%; width: ${widthPct}%;`;
+      const retClass = r.ret > 0.05 ? 'positive' : r.ret < -0.05 ? 'negative' : '';
+      return `
+        <div class="matchup-row ${r.variant}">
+          <div class="name">${esc(r.label)}</div>
+          <div class="bar-container">
+            <div class="bar-zero" style="left: 50%"></div>
+            <div class="bar-fill" style="${fillStyle}"></div>
+          </div>
+          <div class="stats">
+            <div class="ret ${retClass}">${r.ret >= 0 ? '+' : ''}${r.ret.toFixed(2)}%</div>
+            <div class="bal">${fmtMoney(r.data.balance, 4)}</div>
+          </div>
+        </div>
+      `;
+    }).join('');
+
+    return `
+      <div class="card matchup-card">
+        <div class="card-header">
+          <div>
+            <div class="card-title"><span class="diamond"></span>Three-Way Matchup</div>
+            <div class="card-subtitle">SCROOGE vs MIDAS vs CRYPTOBRO · % return from $1 inception</div>
+          </div>
+        </div>
+        <div class="matchup-rows">${rowsHtml}</div>
+        <div class="matchup-legend">All three start at $1.00. Bars centered at 0%, scale ±${range.toFixed(0)}%. CRYPTOBRO can rotate up to 5×/day; the other two are once-per-day.</div>
       </div>
     `;
   }
@@ -916,27 +1621,846 @@
     `;
   }
 
-  function renderRoster(signals) {
-    const roster = signals.agent_roster || [];
-    const cards = roster.map(a => `
-      <div class="agent-card ${a.codename === 'MIDAS' ? 'is-midas' : ''}" onclick="openAgentDrawer('${esc(a.codename)}')">
-        <div class="click-hint">VIEW ▸</div>
-        <div class="codename">${esc(a.codename)}</div>
-        <div class="specialty">${esc(a.specialty)}</div>
-        <div class="temperament">${esc(a.temperament)}</div>
+  // ──────────────────────────────────────────────────────────
+  // PHASE D: CAREER MODE
+  // Three user save slots, $5K each, trade against the same universe
+  // SILMARIL prices, leaderboard placement against the 17 agents.
+  // Persisted in localStorage so it survives across page loads.
+  // ──────────────────────────────────────────────────────────
+
+  const CAREER_KEY = 'silmaril_careers_v1';
+  const CAREER_STARTING_CAPITAL = 5000.00;
+
+  function loadCareers() {
+    try {
+      const raw = localStorage.getItem(CAREER_KEY);
+      if (raw) return JSON.parse(raw);
+    } catch (e) {}
+    return _freshCareers();
+  }
+
+  function saveCareers(careers) {
+    try { localStorage.setItem(CAREER_KEY, JSON.stringify(careers)); }
+    catch (e) { console.warn('Could not persist careers', e); }
+  }
+
+  function _freshCareers() {
+    return {
+      active_slot: 0,
+      slots: [
+        _freshSlot('Profile 1'),
+        _freshSlot('Profile 2'),
+        _freshSlot('Profile 3'),
+      ],
+    };
+  }
+
+  function _freshSlot(name) {
+    return {
+      name,
+      cash: CAREER_STARTING_CAPITAL,
+      positions: [],
+      history: [],
+      created_at: new Date().toISOString(),
+      realized_pnl: 0.0,
+      total_fees_paid: 0.0,
+    };
+  }
+
+  function _computeFees(ticker, side, shares, price) {
+    const isCrypto = ticker.endsWith('-USD');
+    const gross = shares * price;
+    const fees = {
+      commission: 0,
+      sec_section_31: 0,
+      finra_taf: 0,
+      coinbase_taker: 0,
+      spread_cost: 0,
+    };
+    if (isCrypto) {
+      fees.coinbase_taker = gross * 0.004;
+      fees.spread_cost = gross * 0.0008;
+    } else {
+      if (side === 'SELL') {
+        fees.sec_section_31 = gross * (27.80 / 1_000_000);
+        fees.finra_taf = Math.min(9.30, shares * 0.000166);
+      }
+      fees.spread_cost = gross * 0.00012;
+    }
+    fees.total = fees.commission + fees.sec_section_31 + fees.finra_taf
+               + fees.coinbase_taker + fees.spread_cost;
+    return fees;
+  }
+
+  function executeCareerBuy(slot, ticker, shares, price) {
+    const fees = _computeFees(ticker, 'BUY', shares, price);
+    const cost = shares * price + fees.total;
+    if (cost > slot.cash + 0.001) {
+      return { ok: false, reason: `Insufficient cash. Need ${fmtMoney(cost, 2)}, have ${fmtMoney(slot.cash, 2)}.` };
+    }
+    slot.cash -= cost;
+    slot.total_fees_paid += fees.total;
+    const existing = slot.positions.find(p => p.ticker === ticker);
+    if (existing) {
+      const totalCost = existing.shares * existing.entry_price + shares * price;
+      const totalShares = existing.shares + shares;
+      existing.entry_price = totalCost / totalShares;
+      existing.shares = totalShares;
+      existing.fees_paid = (existing.fees_paid || 0) + fees.total;
+    } else {
+      slot.positions.push({
+        ticker, shares,
+        entry_price: price,
+        entry_date: new Date().toISOString().slice(0, 10),
+        fees_paid: fees.total,
+      });
+    }
+    slot.history.unshift({
+      date: new Date().toISOString().slice(0, 10),
+      action: 'BUY',
+      ticker, shares, price,
+      fees: fees.total,
+      cost,
+      balance_after: slot.cash,
+    });
+    return { ok: true, fees, cost };
+  }
+
+  function executeCareerSell(slot, ticker, shares, price) {
+    const pos = slot.positions.find(p => p.ticker === ticker);
+    if (!pos || pos.shares < shares - 0.000001) {
+      return { ok: false, reason: `Not enough ${ticker} held.` };
+    }
+    const fees = _computeFees(ticker, 'SELL', shares, price);
+    const proceeds = shares * price - fees.total;
+    const costBasis = pos.entry_price * shares;
+    const pnl = proceeds - costBasis;
+    slot.cash += proceeds;
+    slot.realized_pnl += pnl;
+    slot.total_fees_paid += fees.total;
+    pos.shares -= shares;
+    if (pos.shares < 0.000001) {
+      slot.positions = slot.positions.filter(p => p !== pos);
+    }
+    slot.history.unshift({
+      date: new Date().toISOString().slice(0, 10),
+      action: 'SELL',
+      ticker, shares, price,
+      fees: fees.total,
+      proceeds,
+      pnl,
+      pnl_pct: ((price / pos.entry_price) - 1) * 100,
+      balance_after: slot.cash,
+    });
+    return { ok: true, fees, proceeds, pnl };
+  }
+
+  function _markPrice(ticker) {
+    const debates = (STATE.signals && STATE.signals.debates) || [];
+    const d = debates.find(x => x.ticker === ticker);
+    return d ? d.price : null;
+  }
+
+  function _slotEquity(slot) {
+    let mtm = 0;
+    for (const p of slot.positions) {
+      const mark = _markPrice(p.ticker) || p.entry_price;
+      mtm += p.shares * mark;
+    }
+    return slot.cash + mtm;
+  }
+
+  window.careerSwitchSlot = function(idx) {
+    const c = STATE.careers;
+    c.active_slot = idx;
+    saveCareers(c);
+    render();
+  };
+
+  window.careerRenameSlot = function() {
+    const c = STATE.careers;
+    const slot = c.slots[c.active_slot];
+    const name = prompt('Rename profile:', slot.name);
+    if (name && name.trim()) {
+      slot.name = name.trim().slice(0, 30);
+      saveCareers(c);
+      render();
+    }
+  };
+
+  window.careerResetActive = function() {
+    if (!confirm('Reset this profile back to $5,000? All trades and history will be erased.')) return;
+    const c = STATE.careers;
+    const oldName = c.slots[c.active_slot].name;
+    c.slots[c.active_slot] = _freshSlot(oldName);
+    saveCareers(c);
+    render();
+  };
+
+  window.careerResetAll = function() {
+    if (!confirm('Reset ALL three career profiles back to $5,000 each? Everything will be erased.')) return;
+    STATE.careers = _freshCareers();
+    saveCareers(STATE.careers);
+    render();
+  };
+
+  window.careerSubmitTrade = function(formId) {
+    const form = document.getElementById(formId);
+    const tickerSel = form.querySelector('[name="ticker"]');
+    const sideSel = form.querySelector('[name="side"]');
+    const sharesIn = form.querySelector('[name="shares"]');
+    if (!tickerSel.value) return _careerFlash('Pick an asset.', 'error');
+    const ticker = tickerSel.value;
+    const side = sideSel.value;
+    const shares = parseFloat(sharesIn.value);
+    if (!shares || shares <= 0) return _careerFlash('Enter a positive share count.', 'error');
+    const price = _markPrice(ticker);
+    if (!price) return _careerFlash(`No live price for ${ticker}.`, 'error');
+
+    const c = STATE.careers;
+    const slot = c.slots[c.active_slot];
+    const result = side === 'BUY'
+      ? executeCareerBuy(slot, ticker, shares, price)
+      : executeCareerSell(slot, ticker, shares, price);
+
+    if (!result.ok) return _careerFlash(result.reason, 'error');
+    saveCareers(c);
+    const msg = side === 'BUY'
+      ? `Bought ${shares} ${ticker} @ ${fmtMoney(price)}. Fees: ${fmtMoney(result.fees.total, 4)}.`
+      : `Sold ${shares} ${ticker} @ ${fmtMoney(price)}. P&L: ${result.pnl >= 0 ? '+' : ''}${fmtMoney(result.pnl, 2)}.`;
+    _careerFlash(msg, 'success');
+    sharesIn.value = '';
+    render();
+  };
+
+  window.careerSellAll = function(ticker) {
+    const c = STATE.careers;
+    const slot = c.slots[c.active_slot];
+    const pos = slot.positions.find(p => p.ticker === ticker);
+    if (!pos) return;
+    const price = _markPrice(ticker);
+    if (!price) return _careerFlash(`No live price for ${ticker}.`, 'error');
+    const result = executeCareerSell(slot, ticker, pos.shares, price);
+    if (!result.ok) return _careerFlash(result.reason, 'error');
+    saveCareers(c);
+    _careerFlash(`Closed ${ticker}. P&L ${result.pnl >= 0 ? '+' : ''}${fmtMoney(result.pnl, 2)}`, 'success');
+    render();
+  };
+
+  function _careerFlash(msg, kind) {
+    STATE._careerFlash = { msg, kind };
+    render();
+  }
+
+  function renderCareerMode() {
+    const c = STATE.careers;
+    if (!c) return '';
+    const slot = c.slots[c.active_slot];
+    const equity = _slotEquity(slot);
+    const ret = ((equity / CAREER_STARTING_CAPITAL) - 1) * 100;
+    const retClass = ret > 0.01 ? 'positive' : ret < -0.01 ? 'negative' : '';
+    const retSign = ret >= 0 ? '+' : '';
+
+    const tabs = c.slots.map((s, i) => {
+      const eq = _slotEquity(s);
+      const r = ((eq / CAREER_STARTING_CAPITAL) - 1) * 100;
+      const rCls = r > 0.05 ? 'positive' : r < -0.05 ? 'negative' : '';
+      return `
+        <div class="career-tab ${i === c.active_slot ? 'active' : ''}" onclick="careerSwitchSlot(${i})">
+          ${esc(s.name)}
+          <span class="ret-mini ${rCls}">${r >= 0 ? '+' : ''}${r.toFixed(1)}%</span>
+        </div>
+      `;
+    }).join('');
+
+    const flash = STATE._careerFlash
+      ? `<div class="career-flash ${STATE._careerFlash.kind}">${esc(STATE._careerFlash.msg)}</div>`
+      : '';
+    delete STATE._careerFlash;
+
+    const debates = (STATE.signals && STATE.signals.debates) || [];
+    const tickerOptions = debates.map(d =>
+      `<option value="${esc(d.ticker)}">${esc(d.ticker)} — ${fmtMoney(d.price)} (${d.consensus.signal.replace('_', ' ')})</option>`
+    ).join('');
+
+    const formId = `career-form-${c.active_slot}`;
+
+    let positionsHtml;
+    if (slot.positions.length === 0) {
+      positionsHtml = '<div class="career-empty">No open positions. Use the trade form above to buy something.</div>';
+    } else {
+      positionsHtml = `<div class="career-positions">${slot.positions.map(p => {
+        const mark = _markPrice(p.ticker) || p.entry_price;
+        const value = p.shares * mark;
+        const pnl = (mark - p.entry_price) * p.shares;
+        const pnlPct = ((mark / p.entry_price) - 1) * 100;
+        const cls = pnl > 0.01 ? 'positive' : pnl < -0.01 ? 'negative' : '';
+        return `
+          <div class="career-position">
+            <span class="tk">${esc(p.ticker)}</span>
+            <span>${fmt(p.shares, 4)} sh</span>
+            <span>@ ${fmtMoney(p.entry_price)}</span>
+            <span class="pnl ${cls}">Mark ${fmtMoney(mark)} · ${fmtMoney(value, 2)} · ${pnl >= 0 ? '+' : ''}${fmtMoney(pnl, 2)} (${pnlPct >= 0 ? '+' : ''}${pnlPct.toFixed(2)}%)</span>
+            <button class="sell-btn" onclick="careerSellAll('${esc(p.ticker)}')">SELL</button>
+          </div>
+        `;
+      }).join('')}</div>`;
+    }
+
+    const recentHistory = slot.history.slice(0, 12);
+    const historyHtml = recentHistory.length ? `
+      <div class="career-history">
+        ${recentHistory.map(h => `
+          <div class="track-call">
+            <span class="date">${esc(h.date)}</span>
+            <span class="tk">${esc(h.ticker || '—')}</span>
+            <span class="sg ${h.action}">${h.action}</span>
+            <span class="conv">
+              ${fmt(h.shares, 4)} @ ${fmtMoney(h.price)}
+              ${h.action === 'SELL' ? ` · P&L ${h.pnl >= 0 ? '+' : ''}${fmtMoney(h.pnl, 2)} (${h.pnl_pct >= 0 ? '+' : ''}${(h.pnl_pct || 0).toFixed(2)}%)` : ''}
+              · fees ${fmtMoney(h.fees, 4)}
+            </span>
+          </div>
+        `).join('')}
+      </div>
+    ` : '<div class="career-empty">No trades yet. Make your first move above.</div>';
+
+    const leaderboard = _buildCombinedLeaderboard(c);
+    const leaderHtml = leaderboard.map(row => `
+      <div class="leader-row ${row.is_user ? 'you' : ''}">
+        <span class="rank">${row.rank}</span>
+        <span class="name">${esc(row.name)}${row.is_user ? ' · YOU' : ''}</span>
+        <span class="equity">${fmtMoney(row.equity, 2)}</span>
+        <span class="ret ${row.ret > 0.01 ? 'positive' : row.ret < -0.01 ? 'negative' : ''}">${row.ret >= 0 ? '+' : ''}${row.ret.toFixed(2)}%</span>
       </div>
     `).join('');
+
+    return `
+      <div class="card career-card">
+        <div class="card-header">
+          <div>
+            <div class="card-title"><span class="diamond"></span>Career Mode</div>
+            <div class="card-subtitle">3 profiles · $5,000 each · trade against agents · stored in your browser</div>
+          </div>
+        </div>
+        <div class="career-tabs">${tabs}</div>
+        ${flash}
+        <div class="career-header">
+          <div class="equity-display">
+            <div class="item">
+              <div class="lbl">Cash</div>
+              <div class="val">${fmtMoney(slot.cash, 2)}</div>
+            </div>
+            <div class="item">
+              <div class="lbl">Equity</div>
+              <div class="val ${retClass}">${fmtMoney(equity, 2)}</div>
+            </div>
+            <div class="item">
+              <div class="lbl">Return</div>
+              <div class="val ${retClass}">${retSign}${ret.toFixed(2)}%</div>
+            </div>
+            <div class="item">
+              <div class="lbl">Realized P&L</div>
+              <div class="val">${slot.realized_pnl >= 0 ? '+' : ''}${fmtMoney(slot.realized_pnl, 2)}</div>
+            </div>
+            <div class="item">
+              <div class="lbl">Fees Paid</div>
+              <div class="val">${fmtMoney(slot.total_fees_paid, 2)}</div>
+            </div>
+            <div class="item">
+              <div class="lbl">Trades</div>
+              <div class="val">${slot.history.length}</div>
+            </div>
+          </div>
+          <div class="actions">
+            <button class="career-action-btn secondary" onclick="careerRenameSlot()">Rename</button>
+            <button class="career-action-btn danger" onclick="careerResetActive()">Reset Profile</button>
+            <button class="career-action-btn danger" onclick="careerResetAll()">Reset All 3</button>
+          </div>
+        </div>
+
+        <form id="${formId}" class="career-trade-form" onsubmit="event.preventDefault(); careerSubmitTrade('${formId}');">
+          <div class="form-row">
+            <div class="field">
+              <label>Asset</label>
+              <select name="ticker" required>
+                <option value="">— choose an asset —</option>
+                ${tickerOptions}
+              </select>
+            </div>
+            <div class="field">
+              <label>Side</label>
+              <select name="side">
+                <option value="BUY">BUY</option>
+                <option value="SELL">SELL</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>Shares</label>
+              <input name="shares" type="number" step="0.0001" min="0" placeholder="e.g. 10">
+            </div>
+            <div class="field">
+              <label>&nbsp;</label>
+              <button class="career-action-btn" type="submit" style="width:100%">Execute</button>
+            </div>
+          </div>
+        </form>
+
+        <h4 style="font-family:var(--display); font-size:11px; color:var(--gold); letter-spacing:0.15em; text-transform:uppercase; margin-bottom:10px">Open Positions</h4>
+        ${positionsHtml}
+
+        <h4 style="font-family:var(--display); font-size:11px; color:var(--gold); letter-spacing:0.15em; text-transform:uppercase; margin: 20px 0 10px">Recent Trades</h4>
+        ${historyHtml}
+
+        <div class="career-leaderboard">
+          <h4>You vs the Agents — Live Leaderboard (by % return)</h4>
+          ${leaderHtml}
+        </div>
+      </div>
+    `;
+  }
+
+  function _buildCombinedLeaderboard(careers) {
+    const rows = [];
+    careers.slots.forEach((s) => {
+      const eq = _slotEquity(s);
+      rows.push({
+        name: s.name, equity: eq,
+        ret: ((eq / CAREER_STARTING_CAPITAL) - 1) * 100,
+        is_user: true, starting_cap: CAREER_STARTING_CAPITAL,
+      });
+    });
+    const portfolios = (STATE.agent_portfolios && STATE.agent_portfolios.portfolios) || {};
+    Object.values(portfolios).forEach(p => {
+      const mark = p.current_position ? _markPrice(p.current_position.ticker) || p.current_position.entry_price : 0;
+      const eq = (p.balance || 0) + (p.current_position ? p.current_position.shares * mark : 0);
+      rows.push({
+        name: p.agent, equity: eq,
+        ret: ((eq / 10000) - 1) * 100,
+        is_user: false, starting_cap: 10000,
+      });
+    });
+    [['SCROOGE', STATE.scrooge], ['MIDAS', STATE.midas], ['CRYPTOBRO', STATE.cryptobro]].forEach(([name, s]) => {
+      if (!s) return;
+      rows.push({
+        name, equity: s.balance,
+        ret: ((s.balance / 1.0) - 1) * 100,
+        is_user: false, starting_cap: 1.0,
+      });
+    });
+    rows.sort((a, b) => b.ret - a.ret);
+    rows.forEach((r, i) => { r.rank = i + 1; });
+    return rows;
+  }
+
+  // ── Risk Engine Dashboard (Phase E) ──────────────────────
+  function renderRiskDashboard() {
+    const r = STATE.risk_state;
+    if (!r) return '';
+    const sys = r.system || {};
+    const agents = r.agents || {};
+    const cfg = r.config || {};
+    const sum = r.summary || {};
+    const frozenAgents = Object.values(agents).filter(a => a.frozen);
+    const totalAgents = Object.values(agents).length;
+    const healthyCount = totalAgents - frozenAgents.length;
+
+    const safeModeBanner = sys.safe_mode ? `
+      <div class="safe-mode-banner">
+        <span class="icon">⚠</span>
+        <div class="text">
+          <strong>SAFE MODE ACTIVE</strong> — ${esc(sys.safe_mode_reason || 'Cohort drawdown threshold breached.')}
+          ${sys.safe_mode_since ? `<br><span style="color:var(--muted); font-family:var(--mono); font-size:11px">Active since ${esc(sys.safe_mode_since)}</span>` : ''}
+        </div>
+      </div>
+    ` : '';
+
+    const frozenHtml = frozenAgents.length ? `
+      <div class="frozen-list">
+        ${frozenAgents.map(a => `
+          <div class="frozen-row">
+            <span class="agent">${esc(a.agent)}</span>
+            <span class="since">since ${esc(a.frozen_since || '—')}</span>
+            <span class="reason">${esc(a.frozen_reason || '')}</span>
+          </div>
+        `).join('')}
+      </div>
+    ` : `
+      <div class="career-empty" style="padding:20px">All agents healthy. No active freezes.</div>
+    `;
+
+    // Show plans that the risk engine rejected from this run
+    const rejected = (STATE.trade_plans && STATE.trade_plans.rejected) || [];
+    const rejectedHtml = rejected.length ? `
+      <div class="rejected-plans-section">
+        <h4>⚠ ${rejected.length} Plan(s) Rejected by Risk Filter This Run</h4>
+        ${rejected.map(p => `
+          <div class="rejected-plan-row">
+            <span class="tk">${esc(p.ticker)} · R/R ${fmt(p.reward_risk_ratio, 2)}:1</span>
+            <span class="reason">${esc(p.rejected_reason || 'Filter not specified')}</span>
+          </div>
+        `).join('')}
+      </div>
+    ` : '';
+
+    const cohortRet = sys.cohort_avg_return_pct || 0;
+
+    return `
+      <div class="card risk-card">
+        <div class="card-header">
+          <div>
+            <div class="card-title"><span class="diamond"></span>Risk Engine</div>
+            <div class="card-subtitle">Hard caps · drawdown freeze · track-record kill switch · cohort safe mode</div>
+          </div>
+        </div>
+        ${safeModeBanner}
+        <div class="risk-summary">
+          <div class="cell">
+            <div class="n ${frozenAgents.length ? 'frozen' : 'healthy'}">${frozenAgents.length}</div>
+            <div class="l">Frozen Agents</div>
+          </div>
+          <div class="cell">
+            <div class="n healthy">${healthyCount}</div>
+            <div class="l">Healthy Agents</div>
+          </div>
+          <div class="cell">
+            <div class="n" style="color: ${cohortRet >= 0 ? 'var(--pos)' : 'var(--neg)'}">${cohortRet >= 0 ? '+' : ''}${cohortRet.toFixed(2)}%</div>
+            <div class="l">Cohort Avg Return</div>
+          </div>
+          <div class="cell">
+            <div class="n ${sys.safe_mode ? 'frozen' : 'healthy'}">${sys.safe_mode ? 'SAFE MODE' : 'NORMAL'}</div>
+            <div class="l">System Status</div>
+          </div>
+        </div>
+        ${frozenHtml}
+        ${rejectedHtml}
+        <div class="risk-config-grid">
+          <div class="row"><span class="lbl">Daily DD freeze</span><span>−${((cfg.daily_drawdown_freeze_pct || 0) * 100).toFixed(0)}%</span></div>
+          <div class="row"><span class="lbl">DD unfreeze rebound</span><span>+${((cfg.daily_drawdown_unfreeze_pct || 0) * 100).toFixed(0)}%</span></div>
+          <div class="row"><span class="lbl">Kill weight threshold</span><span>${(cfg.kill_weight_threshold || 0).toFixed(2)}×</span></div>
+          <div class="row"><span class="lbl">Kill min calls</span><span>${cfg.kill_min_calls || 0}</span></div>
+          <div class="row"><span class="lbl">Cohort DD safe mode</span><span>−${((cfg.cohort_dd_threshold || 0) * 100).toFixed(0)}%</span></div>
+          <div class="row"><span class="lbl">Min reward/risk</span><span>${(cfg.min_reward_risk || 0).toFixed(1)}:1</span></div>
+          <div class="row"><span class="lbl">Max risk per plan</span><span>${((cfg.max_risk_per_plan_pct || 0) * 100).toFixed(0)}%</span></div>
+          <div class="row"><span class="lbl">Max single position</span><span>${((cfg.max_single_position_pct || 0) * 100).toFixed(0)}%</span></div>
+        </div>
+      </div>
+    `;
+  }
+
+  // ── Truth Dashboard (Phase C scoring) ────────────────────────
+  function renderTruthDashboard(scoring) {
+    if (!scoring || !scoring.summary) {
+      return `
+        <div class="card truth-card">
+          <div class="card-header">
+            <div>
+              <div class="card-title"><span class="diamond"></span>Truth Dashboard</div>
+              <div class="card-subtitle">Outcome scoring · agent track records</div>
+            </div>
+          </div>
+          <div class="truth-empty">No scored predictions yet. Each day's votes are scored against the next day's prices, so the table fills in starting on run #2.</div>
+        </div>
+      `;
+    }
+    const sm = scoring.summary;
+    const total = sm.total_scored_calls || 0;
+    const tracked = sm.agents_with_track_record || 0;
+    const best = sm.best_agent;
+    const worst = sm.worst_agent;
+
+    const summaryGrid = `
+      <div class="truth-summary">
+        <div class="truth-cell">
+          <div class="n">${total}</div>
+          <div class="l">Predictions Scored</div>
+        </div>
+        <div class="truth-cell">
+          <div class="n">${tracked}</div>
+          <div class="l">Agents w/ Record</div>
+        </div>
+        <div class="truth-cell">
+          <div class="n" style="color:var(--pos)">${best ? best.agent : '—'}</div>
+          <div class="l">Best by EV</div>
+        </div>
+        <div class="truth-cell">
+          <div class="n" style="color:var(--neg)">${worst ? worst.agent : '—'}</div>
+          <div class="l">Worst by EV</div>
+        </div>
+      </div>
+    `;
+
+    const head = `
+      <div class="truth-row head">
+        <div>Agent</div>
+        <div style="text-align:right">Calls</div>
+        <div style="text-align:right">Win %</div>
+        <div style="text-align:right">EV %</div>
+        <div style="text-align:right">Worst</div>
+        <div style="text-align:center">Weight</div>
+        <div>Reasoning</div>
+      </div>
+    `;
+
+    const rows = (sm.leaderboard || [])
+      .filter(r => r.scored_calls > 0)
+      .map(r => {
+        const wrPct = (r.win_rate || 0) * 100;
+        const wrCls = wrPct >= 55 ? 'pos' : wrPct < 45 ? 'neg' : '';
+        const evCls = (r.expected_value || 0) > 0.05 ? 'pos' : (r.expected_value || 0) < -0.05 ? 'neg' : '';
+        const wtMult = r.weight_multiplier || 1.0;
+        const wtCls = wtMult > 1.05 ? 'boosted' : wtMult < 0.95 ? 'reduced' : 'neutral';
+        return `
+          <div class="truth-row">
+            <div class="agent">${esc(r.agent)}</div>
+            <div class="n">${r.scored_calls}</div>
+            <div class="n wr ${wrCls}">${wrPct.toFixed(0)}%</div>
+            <div class="n ev ${evCls}">${(r.expected_value || 0) >= 0 ? '+' : ''}${(r.expected_value || 0).toFixed(2)}</div>
+            <div class="n">${(r.worst_call_pct || 0).toFixed(2)}</div>
+            <div class="wt ${wtCls}">${wtMult.toFixed(2)}×</div>
+            <div class="expl">${esc(r.weight_explanation || '')}</div>
+          </div>
+        `;
+      }).join('');
+
+    const empties = (sm.leaderboard || []).filter(r => r.scored_calls === 0).length;
+    const emptiesNote = empties > 0
+      ? `<div class="truth-empty" style="margin-top:10px; padding:12px; font-size:12px">${empties} agent(s) have no scored calls yet — they'll appear once they cast their first votes through a daily cycle.</div>`
+      : '';
+
+    return `
+      <div class="card truth-card">
+        <div class="card-header">
+          <div>
+            <div class="card-title"><span class="diamond"></span>Truth Dashboard</div>
+            <div class="card-subtitle">Each agent scored against actual next-day price moves · Weight multiplier feeds back into consensus</div>
+          </div>
+        </div>
+        ${summaryGrid}
+        <div class="truth-table">${head}${rows}</div>
+        ${emptiesNote}
+      </div>
+    `;
+  }
+
+  function renderRoster(signals) {
+    const roster = signals.agent_roster || [];
+    const portfolios = (STATE.agent_portfolios && STATE.agent_portfolios.portfolios) || {};
+    const riskAgents = (STATE.risk_state && STATE.risk_state.agents) || {};
+
+    const cards = roster.map(a => {
+      const p = portfolios[a.codename];
+      const portfolioStrip = p ? renderPortfolioStrip(p) : '';
+      const compounderHint = (a.codename === 'SCROOGE' || a.codename === 'MIDAS' || a.codename === 'CRYPTOBRO')
+        ? `<div class="portfolio-strip"><div class="pos-line cash">$1 compounder · see card above</div></div>`
+        : portfolioStrip;
+      const isFrozen = riskAgents[a.codename] && riskAgents[a.codename].frozen;
+      const variantClass = a.codename === 'MIDAS' ? 'is-midas'
+                         : a.codename === 'CRYPTOBRO' ? 'is-cryptobro'
+                         : '';
+      const cssClass = `${variantClass} ${isFrozen ? 'frozen' : ''}`.trim();
+      return `
+        <div class="agent-card ${cssClass}" onclick="openAgentDrawer('${esc(a.codename)}')">
+          <div class="click-hint">VIEW ▸</div>
+          <div class="codename">${esc(a.codename)}</div>
+          <div class="specialty">${esc(a.specialty)}</div>
+          <div class="temperament">${esc(a.temperament)}</div>
+          ${compounderHint}
+        </div>
+      `;
+    }).join('');
 
     return `
       <div class="card">
         <div class="card-header">
           <div>
             <div class="card-title"><span class="diamond"></span>Agent Roster</div>
-            <div class="card-subtitle">${roster.length} agents · click to view bio + track record</div>
+            <div class="card-subtitle">${roster.length} agents · 15 main agents run their own $10K career portfolios</div>
           </div>
         </div>
         <div class="roster-grid">${cards}</div>
       </div>
+    `;
+  }
+
+  function renderPortfolioStrip(p) {
+    const ret = p.return_pct != null ? p.return_pct : ((p.equity / 10000 - 1) * 100);
+    const retClass = ret > 0.01 ? 'positive' : ret < -0.01 ? 'negative' : 'flat';
+    const retSign = ret >= 0 ? '+' : '';
+    const pos = p.current_position;
+    const posLine = pos
+      ? `<div class="pos-line"><span class="ticker">${esc(pos.ticker)}</span> · ${fmt(pos.shares, 2)} sh @ ${fmtMoney(pos.entry_price, 2)}</div>`
+      : `<div class="pos-line cash">CASH</div>`;
+    const sparkline = renderSparkline(p.equity_curve || []);
+    return `
+      <div class="portfolio-strip">
+        <div class="equity-line">
+          <span class="eq">${fmtMoney(p.equity, 2)}</span>
+          <span class="ret ${retClass}">${retSign}${ret.toFixed(2)}%</span>
+        </div>
+        ${posLine}
+        ${sparkline}
+      </div>
+    `;
+  }
+
+  // Tiny inline SVG sparkline of the equity curve
+  function renderSparkline(curve) {
+    if (!curve || curve.length < 2) return '';
+    const values = curve.map(p => p.equity).filter(v => v != null);
+    if (values.length < 2) return '';
+    const min = Math.min(...values);
+    const max = Math.max(...values);
+    const range = max - min || 1;
+    const W = 100, H = 18;
+    const points = values.map((v, i) => {
+      const x = (i / (values.length - 1)) * W;
+      const y = H - ((v - min) / range) * H;
+      return `${x.toFixed(1)},${y.toFixed(1)}`;
+    }).join(' ');
+    const lastVal = values[values.length - 1];
+    const firstVal = values[0];
+    const stroke = lastVal >= firstVal ? 'var(--pos)' : 'var(--neg)';
+    return `<svg class="sparkline" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none"><polyline fill="none" stroke="${stroke}" stroke-width="1.2" points="${points}"/></svg>`;
+  }
+
+  function renderAgentRegimeBreakdown(codename) {
+    const sc = STATE.scoring;
+    if (!sc || !sc.summary || !sc.summary.leaderboard) return '';
+    const row = sc.summary.leaderboard.find(r => r.agent === codename);
+    if (!row || !row.scored_calls) return '';
+
+    const dimLabels = {
+      market_regime: 'Market Regime',
+      trend_state: 'Trend',
+      vol_state: 'Volatility',
+      news_state: 'News',
+    };
+    const blocks = Object.entries(row.by_regime || {}).map(([dim, buckets]) => {
+      const items = Object.entries(buckets).map(([label, stats]) => {
+        const wrCls = stats.win_rate >= 0.55 ? 'pos' : stats.win_rate < 0.45 ? 'neg' : '';
+        return `
+          <div class="regime-bucket">
+            <span class="lbl">${esc(label)}</span>
+            <span class="stats">n=${stats.n} · WR=<span class="${wrCls}">${(stats.win_rate * 100).toFixed(0)}%</span> · EV=${stats.ev >= 0 ? '+' : ''}${stats.ev.toFixed(2)}</span>
+          </div>
+        `;
+      }).join('');
+      return `
+        <div class="regime-dim">
+          <h5>${esc(dimLabels[dim] || dim)}</h5>
+          ${items || '<div class="regime-bucket"><span class="lbl">no data</span></div>'}
+        </div>
+      `;
+    }).join('');
+
+    return `
+      <div class="bio-section">
+        <h3>Performance by Market Condition</h3>
+        <p style="font-size:12px; color:var(--muted); margin-bottom:8px">When does this agent's edge actually show up?</p>
+        <div class="regime-breakdown">${blocks}</div>
+        <div style="margin-top:10px; font-family:var(--mono); font-size:11px; color:var(--muted)">
+          Overall: ${row.scored_calls} scored calls · WR ${(row.win_rate * 100).toFixed(0)}% · EV ${(row.expected_value || 0) >= 0 ? '+' : ''}${(row.expected_value || 0).toFixed(2)} · Weight ${row.weight_multiplier}×
+        </div>
+      </div>
+    `;
+  }
+
+  function renderAgentPortfolio(codename) {
+    // Compounders ($1 agents) have their own card section, not a $10K portfolio
+    if (['SCROOGE', 'MIDAS', 'CRYPTOBRO'].includes(codename)) return '';
+
+    const portfolios = (STATE.agent_portfolios && STATE.agent_portfolios.portfolios) || {};
+    const p = portfolios[codename];
+    if (!p) {
+      return `
+        <div class="bio-section">
+          <h3>$10K Career Portfolio</h3>
+          <p style="color:var(--muted); font-style:italic">No portfolio data yet — first run still pending.</p>
+        </div>
+      `;
+    }
+
+    const startCap = (STATE.agent_portfolios && STATE.agent_portfolios.starting_capital) || 10000;
+    const equity = p.balance + (p.current_position
+      ? p.current_position.shares * (p.current_position.entry_price)  // mark to entry as fallback
+      : 0);
+    const ret = ((equity / startCap) - 1) * 100;
+    const retClass = ret > 0.01 ? 'positive' : ret < -0.01 ? 'negative' : '';
+    const retSign = ret >= 0 ? '+' : '';
+
+    const curve = p.equity_curve || [];
+    const curveSvg = renderEquityCurve(curve, startCap);
+
+    const recentTrades = (p.history || []).slice(-10).reverse();
+    const tradesHtml = recentTrades.length ? recentTrades.map(h => {
+      const action = h.action;
+      const tag = action === 'BUY' ? 'BUY'
+                : action === 'SELL' ? 'SELL'
+                : action === 'HOLD' ? 'HOLD'
+                : action === 'CASH' ? 'CASH'
+                : action;
+      const sigCls = (action === 'BUY') ? 'BUY'
+                  : (action === 'SELL') ? 'SELL'
+                  : 'HOLD';
+      const detail = action === 'BUY'
+        ? `${fmt(h.shares, 2)} sh @ ${fmtMoney(h.entry_price, 2)}`
+        : action === 'SELL'
+        ? `${fmt(h.shares, 2)} sh @ ${fmtMoney(h.exit_price, 2)} (${h.pnl_pct >= 0 ? '+' : ''}${fmt(h.pnl_pct, 2)}%)`
+        : action === 'HOLD'
+        ? `HODL ${esc(h.ticker || '')}`
+        : 'cash';
+      return `
+        <div class="track-call">
+          <span class="date">${esc((h.date || '').slice(0, 10))}</span>
+          <span class="tk">${esc(h.ticker || '—')}</span>
+          <span class="sg ${sigCls}">${tag}</span>
+          <span class="conv">${esc(detail)}</span>
+        </div>
+      `;
+    }).join('') : '<div class="empty-track">No trades yet — first day.</div>';
+
+    return `
+      <div class="equity-curve-card">
+        <h3 style="font-family:var(--display); font-size:12px; letter-spacing:0.15em; color:var(--gold); text-transform:uppercase; margin-bottom:12px; padding-bottom:6px; border-bottom:1px solid var(--border)">$10K Career Portfolio</h3>
+        <div class="curve-stats">
+          <div class="cell"><div class="n">${fmtMoney(equity, 2)}</div><div class="l">Equity</div></div>
+          <div class="cell"><div class="n ${retClass}" style="color:${ret > 0 ? 'var(--pos)' : ret < 0 ? 'var(--neg)' : 'var(--text)'}">${retSign}${ret.toFixed(2)}%</div><div class="l">Return</div></div>
+          <div class="cell"><div class="n">${p.trades_count || 0}</div><div class="l">Trades</div></div>
+          <div class="cell"><div class="n">${fmtMoney(p.total_fees_paid, 2)}</div><div class="l">Fees</div></div>
+        </div>
+        ${curveSvg}
+      </div>
+      <div class="bio-section">
+        <h3>Recent Portfolio Activity</h3>
+        <div class="track-calls">${tradesHtml}</div>
+      </div>
+    `;
+  }
+
+  function renderEquityCurve(curve, startCap) {
+    if (!curve || curve.length < 2) {
+      return '<div class="empty-track" style="padding:14px">Equity curve begins on day 2 — come back tomorrow.</div>';
+    }
+    const values = curve.map(p => p.equity);
+    const min = Math.min(startCap, ...values);
+    const max = Math.max(startCap, ...values);
+    const range = max - min || 1;
+    const W = 600, H = 80;
+    const points = values.map((v, i) => {
+      const x = (i / (values.length - 1)) * W;
+      const y = H - ((v - min) / range) * H;
+      return `${x.toFixed(1)},${y.toFixed(1)}`;
+    }).join(' ');
+    // Reference line at starting capital
+    const baselineY = H - ((startCap - min) / range) * H;
+    const lastVal = values[values.length - 1];
+    const stroke = lastVal >= startCap ? 'var(--pos)' : 'var(--neg)';
+    return `
+      <svg class="equity-svg" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none">
+        <line x1="0" y1="${baselineY.toFixed(1)}" x2="${W}" y2="${baselineY.toFixed(1)}" stroke="var(--muted)" stroke-width="0.5" stroke-dasharray="3,3" opacity="0.6"/>
+        <polyline fill="none" stroke="${stroke}" stroke-width="1.8" points="${points}"/>
+      </svg>
     `;
   }
 
@@ -990,6 +2514,7 @@
     `).join('') : '<div class="empty-track">Track record begins today — every subsequent run adds history.</div>';
 
     const isMidas = codename === 'MIDAS';
+    const isCryptoBro = codename === 'CRYPTOBRO';
     const content = `
       <div class="head">
         <h2>${esc(agent.codename)}</h2>
@@ -1021,8 +2546,12 @@
         <p style="color:var(--gold)">${esc(bio.power)}</p>
       </div>` : ''}
 
+      ${renderAgentPortfolio(codename)}
+
+      ${renderAgentRegimeBreakdown(codename)}
+
       <div class="track-record">
-        <h3 style="font-family:var(--display); font-size:12px; letter-spacing:0.15em; color:var(--gold); text-transform:uppercase; margin-bottom:12px; padding-bottom:6px; border-bottom:1px solid var(--border)">Track Record</h3>
+        <h3 style="font-family:var(--display); font-size:12px; letter-spacing:0.15em; color:var(--gold); text-transform:uppercase; margin-bottom:12px; padding-bottom:6px; border-bottom:1px solid var(--border)">Vote Track Record</h3>
         <div class="track-stats">
           <div class="track-stat"><div class="n">${totalCalls}</div><div class="l">Calls</div></div>
           <div class="track-stat"><div class="n" style="color:var(--pos)">${buys}</div><div class="l">Buys</div></div>
@@ -1035,6 +2564,7 @@
 
     const drawer = document.getElementById('drawer');
     drawer.classList.toggle('is-midas', isMidas);
+    drawer.classList.toggle('is-cryptobro', isCryptoBro);
     document.getElementById('drawerContent').innerHTML = content;
     drawer.classList.add('open');
     document.getElementById('drawerOverlay').classList.add('open');
@@ -1047,9 +2577,12 @@
     document.body.style.overflow = '';
   }
 
-  function renderPlans(plans) {
+  function renderPlans(plans, perPlanHandoffs) {
     if (!plans || !plans.length) return '<div class="empty-track" style="padding: 30px">No actionable plans this run.</div>';
-    return `<div class="plans-grid">${plans.map(p => `
+    perPlanHandoffs = perPlanHandoffs || {};
+    return `<div class="plans-grid">${plans.map(p => {
+      const handoff = perPlanHandoffs[p.plan_id];
+      return `
       <div class="plan-card">
         <div class="plan-head">
           <span class="tk">${esc(p.ticker)}</span>
@@ -1067,30 +2600,73 @@
           <span class="lbl">Size:</span> ${fmt(p.shares, 2)} sh · ${fmtMoney(p.position_value)} · ${(p.risk_pct_of_portfolio * 100).toFixed(2)}% risk
         </div>
         ${p.execution ? renderExecution(p.execution) : ''}
+        ${handoff ? renderHandoff(`Stress-test ${p.ticker} with an LLM`, handoff, { compact: true }) : ''}
       </div>
-    `).join('')}</div>`;
+      `;
+    }).join('')}</div>`;
   }
 
-  function renderHandoff(title, block) {
+  function renderHandoff(title, block, opts = {}) {
     if (!block) return '';
-    const links = block.links || {};
-    const makeBtn = (label, url, secondary) =>
-      url ? `<a class="handoff-btn ${secondary ? 'secondary' : ''}" href="${esc(url)}" target="_blank" rel="noopener">${esc(label)} ↗</a>` : '';
+    const compact = opts.compact === true;
+    const promptText = block.context_text || block.prompt || '';
+    const handoffs = block.handoffs || [];
+
+    // Build buttons. url_param: just an anchor that opens the prefilled URL.
+    // copy_and_go: a button that copies the prompt to clipboard then opens
+    // the LLM's homepage for the user to paste.
+    const buttons = handoffs.map((h, i) => {
+      const isCopyGo = h.strategy === 'copy_and_go';
+      const cls = isCopyGo ? 'handoff-btn secondary' : 'handoff-btn';
+      const label = esc(h.display_name);
+      if (isCopyGo) {
+        // copy_and_go: clipboard + open homepage
+        return `<button class="${cls}" data-llm="${esc(h.llm)}" data-url="${esc(h.url)}" data-prompt-idx="${i}" onclick="copyGoLLM(this)">${label} ↗</button>`;
+      }
+      return `<a class="${cls}" href="${esc(h.url)}" target="_blank" rel="noopener">${label} ↗</a>`;
+    }).join('');
+
+    // Stash the prompt on the document so the copy_and_go handler can find it
+    // (Inlining prompts in the data-prompt attribute would balloon HTML; we
+    //  keep them in a hidden <script type="application/json"> instead.)
+    const safePrompt = promptText.replace(/<\/script>/gi, '<\\/script>');
+
     return `
       <div class="handoff-card">
         <div class="handoff-title">${esc(title)}</div>
-        <div class="handoff-prompt">${esc(block.prompt || '')}</div>
+        ${compact ? '' : `<div class="handoff-prompt">${esc(promptText)}</div>`}
         <div class="handoff-actions">
-          <button class="handoff-btn" onclick="navigator.clipboard.writeText(${JSON.stringify(block.prompt || '')})">Copy prompt</button>
-          ${makeBtn('ChatGPT', links.chatgpt)}
-          ${makeBtn('Claude', links.claude, true)}
-          ${makeBtn('Gemini', links.gemini, true)}
-          ${makeBtn('Perplexity', links.perplexity, true)}
-          ${makeBtn('Grok', links.grok, true)}
+          <button class="handoff-btn" onclick="copyPrompt(this)" data-prompt-idx="next">Copy prompt</button>
+          ${buttons}
         </div>
+        <script type="application/json" class="handoff-prompt-data">${safePrompt}</script>
       </div>
     `;
   }
+
+  // Helper: when a copy_and_go LLM button is clicked, copy + open
+  window.copyGoLLM = function(btn) {
+    const card = btn.closest('.handoff-card');
+    const dataEl = card && card.querySelector('script.handoff-prompt-data');
+    const text = dataEl ? dataEl.textContent : '';
+    if (text && navigator.clipboard) {
+      navigator.clipboard.writeText(text).catch(() => {});
+    }
+    window.open(btn.dataset.url, '_blank', 'noopener');
+  };
+
+  window.copyPrompt = function(btn) {
+    const card = btn.closest('.handoff-card');
+    const dataEl = card && card.querySelector('script.handoff-prompt-data');
+    const text = dataEl ? dataEl.textContent : '';
+    if (text && navigator.clipboard) {
+      navigator.clipboard.writeText(text).then(() => {
+        const orig = btn.textContent;
+        btn.textContent = 'Copied ✓';
+        setTimeout(() => { btn.textContent = orig; }, 1400);
+      });
+    }
+  };
 
   function selectFeatured(ticker) {
     const d = STATE.signals.debates.find(x => x.ticker === ticker);
@@ -1101,13 +2677,25 @@
   }
 
   function render() {
-    const { signals, trade_plans, scrooge, midas, handoff_blocks } = STATE;
+    const { signals, trade_plans, scrooge, midas, cryptobro, handoff_blocks, history } = STATE;
     const debates = signals.debates || [];
     const featured = STATE.featured || debates[0];
+
+    // First-run banner: history is empty or just today's snapshot
+    const runCount = (history && history.runs ? history.runs.length : 0);
+    const banner = runCount <= 1 ? `
+      <div class="first-run-banner">
+        <span class="icon">✦</span>
+        <div class="text">
+          <strong>Track records start now.</strong> This is run #${runCount || 1} of SILMARIL. Every agent's votes, every SCROOGE / MIDAS / CryptoBro trade, and every closed position is logged from this point forward. Come back tomorrow to see the first day-over-day comparison; come back in a month to see real strategy edge emerge in the agent drawer.
+        </div>
+      </div>
+    ` : '';
 
     const app = document.getElementById('app');
     app.innerHTML = `
       ${renderTopbar(signals)}
+      ${banner}
       <div class="main-grid">
         ${renderFeaturedDebate(featured)}
         ${renderFullDebate(debates, featured ? featured.ticker : null, signals)}
@@ -1116,7 +2704,16 @@
       <div class="compounders-grid">
         ${renderCompounder(scrooge, 'scrooge')}
         ${renderCompounder(midas, 'midas')}
+        ${renderCompounder(cryptobro, 'cryptobro')}
       </div>
+
+      ${renderMatchup(scrooge, midas, cryptobro)}
+
+      ${renderRiskDashboard()}
+
+      ${renderCareerMode()}
+
+      ${renderTruthDashboard(STATE.scoring)}
 
       ${renderRoster(signals)}
 
@@ -1127,7 +2724,7 @@
             <div class="card-subtitle">${(trade_plans.plans || []).length} plans with full execution detail</div>
           </div>
         </div>
-        ${renderPlans(trade_plans.plans || [])}
+        ${renderPlans(trade_plans.plans || [], handoff_blocks.per_plan || {})}
       </div>
 
       <div class="card" style="margin-top: 24px">
@@ -1158,8 +2755,13 @@
         trade_plans: data.trade_plans,
         scrooge: data.scrooge,
         midas: data.midas,
+        cryptobro: data.cryptobro,
+        agent_portfolios: data.agent_portfolios,
+        scoring: data.scoring,
+        risk_state: data.risk_state,
         handoff_blocks: data.handoff_blocks,
         history: data.history,
+        careers: loadCareers(),
         featured: null,
       };
       render();

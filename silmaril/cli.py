@@ -41,7 +41,20 @@ from .agents.vespa import vespa
 from .agents.magus import magus
 from .agents.talon import talon
 from .agents.midas import midas, midas_act, MidasState, MIDAS_UNIVERSE
+from .agents.cryptobro import cryptobro, cryptobro_act, CryptoBroState, CRYPTOBRO_UNIVERSE
 from .agents.bios import get_bio
+from .portfolios.agent_portfolio import (
+    AgentPortfolio, agent_portfolio_act, load_portfolios, save_portfolios,
+)
+from .scoring.regime_tags import tag_context
+from .scoring.outcomes import (
+    score_prior_run, build_scoring_summary, load_scoring, save_scoring,
+)
+from .risk.engine import (
+    AgentRiskState, SystemRiskState, DEFAULT_CONFIG,
+    evaluate_agent_risk, evaluate_cohort_risk,
+    filter_plans_by_risk, load_risk_state, save_risk_state,
+)
 
 from .debate.arbiter import Arbiter
 from .trade_engine.plans import build_plan_from_debate
@@ -49,6 +62,7 @@ from .handoff.blocks import (
     build_asset_deep_dive,
     build_scrooge_narrative,
     build_debate_summary,
+    build_trade_plan_handoff,
 )
 from .universe.core import all_entries, asset_class_of
 from .analytics import technicals as ti
@@ -63,7 +77,7 @@ from .analytics.regime import classify_regime, spy_trend_label
 AGENTS: List[Agent] = [
     aegis, forge, thunderhead, jade, veil, kestrel, obsidian, zenith,
     weaver, hex_agent, synth, speck, vespa, magus, talon,
-    scrooge, midas,
+    scrooge, midas, cryptobro,
 ]
 
 
@@ -301,6 +315,20 @@ def build_demo_contexts() -> List[AssetContext]:
             asset_class="crypto",
         ),
         build(
+            ticker="ETH-USD", name="Ethereum", sector="Crypto",
+            price=3520, change_pct=4.10, volume=0, avg_volume_30d=0,
+            price_history=gen_history(2400, drift=0.0022, vol=0.034),
+            sentiment_score=0.38, article_count=14,
+            asset_class="crypto",
+        ),
+        build(
+            ticker="SOL-USD", name="Solana", sector="Crypto",
+            price=178.40, change_pct=6.85, volume=0, avg_volume_30d=0,
+            price_history=gen_history(112, drift=0.003, vol=0.045),
+            sentiment_score=0.55, article_count=8,
+            asset_class="crypto",
+        ),
+        build(
             ticker="JPM", name="JPMorgan Chase & Co.", sector="Financials",
             price=196.20, change_pct=0.25, volume=9_500_000, avg_volume_30d=11_000_000,
             price_history=gen_history(180, drift=0.0008, vol=0.01),
@@ -319,6 +347,7 @@ def run(mode: str = "demo", output_dir: str = "docs/data") -> None:
     out.mkdir(parents=True, exist_ok=True)
 
     now = datetime.now(timezone.utc)
+    today_iso = now.date().isoformat()
     log.info("✦ SILMARIL run starting — mode=%s", mode)
 
     if mode == "live":
@@ -330,18 +359,42 @@ def run(mode: str = "demo", output_dir: str = "docs/data") -> None:
         log.error("No contexts built — aborting")
         sys.exit(1)
 
+    # ── Backfill demo headlines for assets that don't have hand-written ones ─
+    # In live mode, recent_headlines is populated by news.py from RSS.
+    # In demo mode, only a couple of assets have curated headlines, so we
+    # generate plausible synthetic ones so the news-feed UI is demonstrable.
+    if mode == "demo":
+        _backfill_demo_headlines(contexts)
+
     # ── Run the debate ──────────────────────────────────────────
     arbiter = Arbiter(agents=AGENTS, aegis_veto_enabled=True)
     debates = arbiter.resolve(contexts)
     debate_dicts = [d.to_dict() for d in debates]
 
     # Annotate each debate with the context's asset_class (execution needs it)
+    # and recent_headlines (so the dashboard can show what news drove the vote)
+    # and regime tags (so we can later score performance by market condition)
     ctx_lookup = {c.ticker: c for c in contexts}
     for d in debate_dicts:
         c = ctx_lookup.get(d["ticker"])
         if c:
             d["asset_class"] = c.asset_class
             d["sector"] = c.sector
+            d["recent_headlines"] = c.recent_headlines or []
+            # Build a flat ctx-like dict for regime tagging
+            ctx_flat = {
+                "price": c.price,
+                "sma_20": getattr(c, "sma_20", None),
+                "sma_50": getattr(c, "sma_50", None),
+                "sma_200": getattr(c, "sma_200", None),
+                "atr_14": getattr(c, "atr_14", None),
+                "volume": c.volume,
+                "avg_volume_30d": c.avg_volume_30d,
+                "article_count": c.article_count,
+                "vix": c.vix,
+                "market_regime": c.market_regime,
+            }
+            d["tags"] = tag_context(ctx_flat)
 
     debate_dicts.sort(
         key=lambda d: (d["consensus"]["score"], d["consensus"]["avg_conviction"]),
@@ -385,10 +438,163 @@ def run(mode: str = "demo", output_dir: str = "docs/data") -> None:
     mstate = midas_act(mstate, midas_candidates, prices)
     midas_dict = mstate.to_dict()
 
+    # ── CryptoBro (parallel multi-trade crypto compounder) ──────
+    cbro_state_path = out / "cryptobro.json"
+    cbstate = _load_or_init_cryptobro(cbro_state_path)
+    cbro_candidates = [
+        {
+            "ticker": d["ticker"],
+            "consensus": d["consensus"],
+        }
+        for d in debate_dicts
+    ]
+    cbstate = cryptobro_act(cbstate, cbro_candidates, prices)
+    cryptobro_dict = cbstate.to_dict()
+
+    # ── Per-agent $10K career portfolios (15 main agents) ───────
+    portfolios_path = out / "agent_portfolios.json"
+    portfolios = load_portfolios(portfolios_path)
+    main_agents = [a.codename for a in AGENTS if a.codename not in {"SCROOGE", "MIDAS", "CRYPTOBRO"}]
+
+    # Load any pre-existing risk state to know which agents enter today frozen
+    risk_path = out / "risk_state.json"
+    prior_agent_risk, prior_system_risk = load_risk_state(risk_path)
+    frozen_today = {n for n, s in prior_agent_risk.items() if s.frozen}
+    if prior_system_risk.safe_mode:
+        log.warning("  ⚠ Entering run in SAFE MODE: %s", prior_system_risk.safe_mode_reason)
+        # In safe mode, ALL agents skip new opens
+        frozen_today = set(main_agents)
+
+    for agent_name in main_agents:
+        if agent_name not in portfolios:
+            portfolios[agent_name] = AgentPortfolio(agent=agent_name)
+        if agent_name in frozen_today:
+            # Mark equity but do not act
+            p = portfolios[agent_name]
+            mark = None
+            if p.current_position:
+                mark = prices.get(p.current_position["ticker"])
+            equity = p.total_equity(mark)
+            p.history.append({
+                "date": today_iso,
+                "action": "FROZEN",
+                "reason": (prior_agent_risk.get(agent_name).frozen_reason
+                           if prior_agent_risk.get(agent_name)
+                           else "System safe mode"),
+                "equity": round(equity, 4),
+            })
+            p.equity_curve.append({"date": today_iso, "equity": round(equity, 4)})
+        else:
+            portfolios[agent_name] = agent_portfolio_act(
+                portfolios[agent_name], debate_dicts, prices,
+            )
+    save_portfolios(portfolios_path, portfolios, prices)
+
+    # ── Phase C: outcome scoring (the learning loop) ────────────
+    # Step 1: read existing history (which has yesterday's votes + tags)
+    # Step 2: score those votes against today's prices
+    # Step 3: append new outcomes to scoring.json
+    # Step 4: rebuild the per-agent summary (win rate, EV, regime cuts)
+    history_path = out / "history.json"
+    history_data = {"runs": []}
+    if history_path.exists():
+        try:
+            history_data = json.loads(history_path.read_text())
+        except Exception:
+            history_data = {"runs": []}
+
+    scoring_path = out / "scoring.json"
+    scoring_data = load_scoring(scoring_path)
+
+    new_outcomes = score_prior_run(history_data, prices, today_iso)
+    new_outcome_dicts = [o.to_dict() for o in new_outcomes]
+
+    # Dedupe — never score the same (agent, ticker, predicted_at) twice
+    existing_keys = {
+        (o["agent"], o["ticker"], o["predicted_at"])
+        for o in scoring_data.get("outcomes", [])
+    }
+    new_unique = [
+        o for o in new_outcome_dicts
+        if (o["agent"], o["ticker"], o["predicted_at"]) not in existing_keys
+    ]
+    all_outcomes = scoring_data.get("outcomes", []) + new_unique
+
+    agent_codenames = [a.codename for a in AGENTS]
+    scoring_summary = build_scoring_summary(all_outcomes, agent_codenames)
+    save_scoring(scoring_path, all_outcomes, scoring_summary)
+
+    log.info("  Scored %d new predictions (total tracked: %d)",
+             len(new_unique), len(all_outcomes))
+    if scoring_summary.get("best_agent"):
+        b = scoring_summary["best_agent"]
+        log.info("  Best agent: %s (win rate %.1f%%, EV %+.2f%%)",
+                 b["agent"], (b["win_rate"] or 0) * 100, b["expected_value"] or 0)
+
+    # ── Phase E: hard risk engine ───────────────────────────────
+    # Use the prior_* state we loaded above as the basis; evaluate;
+    # save updated state to disk
+    agent_risk, system_risk = prior_agent_risk, prior_system_risk
+
+    # Build a quick lookup of weight multipliers from scoring
+    weight_lookup: Dict[str, float] = {}
+    calls_lookup: Dict[str, int] = {}
+    for r in scoring_summary.get("leaderboard", []):
+        weight_lookup[r["agent"]] = r.get("weight_multiplier") or 1.0
+        calls_lookup[r["agent"]] = r.get("scored_calls") or 0
+
+    # Evaluate per-agent risk (use $10K career portfolio equity as the metric)
+    main_agent_returns: List[float] = []
+    for agent_name, p in portfolios.items():
+        mark = None
+        if p.current_position:
+            mark = prices.get(p.current_position["ticker"])
+        equity = p.total_equity(mark)
+
+        state = agent_risk.get(agent_name) or AgentRiskState(agent=agent_name)
+        state, log_msg = evaluate_agent_risk(
+            state,
+            current_equity=equity,
+            weight_multiplier=weight_lookup.get(agent_name),
+            scored_calls=calls_lookup.get(agent_name, 0),
+            today_iso=today_iso,
+        )
+        agent_risk[agent_name] = state
+        if log_msg:
+            log.info("  %s", log_msg)
+
+        ret_pct = ((equity / 10_000.0) - 1) * 100
+        main_agent_returns.append(ret_pct)
+
+    # System-wide cohort kill switch
+    system_risk, sys_log = evaluate_cohort_risk(
+        system_risk, main_agent_returns, today_iso,
+    )
+    if sys_log:
+        log.warning("  ⚠ %s", sys_log)
+
+    save_risk_state(risk_path, agent_risk, system_risk, DEFAULT_CONFIG)
+
+    frozen = [n for n, s in agent_risk.items() if s.frozen]
+    if frozen:
+        log.info("  Frozen agents: %s", ", ".join(frozen))
+    if system_risk.safe_mode:
+        log.warning("  ⚠ SYSTEM IN SAFE MODE: %s", system_risk.safe_mode_reason)
+
+    # ── Risk-filter the trade plans ─────────────────────────────
+    plans_kept, plans_rejected = filter_plans_by_risk(plans)
+    if plans_rejected:
+        log.info("  %d plans rejected by risk engine", len(plans_rejected))
+
     # ── Handoff Blocks ──────────────────────────────────────────
     per_asset_handoffs = {
         d["ticker"]: build_asset_deep_dive(_attach_headlines(d, contexts))
         for d in debate_dicts
+    }
+
+    per_plan_handoffs = {
+        p["plan_id"]: build_trade_plan_handoff(p)
+        for p in plans_kept
     }
 
     # Regime/VIX from the first context (all have the same macro)
@@ -399,6 +605,7 @@ def run(mode: str = "demo", output_dir: str = "docs/data") -> None:
         ),
         "scrooge_narrative": build_scrooge_narrative(scrooge_dict),
         "per_asset": per_asset_handoffs,
+        "per_plan": per_plan_handoffs,
     }
 
     # ── Agent roster for UI (with full bios) ────────────────────
@@ -446,19 +653,40 @@ def run(mode: str = "demo", output_dir: str = "docs/data") -> None:
     }
 
     _write(out / "signals.json", signals_output)
-    _write(out / "trade_plans.json", {"meta": signals_output["meta"], "plans": plans})
+    _write(out / "trade_plans.json", {
+        "meta": signals_output["meta"],
+        "plans": plans_kept,
+        "rejected": plans_rejected,
+        "risk_filter_applied": True,
+    })
     _write(out / "scrooge.json", scrooge_dict)
     _write(out / "midas.json", midas_dict)
+    _write(out / "cryptobro.json", cryptobro_dict)
     _write(out / "handoff_blocks.json", handoff_blocks)
 
     # ── Rolling history (per-agent track record, accumulates each run) ─
     _append_history(out / "history.json", debate_dicts, plans, now)
 
+    # Portfolio leaderboard for the log
+    leaderboard = []
+    for name, p in portfolios.items():
+        mark = None
+        if p.current_position:
+            mark = prices.get(p.current_position["ticker"])
+        equity = p.total_equity(mark)
+        leaderboard.append((name, equity))
+    leaderboard.sort(key=lambda r: r[1], reverse=True)
+
     log.info("✦ SILMARIL run complete")
     log.info("  %d debates resolved", len(debate_dicts))
-    log.info("  %d trade plans", len(plans))
-    log.info("  SCROOGE: $%.4f (life #%d)", scrooge_dict["balance"], scrooge_dict["current_life"])
-    log.info("  MIDAS:   $%.4f (life #%d)", midas_dict["balance"], midas_dict["current_life"])
+    log.info("  %d trade plans (kept after risk filter; %d rejected)",
+             len(plans_kept), len(plans_rejected))
+    log.info("  SCROOGE:   $%.4f (life #%d)", scrooge_dict["balance"], scrooge_dict["current_life"])
+    log.info("  MIDAS:     $%.4f (life #%d)", midas_dict["balance"], midas_dict["current_life"])
+    log.info("  CRYPTOBRO: $%.4f (life #%d, %d trades today)",
+             cryptobro_dict["balance"], cryptobro_dict["current_life"],
+             cryptobro_dict.get("trades_today", 0))
+    log.info("  Top agent portfolio: %s @ $%.2f", leaderboard[0][0], leaderboard[0][1])
     log.info("  Output: %s", out.resolve())
 
 
@@ -504,6 +732,27 @@ def _load_or_init_midas(path: Path) -> MidasState:
         return MidasState()
 
 
+def _load_or_init_cryptobro(path: Path) -> CryptoBroState:
+    if not path.exists():
+        return CryptoBroState()
+    try:
+        with path.open() as f:
+            data = json.load(f)
+        return CryptoBroState(
+            balance=data.get("balance", 1.0),
+            current_position=data.get("current_position"),
+            lifetime_peak=data.get("lifetime_peak", 1.0),
+            current_life=data.get("current_life", 1),
+            life_start_date=data.get("life_start_date", datetime.now(timezone.utc).date().isoformat()),
+            history=data.get("history", []),
+            deaths=data.get("deaths", []),
+            trades_today=data.get("trades_today", 0),
+            last_action_date=data.get("last_action_date", ""),
+        )
+    except Exception:
+        return CryptoBroState()
+
+
 def _append_history(path: Path, debate_dicts, plans, now) -> None:
     """Append a compact per-run snapshot to history.json so agent track
     records accumulate across runs. Kept small (verdicts only — not full
@@ -527,6 +776,7 @@ def _append_history(path: Path, debate_dicts, plans, now) -> None:
                     for v in d.get("verdicts", [])
                 ],
                 "price": d.get("price"),
+                "tags": d.get("tags", {}),
             }
             for d in debate_dicts
         ],
@@ -567,6 +817,71 @@ def _attach_headlines(debate: dict, contexts: List[AssetContext]) -> dict:
         if ctx.ticker == debate["ticker"]:
             return {**debate, "recent_headlines": ctx.recent_headlines}
     return debate
+
+
+# Realistic synthetic-headline pool for demo mode. In --live mode these
+# come from RSS via news.py; demo mode needs them to demonstrate the UI.
+_DEMO_HEADLINE_POOLS = {
+    "Technology": [
+        ("Tech earnings season frames AI capex debate", "Reuters"),
+        ("Hyperscaler spending guide raised for 2026", "Bloomberg"),
+        ("Semis sector breadth widens beyond top three names", "Barron's"),
+        ("Cloud infrastructure outlook: revenue acceleration likely", "WSJ"),
+    ],
+    "Index": [
+        ("Index breadth improves as small-caps participate", "Bloomberg"),
+        ("Volatility compressed; range-bound trading continues", "Reuters"),
+        ("Quarter-end rebalance flows expected this week", "WSJ"),
+    ],
+    "Crypto": [
+        ("Spot ETF flows turn positive after week of outflows", "CoinDesk"),
+        ("Layer-1 activity ticks higher on weekend volume", "The Block"),
+        ("Stablecoin supply growth signals risk-on positioning", "Bloomberg"),
+    ],
+    "Commodities": [
+        ("Gold holds near record on real-rate compression", "Bloomberg"),
+        ("Central bank gold buying continues into Q2", "Reuters"),
+        ("Silver industrial demand outlook lifts on solar growth", "WSJ"),
+    ],
+    "FX": [
+        ("Dollar firms on hawkish Fed minutes language", "Reuters"),
+        ("DXY consolidates as rate-cut expectations recede", "Bloomberg"),
+    ],
+    "Rates": [
+        ("Long-duration bonds catch bid on duration buying", "Bloomberg"),
+        ("Treasury auction demand exceeds expectations", "WSJ"),
+    ],
+    "Energy": [
+        ("OPEC+ production discipline supports crude floor", "Reuters"),
+        ("Refining margins expand into summer driving season", "Bloomberg"),
+    ],
+    "Discretionary": [
+        ("Consumer credit data softens; discretionary at risk", "Bloomberg"),
+        ("Retail same-store sales miss on weather effects", "WSJ"),
+    ],
+    "Financials": [
+        ("Bank earnings highlight net-interest-margin pressure", "Reuters"),
+        ("Loan-loss provisions tick higher in commercial real estate", "Bloomberg"),
+    ],
+}
+_DEMO_HEADLINE_DEFAULT = [
+    ("Markets digest mixed economic data ahead of catalysts", "Reuters"),
+    ("Sector rotation continues; cross-asset correlations easing", "Bloomberg"),
+]
+
+
+def _backfill_demo_headlines(contexts: List[AssetContext]) -> None:
+    """Mutate contexts so any ticker without headlines gets 2 plausible ones."""
+    import random
+    rng = random.Random(42)  # deterministic across runs
+    for ctx in contexts:
+        if ctx.recent_headlines:
+            continue
+        pool = _DEMO_HEADLINE_POOLS.get(ctx.sector, _DEMO_HEADLINE_DEFAULT)
+        picks = rng.sample(pool, k=min(2, len(pool)))
+        ctx.recent_headlines = [
+            {"title": t, "source": s, "url": ""} for (t, s) in picks
+        ]
 
 
 def _compute_summary(debates: List[dict]) -> dict:

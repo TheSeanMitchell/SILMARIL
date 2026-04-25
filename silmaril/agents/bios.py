@@ -274,6 +274,38 @@ BIOS: Dict[str, Dict[str, str]] = {
         "strength": "Uncorrelated to SCROOGE. Survives regimes that break equities.",
         "failure_mode": "Misses multi-year equity bull markets entirely.",
     },
+
+    "CRYPTOBRO": {
+        "title": "The Degenerate Optimist",
+        "strategy": (
+            "Third $1 compounder, crypto-only, multi-trade per day. Where "
+            "SCROOGE and MIDAS each take exactly one position daily, "
+            "CryptoBro can rotate up to five times per cycle if the vibes "
+            "shift. He plays momentum and the dip with equal conviction."
+        ),
+        "style": (
+            "Hyperactive, impatient, talks in third person. CryptoBro "
+            "doesn't read 10-Ks. He reads Twitter and the chart."
+        ),
+        "personality": (
+            "Every guy at the bar in 2021. Says 'wagmi' and 'ser' "
+            "unironically. Diamond hands on the way down, paper hands "
+            "at all-time highs, never the other way around."
+        ),
+        "universe": "BTC, ETH, SOL, AVAX, DOGE, LINK, MATIC, ADA, XRP, DOT, ATOM.",
+        "strength": (
+            "Multi-trade-per-day permission. Catches intraday rotations "
+            "that single-shot agents like SCROOGE and MIDAS structurally miss."
+        ),
+        "failure_mode": (
+            "Overtrades. Pays Coinbase 40 bps every rotation, which is "
+            "expensive when conviction is low. Reincarnates often."
+        ),
+        "power": (
+            "MULTI-TRADE — can execute up to 5 transactions per day, "
+            "where SCROOGE and MIDAS are limited to one."
+        ),
+    },
 }
 
 
