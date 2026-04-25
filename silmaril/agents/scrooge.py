@@ -113,6 +113,60 @@ def scrooge_act(
     """
     today = today or datetime.now(timezone.utc).date().isoformat()
 
+    # ── Determine today's pick FIRST so we can decide whether to rotate ─
+    next_pick = _pick_best_buy(top_consensus)
+
+    # ── Step 0: Fee-aware rotation gate ──────────────────────────
+    # If SCROOGE already holds something AND the new pick isn't significantly
+    # better than what he holds (after round-trip fees), HODL instead.
+    if state.current_position and next_pick:
+        from .fee_aware_rotation import should_rotate
+        held_ticker = state.current_position["ticker"]
+        target_ticker = next_pick["ticker"]
+        target_price = prices.get(target_ticker, 0)
+
+        # Find the held ticker's current consensus from the same list (if present)
+        held_consensus = next(
+            (c for c in top_consensus if c.get("ticker") == held_ticker), None,
+        )
+        if held_consensus:
+            held_signal = held_consensus.get("signal", "HOLD")
+            held_score = held_consensus.get("consensus_score", 0)
+        else:
+            held_signal = "HOLD"
+            held_score = 0
+
+        if held_ticker == target_ticker:
+            # Same pick — pure HODL, no rotation, no fees
+            state.history.append({
+                "date": today,
+                "action": "HODL",
+                "ticker": held_ticker,
+                "reason": "Top pick unchanged. SCROOGE holds, avoids round-trip fees.",
+                "life": state.current_life,
+            })
+            return state
+
+        rotate, why = should_rotate(
+            current_consensus_signal=held_signal,
+            current_consensus_score=held_score,
+            target_consensus_signal=next_pick.get("signal", "HOLD"),
+            target_consensus_score=next_pick.get("consensus_score", 0),
+            asset_class="crypto" if held_ticker.endswith("-USD") else "etf",
+            price=target_price or 1.0,
+            notional=state.balance,
+            multiplier=2.0,  # SCROOGE is patient
+        )
+        if not rotate:
+            state.history.append({
+                "date": today,
+                "action": "HODL",
+                "ticker": held_ticker,
+                "reason": why,
+                "life": state.current_life,
+            })
+            return state
+
     # ── Step 1: Close yesterday's position, if any ──────────────
     if state.current_position:
         ticker = state.current_position["ticker"]

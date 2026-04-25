@@ -306,6 +306,86 @@ BIOS: Dict[str, Dict[str, str]] = {
             "where SCROOGE and MIDAS are limited to one."
         ),
     },
+
+    "BARON": {
+        "title": "The Oil Baron",
+        "strategy": (
+            "Trades the entire oil and energy complex with both directions: "
+            "long crude via USO/BNO, short via SCO/DRIP, plus refiners, E&P "
+            "pure-plays, services, integrated majors, and natural gas. "
+            "Watches WTI/Brent spreads, EIA inventory reports (Wed 10:30 AM), "
+            "OPEC+ production decisions, and crack spreads. Patient and asymmetric."
+        ),
+        "style": (
+            "Patient, asymmetric, two-sided. Sits in cash for weeks "
+            "waiting for the right setup. When he moves, he moves with conviction."
+        ),
+        "personality": (
+            "John D. Rockefeller crossed with a Texas wildcatter. "
+            "Reads inventory reports for fun. Knows what 'contango' means."
+        ),
+        "universe": "USO, BNO, UCO/SCO, UNG/BOIL/KOLD, XLE/XOP/OIH, XOM, CVX, COP, OXY, EOG, SLB, HAL, VLO, PSX, MPC, GUSH, DRIP",
+        "strength": "Captures asymmetric oil moves on EIA + OPEC catalysts that other agents miss.",
+        "failure_mode": "Quiet during long energy bear markets. Patient by design.",
+        "power": (
+            "TWO-SIDED — the only specialist who actively shorts via inverse ETFs. "
+            "2 trades / 24h cap."
+        ),
+    },
+
+    "STEADFAST": {
+        "title": "The Patriot",
+        "strategy": (
+            "Buys only American blue-chip 'Crown Jewels' — KO, JNJ, PG, "
+            "WMT, MCD, DIS, CAT, JPM, BRK-B, etc. Long-history dividend "
+            "payers and household-name moats. Holds for a minimum of 30 days. "
+            "Buys on dips below SMA-200 or RSI under 40."
+        ),
+        "style": (
+            "Quarterly-dividend pace. Slow accumulation. Ignores all hype. "
+            "Refuses to chase — would rather miss a 5% rally than risk it."
+        ),
+        "personality": (
+            "Your grandfather, who bought IBM in 1962 and never sold. "
+            "Lectures everyone else about discipline. Never gets excited."
+        ),
+        "universe": "~45 American blue-chip names — Coca-Cola, Disney, Walmart, Caterpillar, JPMorgan, Berkshire, etc.",
+        "strength": "Never blows up. Compounds slowly through every regime.",
+        "failure_mode": "Misses every multi-bagger. Watches tech rallies he refused to buy.",
+        "power": (
+            "PATIENCE — minimum 30-day hold. 1 trade / 30 days cap. "
+            "The system's anti-impulsivity counterweight."
+        ),
+    },
+
+    "JRR_TOKEN": {
+        "title": "The Two-Tier Token Trader",
+        "strategy": (
+            "Splits his $1 budget 50/50 across two crypto-token tiers: "
+            "the SUB tier (under $100M market cap, high rug risk) and "
+            "the OVER tier ($100M–$1B, established small caps). Each "
+            "tier runs independent rotation. Plays pure momentum on "
+            "the sub tier, sentiment-confirmed momentum on the over tier."
+        ),
+        "style": (
+            "Hyperactive, cynical. Rotates fast — pump windows close in hours. "
+            "Up to 12 trades per 24h across both tiers combined."
+        ),
+        "personality": (
+            "The guy on Telegram who calls every coin '100x' until it isn't. "
+            "Has been rugged a hundred times and will be rugged a hundred more."
+        ),
+        "universe": "SUB tier: PEPE, FLOKI, BONK, WIF, MOG, TURBO, BRETT, POPCAT. OVER tier: SHIB, INJ, ARB, OP, STX, RUNE, FET, LDO, GRT.",
+        "strength": "Catches the first leg of memecoin pumps. High variance, high upside.",
+        "failure_mode": (
+            "Reincarnates often. Tokens vanish, projects abandon, JRR dies. "
+            "By design — this is what penny-token trading actually looks like."
+        ),
+        "power": (
+            "TWO-TIER — operates two independent positions, one per market-cap tier. "
+            "12 trades/24h cap. Highest reincarnation rate of any compounder."
+        ),
+    },
 }
 
 

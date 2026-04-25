@@ -185,7 +185,44 @@ def midas_act(
 
     # ── If already holding the target, nothing to do ────────────
     if state.current_position and state.current_position["ticker"] == target_ticker:
+        state.history.append({
+            "date": today,
+            "action": "HODL",
+            "ticker": target_ticker,
+            "reason": "Top hard-currency pick unchanged. MIDAS holds.",
+        })
         return state
+
+    # ── Fee-aware rotation gate ─────────────────────────────────
+    # MIDAS is the most patient compounder. He only rotates when edge
+    # decisively beats round-trip fees (2.0× threshold).
+    if state.current_position:
+        from .fee_aware_rotation import should_rotate
+        held_ticker = state.current_position["ticker"]
+        held_consensus = next(
+            (d for d in debates if d.get("ticker") == held_ticker), None,
+        )
+        held_signal = held_consensus["consensus"]["signal"] if held_consensus else "HOLD"
+        held_score = held_consensus["consensus"]["score"] if held_consensus else 0
+
+        rotate, why = should_rotate(
+            current_consensus_signal=held_signal,
+            current_consensus_score=held_score,
+            target_consensus_signal=target["consensus"]["signal"],
+            target_consensus_score=target["consensus"]["score"],
+            asset_class="etf",
+            price=target_price,
+            notional=state.balance,
+            multiplier=2.0,  # MIDAS is patient
+        )
+        if not rotate:
+            state.history.append({
+                "date": today,
+                "action": "HODL",
+                "ticker": held_ticker,
+                "reason": why,
+            })
+            return state
 
     # ── Rotate: sell old, buy new ───────────────────────────────
     if state.current_position:

@@ -42,7 +42,20 @@ from .agents.magus import magus
 from .agents.talon import talon
 from .agents.midas import midas, midas_act, MidasState, MIDAS_UNIVERSE
 from .agents.cryptobro import cryptobro, cryptobro_act, CryptoBroState, CRYPTOBRO_UNIVERSE
+from .agents.baron import baron, BARON_UNIVERSE
+from .agents.steadfast import steadfast, CROWN_JEWELS
+from .agents.jrr_token import (
+    jrr_token, jrr_token_act, JRRTokenState, JRR_UNIVERSE,
+    SUB_100M_TOKENS, OVER_100M_TOKENS,
+)
 from .agents.bios import get_bio
+from .agents.sports_bro import (
+    sports_bro, sports_bro_act, SportsBroState,
+)
+from .sports import fetch_markets, write_markets_json
+from .catalysts import write_catalysts_json
+from .charts import write_charts_json
+from .handoff.brokers import build_broker_links
 from .portfolios.agent_portfolio import (
     AgentPortfolio, agent_portfolio_act, load_portfolios, save_portfolios,
 )
@@ -74,11 +87,29 @@ from .analytics.regime import classify_regime, spy_trend_label
 # Full agent roster — the order here is the order shown in the UI
 # ─────────────────────────────────────────────────────────────────
 
-AGENTS: List[Agent] = [
+# ─────────────────────────────────────────────────────────────────
+# Agent Cohorts (Phase F)
+#
+# MAIN_VOTERS:  the panel of market experts. They vote in every debate.
+#               Each runs a $10K career portfolio.
+# SPECIALISTS:  niche operators. They act on consensus but DO NOT vote
+#               (would muddy the consensus with ultra-narrow domain bias).
+#               Some run $10K portfolios (Baron, Steadfast), some are
+#               $1 compounders (Scrooge, Midas, CryptoBro, JRR Token).
+# ─────────────────────────────────────────────────────────────────
+
+MAIN_VOTERS: List[Agent] = [
     aegis, forge, thunderhead, jade, veil, kestrel, obsidian, zenith,
     weaver, hex_agent, synth, speck, vespa, magus, talon,
-    scrooge, midas, cryptobro,
 ]
+
+SPECIALIST_AGENTS: List[Agent] = [
+    baron, steadfast,            # $10K career operators
+    scrooge, midas, cryptobro, jrr_token, sports_bro,  # $1 compounders
+]
+
+# Backward compat alias — used elsewhere in the CLI for serialization
+AGENTS: List[Agent] = MAIN_VOTERS + SPECIALIST_AGENTS
 
 
 log = logging.getLogger("silmaril")
@@ -335,6 +366,55 @@ def build_demo_contexts() -> List[AssetContext]:
             sentiment_score=0.10, article_count=4,
             days_to_earnings=18,
         ),
+        # ── Phase F demo additions: oil/Baron + tokens/JRR + crown jewels/Steadfast ─
+        build(
+            ticker="USO", name="United States Oil Fund (WTI)", sector="Energy",
+            price=78.40, change_pct=1.85, volume=4_200_000, avg_volume_30d=4_800_000,
+            price_history=gen_history(72, drift=0.0010, vol=0.022),
+            sentiment_score=0.18, article_count=6, asset_class="etf",
+        ),
+        build(
+            ticker="XOM", name="Exxon Mobil", sector="Energy",
+            price=118.90, change_pct=-0.85, volume=14_000_000, avg_volume_30d=15_500_000,
+            price_history=gen_history(115, drift=0.0006, vol=0.014),
+            sentiment_score=0.05, article_count=5,
+        ),
+        build(
+            ticker="VLO", name="Valero Energy", sector="Energy",
+            price=148.60, change_pct=2.10, volume=3_800_000, avg_volume_30d=4_500_000,
+            price_history=gen_history(135, drift=0.0012, vol=0.018),
+            sentiment_score=0.25, article_count=4,
+        ),
+        build(
+            ticker="KO", name="Coca-Cola", sector="Staples",
+            price=68.20, change_pct=-1.50, volume=14_000_000, avg_volume_30d=12_000_000,
+            price_history=gen_history(72, drift=-0.0001, vol=0.008),
+            sentiment_score=-0.05, article_count=2,
+        ),
+        build(
+            ticker="DIS", name="Disney", sector="Communication",
+            price=92.40, change_pct=-2.30, volume=11_000_000, avg_volume_30d=12_500_000,
+            price_history=gen_history(98, drift=-0.0005, vol=0.014),
+            sentiment_score=-0.18, article_count=8,
+        ),
+        build(
+            ticker="PEPE-USD", name="Pepe (memecoin)", sector="Token",
+            price=0.000018, change_pct=18.50, volume=0, avg_volume_30d=0,
+            price_history=gen_history(0.000012, drift=0.005, vol=0.08),
+            sentiment_score=0.55, article_count=14, asset_class="crypto",
+        ),
+        build(
+            ticker="SHIB-USD", name="Shiba Inu", sector="Token",
+            price=0.0000242, change_pct=6.20, volume=0, avg_volume_30d=0,
+            price_history=gen_history(0.000022, drift=0.002, vol=0.045),
+            sentiment_score=0.32, article_count=8, asset_class="crypto",
+        ),
+        build(
+            ticker="ARB-USD", name="Arbitrum", sector="Token",
+            price=0.74, change_pct=4.80, volume=0, avg_volume_30d=0,
+            price_history=gen_history(0.65, drift=0.0018, vol=0.04),
+            sentiment_score=0.28, article_count=5, asset_class="crypto",
+        ),
     ]
 
 
@@ -367,9 +447,34 @@ def run(mode: str = "demo", output_dir: str = "docs/data") -> None:
         _backfill_demo_headlines(contexts)
 
     # ── Run the debate ──────────────────────────────────────────
-    arbiter = Arbiter(agents=AGENTS, aegis_veto_enabled=True)
+    # Only the main 15 vote in the debate. Specialists act on consensus
+    # but their narrow universes would distort the cross-asset signal if
+    # they could vote.
+    arbiter = Arbiter(agents=MAIN_VOTERS, aegis_veto_enabled=True)
     debates = arbiter.resolve(contexts)
     debate_dicts = [d.to_dict() for d in debates]
+
+    # ── Specialist votes (operator-only, never affects consensus) ─
+    # Baron and Steadfast run $10K career portfolios; they need their
+    # own verdicts attached to each debate so the portfolio system can
+    # pick their best BUY. These verdicts are added AFTER consensus is
+    # computed, so they don't influence the panel's vote.
+    SPECIALIST_VOTERS = [baron, steadfast]
+    ctx_by_ticker = {c.ticker: c for c in contexts}
+    for d in debate_dicts:
+        ctx = ctx_by_ticker.get(d["ticker"])
+        if not ctx:
+            continue
+        for spec in SPECIALIST_VOTERS:
+            if spec.applies_to(ctx):
+                v = spec.evaluate(ctx)
+                d.setdefault("verdicts", []).append({
+                    "agent": v.agent,
+                    "signal": v.signal.value,
+                    "conviction": v.conviction,
+                    "rationale": v.rationale,
+                    "is_specialist": True,
+                })
 
     # Annotate each debate with the context's asset_class (execution needs it)
     # and recent_headlines (so the dashboard can show what news drove the vote)
@@ -402,8 +507,10 @@ def run(mode: str = "demo", output_dir: str = "docs/data") -> None:
     )
 
     # ── Trade plans ─────────────────────────────────────────────
+    # Top 16 by consensus across all debates (Phase F: was unbounded)
+    TOP_PLAN_COUNT = 16
     plans = []
-    for d in debate_dicts:
+    for d in debate_dicts[:TOP_PLAN_COUNT]:
         plan = build_plan_from_debate(d, portfolio_size=10_000.0)
         if plan:
             plans.append(plan.to_dict())
@@ -451,10 +558,41 @@ def run(mode: str = "demo", output_dir: str = "docs/data") -> None:
     cbstate = cryptobro_act(cbstate, cbro_candidates, prices)
     cryptobro_dict = cbstate.to_dict()
 
-    # ── Per-agent $10K career portfolios (15 main agents) ───────
+    # ── JRR Token (two-tier penny token compounder) ─────────────
+    jrr_state_path = out / "jrr_token.json"
+    jrrstate = _load_or_init_jrr_token(jrr_state_path)
+    jrr_candidates = [
+        {
+            "ticker": d["ticker"],
+            "consensus": d["consensus"],
+        }
+        for d in debate_dicts
+        if d["ticker"] in JRR_UNIVERSE
+    ]
+    jrrstate = jrr_token_act(jrrstate, jrr_candidates, prices)
+    jrr_token_dict = jrrstate.to_dict()
+
+    # ── Sports Bro (Polymarket + Kalshi) ────────────────────────
+    sports_state_path = out / "sports_bro.json"
+    sb_state = _load_or_init_sports_bro(sports_state_path)
+    sports_markets = fetch_markets(mode=mode)
+    sb_state = sports_bro_act(sb_state, sports_markets)
+    sports_bro_dict = sb_state.to_dict()
+    write_markets_json(out / "sports_markets.json", sports_markets)
+
+    # ── Catalysts roundup ───────────────────────────────────────
+    write_catalysts_json(out / "catalysts.json", today_iso)
+
+    # ── Chart bundles for each debated ticker ───────────────────
+    write_charts_json(out / "charts.json", debate_dicts, ctx_lookup)
+
+    # ── Per-agent $10K career portfolios ─────────────────────────
+    # Includes the 15 main voters PLUS Baron and Steadfast (specialists
+    # who run $10K career books). $1 compounders are excluded.
     portfolios_path = out / "agent_portfolios.json"
     portfolios = load_portfolios(portfolios_path)
-    main_agents = [a.codename for a in AGENTS if a.codename not in {"SCROOGE", "MIDAS", "CRYPTOBRO"}]
+    DOLLAR_COMPOUNDERS = {"SCROOGE", "MIDAS", "CRYPTOBRO", "JRR_TOKEN"}
+    main_agents = [a.codename for a in AGENTS if a.codename not in DOLLAR_COMPOUNDERS]
 
     # Load any pre-existing risk state to know which agents enter today frozen
     risk_path = out / "risk_state.json"
@@ -653,6 +791,14 @@ def run(mode: str = "demo", output_dir: str = "docs/data") -> None:
     }
 
     _write(out / "signals.json", signals_output)
+
+    # Decorate each kept plan with broker deeplinks BEFORE writing
+    for p in plans_kept:
+        p["brokers"] = build_broker_links(
+            p.get("ticker", ""),
+            p.get("asset_class", "equity"),
+        )
+
     _write(out / "trade_plans.json", {
         "meta": signals_output["meta"],
         "plans": plans_kept,
@@ -662,6 +808,8 @@ def run(mode: str = "demo", output_dir: str = "docs/data") -> None:
     _write(out / "scrooge.json", scrooge_dict)
     _write(out / "midas.json", midas_dict)
     _write(out / "cryptobro.json", cryptobro_dict)
+    _write(out / "jrr_token.json", jrr_token_dict)
+    _write(out / "sports_bro.json", sports_bro_dict)
     _write(out / "handoff_blocks.json", handoff_blocks)
 
     # ── Rolling history (per-agent track record, accumulates each run) ─
@@ -686,6 +834,10 @@ def run(mode: str = "demo", output_dir: str = "docs/data") -> None:
     log.info("  CRYPTOBRO: $%.4f (life #%d, %d trades today)",
              cryptobro_dict["balance"], cryptobro_dict["current_life"],
              cryptobro_dict.get("trades_today", 0))
+    log.info("  JRR_TOKEN: $%.4f (life #%d, sub:$%.4f over:$%.4f)",
+             jrr_token_dict["balance"], jrr_token_dict["current_life"],
+             jrr_token_dict["tiers"]["sub_100m"]["balance"],
+             jrr_token_dict["tiers"]["over_100m"]["balance"])
     log.info("  Top agent portfolio: %s @ $%.2f", leaderboard[0][0], leaderboard[0][1])
     log.info("  Output: %s", out.resolve())
 
@@ -751,6 +903,63 @@ def _load_or_init_cryptobro(path: Path) -> CryptoBroState:
         )
     except Exception:
         return CryptoBroState()
+
+
+def _load_or_init_jrr_token(path: Path) -> JRRTokenState:
+    from .agents.jrr_token import TierState
+    if not path.exists():
+        return JRRTokenState()
+    try:
+        with path.open() as f:
+            data = json.load(f)
+        tiers = data.get("tiers", {})
+        sub_data = tiers.get("sub_100m", {})
+        over_data = tiers.get("over_100m", {})
+        sub_history = sub_data.get("recent_history", [])
+        over_history = over_data.get("recent_history", [])
+        return JRRTokenState(
+            sub_tier=TierState(
+                name="SUB_100M",
+                balance=sub_data.get("balance", 0.50),
+                current_position=sub_data.get("current_position"),
+                history=sub_history,
+            ),
+            over_tier=TierState(
+                name="OVER_100M",
+                balance=over_data.get("balance", 0.50),
+                current_position=over_data.get("current_position"),
+                history=over_history,
+            ),
+            lifetime_peak=data.get("lifetime_peak", 1.0),
+            current_life=data.get("current_life", 1),
+            life_start_date=data.get("life_start_date", datetime.now(timezone.utc).date().isoformat()),
+            deaths=data.get("deaths", []),
+            trades_today=data.get("trades_today", 0),
+            last_action_date=data.get("last_action_date", ""),
+        )
+    except Exception:
+        return JRRTokenState()
+
+
+def _load_or_init_sports_bro(path: Path) -> SportsBroState:
+    if not path.exists():
+        return SportsBroState()
+    try:
+        with path.open() as f:
+            data = json.load(f)
+        return SportsBroState(
+            balance=data.get("balance", 1.0),
+            open_bets=data.get("open_bets", []),
+            history=data.get("history", []),
+            lifetime_peak=data.get("lifetime_peak", 1.0),
+            current_life=data.get("current_life", 1),
+            life_start_date=data.get("life_start_date", datetime.now(timezone.utc).date().isoformat()),
+            deaths=data.get("deaths", []),
+            trades_today=data.get("trades_today", 0),
+            last_action_date=data.get("last_action_date", ""),
+        )
+    except Exception:
+        return SportsBroState()
 
 
 def _append_history(path: Path, debate_dicts, plans, now) -> None:

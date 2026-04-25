@@ -1,0 +1,172 @@
+"""
+silmaril.agents.sports_bro — Sports Bro, prediction-market specialist.
+
+Plays Polymarket and Kalshi only — never traditional sportsbooks.
+The structural difference matters: peer-to-peer pricing on prediction
+markets means tight spreads (~0.5–2%) vs traditional sportsbook vig
+(~4.5%+). Edge is calculable; sportsbook edge is not.
+
+Strategy: half-Kelly sizing on positive-EV opportunities only.
+A $1 compounder. Combined balance, many small positions.
+"""
+
+from __future__ import annotations
+
+from dataclasses import dataclass, field
+from datetime import datetime, timezone
+from typing import Dict, List, Optional
+
+from .base import Agent, AssetContext, Signal, Verdict
+from ..execution.detail import build_execution
+
+
+MAX_TRADES_PER_DAY = 8
+DEATH_THRESHOLD = 0.05
+HALF_KELLY = 0.5
+
+
+@dataclass
+class SportsBroState:
+    balance: float = 1.0
+    open_bets: List[Dict] = field(default_factory=list)
+    history: List[Dict] = field(default_factory=list)
+    lifetime_peak: float = 1.0
+    current_life: int = 1
+    life_start_date: str = field(
+        default_factory=lambda: datetime.now(timezone.utc).date().isoformat()
+    )
+    deaths: List[Dict] = field(default_factory=list)
+    trades_today: int = 0
+    last_action_date: str = ""
+
+    def to_dict(self) -> Dict:
+        return {
+            "codename": "SPORTS_BRO",
+            "title": "Prediction Market Trader",
+            "balance": round(self.balance, 6),
+            "open_bets": self.open_bets,
+            "current_position": self.open_bets[0] if self.open_bets else None,
+            "lifetime_peak": round(self.lifetime_peak, 6),
+            "current_life": self.current_life,
+            "life_start_date": self.life_start_date,
+            "deaths": self.deaths,
+            "trades_today": self.trades_today,
+            "max_trades_per_day": MAX_TRADES_PER_DAY,
+            "history": self.history[-30:],
+            "actions_this_life": len(self.history),
+            "days_alive": self._days_alive(),
+        }
+
+    def _days_alive(self) -> int:
+        try:
+            start = datetime.fromisoformat(self.life_start_date).date()
+            today = datetime.now(timezone.utc).date()
+            return max(0, (today - start).days)
+        except Exception:
+            return 0
+
+
+class SportsBro(Agent):
+    codename = "SPORTS_BRO"
+    specialty = "Polymarket + Kalshi prediction markets"
+    temperament = "Disciplined Kelly bettor, never traditional books"
+    inspiration = "The arbitrageur who knows the vig and avoids it"
+    asset_classes = ("prediction_market",)
+
+    def applies_to(self, ctx: AssetContext) -> bool:
+        return getattr(ctx, "asset_class", None) == "prediction_market"
+
+    def _judge(self, ctx: AssetContext) -> Verdict:
+        # Implied probability vs model probability decides edge
+        market_prob = getattr(ctx, "market_prob", 0.5)
+        model_prob = getattr(ctx, "model_prob", 0.5)
+        edge = model_prob - market_prob
+        if edge > 0.07:
+            return Verdict(
+                agent=self.codename, ticker=ctx.ticker,
+                signal=Signal.BUY, conviction=min(0.85, edge * 5),
+                rationale=f"Model {model_prob:.0%} vs market {market_prob:.0%}. Edge +{edge*100:.0f} bps. Half-Kelly entry.",
+            )
+        if edge < -0.07:
+            return Verdict(
+                agent=self.codename, ticker=ctx.ticker,
+                signal=Signal.SELL, conviction=min(0.85, -edge * 5),
+                rationale=f"Market overprices at {market_prob:.0%} vs model {model_prob:.0%}. Fade.",
+            )
+        return Verdict(
+            agent=self.codename, ticker=ctx.ticker,
+            signal=Signal.HOLD, conviction=0.4,
+            rationale=f"No edge ({edge*100:+.1f} bps). Sports Bro doesn't bet without one.",
+        )
+
+
+sports_bro = SportsBro()
+
+
+def sports_bro_act(state: SportsBroState, candidates: List[Dict]) -> SportsBroState:
+    today = datetime.now(timezone.utc).date().isoformat()
+    if state.last_action_date != today:
+        state.trades_today = 0
+        state.last_action_date = today
+
+    if state.balance < DEATH_THRESHOLD:
+        state.deaths.append({
+            "date": today, "life": state.current_life,
+            "final_balance": round(state.balance, 6),
+            "peak_balance": round(state.lifetime_peak, 6),
+            "epitaph": f"Sports Bro busted on Life #{state.current_life}. Even with discipline, prediction markets are hard.",
+        })
+        state.balance = 1.0
+        state.open_bets = []
+        state.current_life += 1
+        state.life_start_date = today
+        state.lifetime_peak = 1.0
+        state.trades_today = 0
+        return state
+
+    # Settle yesterday's open bets that have a resolution
+    new_open = []
+    for bet in state.open_bets:
+        resolved = bet.get("resolved")
+        if resolved:
+            outcome_payout = bet["stake"] * (1 / bet["entry_price"]) if bet["won"] else 0
+            pnl = outcome_payout - bet["stake"]
+            state.balance += outcome_payout
+            state.history.append({
+                "date": today, "action": "SETTLE", "market": bet["market"],
+                "stake": bet["stake"], "won": bet["won"], "pnl": round(pnl, 4),
+                "balance_after": round(state.balance, 6),
+            })
+        else:
+            new_open.append(bet)
+    state.open_bets = new_open
+    state.lifetime_peak = max(state.lifetime_peak, state.balance)
+
+    # Open new positions on top edge candidates
+    for c in candidates[:3]:
+        if state.trades_today >= MAX_TRADES_PER_DAY:
+            break
+        edge = c.get("edge", 0)
+        if edge < 0.07:
+            continue
+        kelly_frac = HALF_KELLY * edge / max(0.01, c.get("market_prob", 0.5) * (1 - c.get("market_prob", 0.5)))
+        kelly_frac = max(0.0, min(0.10, kelly_frac))  # cap at 10% of book per bet
+        stake = round(state.balance * kelly_frac, 4)
+        if stake < 0.01:
+            continue
+        state.balance -= stake
+        bet = {
+            "date": today, "market": c["market"], "side": c.get("side", "YES"),
+            "entry_price": c.get("market_prob", 0.5),
+            "model_prob": c.get("model_prob", 0.5),
+            "edge": edge, "stake": stake, "resolved": False, "won": False,
+            "venue": c.get("venue", "Polymarket"),
+        }
+        state.open_bets.append(bet)
+        state.history.append({
+            "date": today, "action": "BUY", "market": c["market"],
+            "stake": stake, "entry_price": c.get("market_prob"),
+            "edge": edge, "venue": bet["venue"],
+        })
+        state.trades_today += 1
+    return state

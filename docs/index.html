@@ -383,12 +383,72 @@
 
     .compounders-grid {
       display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      gap: 18px;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
       margin-bottom: 24px;
     }
-    @media (max-width: 1200px) { .compounders-grid { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 1400px) { .compounders-grid { grid-template-columns: repeat(2, 1fr); } }
     @media (max-width: 800px) { .compounders-grid { grid-template-columns: 1fr; } }
+
+    /* JRR Token rose/red theme — fourth color */
+    .compounder.jrr_token { border-color: #e07a9c; }
+    .compounder.jrr_token .balance { color: #f396b3; text-shadow: 0 2px 24px rgba(243, 150, 179, 0.4); }
+    .compounder.jrr_token .life-pill { border-color: #f396b3; color: #f396b3; }
+    .compounder.jrr_token .position-card { border-left-color: #f396b3; }
+    .compounder.jrr_token .position-card .pos-ticker { color: #f396b3; }
+    .compounder.jrr_token .card-title { color: #f396b3; }
+    .compounder.jrr_token .card-title .diamond { background: #f396b3; box-shadow: 0 0 10px rgba(243, 150, 179, 0.5); }
+
+    /* Per-tier mini boxes inside JRR Token card */
+    .jrr-tiers { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 14px; }
+    .jrr-tier {
+      padding: 10px 12px;
+      background: rgba(0, 0, 0, 0.18);
+      border: 1px solid var(--border);
+      border-left: 3px solid #e07a9c;
+      border-radius: 5px;
+      font-family: var(--mono);
+      font-size: 11px;
+    }
+    .jrr-tier .tier-label {
+      font-size: 9px;
+      color: var(--muted);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+    .jrr-tier .tier-balance {
+      font-family: var(--mono);
+      font-size: 14px;
+      font-weight: 600;
+      color: #f396b3;
+    }
+    .jrr-tier .tier-position {
+      font-size: 11px;
+      color: var(--text-dim);
+      margin-top: 4px;
+    }
+    .jrr-tier .tier-position .ticker {
+      color: var(--gold);
+      font-weight: 600;
+    }
+    .jrr-tier .tier-position.cash { color: var(--muted); font-style: italic; }
+
+    /* Lifetime fees line on every compounder */
+    .compounder .fees-line {
+      margin-top: 10px;
+      padding: 8px 10px;
+      background: rgba(255, 144, 144, 0.06);
+      border: 1px solid rgba(255, 144, 144, 0.25);
+      border-radius: 4px;
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--text-dim);
+      display: flex;
+      justify-content: space-between;
+    }
+    .compounder .fees-line .lbl { color: var(--muted); letter-spacing: 0.05em; }
+    .compounder .fees-line .val { color: var(--neg-strong); font-weight: 600; }
 
     /* CryptoBro neon teal — third color, distinct from gold/silver */
     .compounder.cryptobro { border-color: #4dd6c1; }
@@ -429,6 +489,7 @@
     .matchup-row.scrooge .name { color: var(--gold); }
     .matchup-row.midas .name { color: var(--silver); }
     .matchup-row.cryptobro .name { color: #6ee8d3; }
+    .matchup-row.jrr_token .name { color: #f396b3; }
     .matchup-row .bar-container {
       position: relative;
       height: 22px;
@@ -446,6 +507,7 @@
     .matchup-row.scrooge .bar-fill { background: linear-gradient(90deg, var(--gold-deep), var(--gold)); }
     .matchup-row.midas .bar-fill { background: linear-gradient(90deg, var(--silver-deep), var(--silver)); }
     .matchup-row.cryptobro .bar-fill { background: linear-gradient(90deg, #2db8a0, #6ee8d3); }
+    .matchup-row.jrr_token .bar-fill { background: linear-gradient(90deg, #b85478, #f396b3); }
     .matchup-row .bar-zero { position: absolute; top: 0; bottom: 0; width: 1px; background: var(--muted); opacity: 0.5; }
     .matchup-row .stats { font-family: var(--mono); font-size: 13px; text-align: right; }
     .matchup-row .stats .ret { font-weight: 600; }
@@ -833,6 +895,86 @@
       100% { opacity: 0; height: 0; padding: 0; margin: 0; border: none; }
     }
 
+    /* ── Phase G/H/I additions ── */
+    .sports-card { margin-top: 24px; }
+    .sports-card .balance { font-size: 32px; }
+    .sports-best { padding: 12px; background: rgba(0,0,0,0.18); border: 1px solid var(--border); border-radius: 6px; margin-top: 14px; }
+    .sports-best-head { font-size: 10px; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 6px; }
+    .sports-best-head .venue { color: var(--gold); }
+    .sports-best-q { font-size: 13px; color: var(--text); margin-bottom: 4px; }
+    .sports-best-stats { font-family: var(--mono); font-size: 11px; color: var(--text-dim); }
+    .sports-best-stats .edge-pos { color: var(--pos); font-weight: 600; }
+    .sports-open { margin-top: 12px; }
+    .sports-open h5 { font-size: 10px; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 8px; }
+    .sports-bet { display: grid; grid-template-columns: 80px 1fr 110px; gap: 10px; padding: 6px 8px; background: rgba(255,255,255,0.03); border-radius: 4px; margin-bottom: 4px; font-family: var(--mono); font-size: 11px; }
+    .sports-bet .venue { color: var(--gold); font-weight: 600; }
+    .sports-bet .stake { text-align: right; color: var(--text-dim); }
+
+    /* Chart panel */
+    .chart-panel { margin-top: 16px; padding: 14px; background: rgba(0,0,0,0.18); border: 1px solid var(--border); border-radius: 8px; }
+    .chart-head { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 10px; }
+    .chart-ticker { font-family: var(--display); font-size: 18px; color: var(--gold); letter-spacing: 0.05em; font-weight: 600; }
+    .chart-price { font-family: var(--mono); font-size: 16px; color: var(--text); margin-left: 12px; }
+    .chart-ytd { font-family: var(--mono); font-size: 12px; margin-left: 10px; }
+    .chart-ytd.positive { color: var(--pos); }
+    .chart-ytd.negative { color: var(--neg); }
+    .tf-row { display: flex; gap: 4px; }
+    .tf-btn { padding: 4px 9px; font-family: var(--mono); font-size: 10px; background: transparent; color: var(--muted); border: 1px solid var(--border); border-radius: 3px; cursor: pointer; }
+    .tf-btn:hover { color: var(--text); border-color: var(--text-dim); }
+    .tf-btn.active { background: var(--gold-glow); color: var(--gold); border-color: var(--gold); }
+    .chart-svg { width: 100%; height: 220px; display: block; }
+    .chart-stats { display: flex; gap: 18px; margin-top: 10px; font-family: var(--mono); font-size: 11px; color: var(--text-dim); }
+    .chart-stats .lbl { color: var(--muted); margin-right: 4px; }
+
+    /* Catalysts */
+    .catalyst-card { margin-top: 24px; }
+    .cat-section-h { font-family: var(--mono); font-size: 10px; letter-spacing: 0.15em; color: var(--gold); text-transform: uppercase; margin: 14px 0 8px; }
+    .cat-list { display: flex; flex-direction: column; gap: 5px; }
+    .cat-row { display: grid; grid-template-columns: 110px 70px 110px 1fr; gap: 10px; padding: 8px 10px; background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 4px; font-size: 12px; align-items: center; }
+    .cat-row .time { font-family: var(--mono); font-size: 10px; color: var(--muted); }
+    .cat-row .tk { font-family: var(--display); color: var(--gold); font-weight: 600; letter-spacing: 0.05em; font-size: 11px; }
+    .cat-row .type { font-family: var(--mono); font-size: 9px; padding: 2px 6px; border-radius: 3px; background: rgba(255, 214, 110, 0.1); color: var(--gold); border: 1px solid var(--gold-glow); text-align: center; }
+    .cat-row .note { color: var(--text-dim); font-size: 11px; line-height: 1.4; }
+    .cat-row.weekly { background: rgba(0, 0, 0, 0.18); }
+
+    /* Prediction Markets */
+    .pm-card { margin-top: 24px; }
+    .pm-list { display: flex; flex-direction: column; gap: 4px; }
+    .pm-row { display: grid; grid-template-columns: 100px 1fr 160px 80px 110px; gap: 10px; padding: 8px 10px; background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 4px; font-size: 11.5px; align-items: center; }
+    .pm-row .venue { font-family: var(--display); color: var(--gold); font-weight: 600; letter-spacing: 0.05em; font-size: 10px; }
+    .pm-row .q { color: var(--text); }
+    .pm-row .probs { font-family: var(--mono); font-size: 10px; color: var(--text-dim); }
+    .pm-row .edge { font-family: var(--mono); font-weight: 600; text-align: right; }
+    .pm-row .edge.positive { color: var(--pos); }
+    .pm-row .edge.negative { color: var(--neg); }
+    .pm-row .cat { font-size: 10px; color: var(--muted); text-align: right; }
+
+    /* Death chart */
+    .death-card { margin-top: 24px; }
+    .death-list { display: flex; flex-direction: column; gap: 5px; }
+    .death-row { display: grid; grid-template-columns: 130px 80px 100px 1fr; gap: 12px; padding: 8px 10px; background: rgba(0,0,0,0.18); border: 1px solid var(--border); border-radius: 4px; font-family: var(--mono); font-size: 11.5px; align-items: center; }
+    .death-row .name { color: var(--gold); font-weight: 600; letter-spacing: 0.05em; }
+    .death-row .deaths { color: var(--neg-strong); }
+    .death-row .peak { color: var(--text-dim); text-align: right; }
+
+    /* Broker links */
+    .broker-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; padding-top: 10px; border-top: 1px dashed var(--border); }
+    .broker-btn { padding: 5px 10px; font-family: var(--mono); font-size: 10px; background: transparent; color: var(--text-dim); border: 1px solid var(--border); border-radius: 3px; text-decoration: none; transition: all 0.15s; }
+    .broker-btn:hover { color: var(--gold); border-color: var(--gold); background: var(--gold-glow); }
+    .broker-btn .fee { color: var(--muted); font-size: 9px; margin-left: 4px; }
+
+    /* About */
+    .about-card { margin-top: 24px; }
+    .about-card .about-p { color: var(--text-dim); font-size: 13px; line-height: 1.6; margin-bottom: 12px; }
+    .about-card strong { color: var(--gold); }
+
+    /* Tutorials */
+    .tutorial-card { margin-top: 24px; }
+    .tutorial-list { display: flex; flex-direction: column; gap: 6px; }
+    .tutorial-row { padding: 10px 14px; background: rgba(0,0,0,0.18); border: 1px solid var(--border); border-radius: 4px; cursor: pointer; }
+    .tutorial-row summary { font-size: 13px; color: var(--gold); font-family: var(--display); letter-spacing: 0.04em; }
+    .tutorial-row p { margin-top: 8px; color: var(--text-dim); font-size: 12px; line-height: 1.5; }
+
     /* ── Risk Engine (Phase E) ──────────────────────────────── */
     .risk-card { margin-top: 24px; }
     .safe-mode-banner {
@@ -1051,6 +1193,12 @@
     .agent-card.is-midas:hover { border-color: var(--silver); box-shadow: 0 0 20px var(--silver-glow), var(--shadow); }
     .agent-card.is-cryptobro:hover { border-color: #6ee8d3; box-shadow: 0 0 20px rgba(110, 232, 211, 0.4), var(--shadow); }
     .agent-card.is-cryptobro .codename { color: #6ee8d3; }
+    .agent-card.is-jrr-token:hover { border-color: #f396b3; box-shadow: 0 0 20px rgba(243, 150, 179, 0.4), var(--shadow); }
+    .agent-card.is-jrr-token .codename { color: #f396b3; }
+    .agent-card.is-baron:hover { border-color: #c98c4e; box-shadow: 0 0 20px rgba(201, 140, 78, 0.4), var(--shadow); }
+    .agent-card.is-baron .codename { color: #e2a76a; }
+    .agent-card.is-steadfast:hover { border-color: #7fb1da; box-shadow: 0 0 20px rgba(127, 177, 218, 0.4), var(--shadow); }
+    .agent-card.is-steadfast .codename { color: #9fc7e6; }
     .agent-card .codename {
       font-family: var(--display);
       font-size: 15px;
@@ -1271,19 +1419,24 @@
 
   async function loadData() {
     if (window.__SILMARIL_DATA__) return window.__SILMARIL_DATA__;
-    const [signals, trade_plans, scrooge, midas, cryptobro, agent_portfolios, scoring, risk_state, handoff_blocks, history] = await Promise.all([
+    const [signals, trade_plans, scrooge, midas, cryptobro, jrr_token, sports_bro, sports_markets, agent_portfolios, scoring, risk_state, catalysts, charts, handoff_blocks, history] = await Promise.all([
       fetch(DATA_BASE + 'signals.json').then(r => r.json()),
       fetch(DATA_BASE + 'trade_plans.json').then(r => r.json()),
       fetch(DATA_BASE + 'scrooge.json').then(r => r.json()),
       fetch(DATA_BASE + 'midas.json').then(r => r.json()).catch(() => null),
       fetch(DATA_BASE + 'cryptobro.json').then(r => r.json()).catch(() => null),
+      fetch(DATA_BASE + 'jrr_token.json').then(r => r.json()).catch(() => null),
+      fetch(DATA_BASE + 'sports_bro.json').then(r => r.json()).catch(() => null),
+      fetch(DATA_BASE + 'sports_markets.json').then(r => r.json()).catch(() => null),
       fetch(DATA_BASE + 'agent_portfolios.json').then(r => r.json()).catch(() => null),
       fetch(DATA_BASE + 'scoring.json').then(r => r.json()).catch(() => null),
       fetch(DATA_BASE + 'risk_state.json').then(r => r.json()).catch(() => null),
+      fetch(DATA_BASE + 'catalysts.json').then(r => r.json()).catch(() => null),
+      fetch(DATA_BASE + 'charts.json').then(r => r.json()).catch(() => null),
       fetch(DATA_BASE + 'handoff_blocks.json').then(r => r.json()),
       fetch(DATA_BASE + 'history.json').then(r => r.json()).catch(() => ({ runs: [] })),
     ]);
-    return { signals, trade_plans, scrooge, midas, cryptobro, agent_portfolios, scoring, risk_state, handoff_blocks, history };
+    return { signals, trade_plans, scrooge, midas, cryptobro, jrr_token, sports_bro, sports_markets, agent_portfolios, scoring, risk_state, catalysts, charts, handoff_blocks, history };
   }
 
   const fmt = (n, d = 2) => n == null ? '—' : Number(n).toFixed(d);
@@ -1480,20 +1633,40 @@
     if (!s) return `<div class="card"><div class="card-title"><span class="diamond"></span>${variant.toUpperCase()}</div><div class="empty-track" style="margin-top:14px">Data unavailable</div></div>`;
     const isMidas = variant === 'midas';
     const isBro = variant === 'cryptobro';
-    const label = isMidas ? 'KING MIDAS' : isBro ? 'CRYPTOBRO' : 'SCROOGE';
+    const isJrr = variant === 'jrr_token';
+    const label = isMidas ? 'KING MIDAS'
+                : isBro ? 'CRYPTOBRO'
+                : isJrr ? 'JRR TOKEN'
+                : 'SCROOGE';
     const sub = isMidas ? 'Hard Currency Compounder'
               : isBro ? 'Multi-Trade Crypto Compounder'
+              : isJrr ? 'Two-Tier Token Trader'
               : '$1 Compounder';
     const pos = s.current_position;
     const daysAlive = s.days_alive != null ? s.days_alive : (s.actions_this_life != null ? s.actions_this_life : 0);
-    const variantClass = isMidas ? 'midas' : isBro ? 'cryptobro' : '';
+    const variantClass = isMidas ? 'midas' : isBro ? 'cryptobro' : isJrr ? 'jrr_token' : '';
 
-    // CryptoBro extras: latest narrative bubble + trade-counter pill
+    // CryptoBro narrative + trade-counter pill
     const lastAction = (s.history || []).slice().reverse().find(h => h.narrative || h.reason);
-    const narrative = lastAction ? (lastAction.narrative || lastAction.reason) : null;
-    const tradesBadge = isBro
+    const narrative = (isBro && lastAction) ? (lastAction.narrative || lastAction.reason) : null;
+    const tradesBadge = (isBro || isJrr)
       ? `<span class="trades-pill">${s.trades_today || 0}/${s.max_trades_per_day || 5} TRADES TODAY</span>`
       : '';
+
+    // JRR Token tier display
+    const tiersHtml = isJrr && s.tiers ? renderJrrTiers(s.tiers) : '';
+
+    // Lifetime fees — sum from execution receipts in history
+    const lifetimeFees = (s.history || []).reduce((sum, h) => {
+      const f = h.execution && h.execution.fees && h.execution.fees.total;
+      return sum + (f || 0);
+    }, 0);
+    const feesLine = lifetimeFees > 0 ? `
+      <div class="fees-line">
+        <span class="lbl">Lifetime fees paid</span>
+        <span class="val">${fmtMoney(lifetimeFees, 4)}</span>
+      </div>
+    ` : '';
 
     return `
       <div class="card compounder ${variantClass}">
@@ -1511,8 +1684,31 @@
           <div class="row"><span class="k">Deaths</span><span class="v">${(s.deaths || []).length}</span></div>
           <div class="row"><span class="k">Actions</span><span class="v">${(s.history || []).length}</span></div>
         </div>
-        ${pos ? renderPosition(pos, variant) : '<div class="empty-track" style="margin-top:14px">No position today</div>'}
-        ${isBro && narrative ? `<div class="narrative-bubble">"${esc(narrative)}"</div>` : ''}
+        ${tiersHtml || (pos ? renderPosition(pos, variant) : '<div class="empty-track" style="margin-top:14px">No position today</div>')}
+        ${narrative ? `<div class="narrative-bubble">"${esc(narrative)}"</div>` : ''}
+        ${feesLine}
+      </div>
+    `;
+  }
+
+  function renderJrrTiers(tiers) {
+    const renderTier = (label, tier) => {
+      const pos = tier.current_position;
+      const posBlock = pos
+        ? `<div class="tier-position"><span class="ticker">${esc(pos.ticker)}</span> · ${fmt(pos.shares, 2)} sh @ ${fmtMoney(pos.entry_price, 6)}</div>`
+        : `<div class="tier-position cash">CASH</div>`;
+      return `
+        <div class="jrr-tier">
+          <div class="tier-label">${label}</div>
+          <div class="tier-balance">${fmtMoney(tier.balance, 4)}</div>
+          ${posBlock}
+        </div>
+      `;
+    };
+    return `
+      <div class="jrr-tiers">
+        ${renderTier('SUB $100M', tiers.sub_100m || { balance: 0.5 })}
+        ${renderTier('OVER $100M', tiers.over_100m || { balance: 0.5 })}
       </div>
     `;
   }
@@ -1531,12 +1727,13 @@
   }
 
   // ── Three-way compounder matchup chart ─────────────────────
-  function renderMatchup(scrooge, midas, cryptobro) {
-    if (!scrooge && !midas && !cryptobro) return '';
+  function renderMatchup(scrooge, midas, cryptobro, jrrToken) {
+    if (!scrooge && !midas && !cryptobro && !jrrToken) return '';
     const rows = [
       { variant: 'scrooge',   label: 'SCROOGE',   data: scrooge },
       { variant: 'midas',     label: 'KING MIDAS', data: midas },
       { variant: 'cryptobro', label: 'CRYPTOBRO', data: cryptobro },
+      { variant: 'jrr_token', label: 'JRR TOKEN', data: jrrToken },
     ].filter(r => r.data);
 
     // Compute return % from inception ($1 starting capital for all three)
@@ -2040,7 +2237,7 @@
         is_user: false, starting_cap: 10000,
       });
     });
-    [['SCROOGE', STATE.scrooge], ['MIDAS', STATE.midas], ['CRYPTOBRO', STATE.cryptobro]].forEach(([name, s]) => {
+    [['SCROOGE', STATE.scrooge], ['MIDAS', STATE.midas], ['CRYPTOBRO', STATE.cryptobro], ['JRR_TOKEN', STATE.jrr_token]].forEach(([name, s]) => {
       if (!s) return;
       rows.push({
         name, equity: s.balance,
@@ -2243,6 +2440,362 @@
     `;
   }
 
+  // ── Phase G/H/I: Sports Bro card ──────────────────────────
+  function renderSportsBro(sb, markets) {
+    if (!sb) return '';
+    const open = sb.open_bets || [];
+    const lifetimeFees = 0; // prediction markets ~no fees in our model
+    const venuesLine = markets && markets.markets
+      ? `${markets.markets.length} markets tracked across ${(markets.venues || []).join(' + ')}`
+      : 'Polymarket + Kalshi';
+    const bestMarket = markets && markets.best_edge;
+    const bestEdgeHtml = bestMarket
+      ? `<div class="sports-best">
+          <div class="sports-best-head">Best edge today · <span class="venue">${esc(bestMarket.venue)}</span></div>
+          <div class="sports-best-q">${esc(bestMarket.market)}</div>
+          <div class="sports-best-stats">
+            Market ${(bestMarket.market_prob * 100).toFixed(0)}% · Model ${(bestMarket.model_prob * 100).toFixed(0)}% ·
+            <span class="edge-pos">edge +${(bestMarket.edge * 100).toFixed(1)}pp</span>
+          </div>
+        </div>`
+      : '';
+    const openHtml = open.length ? `
+      <div class="sports-open">
+        <h5>Open positions (${open.length})</h5>
+        ${open.map(b => `
+          <div class="sports-bet">
+            <span class="venue">${esc(b.venue || '')}</span>
+            <span class="q">${esc(b.market)}</span>
+            <span class="stake">$${(b.stake || 0).toFixed(3)} · ${(b.entry_price * 100).toFixed(0)}%</span>
+          </div>
+        `).join('')}
+      </div>
+    ` : '<div class="empty-track" style="margin-top:10px">No open bets — no edge today.</div>';
+
+    return `
+      <div class="card sports-card">
+        <div class="card-header">
+          <div>
+            <div class="card-title"><span class="diamond"></span>SPORTS BRO</div>
+            <div class="card-subtitle">${esc(venuesLine)} · half-Kelly disciplined</div>
+          </div>
+        </div>
+        <div class="balance">${fmtMoney(sb.balance, 4)}</div>
+        <div class="balance-label">Compounder · Life #${sb.current_life} · ${sb.trades_today || 0}/${sb.max_trades_per_day || 8} bets today</div>
+        ${bestEdgeHtml}
+        ${openHtml}
+      </div>
+    `;
+  }
+
+  // ── Phase G: per-asset price chart with agent overlays ──────
+  function renderChartPanel(ticker) {
+    if (!ticker || !STATE.charts || !STATE.charts.charts) return '';
+    const bundle = STATE.charts.charts[ticker];
+    if (!bundle) return '';
+    const series = bundle.series || [];
+    if (series.length < 2) return '';
+
+    const w = 760, h = 220, pad = 30;
+    const closes = series.map(s => s.c);
+    const minP = Math.min(...closes);
+    const maxP = Math.max(...closes);
+    const range = (maxP - minP) || 1;
+    const xStep = (w - pad * 2) / (series.length - 1);
+
+    // Build the area path
+    let pathD = '';
+    let areaD = '';
+    series.forEach((s, i) => {
+      const x = pad + i * xStep;
+      const y = pad + (h - pad * 2) * (1 - (s.c - minP) / range);
+      if (i === 0) {
+        pathD = `M ${x.toFixed(2)} ${y.toFixed(2)}`;
+        areaD = `M ${x.toFixed(2)} ${(h - pad).toFixed(2)} L ${x.toFixed(2)} ${y.toFixed(2)}`;
+      } else {
+        pathD += ` L ${x.toFixed(2)} ${y.toFixed(2)}`;
+        areaD += ` L ${x.toFixed(2)} ${y.toFixed(2)}`;
+      }
+    });
+    areaD += ` L ${(pad + (series.length - 1) * xStep).toFixed(2)} ${(h - pad).toFixed(2)} Z`;
+
+    // Agent vote markers
+    const debate = (STATE.signals.debates || []).find(d => d.ticker === ticker);
+    const verdicts = debate ? (debate.verdicts || []) : [];
+    const agentColors = {
+      AEGIS: '#ffd66e', FORGE: '#9fc7e6', THUNDERHEAD: '#a76ee2',
+      JADE: '#9ce0a0', VEIL: '#d8a8e0', KESTREL: '#e0a878',
+      OBSIDIAN: '#aaaaaa', ZENITH: '#ffe89c', WEAVER: '#7ed3c8',
+      HEX: '#888', SYNTH: '#e09cb6', SPECK: '#cccccc',
+      VESPA: '#ffaa66', MAGUS: '#b88be0', TALON: '#e08888',
+      BARON: '#e2a76a', STEADFAST: '#9fc7e6',
+    };
+    const lastY = pad + (h - pad * 2) * (1 - (series[series.length - 1].c - minP) / range);
+    const lastX = pad + (series.length - 1) * xStep;
+    const markers = verdicts.filter(v => v.signal && v.signal !== 'ABSTAIN').slice(0, 8).map((v, i) => {
+      const x = lastX - 8;
+      const y = lastY + (i - 4) * 9;
+      const color = agentColors[v.agent] || '#ffd66e';
+      const sym = v.signal === 'STRONG_BUY' ? '▲' :
+                  v.signal === 'BUY' ? '△' :
+                  v.signal === 'SELL' ? '▽' :
+                  v.signal === 'STRONG_SELL' ? '▼' : '·';
+      return `<text x="${(w - pad + 6).toFixed(2)}" y="${(y + 3).toFixed(2)}" fill="${color}" font-size="10" font-family="ui-monospace,monospace">${sym} ${esc(v.agent.slice(0, 6))}</text>`;
+    }).join('');
+
+    const tfButtons = ['1D', '5D', '1M', '3M', '6M', 'YTD', '1Y', 'ALL'].map(tf => `
+      <button class="tf-btn ${STATE.chartTimeframe === tf ? 'active' : ''}" onclick="window.setTimeframe('${tf}')">${tf}</button>
+    `).join('');
+
+    return `
+      <div class="chart-panel">
+        <div class="chart-head">
+          <div>
+            <span class="chart-ticker">${esc(ticker)}</span>
+            <span class="chart-price">${fmtMoney(bundle.current_price, 4)}</span>
+            <span class="chart-ytd ${bundle.ytd_change_pct >= 0 ? 'positive' : 'negative'}">${bundle.ytd_change_pct >= 0 ? '+' : ''}${bundle.ytd_change_pct.toFixed(2)}% YTD</span>
+          </div>
+          <div class="tf-row">${tfButtons}</div>
+        </div>
+        <svg viewBox="0 0 ${w} ${h}" class="chart-svg" preserveAspectRatio="none">
+          <defs>
+            <linearGradient id="chart-grad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="var(--gold)" stop-opacity="0.3"/>
+              <stop offset="100%" stop-color="var(--gold)" stop-opacity="0.02"/>
+            </linearGradient>
+          </defs>
+          <path d="${areaD}" fill="url(#chart-grad)"/>
+          <path d="${pathD}" stroke="var(--gold)" stroke-width="1.5" fill="none"/>
+          <line x1="${pad}" y1="${lastY.toFixed(2)}" x2="${(w - pad).toFixed(2)}" y2="${lastY.toFixed(2)}" stroke="var(--gold)" stroke-width="0.5" stroke-dasharray="3 3" opacity="0.5"/>
+          ${markers}
+        </svg>
+        <div class="chart-stats">
+          <span><span class="lbl">High</span> ${fmtMoney(bundle.high_52w, 4)}</span>
+          <span><span class="lbl">Low</span> ${fmtMoney(bundle.low_52w, 4)}</span>
+          <span><span class="lbl">Range</span> ${series.length}d</span>
+        </div>
+      </div>
+    `;
+  }
+
+  window.setTimeframe = function(tf) {
+    STATE.chartTimeframe = tf;
+    render();
+  };
+
+  // ── Phase H: Catalysts roundup ──────────────────────────────
+  function renderCatalysts() {
+    const c = STATE.catalysts;
+    if (!c) return '';
+    const dailyHtml = (c.daily || []).map(d => `
+      <div class="cat-row">
+        <span class="time">${esc(d.time || '')}</span>
+        <span class="tk">${esc(d.ticker || '')}</span>
+        <span class="type ${esc(d.type || '').replace(/\s+/g, '-')}">${esc(d.type || '')}</span>
+        <span class="note">${esc(d.note || '')}</span>
+      </div>
+    `).join('');
+    const weeklyHtml = (c.weekly || []).map(w => `
+      <div class="cat-row weekly">
+        <span class="time">${esc(w.date || '')}</span>
+        <span class="tk">${esc(w.ticker || '')}</span>
+        <span class="type ${esc(w.type || '').replace(/\s+/g, '-')}">${esc(w.type || '')}</span>
+        <span class="note">${esc(w.note || '')}</span>
+      </div>
+    `).join('');
+    return `
+      <div class="card catalyst-card">
+        <div class="card-header">
+          <div>
+            <div class="card-title"><span class="diamond"></span>Catalysts Roundup</div>
+            <div class="card-subtitle">${esc(c.summary || '')}</div>
+          </div>
+        </div>
+        <h4 class="cat-section-h">Today</h4>
+        <div class="cat-list">${dailyHtml || '<div class="empty-track">No catalysts today.</div>'}</div>
+        <h4 class="cat-section-h">This Week</h4>
+        <div class="cat-list">${weeklyHtml}</div>
+      </div>
+    `;
+  }
+
+  // ── Phase H: Polymarket / Kalshi prediction markets ─────────
+  function renderPredictionMarkets() {
+    const m = STATE.sports_markets;
+    if (!m || !m.markets) return '';
+    const rows = m.markets.map(mk => `
+      <div class="pm-row">
+        <span class="venue">${esc(mk.venue)}</span>
+        <span class="q">${esc(mk.market)}</span>
+        <span class="probs">M ${(mk.market_prob * 100).toFixed(0)}% / Mod ${(mk.model_prob * 100).toFixed(0)}%</span>
+        <span class="edge ${mk.edge > 0 ? 'positive' : 'negative'}">${mk.edge >= 0 ? '+' : ''}${(mk.edge * 100).toFixed(1)}pp</span>
+        <span class="cat">${esc(mk.category)}</span>
+      </div>
+    `).join('');
+    return `
+      <div class="card pm-card">
+        <div class="card-header">
+          <div>
+            <div class="card-title"><span class="diamond"></span>Prediction Markets</div>
+            <div class="card-subtitle">Polymarket + Kalshi · sorted by edge</div>
+          </div>
+        </div>
+        <div class="pm-list">${rows}</div>
+      </div>
+    `;
+  }
+
+  // ── Phase I: watchlist persistence ─────────────────────────
+  const WATCHLIST_KEY = 'silmaril_watchlist_v1';
+  function loadWatchlist() {
+    try {
+      const raw = localStorage.getItem(WATCHLIST_KEY);
+      if (raw) return JSON.parse(raw);
+    } catch (e) {}
+    return [];
+  }
+  function saveWatchlist(list) {
+    try { localStorage.setItem(WATCHLIST_KEY, JSON.stringify(list)); } catch (e) {}
+  }
+  window.toggleWatchlist = function(ticker) {
+    const list = STATE.watchlist || [];
+    const idx = list.indexOf(ticker);
+    if (idx >= 0) list.splice(idx, 1);
+    else list.push(ticker);
+    STATE.watchlist = list;
+    saveWatchlist(list);
+    render();
+  };
+
+  // ── Phase I: Death chart for $1 compounders ────────────────
+  function renderDeathChart() {
+    const compounders = [
+      ['SCROOGE', STATE.scrooge],
+      ['MIDAS', STATE.midas],
+      ['CRYPTOBRO', STATE.cryptobro],
+      ['JRR TOKEN', STATE.jrr_token],
+      ['SPORTS BRO', STATE.sports_bro],
+    ].filter(([n, s]) => s);
+    if (!compounders.length) return '';
+    const total = compounders.reduce((sum, [n, s]) => sum + ((s.deaths || []).length), 0);
+    const rows = compounders.map(([name, s]) => {
+      const deaths = (s.deaths || []).length;
+      const life = s.current_life || 1;
+      const peak = s.lifetime_peak || 1;
+      return `
+        <div class="death-row">
+          <span class="name">${esc(name)}</span>
+          <span class="life">Life #${life}</span>
+          <span class="deaths">${deaths} death${deaths === 1 ? '' : 's'}</span>
+          <span class="peak">peak ${fmtMoney(peak, 4)}</span>
+        </div>
+      `;
+    }).join('');
+    return `
+      <div class="card death-card">
+        <div class="card-header">
+          <div>
+            <div class="card-title"><span class="diamond"></span>Compounder Mortality</div>
+            <div class="card-subtitle">${total} total death${total === 1 ? '' : 's'} across the cohort · all reincarnate at $1.00</div>
+          </div>
+        </div>
+        <div class="death-list">${rows}</div>
+      </div>
+    `;
+  }
+
+  // ── Phase I: About / disclaimer footer ─────────────────────
+  function renderAbout() {
+    return `
+      <div class="card about-card">
+        <div class="card-header">
+          <div>
+            <div class="card-title"><span class="diamond"></span>About SILMARIL</div>
+            <div class="card-subtitle">What this is, what it isn't</div>
+          </div>
+        </div>
+        <p class="about-p">
+          <strong>SILMARIL is a learning system.</strong> It is a multi-agent
+          financial intelligence simulator with 22 distinct agents — 15 main
+          voters and 7 specialists — debating signals across stocks, crypto,
+          tokens, prediction markets, oil, and hard currencies. Every vote is
+          scored against next-day price moves. Every position is tracked with
+          real fees. Every kill switch has a reason.
+        </p>
+        <p class="about-p">
+          <strong>This is NOT financial advice.</strong> No consensus signal,
+          trade plan, or agent recommendation here is a recommendation to buy
+          or sell anything. Past performance is not indicative of future
+          results. Markets change faster than any system. The agents
+          themselves can be wrong, and several of them are designed to fail
+          in instructive ways (CryptoBro, JRR Token, Sports Bro).
+        </p>
+        <p class="about-p">
+          <strong>What you can do here:</strong> watch how 15 different
+          decision frames look at the same asset on the same day; learn how
+          fees, slippage, and discipline compound; track which agents earn
+          their weight and which collapse; play the career mode against the
+          agents with $5K of fake money; copy the LLM handoff prompts to
+          stress-test the day's call against a model of your choice; tap a
+          broker deeplink to take the trade in your own account, where you
+          and only you decide.
+        </p>
+        <p class="about-p">
+          <strong>What this is not:</strong> a robo-advisor, a brokerage, a
+          backtest you should trust as predictive, an Anthropic product, or a
+          substitute for licensed professional advice.
+        </p>
+        <p class="about-p" style="font-style:italic; color:var(--muted)">
+          Built as an open educational experiment. The two trees are
+          Laurelin and Telperion. Source: github.com/TheSeanMitchell/SILMARIL
+        </p>
+      </div>
+    `;
+  }
+
+  // ── Phase L: Quizzes / Tutorials ───────────────────────────
+  const QUIZZES = [
+    {
+      q: "Why did AEGIS veto today's debate?",
+      hint: "AEGIS only vetos when conviction is low across the cohort or when risk vastly outweighs reward. Look for low aggregate conviction or extreme volatility.",
+    },
+    {
+      q: "Who's the most fee-efficient compounder?",
+      hint: "The compounder rotating least often paying lowest fees. MIDAS rotates weekly; SCROOGE daily; CryptoBro intraday; JRR Token frenetically.",
+    },
+    {
+      q: "When does HEX get unfrozen?",
+      hint: "When his weight multiplier (Truth Dashboard) recovers above 0.85× — meaning his win rate AND expected value have to climb back to baseline.",
+    },
+    {
+      q: "What does The Baron do on EIA Wednesday?",
+      hint: "He pre-positions for the 10:30 AM ET inventory print. Bullish (draw) → long crude or refiners. Bearish (build) → DRIP/SCO short instruments.",
+    },
+    {
+      q: "Why does Sports Bro avoid traditional sportsbooks?",
+      hint: "Sportsbook vig is ~4.5%+ baked in. Polymarket and Kalshi are peer-to-peer with 0.5–2% spreads. Edge is calculable; sportsbook edge isn't.",
+    },
+  ];
+  function renderTutorials() {
+    const items = QUIZZES.map((qz, i) => `
+      <details class="tutorial-row">
+        <summary>${esc(qz.q)}</summary>
+        <p>${esc(qz.hint)}</p>
+      </details>
+    `).join('');
+    return `
+      <div class="card tutorial-card">
+        <div class="card-header">
+          <div>
+            <div class="card-title"><span class="diamond"></span>Learn the System</div>
+            <div class="card-subtitle">5 questions to understand what's actually happening</div>
+          </div>
+        </div>
+        <div class="tutorial-list">${items}</div>
+      </div>
+    `;
+  }
+
   function renderRoster(signals) {
     const roster = signals.agent_roster || [];
     const portfolios = (STATE.agent_portfolios && STATE.agent_portfolios.portfolios) || {};
@@ -2251,12 +2804,16 @@
     const cards = roster.map(a => {
       const p = portfolios[a.codename];
       const portfolioStrip = p ? renderPortfolioStrip(p) : '';
-      const compounderHint = (a.codename === 'SCROOGE' || a.codename === 'MIDAS' || a.codename === 'CRYPTOBRO')
+      const isDollarCompounder = ['SCROOGE', 'MIDAS', 'CRYPTOBRO', 'JRR_TOKEN'].includes(a.codename);
+      const compounderHint = isDollarCompounder
         ? `<div class="portfolio-strip"><div class="pos-line cash">$1 compounder · see card above</div></div>`
         : portfolioStrip;
       const isFrozen = riskAgents[a.codename] && riskAgents[a.codename].frozen;
       const variantClass = a.codename === 'MIDAS' ? 'is-midas'
                          : a.codename === 'CRYPTOBRO' ? 'is-cryptobro'
+                         : a.codename === 'JRR_TOKEN' ? 'is-jrr-token'
+                         : a.codename === 'BARON' ? 'is-baron'
+                         : a.codename === 'STEADFAST' ? 'is-steadfast'
                          : '';
       const cssClass = `${variantClass} ${isFrozen ? 'frozen' : ''}`.trim();
       return `
@@ -2600,6 +3157,14 @@
           <span class="lbl">Size:</span> ${fmt(p.shares, 2)} sh · ${fmtMoney(p.position_value)} · ${(p.risk_pct_of_portfolio * 100).toFixed(2)}% risk
         </div>
         ${p.execution ? renderExecution(p.execution) : ''}
+        ${(p.brokers && p.brokers.length) ? `
+          <div class="broker-row">
+            <span style="font-family:var(--mono); font-size:10px; color:var(--muted); letter-spacing:0.1em; text-transform:uppercase; align-self:center; margin-right:4px">Trade at:</span>
+            ${p.brokers.map(b => `
+              <a class="broker-btn" href="${esc(b.url)}" target="_blank" rel="noopener">${esc(b.name)}<span class="fee">${esc(b.fee_label)}</span></a>
+            `).join('')}
+          </div>
+        ` : ''}
         ${handoff ? renderHandoff(`Stress-test ${p.ticker} with an LLM`, handoff, { compact: true }) : ''}
       </div>
       `;
@@ -2674,7 +3239,7 @@
   }
 
   function render() {
-    const { signals, trade_plans, scrooge, midas, cryptobro, handoff_blocks, history } = STATE;
+    const { signals, trade_plans, scrooge, midas, cryptobro, jrr_token, handoff_blocks, history } = STATE;
     const debates = signals.debates || [];
     const featured = STATE.featured || debates[0];
 
@@ -2702,9 +3267,14 @@
         ${renderCompounder(scrooge, 'scrooge')}
         ${renderCompounder(midas, 'midas')}
         ${renderCompounder(cryptobro, 'cryptobro')}
+        ${renderCompounder(jrr_token, 'jrr_token')}
       </div>
 
-      ${renderMatchup(scrooge, midas, cryptobro)}
+      ${renderMatchup(scrooge, midas, cryptobro, jrr_token)}
+
+      ${renderSportsBro(STATE.sports_bro, STATE.sports_markets)}
+
+      ${featured ? renderChartPanel(featured.ticker) : ''}
 
       ${renderRiskDashboard()}
 
@@ -2712,17 +3282,25 @@
 
       ${renderTruthDashboard(STATE.scoring)}
 
+      ${renderPredictionMarkets()}
+
       ${renderRoster(signals)}
 
       <div class="card" style="margin-top: 24px">
         <div class="card-header">
           <div>
             <div class="card-title"><span class="diamond"></span>Actionable Trade Plans</div>
-            <div class="card-subtitle">${(trade_plans.plans || []).length} plans with full execution detail</div>
+            <div class="card-subtitle">${(trade_plans.plans || []).length} plans with full execution detail · broker deeplinks below each plan</div>
           </div>
         </div>
         ${renderPlans(trade_plans.plans || [], handoff_blocks.per_plan || {})}
       </div>
+
+      ${renderCatalysts()}
+
+      ${renderDeathChart()}
+
+      ${renderTutorials()}
 
       <div class="card" style="margin-top: 24px">
         <div class="card-header">
@@ -2735,6 +3313,8 @@
         ${renderHandoff('SCROOGE Narrative', handoff_blocks.scrooge_narrative)}
         ${featured && handoff_blocks.per_asset && handoff_blocks.per_asset[featured.ticker] ? renderHandoff(`Deep Dive: ${featured.ticker}`, handoff_blocks.per_asset[featured.ticker]) : ''}
       </div>
+
+      ${renderAbout()}
 
       <div class="footer">
         <div><strong>SILMARIL</strong> · Multi-Agent Financial Intelligence · Powered by open RSS + yfinance</div>
@@ -2753,13 +3333,20 @@
         scrooge: data.scrooge,
         midas: data.midas,
         cryptobro: data.cryptobro,
+        jrr_token: data.jrr_token,
+        sports_bro: data.sports_bro,
+        sports_markets: data.sports_markets,
         agent_portfolios: data.agent_portfolios,
         scoring: data.scoring,
         risk_state: data.risk_state,
+        catalysts: data.catalysts,
+        charts: data.charts,
         handoff_blocks: data.handoff_blocks,
         history: data.history,
         careers: loadCareers(),
+        watchlist: loadWatchlist(),
         featured: null,
+        chartTimeframe: '1M',
       };
       render();
     } catch (e) {

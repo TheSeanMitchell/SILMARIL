@@ -265,6 +265,40 @@ def cryptobro_act(
         })
         return state
 
+    # ── Fee-aware rotation gate ────────────────────────────────
+    # CryptoBro is fast-paced (1.5× multiplier) — he rotates more
+    # readily than SCROOGE/MIDAS, but still HODLs when edge isn't
+    # worth the 80bps round-trip Coinbase fees.
+    if state.current_position:
+        from .fee_aware_rotation import should_rotate
+        held_consensus = next(
+            (c for c in ranked_candidates if c.get("ticker") == held_ticker), None,
+        )
+        held_signal = held_consensus["consensus"]["signal"] if held_consensus else "HOLD"
+        held_score = held_consensus["consensus"]["score"] if held_consensus else 0
+
+        rotate, why = should_rotate(
+            current_consensus_signal=held_signal,
+            current_consensus_score=held_score,
+            target_consensus_signal=target["consensus"]["signal"],
+            target_consensus_score=target["consensus"]["score"],
+            asset_class="crypto",
+            price=target_price,
+            notional=state.balance,
+            multiplier=1.5,  # CryptoBro is fast
+        )
+        if not rotate:
+            state.history.append({
+                "date": today,
+                "action": "HODL",
+                "ticker": held_ticker,
+                "reason": (f"CryptoBro is HODLing {held_ticker}. {why} "
+                           f"Even degens know fees compound, ser."),
+                "balance": round(state.balance, 6),
+                "trades_today": state.trades_today,
+            })
+            return state
+
     # ── SELL the current position if any ────────────────────────
     if state.current_position:
         old = state.current_position
