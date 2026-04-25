@@ -49,6 +49,7 @@ class TradePlan:
     portfolio_size: float = DEFAULT_PORTFOLIO_SIZE
     generated_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
     status: str = "ACTIVE"          # ACTIVE | FILLED | STOPPED | TARGET_HIT | EXPIRED
+    execution: Optional[Dict[str, Any]] = None
 
     def to_dict(self) -> Dict[str, Any]:
         return {
@@ -71,6 +72,7 @@ class TradePlan:
             "portfolio_size": self.portfolio_size,
             "generated_at": self.generated_at.isoformat(),
             "status": self.status,
+            "execution": self.execution,
         }
 
 
@@ -173,6 +175,18 @@ def build_plan_from_debate(
 
     plan_id = _gen_plan_id(debate["ticker"])
 
+    # ── Execution metadata: what this would look like at a real broker ─
+    from ..execution.detail import build_execution
+    asset_class = debate.get("asset_class") or "equity"
+    execution = build_execution(
+        ticker=debate["ticker"],
+        asset_class=asset_class,
+        side="BUY",
+        shares=shares,
+        price=entry,
+        available_before=portfolio_size,
+    )
+
     return TradePlan(
         plan_id=plan_id,
         ticker=debate["ticker"],
@@ -191,6 +205,7 @@ def build_plan_from_debate(
         dissenters=dissenters,
         consensus_signal=consensus["signal"],
         portfolio_size=portfolio_size,
+        execution=execution,
     )
 
 

@@ -72,6 +72,9 @@ class Debate:
     # Plain-English transcript
     transcript: str = ""
 
+    # Consensus debug: the math transparently shown
+    consensus_debug: Dict[str, Any] = field(default_factory=dict)
+
     generated_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -92,6 +95,7 @@ class Debate:
             "aegis_veto": self.aegis_veto,
             "aegis_veto_reason": self.aegis_veto_reason,
             "transcript": self.transcript,
+            "consensus_debug": self.consensus_debug,
             "generated_at": self.generated_at.isoformat(),
         }
 
@@ -153,6 +157,14 @@ class Arbiter:
             aegis_veto=aegis_veto,
         )
 
+        # ── Consensus debug: show the math transparently ────────
+        debug = self._build_consensus_debug(
+            verdicts=verdicts,
+            voting=voting,
+            consensus_signal=consensus_signal,
+            aegis_veto=aegis_veto,
+        )
+
         return Debate(
             ticker=ctx.ticker,
             name=ctx.name,
@@ -168,6 +180,7 @@ class Arbiter:
             aegis_veto=aegis_veto,
             aegis_veto_reason=aegis_veto_reason,
             transcript=transcript,
+            consensus_debug=debug,
         )
 
     # ─────────────────────────────────────────────────────────────
@@ -281,6 +294,127 @@ class Arbiter:
             )
 
         return "\n".join(lines)
+
+    @staticmethod
+    def _build_consensus_debug(
+        verdicts: List[Verdict],
+        voting: List[Verdict],
+        consensus_signal: Signal,
+        aegis_veto: bool,
+    ) -> Dict[str, Any]:
+        """
+        Produce a per-vote breakdown of exactly how the consensus number
+        was computed. Rendered by the dashboard so users can see whether
+        agreement is genuine, thin, or driven by one loud voter.
+        """
+        contributions: List[Dict[str, Any]] = []
+        total_weight = 0.0
+        weighted_sum = 0.0
+        for v in verdicts:
+            score = SIGNAL_SCORE.get(v.signal)
+            if score is None:
+                contributions.append({
+                    "agent": v.agent,
+                    "signal": v.signal.value,
+                    "conviction": round(v.conviction, 3),
+                    "signal_score": None,
+                    "weight": 0.0,
+                    "contribution": 0.0,
+                    "excluded": True,
+                    "reason": "ABSTAIN — outside specialty or no setup",
+                })
+                continue
+            weight = max(v.conviction, 0.01)
+            contribution = score * weight
+            weighted_sum += contribution
+            total_weight += weight
+            contributions.append({
+                "agent": v.agent,
+                "signal": v.signal.value,
+                "conviction": round(v.conviction, 3),
+                "signal_score": score,
+                "weight": round(weight, 3),
+                "contribution": round(contribution, 3),
+                "excluded": False,
+            })
+
+        weighted_score = (weighted_sum / total_weight) if total_weight else 0.0
+        voting_count = len(voting)
+        abstaining_count = len(verdicts) - voting_count
+
+        # Agreement breakdown by signal
+        signal_counts: Dict[str, int] = {}
+        for v in voting:
+            signal_counts[v.signal.value] = signal_counts.get(v.signal.value, 0) + 1
+
+        # How lopsided is the conviction distribution?
+        top3_weight = sum(
+            sorted([max(v.conviction, 0.01) for v in voting], reverse=True)[:3]
+        )
+        conviction_concentration = (
+            round(top3_weight / total_weight, 3) if total_weight else 0.0
+        )
+
+        return {
+            "total_agents": len(verdicts),
+            "voting_count": voting_count,
+            "abstaining_count": abstaining_count,
+            "weighted_sum": round(weighted_sum, 3),
+            "total_weight": round(total_weight, 3),
+            "weighted_score": round(weighted_score, 3),
+            "signal_thresholds": {
+                "STRONG_BUY":  "≥ 1.25",
+                "BUY":         "0.35 to 1.25",
+                "HOLD":        "−0.35 to 0.35",
+                "SELL":        "−1.25 to −0.35",
+                "STRONG_SELL": "< −1.25",
+            },
+            "landed_on": consensus_signal.value,
+            "signal_distribution": signal_counts,
+            "conviction_concentration_top3": conviction_concentration,
+            "contributions": contributions,
+            "aegis_vetoed": aegis_veto,
+            "interpretation": Arbiter._debug_interpretation(
+                voting_count, abstaining_count, signal_counts,
+                conviction_concentration, aegis_veto,
+            ),
+        }
+
+    @staticmethod
+    def _debug_interpretation(
+        voting_count: int,
+        abstaining_count: int,
+        signal_counts: Dict[str, int],
+        conviction_concentration: float,
+        aegis_veto: bool,
+    ) -> str:
+        """A short, plain-English read of the debate quality."""
+        bits: List[str] = []
+        if voting_count < 3:
+            bits.append(f"Thin debate — only {voting_count} agents spoke; "
+                        f"{abstaining_count} abstained.")
+        elif voting_count >= 8:
+            bits.append(f"Deep debate — {voting_count} agents voted.")
+        else:
+            bits.append(f"{voting_count} of {voting_count + abstaining_count} "
+                        f"agents voted.")
+
+        distinct = len(signal_counts)
+        if distinct == 1:
+            bits.append("Unanimous across signals.")
+        elif distinct == 2:
+            bits.append("Two signal camps — mild disagreement.")
+        else:
+            bits.append(f"Split across {distinct} signals — genuine debate.")
+
+        if conviction_concentration >= 0.75:
+            bits.append("Heavy conviction concentration in top 3 voters — "
+                        "result driven by a small bloc.")
+
+        if aegis_veto:
+            bits.append("AEGIS vetoed the bullish lean on risk grounds.")
+
+        return " ".join(bits)
 
     @staticmethod
     def _no_voters_debate(

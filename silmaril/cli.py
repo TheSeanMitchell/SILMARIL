@@ -40,6 +40,8 @@ from .agents.speck import speck
 from .agents.vespa import vespa
 from .agents.magus import magus
 from .agents.talon import talon
+from .agents.midas import midas, midas_act, MidasState, MIDAS_UNIVERSE
+from .agents.bios import get_bio
 
 from .debate.arbiter import Arbiter
 from .trade_engine.plans import build_plan_from_debate
@@ -60,7 +62,8 @@ from .analytics.regime import classify_regime, spy_trend_label
 
 AGENTS: List[Agent] = [
     aegis, forge, thunderhead, jade, veil, kestrel, obsidian, zenith,
-    weaver, hex_agent, synth, speck, vespa, magus, talon, scrooge,
+    weaver, hex_agent, synth, speck, vespa, magus, talon,
+    scrooge, midas,
 ]
 
 
@@ -270,6 +273,20 @@ def build_demo_contexts() -> List[AssetContext]:
             asset_class="etf",
         ),
         build(
+            ticker="SLV", name="iShares Silver Trust", sector="Commodities",
+            price=28.40, change_pct=0.85, volume=18_000_000, avg_volume_30d=16_000_000,
+            price_history=gen_history(25, drift=0.0015, vol=0.018),
+            sentiment_score=0.22, article_count=3,
+            asset_class="etf",
+        ),
+        build(
+            ticker="UUP", name="Invesco DB US Dollar Index", sector="FX",
+            price=28.95, change_pct=-0.12, volume=1_800_000, avg_volume_30d=2_000_000,
+            price_history=gen_history(28.5, drift=0.0001, vol=0.004),
+            sentiment_score=0.05, article_count=2,
+            asset_class="etf",
+        ),
+        build(
             ticker="TLT", name="iShares 20+ Year Treasury", sector="Rates",
             price=92.80, change_pct=0.45, volume=18_000_000, avg_volume_30d=20_000_000,
             price_history=gen_history(95, drift=-0.0003, vol=0.007),
@@ -317,6 +334,15 @@ def run(mode: str = "demo", output_dir: str = "docs/data") -> None:
     arbiter = Arbiter(agents=AGENTS, aegis_veto_enabled=True)
     debates = arbiter.resolve(contexts)
     debate_dicts = [d.to_dict() for d in debates]
+
+    # Annotate each debate with the context's asset_class (execution needs it)
+    ctx_lookup = {c.ticker: c for c in contexts}
+    for d in debate_dicts:
+        c = ctx_lookup.get(d["ticker"])
+        if c:
+            d["asset_class"] = c.asset_class
+            d["sector"] = c.sector
+
     debate_dicts.sort(
         key=lambda d: (d["consensus"]["score"], d["consensus"]["avg_conviction"]),
         reverse=True,
@@ -346,6 +372,19 @@ def run(mode: str = "demo", output_dir: str = "docs/data") -> None:
     state = scrooge_act(state, top_for_scrooge, prices)
     scrooge_dict = state.to_dict()
 
+    # ── MIDAS (parallel hard-currency compounder) ───────────────
+    midas_state_path = out / "midas.json"
+    mstate = _load_or_init_midas(midas_state_path)
+    midas_candidates = [
+        {
+            "ticker": d["ticker"],
+            "consensus": d["consensus"],
+        }
+        for d in debate_dicts
+    ]
+    mstate = midas_act(mstate, midas_candidates, prices)
+    midas_dict = mstate.to_dict()
+
     # ── Handoff Blocks ──────────────────────────────────────────
     per_asset_handoffs = {
         d["ticker"]: build_asset_deep_dive(_attach_headlines(d, contexts))
@@ -362,21 +401,22 @@ def run(mode: str = "demo", output_dir: str = "docs/data") -> None:
         "per_asset": per_asset_handoffs,
     }
 
-    # ── Agent roster for UI ─────────────────────────────────────
-    agent_roster = [
-        {
+    # ── Agent roster for UI (with full bios) ────────────────────
+    agent_roster = []
+    for a in AGENTS:
+        bio = get_bio(a.codename)
+        agent_roster.append({
             "codename": a.codename,
             "specialty": a.specialty,
             "temperament": a.temperament,
             "inspiration": a.inspiration,
-        }
-        for a in AGENTS
-    ]
+            "bio": bio,
+        })
 
     # ── Main output ─────────────────────────────────────────────
     signals_output = {
         "meta": {
-            "version": "2.0.0",
+            "version": "2.1.0",
             "project": "SILMARIL",
             "run_type": mode,
             "generated_at": now.isoformat(),
@@ -408,12 +448,17 @@ def run(mode: str = "demo", output_dir: str = "docs/data") -> None:
     _write(out / "signals.json", signals_output)
     _write(out / "trade_plans.json", {"meta": signals_output["meta"], "plans": plans})
     _write(out / "scrooge.json", scrooge_dict)
+    _write(out / "midas.json", midas_dict)
     _write(out / "handoff_blocks.json", handoff_blocks)
+
+    # ── Rolling history (per-agent track record, accumulates each run) ─
+    _append_history(out / "history.json", debate_dicts, plans, now)
 
     log.info("✦ SILMARIL run complete")
     log.info("  %d debates resolved", len(debate_dicts))
     log.info("  %d trade plans", len(plans))
     log.info("  SCROOGE: $%.4f (life #%d)", scrooge_dict["balance"], scrooge_dict["current_life"])
+    log.info("  MIDAS:   $%.4f (life #%d)", midas_dict["balance"], midas_dict["current_life"])
     log.info("  Output: %s", out.resolve())
 
 
@@ -438,6 +483,83 @@ def _load_or_init_scrooge(path: Path) -> ScroogeState:
         )
     except Exception:
         return ScroogeState()
+
+
+def _load_or_init_midas(path: Path) -> MidasState:
+    if not path.exists():
+        return MidasState()
+    try:
+        with path.open() as f:
+            data = json.load(f)
+        return MidasState(
+            balance=data.get("balance", 1.0),
+            current_position=data.get("current_position"),
+            lifetime_peak=data.get("lifetime_peak", 1.0),
+            current_life=data.get("current_life", 1),
+            life_start_date=data.get("life_start_date", datetime.now(timezone.utc).date().isoformat()),
+            history=data.get("history", []),
+            deaths=data.get("deaths", []),
+        )
+    except Exception:
+        return MidasState()
+
+
+def _append_history(path: Path, debate_dicts, plans, now) -> None:
+    """Append a compact per-run snapshot to history.json so agent track
+    records accumulate across runs. Kept small (verdicts only — not full
+    debate transcripts) to avoid unbounded file growth."""
+    today = now.date().isoformat()
+    snapshot = {
+        "date": today,
+        "generated_at": now.isoformat(),
+        "verdicts": [
+            {
+                "ticker": d["ticker"],
+                "consensus": d["consensus"]["signal"],
+                "consensus_score": d["consensus"]["score"],
+                "agreement": d["consensus"]["agreement_score"],
+                "votes": [
+                    {
+                        "agent": v["agent"],
+                        "signal": v["signal"],
+                        "conviction": v["conviction"],
+                    }
+                    for v in d.get("verdicts", [])
+                ],
+                "price": d.get("price"),
+            }
+            for d in debate_dicts
+        ],
+        "plans": [
+            {
+                "ticker": p["ticker"],
+                "entry": p.get("entry"),
+                "stop": p.get("stop"),
+                "target": p.get("target"),
+                "reward_risk_ratio": p.get("reward_risk_ratio"),
+                "backers": [b["agent"] for b in p.get("backers", [])],
+            }
+            for p in plans
+        ],
+    }
+
+    # Load existing, append, trim to last 120 snapshots (~6 months of trading days)
+    data = {"runs": []}
+    if path.exists():
+        try:
+            with path.open() as f:
+                data = json.load(f)
+        except Exception:
+            data = {"runs": []}
+
+    # Dedupe: if a run already exists for this date, replace it
+    runs = [r for r in data.get("runs", []) if r.get("date") != today]
+    runs.append(snapshot)
+    runs = runs[-120:]
+    data["runs"] = runs
+
+    with path.open("w") as f:
+        json.dump(data, f, indent=2, default=str)
 
 
 def _attach_headlines(debate: dict, contexts: List[AssetContext]) -> dict:

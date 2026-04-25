@@ -1,18 +1,22 @@
 {
+  "codename": "MIDAS",
+  "style": "hard-currency compounder",
+  "inspiration": "King Midas",
   "balance": 1.0,
   "current_position": {
-    "ticker": "AMD",
-    "shares": 0.00602893,
-    "entry_price": 165.8,
+    "ticker": "GLD",
+    "name": "Gold (SPDR)",
+    "shares": 0.004579,
+    "entry_price": 218.4,
     "entry_date": "2026-04-25",
-    "thesis": "Consensus is BUY, but HEX (SELL) disagree.",
+    "thesis": "Consensus BUY on hard asset (Gold (SPDR)) \u2014 Midas accumulates.",
     "execution": {
-      "order_id": "SIM-20260425-000117-AMD-B",
+      "order_id": "SIM-20260425-000117-GLD-B",
       "side": "BUY",
-      "ticker": "AMD",
+      "ticker": "GLD",
       "asset_class": "etf",
-      "exchange": "NASDAQ",
-      "venue": "electronic equity exchange",
+      "exchange": "NYSE Arca",
+      "venue": "all-electronic ETF/options exchange",
       "broker": "Interactive Brokers (simulated paper account)",
       "order_type": "MARKET",
       "time_in_force": "DAY",
@@ -25,27 +29,27 @@
         "broker": "Interactive Brokers (simulated paper account)",
         "funding_source": "ACH funding from simulated bank account (routed via broker cash sweep)",
         "balance_before": 1.0,
-        "balance_after": 0.0
+        "balance_after": -0.0001
       },
       "fills": [
         {
-          "shares": 0.006029,
-          "price": 165.8,
+          "shares": 0.004579,
+          "price": 218.4,
           "timestamp": "2026-04-25T00:01:19+00:00",
-          "venue": "NASDAQ"
+          "venue": "NYSE Arca"
         }
       ],
-      "avg_fill_price": 165.8,
-      "gross_notional": 0.9996,
+      "avg_fill_price": 218.4,
+      "gross_notional": 1.0,
       "fees": {
         "commission": 0.0,
         "sec_section_31": 0.0,
         "finra_taf": 0.0,
-        "spread_cost": 0.0004,
-        "total": 0.0004,
-        "notes": "Spread estimate: 4 bps. Zero commission (IBKR Lite/TD-class simulated)."
+        "spread_cost": 0.0001,
+        "total": 0.0001,
+        "notes": "Spread estimate: 1 bps. Zero commission (IBKR Lite/TD-class simulated)."
       },
-      "net_cost": 1.0,
+      "net_cost": 1.0001,
       "net_proceeds": null,
       "disclaimer": "Simulated execution \u2014 no live orders were placed on any exchange. Fees modeled on US market structure: SEC Section 31 ($27.80/$1M of sale proceeds), FINRA Trading Activity Fee ($0.000166/share on sells, capped $9.30), Coinbase Advanced taker 0.40% for crypto. Spread cost estimated per ticker."
     }
@@ -53,23 +57,22 @@
   "lifetime_peak": 1.0,
   "current_life": 1,
   "life_start_date": "2026-04-25",
-  "days_alive": 0,
+  "actions_this_life": 1,
   "history": [
     {
       "date": "2026-04-25",
       "action": "BUY",
-      "ticker": "AMD",
-      "shares": 0.00602893,
-      "entry_price": 165.8,
-      "allocated": 1.0,
-      "life": 1,
+      "ticker": "GLD",
+      "shares": 0.004579,
+      "price": 218.4,
+      "cost": 1.0,
       "execution": {
-        "order_id": "SIM-20260425-000117-AMD-B",
+        "order_id": "SIM-20260425-000117-GLD-B",
         "side": "BUY",
-        "ticker": "AMD",
+        "ticker": "GLD",
         "asset_class": "etf",
-        "exchange": "NASDAQ",
-        "venue": "electronic equity exchange",
+        "exchange": "NYSE Arca",
+        "venue": "all-electronic ETF/options exchange",
         "broker": "Interactive Brokers (simulated paper account)",
         "order_type": "MARKET",
         "time_in_force": "DAY",
@@ -82,31 +85,43 @@
           "broker": "Interactive Brokers (simulated paper account)",
           "funding_source": "ACH funding from simulated bank account (routed via broker cash sweep)",
           "balance_before": 1.0,
-          "balance_after": 0.0
+          "balance_after": -0.0001
         },
         "fills": [
           {
-            "shares": 0.006029,
-            "price": 165.8,
+            "shares": 0.004579,
+            "price": 218.4,
             "timestamp": "2026-04-25T00:01:19+00:00",
-            "venue": "NASDAQ"
+            "venue": "NYSE Arca"
           }
         ],
-        "avg_fill_price": 165.8,
-        "gross_notional": 0.9996,
+        "avg_fill_price": 218.4,
+        "gross_notional": 1.0,
         "fees": {
           "commission": 0.0,
           "sec_section_31": 0.0,
           "finra_taf": 0.0,
-          "spread_cost": 0.0004,
-          "total": 0.0004,
-          "notes": "Spread estimate: 4 bps. Zero commission (IBKR Lite/TD-class simulated)."
+          "spread_cost": 0.0001,
+          "total": 0.0001,
+          "notes": "Spread estimate: 1 bps. Zero commission (IBKR Lite/TD-class simulated)."
         },
-        "net_cost": 1.0,
+        "net_cost": 1.0001,
         "net_proceeds": null,
         "disclaimer": "Simulated execution \u2014 no live orders were placed on any exchange. Fees modeled on US market structure: SEC Section 31 ($27.80/$1M of sale proceeds), FINRA Trading Activity Fee ($0.000166/share on sells, capped $9.30), Coinbase Advanced taker 0.40% for crypto. Spread cost estimated per ticker."
       }
     }
   ],
-  "deaths": []
+  "deaths": [],
+  "universe": [
+    "GLD",
+    "IAU",
+    "SLV",
+    "SIVR",
+    "PPLT",
+    "PALL",
+    "UUP",
+    "FXE",
+    "FXY",
+    "FXF"
+  ]
 }

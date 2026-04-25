@@ -27,6 +27,7 @@ from datetime import datetime, timezone
 from typing import Any, Dict, List, Optional
 
 from .base import Agent, AssetContext, Signal, Verdict
+from ..execution.detail import build_execution
 
 
 STARTING_CAPITAL = 1.00  # One US dollar. That's the whole idea.
@@ -124,6 +125,15 @@ def scrooge_act(
             pnl = new_balance - state.balance
             pnl_pct = (exit_price / entry_price - 1) * 100 if entry_price else 0.0
 
+            asset_class = "crypto" if ticker.endswith("-USD") else "etf"
+            execution = build_execution(
+                ticker=ticker, asset_class=asset_class, side="SELL",
+                shares=shares, price=exit_price,
+                available_before=0.0,  # was all-in
+            )
+            # Realize the fee drag against the proceeds
+            realized = execution["net_proceeds"] or new_balance
+
             state.history.append({
                 "date": today,
                 "action": "SELL",
@@ -131,14 +141,15 @@ def scrooge_act(
                 "shares": shares,
                 "exit_price": round(exit_price, 4),
                 "entry_price": round(entry_price, 4),
-                "pnl": round(pnl, 4),
+                "pnl": round(realized - state.balance, 4),
                 "pnl_pct": round(pnl_pct, 2),
-                "balance_after": round(new_balance, 4),
+                "balance_after": round(realized, 4),
                 "life": state.current_life,
+                "execution": execution,
             })
 
-            state.balance = new_balance
-            state.lifetime_peak = max(state.lifetime_peak, new_balance)
+            state.balance = realized
+            state.lifetime_peak = max(state.lifetime_peak, realized)
             state.current_position = None
         else:
             # Price unavailable — hold the position one more day
@@ -196,13 +207,33 @@ def scrooge_act(
         return state
 
     # ── Step 4: Full allocation into the single best pick ───────
-    shares = state.balance / entry_price
+    asset_class = "crypto" if ticker.endswith("-USD") else "etf"
+    # Account for buy-side fees so we don't over-allocate
+    available = state.balance
+    # Rough pre-compute: we want shares such that shares*price + fees ≈ balance
+    # Simple iterative fit (cheap because fees are tiny)
+    shares = available / entry_price
+    for _ in range(3):
+        test_exec = build_execution(
+            ticker=ticker, asset_class=asset_class, side="BUY",
+            shares=shares, price=entry_price, available_before=available,
+        )
+        over = (test_exec["net_cost"] or 0) - available
+        if over <= 0.0001:
+            break
+        shares -= (over / entry_price) * 1.01
+    execution = build_execution(
+        ticker=ticker, asset_class=asset_class, side="BUY",
+        shares=shares, price=entry_price, available_before=available,
+    )
+
     state.current_position = {
         "ticker": ticker,
         "shares": round(shares, 8),
         "entry_price": round(entry_price, 4),
         "entry_date": today,
         "thesis": pick.get("rationale", "highest consensus signal today"),
+        "execution": execution,
     }
 
     state.history.append({
@@ -213,6 +244,7 @@ def scrooge_act(
         "entry_price": round(entry_price, 4),
         "allocated": round(state.balance, 4),
         "life": state.current_life,
+        "execution": execution,
     })
 
     return state
