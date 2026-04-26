@@ -12,6 +12,18 @@ from datetime import datetime, timezone, timedelta
 from pathlib import Path
 from typing import Dict, List
 import json
+import math as _math
+def _sanitize_json(obj):
+    """Recursively convert NaN/Inf to None for valid JSON output."""
+    if isinstance(obj, float):
+        if _math.isnan(obj) or _math.isinf(obj):
+            return None
+        return obj
+    if isinstance(obj, dict):
+        return {k: _sanitize_json(v) for k, v in obj.items()}
+    if isinstance(obj, (list, tuple)):
+        return [_sanitize_json(v) for v in obj]
+    return obj
 
 
 # Static known recurring catalysts. EIA inventory always Wednesday.
@@ -108,4 +120,4 @@ def build_catalyst_roundup(today_iso: str) -> Dict:
 
 def write_catalysts_json(out_path: Path, today_iso: str) -> None:
     payload = build_catalyst_roundup(today_iso)
-    out_path.write_text(json.dumps(payload, indent=2))
+    out_path.write_text(json.dumps(_sanitize_json(payload), indent=2, allow_nan=False))

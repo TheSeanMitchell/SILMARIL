@@ -97,12 +97,16 @@ def build_plan_from_debate(
         return None
 
     # ── Aggregate backers' suggested entries/stops/targets ──────
+    import math
+    def _finite(x):
+        return x is not None and isinstance(x, (int, float)) and not math.isnan(float(x)) and not math.isinf(float(x))
+
     voting = [
         v for v in debate.get("verdicts", [])
         if v["signal"] in ("BUY", "STRONG_BUY")
-        and v.get("suggested_entry")
-        and v.get("suggested_stop")
-        and v.get("suggested_target")
+        and _finite(v.get("suggested_entry"))
+        and _finite(v.get("suggested_stop"))
+        and _finite(v.get("suggested_target"))
     ]
 
     if not voting:

@@ -1606,22 +1606,35 @@
 
   async function loadData() {
     if (window.__SILMARIL_DATA__) return window.__SILMARIL_DATA__;
+    // Tolerant fetch: handle the rare case where a JSON file contains
+    // NaN/Infinity (which is invalid JSON but Python emits if not sanitized).
+    const safeFetch = async (path, fallback) => {
+      try {
+        const res = await fetch(path);
+        const txt = await res.text();
+        const cleaned = txt.replace(/\bNaN\b/g, 'null').replace(/\b-?Infinity\b/g, 'null');
+        return JSON.parse(cleaned);
+      } catch (e) {
+        console.warn('Failed to load', path, e);
+        return fallback;
+      }
+    };
     const [signals, trade_plans, scrooge, midas, cryptobro, jrr_token, sports_bro, sports_markets, agent_portfolios, scoring, risk_state, catalysts, charts, handoff_blocks, history] = await Promise.all([
-      fetch(DATA_BASE + 'signals.json').then(r => r.json()),
-      fetch(DATA_BASE + 'trade_plans.json').then(r => r.json()),
-      fetch(DATA_BASE + 'scrooge.json').then(r => r.json()),
-      fetch(DATA_BASE + 'midas.json').then(r => r.json()).catch(() => null),
-      fetch(DATA_BASE + 'cryptobro.json').then(r => r.json()).catch(() => null),
-      fetch(DATA_BASE + 'jrr_token.json').then(r => r.json()).catch(() => null),
-      fetch(DATA_BASE + 'sports_bro.json').then(r => r.json()).catch(() => null),
-      fetch(DATA_BASE + 'sports_markets.json').then(r => r.json()).catch(() => null),
-      fetch(DATA_BASE + 'agent_portfolios.json').then(r => r.json()).catch(() => null),
-      fetch(DATA_BASE + 'scoring.json').then(r => r.json()).catch(() => null),
-      fetch(DATA_BASE + 'risk_state.json').then(r => r.json()).catch(() => null),
-      fetch(DATA_BASE + 'catalysts.json').then(r => r.json()).catch(() => null),
-      fetch(DATA_BASE + 'charts.json').then(r => r.json()).catch(() => null),
-      fetch(DATA_BASE + 'handoff_blocks.json').then(r => r.json()),
-      fetch(DATA_BASE + 'history.json').then(r => r.json()).catch(() => ({ runs: [] })),
+      safeFetch(DATA_BASE + 'signals.json', { debates: [], meta: {} }),
+      safeFetch(DATA_BASE + 'trade_plans.json', { plans: [], rejected: [] }),
+      safeFetch(DATA_BASE + 'scrooge.json', null),
+      safeFetch(DATA_BASE + 'midas.json', null),
+      safeFetch(DATA_BASE + 'cryptobro.json', null),
+      safeFetch(DATA_BASE + 'jrr_token.json', null),
+      safeFetch(DATA_BASE + 'sports_bro.json', null),
+      safeFetch(DATA_BASE + 'sports_markets.json', null),
+      safeFetch(DATA_BASE + 'agent_portfolios.json', null),
+      safeFetch(DATA_BASE + 'scoring.json', null),
+      safeFetch(DATA_BASE + 'risk_state.json', null),
+      safeFetch(DATA_BASE + 'catalysts.json', null),
+      safeFetch(DATA_BASE + 'charts.json', null),
+      safeFetch(DATA_BASE + 'handoff_blocks.json', { per_plan: {}, per_asset: {} }),
+      safeFetch(DATA_BASE + 'history.json', { runs: [] }),
     ]);
     return { signals, trade_plans, scrooge, midas, cryptobro, jrr_token, sports_bro, sports_markets, agent_portfolios, scoring, risk_state, catalysts, charts, handoff_blocks, history };
   }

@@ -29,6 +29,18 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 import json
+import math as _math
+def _sanitize_json(obj):
+    """Recursively convert NaN/Inf to None for valid JSON output."""
+    if isinstance(obj, float):
+        if _math.isnan(obj) or _math.isinf(obj):
+            return None
+        return obj
+    if isinstance(obj, dict):
+        return {k: _sanitize_json(v) for k, v in obj.items()}
+    if isinstance(obj, (list, tuple)):
+        return [_sanitize_json(v) for v in obj]
+    return obj
 
 
 # Score thresholds
@@ -311,4 +323,4 @@ def save_scoring(path: Path, outcomes: List[Dict[str, Any]], summary: Dict[str, 
         "outcomes": capped,
         "summary": summary,
     }
-    path.write_text(json.dumps(payload, indent=2, default=str))
+    path.write_text(json.dumps(_sanitize_json(payload), indent=2, default=str, allow_nan=False))

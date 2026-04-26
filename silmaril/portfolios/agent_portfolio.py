@@ -31,6 +31,18 @@ from datetime import datetime, timezone
 from typing import Any, Dict, List, Optional
 
 from ..execution.detail import build_execution
+import math as _math
+def _sanitize_json(obj):
+    """Recursively convert NaN/Inf to None for valid JSON output."""
+    if isinstance(obj, float):
+        if _math.isnan(obj) or _math.isinf(obj):
+            return None
+        return obj
+    if isinstance(obj, dict):
+        return {k: _sanitize_json(v) for k, v in obj.items()}
+    if isinstance(obj, (list, tuple)):
+        return [_sanitize_json(v) for v in obj]
+    return obj
 
 
 STARTING_CAPITAL = 10_000.00
@@ -331,7 +343,7 @@ def save_portfolios(path, portfolios: Dict[str, AgentPortfolio], prices: Dict[st
         },
         "summary": _build_summary(portfolios, prices),
     }
-    Path(path).write_text(json.dumps(payload, indent=2, default=str))
+    Path(path).write_text(json.dumps(_sanitize_json(payload), indent=2, default=str, allow_nan=False))
 
 
 def _serialize_full(p: AgentPortfolio) -> Dict[str, Any]:

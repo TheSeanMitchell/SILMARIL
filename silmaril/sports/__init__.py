@@ -8,6 +8,18 @@ from __future__ import annotations
 from typing import Dict, List
 import json
 from pathlib import Path
+import math as _math
+def _sanitize_json(obj):
+    """Recursively convert NaN/Inf to None for valid JSON output."""
+    if isinstance(obj, float):
+        if _math.isnan(obj) or _math.isinf(obj):
+            return None
+        return obj
+    if isinstance(obj, dict):
+        return {k: _sanitize_json(v) for k, v in obj.items()}
+    if isinstance(obj, (list, tuple)):
+        return [_sanitize_json(v) for v in obj]
+    return obj
 
 
 # Static demo markets — in live mode these come from real APIs
@@ -85,4 +97,4 @@ def write_markets_json(out_path: Path, markets: List[Dict]) -> None:
         "venues": sorted({m["venue"] for m in markets}),
         "categories": sorted({m["category"] for m in markets}),
     }
-    out_path.write_text(json.dumps(payload, indent=2))
+    out_path.write_text(json.dumps(_sanitize_json(payload), indent=2, allow_nan=False))

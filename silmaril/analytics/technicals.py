@@ -53,23 +53,24 @@ def rsi(closes: List[float], period: int = 14) -> Optional[float]:
 
 
 def atr(highs: List[float], lows: List[float], closes: List[float], period: int = 14) -> Optional[float]:
-    """Average True Range over `period` bars."""
+    """Average True Range over `period` bars. Skips NaN data points."""
+    import math
     if len(closes) < period + 1:
         return None
     trs = []
     for i in range(1, len(closes)):
-        tr = max(
-            highs[i] - lows[i],
-            abs(highs[i] - closes[i - 1]),
-            abs(lows[i] - closes[i - 1]),
-        )
+        h, l, c_prev = highs[i], lows[i], closes[i - 1]
+        if any(x is None or (isinstance(x, float) and math.isnan(x)) for x in (h, l, c_prev)):
+            continue
+        tr = max(h - l, abs(h - c_prev), abs(l - c_prev))
         trs.append(tr)
     if len(trs) < period:
         return None
-    # Wilder smoothing
     atr_val = sum(trs[:period]) / period
     for i in range(period, len(trs)):
         atr_val = (atr_val * (period - 1) + trs[i]) / period
+    if math.isnan(atr_val) or math.isinf(atr_val):
+        return None
     return atr_val
 
 
@@ -112,8 +113,10 @@ def lowest_in(closes: List[float], lookback: int) -> Optional[float]:
 
 
 def compute_all(closes: List[float], highs: List[float], lows: List[float]) -> dict:
-    """Compute every indicator. Returns dict with None for anything too short."""
-    return {
+    """Compute every indicator. Returns dict with None for anything too short
+    or numerically degenerate (NaN/Inf)."""
+    import math
+    raw = {
         "sma_20":   sma(closes, 20),
         "sma_50":   sma(closes, 50),
         "sma_200":  sma(closes, 200),
@@ -121,3 +124,10 @@ def compute_all(closes: List[float], highs: List[float], lows: List[float]) -> d
         "atr_14":   atr(highs, lows, closes, 14),
         "bb_width": bollinger_width(closes, 20),
     }
+    out = {}
+    for k, v in raw.items():
+        if v is None or (isinstance(v, float) and (math.isnan(v) or math.isinf(v))):
+            out[k] = None
+        else:
+            out[k] = v
+    return out

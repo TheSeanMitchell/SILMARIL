@@ -1018,7 +1018,7 @@ def _append_history(path: Path, debate_dicts, plans, now) -> None:
     data["runs"] = runs
 
     with path.open("w") as f:
-        json.dump(data, f, indent=2, default=str)
+        json.dump(_sanitize_for_json(data), f, indent=2, default=str, allow_nan=False)
 
 
 def _attach_headlines(debate: dict, contexts: List[AssetContext]) -> dict:
@@ -1107,9 +1107,26 @@ def _compute_summary(debates: List[dict]) -> dict:
     }
 
 
+def _sanitize_for_json(obj):
+    """Recursively replace NaN, +Inf, -Inf with None so the resulting
+    JSON is valid for browsers. JSON spec forbids these values; Python's
+    default encoder writes them as 'NaN'/'Infinity' which JS cannot parse."""
+    import math
+    if isinstance(obj, float):
+        if math.isnan(obj) or math.isinf(obj):
+            return None
+        return obj
+    if isinstance(obj, dict):
+        return {k: _sanitize_for_json(v) for k, v in obj.items()}
+    if isinstance(obj, (list, tuple)):
+        return [_sanitize_for_json(v) for v in obj]
+    return obj
+
+
 def _write(path: Path, data) -> None:
+    clean = _sanitize_for_json(data)
     with path.open("w") as f:
-        json.dump(data, f, indent=2, default=str)
+        json.dump(clean, f, indent=2, default=str, allow_nan=False)
 
 
 # ─────────────────────────────────────────────────────────────────

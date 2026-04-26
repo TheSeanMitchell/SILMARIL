@@ -21,6 +21,18 @@ import json
 from datetime import datetime, timezone, timedelta
 from pathlib import Path
 from typing import Any, Dict, Optional
+import math as _math
+def _sanitize_json(obj):
+    """Recursively convert NaN/Inf to None for valid JSON output."""
+    if isinstance(obj, float):
+        if _math.isnan(obj) or _math.isinf(obj):
+            return None
+        return obj
+    if isinstance(obj, dict):
+        return {k: _sanitize_json(v) for k, v in obj.items()}
+    if isinstance(obj, (list, tuple)):
+        return [_sanitize_json(v) for v in obj]
+    return obj
 
 
 def get_calendar(ticker: str, sector: str = "") -> str:
@@ -90,7 +102,7 @@ def load_cache(path: Path) -> Dict[str, Any]:
 
 def save_cache(path: Path, cache: Dict[str, Any]) -> None:
     """Persist cache to disk."""
-    path.write_text(json.dumps(cache, indent=2, default=str))
+    path.write_text(json.dumps(_sanitize_json(cache), indent=2, default=str, allow_nan=False))
 
 
 def get_cached_price(cache: Dict[str, Any], ticker: str, max_age_hours: int = 72) -> Optional[float]:

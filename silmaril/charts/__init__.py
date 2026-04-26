@@ -12,6 +12,18 @@ from pathlib import Path
 from typing import Dict, List
 import json
 import math
+import math as _math
+def _sanitize_json(obj):
+    """Recursively convert NaN/Inf to None for valid JSON output."""
+    if isinstance(obj, float):
+        if _math.isnan(obj) or _math.isinf(obj):
+            return None
+        return obj
+    if isinstance(obj, dict):
+        return {k: _sanitize_json(v) for k, v in obj.items()}
+    if isinstance(obj, (list, tuple)):
+        return [_sanitize_json(v) for v in obj]
+    return obj
 
 
 def build_chart_series(ticker: str, price_history: List[float], current_price: float) -> Dict:
@@ -54,4 +66,4 @@ def write_charts_json(out_path: Path, debate_dicts, ctx_lookup) -> None:
             continue
         ph = list(getattr(ctx, "price_history", []) or [])
         bundles[ticker] = build_chart_series(ticker, ph, ctx.price)
-    out_path.write_text(json.dumps({"charts": bundles}, indent=2))
+    out_path.write_text(json.dumps(_sanitize_json({"charts": bundles}), indent=2, allow_nan=False))
