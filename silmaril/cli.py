@@ -529,7 +529,23 @@ def run(mode: str = "demo", output_dir: str = "docs/data") -> None:
         for d in debate_dicts
     ]
     prices = {ctx.ticker: ctx.price for ctx in contexts}
-    state = scrooge_act(state, top_for_scrooge, prices)
+
+    # ── Once-per-day gate ─────────────────────────────────────────
+    # The cron fires every 30 min during market hours. We want trade
+    # decisions to happen ONCE per UTC day per agent, not on every
+    # cron run. Multi-trade agents (CryptoBro/JRR/Sports/Baron) have
+    # their own daily caps and reset counters at midnight UTC.
+    def _scrooge_already_acted_today(s):
+        # SCROOGE rotates at most 1× per day. If history shows action today, skip.
+        return any((h.get("date") == today_iso) and h.get("action") in ("BUY", "SELL", "ROTATE", "HODL")
+                   for h in (s.history or []))
+
+    def _midas_already_acted_today(s):
+        # MIDAS minimum cycle is 7 days, but in this gate we just check today
+        return any(h.get("date") == today_iso for h in (s.history or []))
+
+    if not _scrooge_already_acted_today(state):
+        state = scrooge_act(state, top_for_scrooge, prices)
     scrooge_dict = state.to_dict()
 
     # ── MIDAS (parallel hard-currency compounder) ───────────────
@@ -542,7 +558,8 @@ def run(mode: str = "demo", output_dir: str = "docs/data") -> None:
         }
         for d in debate_dicts
     ]
-    mstate = midas_act(mstate, midas_candidates, prices)
+    if not _midas_already_acted_today(mstate):
+        mstate = midas_act(mstate, midas_candidates, prices)
     midas_dict = mstate.to_dict()
 
     # ── CryptoBro (parallel multi-trade crypto compounder) ──────
@@ -555,6 +572,7 @@ def run(mode: str = "demo", output_dir: str = "docs/data") -> None:
         }
         for d in debate_dicts
     ]
+    # CryptoBro respects his per-day cap inside act(); pass through.
     cbstate = cryptobro_act(cbstate, cbro_candidates, prices)
     cryptobro_dict = cbstate.to_dict()
 
@@ -606,26 +624,37 @@ def run(mode: str = "demo", output_dir: str = "docs/data") -> None:
     for agent_name in main_agents:
         if agent_name not in portfolios:
             portfolios[agent_name] = AgentPortfolio(agent=agent_name)
+        p = portfolios[agent_name]
+
+        # Once-per-day gate: only run trade decision if the agent
+        # hasn't already acted on a trade today. Mark-to-market the
+        # current equity on every cron run so the dashboard stays fresh.
+        already_acted_today = any(
+            h.get("date") == today_iso and h.get("action") in ("BUY", "SELL", "ROTATE", "HODL", "OPEN", "CLOSE", "FROZEN")
+            for h in (p.history or [])
+        )
+
         if agent_name in frozen_today:
             # Mark equity but do not act
-            p = portfolios[agent_name]
             mark = None
             if p.current_position:
                 mark = prices.get(p.current_position["ticker"])
             equity = p.total_equity(mark)
-            p.history.append({
-                "date": today_iso,
-                "action": "FROZEN",
-                "reason": (prior_agent_risk.get(agent_name).frozen_reason
-                           if prior_agent_risk.get(agent_name)
-                           else "System safe mode"),
-                "equity": round(equity, 4),
-            })
-            p.equity_curve.append({"date": today_iso, "equity": round(equity, 4)})
-        else:
+            if not already_acted_today:
+                p.history.append({
+                    "date": today_iso,
+                    "action": "FROZEN",
+                    "reason": (prior_agent_risk.get(agent_name).frozen_reason
+                               if prior_agent_risk.get(agent_name)
+                               else "System safe mode"),
+                    "equity": round(equity, 4),
+                })
+                p.equity_curve.append({"date": today_iso, "equity": round(equity, 4)})
+        elif not already_acted_today:
             portfolios[agent_name] = agent_portfolio_act(
                 portfolios[agent_name], debate_dicts, prices,
             )
+        # else: already acted today, no new action — equity will mark-to-market via prices
     save_portfolios(portfolios_path, portfolios, prices)
 
     # ── Phase C: outcome scoring (the learning loop) ────────────

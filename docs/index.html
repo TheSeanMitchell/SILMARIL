@@ -496,6 +496,7 @@
     .matchup-row.midas .name { color: var(--silver); }
     .matchup-row.cryptobro .name { color: #6ee8d3; }
     .matchup-row.jrr_token .name { color: #f396b3; }
+    .matchup-row.sports_bro .name { color: #b88be0; }
     .matchup-row .bar-container {
       position: relative;
       height: 22px;
@@ -514,6 +515,7 @@
     .matchup-row.midas .bar-fill { background: linear-gradient(90deg, var(--silver-deep), var(--silver)); }
     .matchup-row.cryptobro .bar-fill { background: linear-gradient(90deg, #2db8a0, #6ee8d3); }
     .matchup-row.jrr_token .bar-fill { background: linear-gradient(90deg, #b85478, #f396b3); }
+    .matchup-row.sports_bro .bar-fill { background: linear-gradient(90deg, #7a5ba0, #b88be0); }
     .matchup-row .bar-zero { position: absolute; top: 0; bottom: 0; width: 1px; background: var(--muted); opacity: 0.5; }
     .matchup-row .stats { font-family: var(--mono); font-size: 13px; text-align: right; }
     .matchup-row .stats .ret { font-weight: 600; }
@@ -1121,7 +1123,58 @@
     .at-agr { font-family: var(--mono); font-size: 10px; color: var(--text-dim); display: flex; align-items: center; gap: 6px; }
     .at-agr .agr-bar { flex: 1; height: 4px; background: rgba(255, 255, 255, 0.06); border-radius: 2px; overflow: hidden; }
     .at-agr .agr-fill { height: 100%; background: linear-gradient(90deg, var(--gold), var(--silver)); }
-    .at-truncated { padding: 12px; text-align: center; color: var(--muted); font-style: italic; font-size: 12px; }
+    .fd-search {
+      flex: 0 0 280px;
+      padding: 8px 12px;
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      color: var(--text);
+      font-family: var(--mono);
+      font-size: 12px;
+    }
+    .fd-search:focus { outline: none; border-color: var(--gold); }
+
+    /* Trade history panel inside compounder cards */
+    .trade-history {
+      margin-top: 12px;
+      padding-top: 10px;
+      border-top: 1px dashed var(--border);
+    }
+    .trade-history summary {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--muted);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      cursor: pointer;
+      padding: 4px 0;
+    }
+    .trade-history summary:hover { color: var(--gold); }
+    .th-list {
+      max-height: 260px;
+      overflow-y: auto;
+      margin-top: 8px;
+    }
+    .th-row {
+      display: grid;
+      grid-template-columns: 70px 60px 80px 1fr;
+      gap: 6px;
+      padding: 5px 0;
+      font-family: var(--mono);
+      font-size: 10px;
+      border-bottom: 1px dashed rgba(255, 255, 255, 0.04);
+    }
+    .th-row:last-child { border-bottom: none; }
+    .th-row .th-date { color: var(--muted); }
+    .th-row .th-action { font-weight: 700; }
+    .th-row .th-action.BUY, .th-row .th-action.OPEN { color: var(--pos); }
+    .th-row .th-action.SELL, .th-row .th-action.CLOSE { color: var(--neg); }
+    .th-row .th-action.HODL, .th-row .th-action.FROZEN { color: var(--muted); }
+    .th-row .th-tk { color: var(--gold); }
+    .th-row .th-detail { color: var(--text-dim); font-size: 10px; }
+    .th-row .th-detail .pos { color: var(--pos); }
+    .th-row .th-detail .neg { color: var(--neg); }
     .cat-row.weekly { background: rgba(0, 0, 0, 0.18); }
 
     /* Prediction Markets */
@@ -1861,7 +1914,14 @@
   }
 
   function renderFullDebate(debates, featuredTicker, signals) {
-    const rows = debates.map(d => {
+    const search = (STATE.fullDebateSearch || '').toLowerCase().trim();
+    const filtered = search
+      ? debates.filter(d =>
+          d.ticker.toLowerCase().includes(search) ||
+          (d.name || '').toLowerCase().includes(search) ||
+          (d.sector || '').toLowerCase().includes(search))
+      : debates;
+    const rows = filtered.map(d => {
       const c = d.consensus;
       const dissent = (d.dissenters || []).length;
       return `
@@ -1876,20 +1936,26 @@
     }).join('');
     return `
       <div class="card">
-        <div class="card-header">
-          <div>
+        <div class="card-header" style="align-items:flex-start">
+          <div style="flex:1">
             <div class="card-title"><span class="diamond"></span>Full Debate</div>
-            <div class="card-subtitle">Click any row to feature it · Bar = agreement</div>
+            <div class="card-subtitle">Click any row to feature it · Bar = agreement · ${filtered.length} of ${debates.length} shown</div>
           </div>
+          <input class="fd-search" type="text" placeholder="Quick search ticker, name, sector…" value="${esc(STATE.fullDebateSearch || '')}" oninput="window.fullDebateSearch(this.value)"/>
         </div>
         ${renderSummary(signals)}
-        <div class="debate-table">${rows}</div>
+        <div class="debate-table">${rows || '<div class="empty-track" style="padding:20px">No assets match your search.</div>'}</div>
         <div class="abstention-note">
-          ✦ <strong>Why don't all 17 agents vote on every asset?</strong> Each agent has a specialty. TALON only votes on indices, OBSIDIAN only on commodities, MAGUS only on the major index ETFs, MIDAS only on hard currencies. When an asset is outside an agent's expertise, they <em>abstain</em> — that silence is a vote that says "this is not my domain." Forcing them to vote outside their lane would generate noise, not signal. The consensus debug panel on the Featured Debate shows exactly how many voted vs. abstained, and how the math worked out.
+          ✦ <strong>Why don't all 15 agents vote on every asset?</strong> Each agent has a specialty. TALON only votes on indices, OBSIDIAN only on commodities, MAGUS only on the major index ETFs, MIDAS only on hard currencies. When an asset is outside an agent's expertise, they <em>abstain</em> — that silence is a vote that says "this is not my domain." Forcing them to vote outside their lane would generate noise, not signal.
         </div>
       </div>
     `;
   }
+
+  window.fullDebateSearch = function(val) {
+    STATE.fullDebateSearch = val;
+    render();
+  };
 
   function renderCompounder(s, variant) {
     if (!s) return `<div class="card"><div class="card-title"><span class="diamond"></span>${variant.toUpperCase()}</div><div class="empty-track" style="margin-top:14px">Data unavailable</div></div>`;
@@ -1950,6 +2016,7 @@
         ${tiersHtml || (pos ? renderPosition(pos, variant) : '<div class="empty-track" style="margin-top:14px">No position today</div>')}
         ${narrative ? `<div class="narrative-bubble">"${esc(narrative)}"</div>` : ''}
         ${feesLine}
+        ${renderTradeHistory(s.history)}
       </div>
     `;
   }
@@ -1990,13 +2057,14 @@
   }
 
   // ── Three-way compounder matchup chart ─────────────────────
-  function renderMatchup(scrooge, midas, cryptobro, jrrToken) {
-    if (!scrooge && !midas && !cryptobro && !jrrToken) return '';
+  function renderMatchup(scrooge, midas, cryptobro, jrrToken, sportsBro) {
+    if (!scrooge && !midas && !cryptobro && !jrrToken && !sportsBro) return '';
     const rows = [
-      { variant: 'scrooge',   label: 'SCROOGE',   data: scrooge },
-      { variant: 'midas',     label: 'KING MIDAS', data: midas },
-      { variant: 'cryptobro', label: 'CRYPTOBRO', data: cryptobro },
-      { variant: 'jrr_token', label: 'JRR TOKEN', data: jrrToken },
+      { variant: 'scrooge',    label: 'SCROOGE',    data: scrooge },
+      { variant: 'midas',      label: 'KING MIDAS', data: midas },
+      { variant: 'cryptobro',  label: 'CRYPTOBRO',  data: cryptobro },
+      { variant: 'jrr_token',  label: 'JRR TOKEN',  data: jrrToken },
+      { variant: 'sports_bro', label: 'SPORTS BRO', data: sportsBro },
     ].filter(r => r.data);
 
     // Compute return % from inception ($10 starting capital for all compounders)
@@ -2005,14 +2073,12 @@
       ret: ((r.data.balance / 10.00) - 1) * 100,
     }));
 
-    // Bar scale: symmetric, anchored at 0%, expand to whatever extreme is largest
     const absMax = Math.max(50, ...returns.map(r => Math.abs(r.ret)));
-    const range = absMax * 1.1; // 10% headroom
+    const range = absMax * 1.1;
 
     const rowsHtml = returns.map(r => {
       const positive = r.ret >= 0;
       const widthPct = Math.min(50, (Math.abs(r.ret) / range) * 50);
-      // Bar starts at center (50%) and grows left for negative or right for positive
       const fillStyle = positive
         ? `left: 50%; width: ${widthPct}%;`
         : `right: 50%; width: ${widthPct}%;`;
@@ -2026,7 +2092,7 @@
           </div>
           <div class="stats">
             <div class="ret ${retClass}">${r.ret >= 0 ? '+' : ''}${r.ret.toFixed(2)}%</div>
-            <div class="bal">${fmtMoney(r.data.balance, 4)}</div>
+            <div class="bal">${fmtMoney(r.data.balance, 2)}</div>
           </div>
         </div>
       `;
@@ -2036,12 +2102,12 @@
       <div class="card matchup-card">
         <div class="card-header">
           <div>
-            <div class="card-title"><span class="diamond"></span>Three-Way Matchup</div>
-            <div class="card-subtitle">SCROOGE vs MIDAS vs CRYPTOBRO · % return from $1 inception</div>
+            <div class="card-title"><span class="diamond"></span>Compounder Matchup</div>
+            <div class="card-subtitle">All five $10 compounders · % return since reset · their cycle and frequency vary by archetype</div>
           </div>
         </div>
         <div class="matchup-rows">${rowsHtml}</div>
-        <div class="matchup-legend">All three start at $1.00. Bars centered at 0%, scale ±${range.toFixed(0)}%. CRYPTOBRO can rotate up to 5×/day; the other two are once-per-day.</div>
+        <div class="matchup-legend">All five start at $10.00. Bars centered at 0%, scale ±${range.toFixed(0)}%. SCROOGE & MIDAS rotate at most 1×/day; CRYPTOBRO 5×/day; JRR TOKEN 12×/day across two tiers; SPORTS BRO 8 bets/day on Polymarket+Kalshi.</div>
       </div>
     `;
   }
@@ -2088,8 +2154,8 @@
   // Persisted in localStorage so it survives across page loads.
   // ──────────────────────────────────────────────────────────
 
-  const CAREER_KEY = 'silmaril_careers_v2';
-  const CAREER_STARTING_CAPITAL = 5000.00;
+  const CAREER_KEY = 'silmaril_careers_v3';
+  const CAREER_STARTING_CAPITAL = 10000.00;
 
   function loadCareers() {
     try {
@@ -2878,6 +2944,7 @@
               <span class="val">${fmtMoney(lifetimeFees, 2)}</span>
             </div>
           ` : ''}
+          ${renderTradeHistory(p.history, 'Trade History')}
         </div>
       `;
     };
@@ -2898,10 +2965,60 @@
     `;
   }
 
+  function renderTradeHistory(history, label = 'Trade History') {
+    const rows = (history || []).slice().reverse().slice(0, 25);
+    if (!rows.length) {
+      return `<details class="trade-history"><summary>${esc(label)} (0)</summary><div class="th-list" style="padding:10px; color:var(--muted); font-style:italic; font-size:10px">No trades recorded yet.</div></details>`;
+    }
+    const html = rows.map(h => {
+      const action = h.action || '';
+      const ticker = h.ticker || h.market || '—';
+      let detail = '';
+      if (action === 'BUY' || action === 'OPEN') {
+        detail = `${h.shares ? fmt(h.shares, 4) + ' sh' : ''} @ ${h.price ? fmtMoney(h.price, h.price < 1 ? 4 : 2) : (h.entry_price ? fmtMoney(h.entry_price, h.entry_price < 1 ? 4 : 2) : '—')}${h.fees != null ? ` · fees ${fmtMoney(h.fees, 4)}` : ''}`;
+      } else if (action === 'SELL' || action === 'CLOSE') {
+        const pnl = h.pnl != null ? h.pnl : (h.pnl_pct);
+        const pnlCls = (pnl || 0) >= 0 ? 'pos' : 'neg';
+        const pnlText = h.pnl != null
+          ? `<span class="${pnlCls}">${h.pnl >= 0 ? '+' : ''}${fmtMoney(h.pnl, 4)}${h.pnl_pct != null ? ` (${h.pnl_pct >= 0 ? '+' : ''}${h.pnl_pct.toFixed(2)}%)` : ''}</span>`
+          : '';
+        detail = `${h.shares ? fmt(h.shares, 4) + ' sh @ ' + (h.price ? fmtMoney(h.price, h.price < 1 ? 4 : 2) : '—') : ''} · ${pnlText}`;
+      } else if (action === 'HODL') {
+        detail = h.reason ? esc(h.reason).slice(0, 80) : 'HODL';
+      } else if (action === 'FROZEN') {
+        detail = esc(h.reason || 'Frozen');
+      } else if (action === 'SETTLE') {
+        const pnlCls = (h.pnl || 0) >= 0 ? 'pos' : 'neg';
+        detail = `<span class="${pnlCls}">${h.pnl >= 0 ? '+' : ''}${fmtMoney(h.pnl, 4)}</span> ${h.won ? 'WON' : 'lost'} · stake ${fmtMoney(h.stake, 4)}`;
+      } else {
+        detail = h.reason ? esc(h.reason).slice(0, 80) : '';
+      }
+      return `
+        <div class="th-row">
+          <span class="th-date">${esc((h.date || '').slice(5))}</span>
+          <span class="th-action ${action}">${esc(action)}</span>
+          <span class="th-tk">${esc(String(ticker).slice(0, 10))}</span>
+          <span class="th-detail">${detail}</span>
+        </div>
+      `;
+    }).join('');
+    return `
+      <details class="trade-history">
+        <summary>${esc(label)} (${(history || []).length} total · last ${rows.length})</summary>
+        <div class="th-list">${html}</div>
+      </details>
+    `;
+  }
+
+  function renderTradeHistoryFromExecutions(history, label) {
+    return renderTradeHistory(history, label);
+  }
+
   function renderSportsBroCompact(sb, markets) {
     if (!sb) return '<div class="card compounder sports-bro"><div class="card-title"><span class="diamond"></span>SPORTS BRO</div><div class="empty-track" style="margin-top:14px">Awaiting first run</div></div>';
     const open = sb.open_bets || [];
-    const lifetimeFees = 0;
+    const stakeInBets = open.reduce((sum, b) => sum + (b.stake || 0), 0);
+    const totalEquity = (sb.balance || 0) + stakeInBets;
     const peak = sb.lifetime_peak || 10.0;
     const daysAlive = sb.days_alive != null ? sb.days_alive : 0;
     const bestMkt = markets && markets.best_edge;
@@ -2922,15 +3039,17 @@
             <div class="card-subtitle">Polymarket + Kalshi · half-Kelly</div>
           </div>
         </div>
-        <div class="balance">${fmtMoney(sb.balance, 2)}</div>
-        <div class="balance-label">Current Balance · ${open.length} open bet${open.length === 1 ? '' : 's'}</div>
+        <div class="balance">${fmtMoney(totalEquity, 2)}</div>
+        <div class="balance-label">Cash ${fmtMoney(sb.balance, 2)} · ${open.length} open bet${open.length === 1 ? '' : 's'} (${fmtMoney(stakeInBets, 2)} staked)</div>
         <div class="life-pill">LIFE #${sb.current_life} · ${daysAlive}d</div>
         <div class="compounder-stats">
           <div class="row"><span class="k">Peak</span><span class="v">${fmtMoney(peak, 2)}</span></div>
           <div class="row"><span class="k">Deaths</span><span class="v">${(sb.deaths || []).length}</span></div>
-          <div class="row"><span class="k">Trades</span><span class="v">${(sb.history || []).length}</span></div>
+          <div class="row"><span class="k">Lifetime trades</span><span class="v">${(sb.history || []).length}</span></div>
+          <div class="row"><span class="k">Daily cap</span><span class="v">${sb.trades_today || 0} / ${sb.max_trades_per_day || 8}</span></div>
         </div>
         ${bestHtml}
+        ${renderTradeHistory(sb.history, 'Bet History')}
       </div>
     `;
   }
@@ -3876,7 +3995,7 @@
         ${renderSportsBroCompact(STATE.sports_bro, STATE.sports_markets)}
       </div>
 
-      ${renderMatchup(scrooge, midas, cryptobro, jrr_token)}
+      ${renderMatchup(scrooge, midas, cryptobro, jrr_token, sports_bro)}
 
       ${renderSpecialists()}
 
