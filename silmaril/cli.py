@@ -807,10 +807,12 @@ Reply concisely.
     # Build macro brief from market regime
     def _macro_brief():
         from .handoff.deeplinks import build_handoffs
+        vix_str = f"{first.vix:.1f}" if first.vix is not None else "n/a"
+        regime_str = first.market_regime if first.market_regime else "UNKNOWN"
         text = f"""SILMARIL Daily Macro Brief
 
-Market regime: {first.market_regime}
-VIX: {first.vix:.1f}
+Market regime: {regime_str}
+VIX: {vix_str}
 Total assets tracked: {len(contexts)}
 Total debates resolved: {len(debate_dicts)}
 Trade plans surviving risk filter: {len(plans_kept)}
