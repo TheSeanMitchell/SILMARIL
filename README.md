@@ -1,212 +1,99 @@
-"""
-silmaril.ingestion.news — News ingestion via free RSS feeds.
+# ✦ SILMARIL
 
-Two free sources, zero API keys, zero rate-limit headaches:
+**A transparent, multi-agent financial intelligence operating system.**
 
-  1. Google News RSS — one search per ticker via news.google.com/rss/search
-  2. SEC EDGAR RSS   — 8-K filings stream for material-event awareness
+> *"The Silmarils held the light of the Two Trees — gold of Laurelin and silver of Telperion — preserved against the night. This system does something smaller: it preserves the reasoning behind every trade signal, so nothing is lost to a black box."*
 
-Both are public, both are RSS, both work from any IP with no auth.
-"""
+> ⚠️ **EDUCATIONAL SIMULATION ONLY. NOT FINANCIAL ADVICE.**
 
-from __future__ import annotations
+---
 
-import hashlib
-import logging
-import re
-import time
-from dataclasses import dataclass, field
-from typing import Dict, List, Optional
-from urllib.parse import quote
+## What it is
 
-log = logging.getLogger("silmaril.news")
+SILMARIL is not a trading bot. It's a **financial intelligence operating system** — a team of sixteen specialist agents that each analyze the market through a distinct lens, debate publicly, and produce fully-specified trade plans with the reasoning preserved.
 
+Every number on the site is inspectable. Every agent's logic is a readable Python module. Every trade plan has an entry, a stop, a target, and an invalidation condition. Every debate shows who dissented and why.
 
-@dataclass
-class Article:
-    """Normalized article record."""
-    id: str
-    ticker: Optional[str]
-    title: str
-    source: str
-    url: str
-    published_iso: Optional[str] = None
-    summary: str = ""
+**Zero paid APIs. Zero hidden LLM calls. 100% transparent.**
 
-    def to_dict(self) -> Dict:
-        return {
-            "id": self.id,
-            "ticker": self.ticker,
-            "title": self.title,
-            "source": self.source,
-            "url": self.url,
-            "published": self.published_iso,
-            "summary": self.summary,
-        }
+---
 
+## The sixteen agents
 
-# ─────────────────────────────────────────────────────────────────
-# Google News RSS (per ticker)
-# ─────────────────────────────────────────────────────────────────
+Fifteen specialists + one saver. Each agent is a self-contained strategy with its own personality, its own portfolio, and its own reputation on the leaderboard.
 
-GOOGLE_NEWS_RSS = (
-    "https://news.google.com/rss/search"
-    "?q={query}&hl=en-US&gl=US&ceid=US:en"
-)
+| Codename | Specialty | Temperament |
+|---|---|---|
+| **AEGIS** | Capital Preservation | The veto cop — defends against drawdowns |
+| **FORGE** | Tech-Sector Momentum | Calculated-risk innovator |
+| **THUNDERHEAD** | Volatility Breakout | Explosive, high-conviction swings |
+| **JADE** | Oversold Mean Reversion | Rage-buys the panic |
+| **VEIL** | Sentiment Divergence | Sees what the market misses |
+| **KESTREL** | Precision Entries | Patient hunter, tight stops |
+| **OBSIDIAN** | Commodities & Resources | Sovereign plays, hard assets |
+| **ZENITH** | Long-Duration Trend | Rides momentum to the peak |
+| **WEAVER** | Micro Scalper | Many small, quick wins |
+| **HEX** | Probabilistic Edge | Statistical arbitrage |
+| **SYNTH** | Cross-Market Correlation | Connects the dots across assets |
+| **SPECK** | Small-Cap & Overlooked | Finds the forgotten |
+| **VESPA** | Event-Driven | Earnings, Fed, FDA, catalysts |
+| **MAGUS** | Seasonality & Time | History rhymes |
+| **TALON** | Market Structure | Index-level, breadth, regime |
+| **SCROOGE** | The $1 Compounder | A single dollar, compounded forever |
 
+SCROOGE is special. He starts with $1. Every day, he takes whatever he has and puts it entirely into the single highest-consensus trade plan. Next day, he sells and rolls it into the next. When he blows up — and he will — the counter resets to $1 and we show the reset. The pain of the reset is part of the lesson. *If you had invested just one dollar a day, here's where you'd be.*
 
-def fetch_ticker_news(
-    ticker: str,
-    name: str,
-    max_articles: int = 6,
-    polite_delay: float = 0.4,
-) -> List[Article]:
-    """Fetch recent news for one ticker via Google News RSS.
+---
 
-    polite_delay: seconds between requests when called in a loop (be kind).
-    """
-    try:
-        import feedparser
-    except ImportError:
-        log.error("feedparser not installed; run: pip install feedparser")
-        return []
+## The Handoff Block
 
-    # Build a strong query: ticker symbol OR company name
-    name_clean = re.sub(r"\s+(Inc\.?|Corporation|Corp\.?|Ltd\.?|Co\.?|Company|Holdings|Group)$", "", name).strip()
-    query = f'"{ticker}" OR "{name_clean}"' if name_clean and name_clean != ticker else ticker
-    url = GOOGLE_NEWS_RSS.format(query=quote(query))
+Every asset page, every debate, every trade plan ends with a **Handoff Block** — a copy-ready context bundle with one-click deep-links to your LLM of choice (ChatGPT, Claude, Gemini, Perplexity, Grok). Click the icon, your LLM opens with the full context and a pre-framed question already loaded.
 
-    try:
-        feed = feedparser.parse(url)
-    except Exception as e:
-        log.warning("Google News RSS failed for %s: %s", ticker, e)
-        return []
+SILMARIL doesn't compete with your LLM. SILMARIL makes you a better prompter.
 
-    articles: List[Article] = []
-    for entry in feed.entries[:max_articles]:
-        title = entry.get("title", "").strip()
-        if not title:
-            continue
+---
 
-        # Google News titles come as "Headline - Source Name"
-        source = "Google News"
-        if " - " in title:
-            parts = title.rsplit(" - ", 1)
-            if len(parts) == 2 and len(parts[1]) < 60:
-                title, source = parts[0].strip(), parts[1].strip()
+## Architecture
 
-        link = entry.get("link", "")
-        published = entry.get("published", "") or entry.get("updated", "")
-        aid = _article_id(ticker, title, source)
+```
+ingestion  →  universe  →  analytics  →  agents  →  debate  →  trade_engine  →  output
+    ↑                                                                              ↓
+    └────────────────────────── leaderboard ← performance  ←─────────────────────┘
+```
 
-        articles.append(Article(
-            id=aid,
-            ticker=ticker,
-            title=title,
-            source=source,
-            url=link,
-            published_iso=published or None,
-            summary=(entry.get("summary", "") or "")[:500],
-        ))
+- **Ingestion**: RSS, Google News, SEC EDGAR, yfinance — all free, all cached
+- **Universe**: ~100-asset core + user watchlists + news-discovered tickers
+- **Analytics**: sentiment, technicals, correlations, event calendar, regime classification
+- **Agents**: sixteen independent strategies, one Python module each
+- **Debate**: arbiter collects verdicts, computes consensus, identifies dissent
+- **Trade engine**: full trade plans with entry/stop/target/invalidation
+- **Output**: canonical JSON → static site → GitHub Pages
+- **Leaderboard**: historical performance tracking with git-replay backfill
 
-    if polite_delay > 0:
-        time.sleep(polite_delay)
+---
 
-    return articles
+## Running it
 
+Public repo, GitHub Actions (unlimited minutes on public repos), GitHub Pages. No paid services.
 
-def fetch_news_bulk(
-    ticker_name_pairs: List[tuple],
-    max_articles_per: int = 5,
-) -> Dict[str, List[Article]]:
-    """Fetch news for many tickers sequentially (with polite delays).
+```bash
+git clone https://github.com/YOUR/silmaril
+cd silmaril
+pip install -r requirements.txt
 
-    Returns {ticker: [Article, ...]}. Tickers with no news return [].
-    """
-    results: Dict[str, List[Article]] = {}
-    for i, (ticker, name) in enumerate(ticker_name_pairs):
-        try:
-            results[ticker] = fetch_ticker_news(ticker, name, max_articles=max_articles_per)
-        except Exception as e:
-            log.warning("News fetch failed for %s: %s", ticker, e)
-            results[ticker] = []
-        if i % 10 == 9:
-            log.info("News fetched: %d/%d tickers", i + 1, len(ticker_name_pairs))
-    return results
+python -m silmaril --demo    # sample contexts, offline (great for dev)
+python -m silmaril --live    # fetch real prices + news, write docs/data/*.json
+```
 
+The GitHub Actions workflow (`.github/workflows/daily.yml`) runs `--live`
+automatically after every US market close and commits fresh data to the repo.
 
-# ─────────────────────────────────────────────────────────────────
-# SEC EDGAR RSS — 8-K filings stream
-# ─────────────────────────────────────────────────────────────────
+---
 
-EDGAR_8K_RSS = (
-    "https://www.sec.gov/cgi-bin/browse-edgar"
-    "?action=getcurrent&type=8-K&company=&dateb=&owner=include&count=40&output=atom"
-)
+## The disclaimer that matters
 
+SILMARIL is an **educational simulation**. Every portfolio, every trade plan, every leaderboard number is hypothetical. Nothing here is financial advice. Past simulated performance does not predict future results — especially when the "past" is itself a backtest. Consult a licensed professional before putting real money anywhere.
 
-def fetch_recent_8k_filings(limit: int = 40) -> List[Article]:
-    """Fetch recent 8-K filings (material events) from EDGAR's public RSS.
+---
 
-    SEC requires a User-Agent header with contact info — we set one below.
-    """
-    try:
-        import feedparser
-    except ImportError:
-        return []
-
-    # feedparser supports request_headers in recent versions
-    try:
-        feed = feedparser.parse(
-            EDGAR_8K_RSS,
-            request_headers={"User-Agent": "SILMARIL Research contact@silmaril.local"},
-        )
-    except Exception as e:
-        log.warning("EDGAR RSS failed: %s", e)
-        return []
-
-    articles: List[Article] = []
-    for entry in feed.entries[:limit]:
-        title = entry.get("title", "").strip()
-        if not title:
-            continue
-        aid = _article_id("SEC", title, "EDGAR")
-        articles.append(Article(
-            id=aid,
-            ticker=_extract_ticker_from_title(title),
-            title=title,
-            source="SEC EDGAR",
-            url=entry.get("link", ""),
-            published_iso=entry.get("updated") or entry.get("published"),
-            summary=(entry.get("summary", "") or "")[:500],
-        ))
-    return articles
-
-
-# ─────────────────────────────────────────────────────────────────
-# Helpers
-# ─────────────────────────────────────────────────────────────────
-
-_TICKER_RE = re.compile(r"\(([A-Z]{1,5})\)")
-
-
-def _extract_ticker_from_title(title: str) -> Optional[str]:
-    m = _TICKER_RE.search(title)
-    return m.group(1) if m else None
-
-
-def _article_id(ticker: str, title: str, source: str) -> str:
-    raw = f"{ticker}|{title}|{source}"
-    return hashlib.sha1(raw.encode("utf-8")).hexdigest()[:16]
-
-
-def dedupe_articles(articles: List[Article]) -> List[Article]:
-    """Remove duplicate articles by ID."""
-    seen = set()
-    out = []
-    for a in articles:
-        if a.id in seen:
-            continue
-        seen.add(a.id)
-        out.append(a)
-    return out
+*Built for learning. Powered by open data. Preserved against the night.*

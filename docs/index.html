@@ -914,9 +914,31 @@
     .sports-best-stats .edge-pos { color: var(--pos); font-weight: 600; }
     .sports-open { margin-top: 12px; }
     .sports-open h5 { font-size: 10px; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 8px; }
-    .sports-bet { display: grid; grid-template-columns: 80px 1fr 110px; gap: 10px; padding: 6px 8px; background: rgba(255,255,255,0.03); border-radius: 4px; margin-bottom: 4px; font-family: var(--mono); font-size: 11px; }
-    .sports-bet .venue { color: var(--gold); font-weight: 600; }
-    .sports-bet .stake { text-align: right; color: var(--text-dim); }
+    .sports-bet {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      padding: 8px 10px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      margin-bottom: 6px;
+      font-family: var(--mono);
+      font-size: 11px;
+      text-decoration: none;
+      transition: all 0.12s;
+    }
+    .sports-bet:hover { background: var(--gold-glow); border-color: var(--gold); }
+    .sports-bet .sb-line1 { display: flex; align-items: center; gap: 6px; }
+    .sports-bet .venue { color: var(--gold); font-weight: 700; letter-spacing: 0.05em; font-size: 10px; }
+    .sports-bet .side { padding: 1px 6px; border-radius: 2px; font-size: 9px; font-weight: 700; }
+    .sports-bet .side.YES { background: rgba(156,224,138,0.18); color: var(--pos); }
+    .sports-bet .side.NO { background: rgba(255,144,144,0.18); color: var(--neg); }
+    .sports-bet .open-link { margin-left: auto; color: var(--muted); font-size: 11px; }
+    .sports-bet .sb-line2 { color: var(--text); font-family: var(--display); font-size: 12px; line-height: 1.3; }
+    .sports-bet .sb-line3 { display: flex; flex-wrap: wrap; gap: 10px; color: var(--text-dim); font-size: 10px; }
+    .sports-bet .sb-line3 .stat .lbl { color: var(--muted); margin-right: 3px; }
+    .sub-h { font-family: var(--mono); font-size: 9px; letter-spacing: 0.15em; color: var(--gold); text-transform: uppercase; margin: 12px 0 6px; }
 
     /* Chart panel */
     .chart-panel { margin-top: 16px; padding: 14px; background: rgba(0,0,0,0.18); border: 1px solid var(--border); border-radius: 8px; }
@@ -935,6 +957,55 @@
     .chart-svg { width: 100%; height: 220px; display: block; }
     .chart-stats { display: flex; gap: 18px; margin-top: 10px; font-family: var(--mono); font-size: 11px; color: var(--text-dim); }
     .chart-stats .lbl { color: var(--muted); margin-right: 4px; }
+
+    .agent-vote-panel { margin-top: 12px; padding-top: 10px; border-top: 1px dashed var(--border); }
+    .avp-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+      gap: 6px;
+      margin-top: 6px;
+    }
+    .avp-cell {
+      padding: 6px 8px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--gold);
+      border-radius: 3px;
+      font-family: var(--mono);
+      font-size: 10px;
+      cursor: help;
+    }
+    .avp-cell.STRONG_BUY, .avp-cell.BUY { background: rgba(156, 224, 138, 0.07); }
+    .avp-cell.SELL, .avp-cell.STRONG_SELL { background: rgba(255, 144, 144, 0.07); }
+    .avp-cell.ABSTAIN { opacity: 0.45; }
+    .avp-name { font-weight: 700; letter-spacing: 0.05em; font-size: 9px; }
+    .avp-sig { color: var(--text); font-weight: 600; margin-top: 2px; font-size: 10px; }
+    .avp-cell.STRONG_BUY .avp-sig, .avp-cell.BUY .avp-sig { color: var(--pos); }
+    .avp-cell.SELL .avp-sig, .avp-cell.STRONG_SELL .avp-sig { color: var(--neg); }
+    .avp-conv { color: var(--muted); font-size: 9px; margin-top: 1px; }
+
+    .handoff-tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      margin-bottom: 12px;
+      padding-bottom: 10px;
+      border-bottom: 1px dashed var(--border);
+    }
+    .handoff-tab {
+      padding: 5px 11px;
+      background: transparent;
+      color: var(--muted);
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.05em;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .handoff-tab:hover { color: var(--text); border-color: var(--text-dim); }
+    .handoff-tab.active { background: var(--gold-glow); color: var(--gold); border-color: var(--gold); }
 
     /* Catalysts */
     .catalyst-card { margin-top: 24px; }
@@ -1023,6 +1094,41 @@
     .specialist-card.steadfast-theme .card-title .diamond { background: #9fc7e6; box-shadow: 0 0 10px rgba(159, 199, 230, 0.5); }
     .specialist-card .balance { font-size: 36px; }
     .specialist-card .pos-ticker { display: flex; align-items: center; gap: 4px; }
+    .philosophy-line {
+      font-style: italic;
+      color: var(--text-dim);
+      font-size: 11px;
+      line-height: 1.5;
+      padding: 8px 12px;
+      background: rgba(0, 0, 0, 0.18);
+      border-radius: 4px;
+      border-left: 2px solid var(--gold);
+      margin-bottom: 14px;
+    }
+    .specialist-card.baron-theme .philosophy-line { border-left-color: #e2a76a; }
+    .specialist-card.steadfast-theme .philosophy-line { border-left-color: #9fc7e6; }
+    .sp-watchlist { display: flex; flex-direction: column; gap: 4px; }
+    .sp-watchlist-row {
+      display: grid;
+      grid-template-columns: 110px 100px 1fr;
+      gap: 8px;
+      padding: 6px 8px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      font-family: var(--mono);
+      font-size: 10px;
+      text-decoration: none;
+      transition: all 0.12s;
+      align-items: center;
+    }
+    .sp-watchlist-row:hover { background: var(--gold-glow); border-color: var(--gold); }
+    .sp-watchlist-row .tk { color: var(--gold); display: flex; align-items: center; gap: 4px; font-weight: 600; }
+    .sp-watchlist-row .sg { font-size: 9px; padding: 1px 5px; border-radius: 2px; text-align: center; font-weight: 700; }
+    .sp-watchlist-row .sg.STRONG_BUY, .sp-watchlist-row .sg.BUY { background: rgba(156,224,138,0.15); color: var(--pos); }
+    .sp-watchlist-row .sg.HOLD { background: rgba(208,218,232,0.1); color: var(--muted); }
+    .sp-watchlist-row .sg.SELL, .sp-watchlist-row .sg.STRONG_SELL { background: rgba(255,144,144,0.15); color: var(--neg); }
+    .sp-watchlist-row .agr { color: var(--muted); font-size: 9px; }
 
     .player-stats {
       display: grid;
@@ -1180,7 +1286,21 @@
     /* Prediction Markets */
     .pm-card { margin-top: 24px; }
     .pm-list { display: flex; flex-direction: column; gap: 4px; }
-    .pm-row { display: grid; grid-template-columns: 100px 1fr 160px 80px 110px; gap: 10px; padding: 8px 10px; background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 4px; font-size: 11.5px; align-items: center; }
+    .pm-row {
+      display: grid;
+      grid-template-columns: 100px 1fr 160px 80px 110px;
+      gap: 10px;
+      padding: 8px 10px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      font-size: 11.5px;
+      align-items: center;
+      text-decoration: none;
+      transition: all 0.15s;
+      cursor: pointer;
+    }
+    .pm-row:hover { background: var(--gold-glow); border-color: var(--gold); }
     .pm-row .venue { font-family: var(--display); color: var(--gold); font-weight: 600; letter-spacing: 0.05em; font-size: 10px; }
     .pm-row .q { color: var(--text); }
     .pm-row .probs { font-family: var(--mono); font-size: 10px; color: var(--text-dim); }
@@ -2900,11 +3020,24 @@
     const steadfast = portfolios.STEADFAST;
     if (!baron && !steadfast) return '';
 
-    const buildCard = (p, label, sub, theme) => {
+    const debates = (STATE.signals && STATE.signals.debates) || [];
+
+    const baronUniverse = ['USO','BNO','UCO','SCO','DRIP','UNG','BOIL','KOLD','XLE','XOP','OIH','GUSH','AMLP','XOM','CVX','COP','OXY','SLB','VLO','PSX','MPC','HES','EOG','PXD','MRO','APA','DVN','HAL','BKR'];
+    const steadfastUniverse = ['AAPL','MSFT','NVDA','GOOGL','META','AMZN','BRK-B','JNJ','UNH','XOM','JPM','V','MA','HD','PG','KO','PEP','WMT','COST','MCD','DIS','NKE','ABBV','LLY','PFE','MRK','BAC','WFC','ABT','TMO','LIN','ACN','CRM','ADBE','ORCL','CSCO','AVGO','BLK','GS','MS','SCHW','CAT','DE','BA','HON','RTX','LMT','NOC'];
+
+    // Find this specialist's current view of their universe
+    const universeOpinions = (universe) => debates
+      .filter(d => universe.includes(d.ticker))
+      .map(d => ({ ticker: d.ticker, signal: d.consensus.signal, agree: d.consensus.agreement_score, name: d.name }))
+      .sort((a, b) => (b.agree || 0) - (a.agree || 0))
+      .slice(0, 8);
+
+    const buildCard = (p, label, sub, theme, universe, philosophy) => {
       if (!p) return '';
       const pos = p.current_position;
       const mark = pos ? (_markPrice(pos.ticker) || pos.entry_price) : 0;
-      const equity = (p.balance || 0) + (pos ? pos.shares * mark : 0);
+      const positionValue = pos ? pos.shares * mark : 0;
+      const equity = (p.balance || 0) + positionValue;
       const ret = ((equity / 10000) - 1) * 100;
       const retCls = ret > 0.05 ? 'positive' : ret < -0.05 ? 'negative' : '';
       const lifetimeFees = (p.history || []).reduce((sum, h) => {
@@ -2913,6 +3046,29 @@
       }, 0);
       const lastNarrative = (p.history || []).slice().reverse().find(h => h.thesis || h.reason);
       const narrative = lastNarrative ? (lastNarrative.thesis || lastNarrative.reason) : '';
+      const watchlist = universeOpinions(universe);
+      const watchlistHtml = watchlist.map(w => `
+        <a class="sp-watchlist-row" href="#" onclick="event.preventDefault(); selectFeatured('${esc(w.ticker)}')">
+          <span class="tk">${assetLogo(w.ticker)}${esc(w.ticker)}</span>
+          <span class="sg ${w.signal}">${w.signal.replace('_', ' ')}</span>
+          <span class="agr">${(w.agree * 100).toFixed(0)}% agreement</span>
+        </a>
+      `).join('');
+
+      // State machine summary: where the agent is in their cycle
+      let stateLabel = 'In Cash';
+      let stateNote = '';
+      if (pos) {
+        const daysHeld = pos.entry_date
+          ? Math.max(0, (new Date() - new Date(pos.entry_date)) / 86400000)
+          : 0;
+        stateLabel = `Holding ${pos.ticker}`;
+        stateNote = `${daysHeld.toFixed(0)}d in position · target ${fmtMoney(pos.target || pos.entry_price * 1.10)}`;
+      } else if (p.last_action_date) {
+        stateLabel = 'Watching · cash';
+        stateNote = `Last action ${esc(p.last_action_date)}`;
+      }
+
       return `
         <div class="card specialist-card ${theme}">
           <div class="card-header">
@@ -2921,28 +3077,32 @@
               <div class="card-subtitle">${esc(sub)}</div>
             </div>
           </div>
+          <div class="philosophy-line">${esc(philosophy)}</div>
           <div class="balance">${fmtMoney(equity, 2)}</div>
-          <div class="balance-label">$10,000 career portfolio · ${ret >= 0 ? '+' : ''}${ret.toFixed(2)}% lifetime</div>
+          <div class="balance-label">$10,000 career portfolio · ${ret >= 0 ? '+' : ''}${ret.toFixed(2)}% lifetime · ${stateLabel}</div>
           <div class="compounder-stats">
             <div class="row"><span class="k">Cash</span><span class="v">${fmtMoney(p.balance || 0, 2)}</span></div>
+            <div class="row"><span class="k">Position value</span><span class="v">${fmtMoney(positionValue, 2)}</span></div>
+            <div class="row"><span class="k">Realized P&L</span><span class="v ${(p.realized_pnl || 0) >= 0 ? 'positive' : 'negative'}">${fmtMoney(p.realized_pnl || 0, 2)}</span></div>
             <div class="row"><span class="k">Trades</span><span class="v">${p.trades_count || (p.history || []).length}</span></div>
-            <div class="row"><span class="k">Realized</span><span class="v ${(p.realized_pnl || 0) >= 0 ? 'positive' : 'negative'}">${fmtMoney(p.realized_pnl || 0, 2)}</span></div>
+            <div class="row"><span class="k">Lifetime fees</span><span class="v">${fmtMoney(lifetimeFees, 4)}</span></div>
+            <div class="row"><span class="k">Win rate</span><span class="v">${p.win_rate != null ? (p.win_rate * 100).toFixed(0) + '%' : '—'}</span></div>
           </div>
           ${pos ? `
             <div class="position-card">
               <div class="pos-ticker">${assetLogo(pos.ticker)}${esc(pos.ticker)}${assetTag(pos.ticker)}</div>
-              <div class="pos-line"><span class="lbl">Shares</span><span class="val">${fmt(pos.shares, 2)}</span></div>
-              <div class="pos-line"><span class="lbl">Entry</span><span class="val">${fmtMoney(pos.entry_price)}</span></div>
-              <div class="pos-line"><span class="lbl">Mark</span><span class="val">${fmtMoney(mark)}</span></div>
+              <div class="pos-line"><span class="lbl">Shares</span><span class="val">${fmt(pos.shares, 4)}</span></div>
+              <div class="pos-line"><span class="lbl">Entry</span><span class="val">${fmtMoney(pos.entry_price, pos.entry_price < 1 ? 4 : 2)}</span></div>
+              <div class="pos-line"><span class="lbl">Mark</span><span class="val">${fmtMoney(mark, mark < 1 ? 4 : 2)}</span></div>
               <div class="pos-line"><span class="lbl">P&L</span><span class="val ${mark >= pos.entry_price ? 'positive' : 'negative'}">${((mark / pos.entry_price - 1) * 100).toFixed(2)}%</span></div>
+              ${pos.stop ? `<div class="pos-line"><span class="lbl">Stop</span><span class="val">${fmtMoney(pos.stop, pos.stop < 1 ? 4 : 2)}</span></div>` : ''}
+              ${pos.target ? `<div class="pos-line"><span class="lbl">Target</span><span class="val">${fmtMoney(pos.target, pos.target < 1 ? 4 : 2)}</span></div>` : ''}
             </div>
-          ` : '<div class="empty-track" style="margin-top:14px">Currently in cash · waiting for setup</div>'}
+          ` : `<div class="empty-track" style="margin-top:14px">${esc(stateNote || 'Currently in cash · waiting for setup')}</div>`}
           ${narrative ? `<div class="narrative-bubble">"${esc(narrative)}"</div>` : ''}
-          ${lifetimeFees > 0 ? `
-            <div class="fees-line">
-              <span class="lbl">Lifetime fees paid</span>
-              <span class="val">${fmtMoney(lifetimeFees, 2)}</span>
-            </div>
+          ${watchlist.length ? `
+            <div class="sub-h">Today's Watchlist (their domain · top by agreement)</div>
+            <div class="sp-watchlist">${watchlistHtml}</div>
           ` : ''}
           ${renderTradeHistory(p.history, 'Trade History')}
         </div>
@@ -2954,12 +3114,14 @@
         <div class="card-header">
           <div>
             <div class="card-title"><span class="diamond"></span>Specialists</div>
-            <div class="card-subtitle">$10K career operators · narrow expertise · vote on consensus output, not in the debate itself</div>
+            <div class="card-subtitle">$10K career operators · deep expertise in a narrow domain · take consensus as input, apply their own discipline as filter</div>
           </div>
         </div>
         <div class="specialists-grid">
-          ${buildCard(baron, 'THE BARON', 'Oil & energy specialist · long/short · EIA Wednesday + OPEC catalyst-aware', 'baron-theme')}
-          ${buildCard(steadfast, 'STEADFAST', 'American blue-chip patriot · Crown Jewels universe · 30-day minimum hold', 'steadfast-theme')}
+          ${buildCard(baron, 'THE BARON', 'Oil & energy specialist · long/short · EIA Wednesday + OPEC catalyst-aware', 'baron-theme', baronUniverse,
+            'Long crude on Wednesday draws or supply shocks · short on builds or demand collapse · trades 2× per day max · respects EIA inventory schedule')}
+          ${buildCard(steadfast, 'STEADFAST', 'American blue-chip patriot · Crown Jewels universe · 30-day minimum hold', 'steadfast-theme', steadfastUniverse,
+            'Buys high-quality American businesses on dips · 30-day minimum hold · never chases hype · never panic-sells the Crown Jewels')}
         </div>
       </div>
     `;
@@ -3022,15 +3184,47 @@
     const peak = sb.lifetime_peak || 10.0;
     const daysAlive = sb.days_alive != null ? sb.days_alive : 0;
     const bestMkt = markets && markets.best_edge;
-    const bestHtml = bestMkt
+
+    // Open bet rows (rich, clickable)
+    const openHtml = open.length ? `
+      <div class="sports-open">
+        <div class="sub-h">Open bets (${open.length})</div>
+        ${open.map(b => {
+          const venue = b.venue || 'Polymarket';
+          const search = encodeURIComponent((b.market || '').slice(0, 40));
+          const url = venue === 'Kalshi'
+            ? `https://kalshi.com/markets?q=${search}`
+            : `https://polymarket.com/markets?search=${search}`;
+          return `
+            <a class="sports-bet" href="${esc(url)}" target="_blank" rel="noopener" title="Open on ${esc(venue)}">
+              <div class="sb-line1">
+                <span class="venue">${esc(venue)}</span>
+                <span class="side ${esc(b.side || 'YES')}">${esc(b.side || 'YES')}</span>
+                <span class="open-link">↗</span>
+              </div>
+              <div class="sb-line2">${esc(b.market)}</div>
+              <div class="sb-line3">
+                <span class="stat"><span class="lbl">Stake</span> $${(b.stake || 0).toFixed(3)}</span>
+                <span class="stat"><span class="lbl">Entry</span> ${(b.entry_price * 100).toFixed(0)}¢</span>
+                <span class="stat"><span class="lbl">Edge</span><span style="color:var(--pos)"> +${((b.edge || 0) * 100).toFixed(1)}pp</span></span>
+                ${b.deadline ? `<span class="stat"><span class="lbl">By</span> ${esc(b.deadline)}</span>` : ''}
+              </div>
+            </a>
+          `;
+        }).join('')}
+      </div>
+    ` : '';
+
+    const bestHtml = !open.length && bestMkt
       ? `<div class="position-card sports-best-mini">
-          <div class="pos-ticker">${esc(bestMkt.venue)} · best edge</div>
+          <div class="pos-ticker">${esc(bestMkt.venue)} · best edge available</div>
           <div class="pos-line" style="font-size:11px">${esc(bestMkt.market.slice(0, 60))}</div>
-          <div class="pos-line"><span class="lbl">M</span><span class="val">${(bestMkt.market_prob * 100).toFixed(0)}%</span></div>
-          <div class="pos-line"><span class="lbl">Mod</span><span class="val">${(bestMkt.model_prob * 100).toFixed(0)}%</span></div>
+          <div class="pos-line"><span class="lbl">Market</span><span class="val">${(bestMkt.market_prob * 100).toFixed(0)}%</span></div>
+          <div class="pos-line"><span class="lbl">Model</span><span class="val">${(bestMkt.model_prob * 100).toFixed(0)}%</span></div>
           <div class="pos-line"><span class="lbl">Edge</span><span class="val" style="color:var(--pos)">+${(bestMkt.edge * 100).toFixed(1)}pp</span></div>
         </div>`
-      : '<div class="empty-track" style="margin-top:14px">No edge today</div>';
+      : (open.length ? '' : '<div class="empty-track" style="margin-top:14px">No edge today</div>');
+
     return `
       <div class="card compounder sports-bro">
         <div class="card-header">
@@ -3048,6 +3242,7 @@
           <div class="row"><span class="k">Lifetime trades</span><span class="v">${(sb.history || []).length}</span></div>
           <div class="row"><span class="k">Daily cap</span><span class="v">${sb.trades_today || 0} / ${sb.max_trades_per_day || 8}</span></div>
         </div>
+        ${openHtml}
         ${bestHtml}
         ${renderTradeHistory(sb.history, 'Bet History')}
       </div>
@@ -3074,13 +3269,31 @@
     const openHtml = open.length ? `
       <div class="sports-open">
         <h5>Open positions (${open.length})</h5>
-        ${open.map(b => `
-          <div class="sports-bet">
-            <span class="venue">${esc(b.venue || '')}</span>
-            <span class="q">${esc(b.market)}</span>
-            <span class="stake">$${(b.stake || 0).toFixed(3)} · ${(b.entry_price * 100).toFixed(0)}%</span>
-          </div>
-        `).join('')}
+        ${open.map(b => {
+          // Build a venue search URL for this bet
+          const venue = b.venue || 'Polymarket';
+          const search = encodeURIComponent((b.market || '').slice(0, 40));
+          const url = venue === 'Kalshi'
+            ? `https://kalshi.com/markets?q=${search}`
+            : `https://polymarket.com/markets?search=${search}`;
+          return `
+            <a class="sports-bet" href="${esc(url)}" target="_blank" rel="noopener" title="Open on ${esc(venue)}">
+              <div class="sb-line1">
+                <span class="venue">${esc(venue)}</span>
+                <span class="side ${esc(b.side || 'YES')}">${esc(b.side || 'YES')}</span>
+                <span class="open-link">↗</span>
+              </div>
+              <div class="sb-line2">${esc(b.market)}</div>
+              <div class="sb-line3">
+                <span class="stat"><span class="lbl">Stake</span> $${(b.stake || 0).toFixed(3)}</span>
+                <span class="stat"><span class="lbl">Entry</span> ${(b.entry_price * 100).toFixed(0)}¢</span>
+                <span class="stat"><span class="lbl">Model</span> ${((b.model_prob || 0) * 100).toFixed(0)}%</span>
+                <span class="stat"><span class="lbl">Edge</span><span style="color:var(--pos)"> +${((b.edge || 0) * 100).toFixed(1)}pp</span></span>
+                ${b.deadline ? `<span class="stat"><span class="lbl">By</span> ${esc(b.deadline)}</span>` : ''}
+              </div>
+            </a>
+          `;
+        }).join('')}
       </div>
     ` : '<div class="empty-track" style="margin-top:10px">No open bets — no edge today.</div>';
 
@@ -3173,24 +3386,30 @@
       <rect x="${(padL + innerW + 4).toFixed(2)}" y="${(lastY - 7).toFixed(2)}" width="42" height="14" fill="var(--gold)" rx="2"/>
       <text x="${(padL + innerW + 25).toFixed(2)}" y="${(lastY + 3).toFixed(2)}" text-anchor="middle" fill="var(--bg-deeper)" font-size="9" font-weight="700" font-family="ui-monospace,monospace">${lastClose.toFixed(lastClose < 1 ? 4 : 2)}</text>`;
 
-    // Agent vote markers — overlay on the right edge
+    // Agent vote panel — built below the chart, not overlayed on it
     const debate = (STATE.signals.debates || []).find(d => d.ticker === ticker);
     const verdicts = debate ? (debate.verdicts || []) : [];
     const agentColors = AGENT_COLORS;
-    const lastX = padL + (series.length - 1) * xStep;
-    const markers = verdicts
-      .filter(v => v.signal && v.signal !== 'ABSTAIN')
-      .slice(0, 10)
-      .map((v, i) => {
-        const y = padT + 12 + i * 14;
-        const color = agentColors[v.agent] || '#ffd66e';
-        const sym = v.signal === 'STRONG_BUY' ? '▲' :
-                    v.signal === 'BUY' ? '△' :
-                    v.signal === 'SELL' ? '▽' :
-                    v.signal === 'STRONG_SELL' ? '▼' :
-                    v.signal === 'HOLD' ? '◌' : '·';
-        return `<text x="${lastX.toFixed(2)}" y="${y.toFixed(2)}" fill="${color}" font-size="10" font-family="ui-monospace,monospace" text-anchor="end">${sym} ${esc(v.agent.slice(0, 8))}</text>`;
+
+    // Candlestick rendering (used for crypto/token by default, optional for stocks)
+    const cls = detectAssetClass(ticker);
+    const useCandles = (STATE.chartMode === 'candles') || (cls === 'crypto' || cls === 'token');
+    let candlesSvg = '';
+    if (useCandles && series.length > 1) {
+      const candleW = Math.max(2, Math.min(12, innerW / series.length * 0.7));
+      candlesSvg = series.map((s, i) => {
+        const x = padL + i * xStep;
+        const yO = yScale(s.o), yC = yScale(s.c), yH = yScale(s.h), yL = yScale(s.l);
+        const isUp = s.c >= s.o;
+        const color = isUp ? 'var(--pos)' : 'var(--neg)';
+        const top = Math.min(yO, yC);
+        const height = Math.max(0.5, Math.abs(yC - yO));
+        return `
+          <line x1="${x.toFixed(2)}" y1="${yH.toFixed(2)}" x2="${x.toFixed(2)}" y2="${yL.toFixed(2)}" stroke="${color}" stroke-width="1" opacity="0.7"/>
+          <rect x="${(x - candleW/2).toFixed(2)}" y="${top.toFixed(2)}" width="${candleW.toFixed(2)}" height="${height.toFixed(2)}" fill="${color}" opacity="0.85"/>
+        `;
       }).join('');
+    }
 
     const tfButtons = ['1D', '5D', '1M', '3M', '6M', 'YTD', '1Y', 'ALL'].map(t => `
       <button class="tf-btn ${tf === t ? 'active' : ''}" onclick="window.setTimeframe('${t}')">${t}</button>
@@ -3200,6 +3419,29 @@
     const changePct = (change / closes[0]) * 100;
     const changeCls = change >= 0 ? 'positive' : 'negative';
 
+    // Build the agent vote panel
+    const sigOrder = { STRONG_BUY: 5, BUY: 4, HOLD: 3, ABSTAIN: 2, SELL: 1, STRONG_SELL: 0 };
+    const sortedVerdicts = [...verdicts].sort((a, b) => (sigOrder[b.signal] || 0) - (sigOrder[a.signal] || 0));
+    const agentPanelHtml = sortedVerdicts.length ? `
+      <div class="agent-vote-panel">
+        <div class="sub-h">Agent Votes (${sortedVerdicts.filter(v => v.signal !== 'ABSTAIN').length} active · ${sortedVerdicts.filter(v => v.signal === 'ABSTAIN').length} abstaining)</div>
+        <div class="avp-grid">
+          ${sortedVerdicts.map(v => {
+            const color = agentColors[v.agent] || '#ffd66e';
+            const sigCls = v.signal || 'ABSTAIN';
+            const conv = v.conviction != null ? (v.conviction * 100).toFixed(0) + '%' : '';
+            return `
+              <div class="avp-cell ${sigCls}" title="${esc(v.rationale || '')}" style="border-left-color:${color}">
+                <div class="avp-name" style="color:${color}">${esc(v.agent)}</div>
+                <div class="avp-sig">${(v.signal || 'ABSTAIN').replace('_', ' ')}</div>
+                <div class="avp-conv">${conv}</div>
+              </div>
+            `;
+          }).join('')}
+        </div>
+      </div>
+    ` : '';
+
     return `
       <div class="chart-panel">
         <div class="chart-head">
@@ -3208,7 +3450,10 @@
             <span class="chart-price">${fmtMoney(bundle.current_price, bundle.current_price < 1 ? 4 : 2)}</span>
             <span class="chart-ytd ${changeCls}">${change >= 0 ? '+' : ''}${change.toFixed(bundle.current_price < 1 ? 4 : 2)} (${changePct >= 0 ? '+' : ''}${changePct.toFixed(2)}%) ${tf}</span>
           </div>
-          <div class="tf-row">${tfButtons}</div>
+          <div class="tf-row">
+            <button class="tf-btn ${useCandles ? 'active' : ''}" onclick="window.setChartMode('${useCandles ? 'line' : 'candles'}')" title="Toggle line/candle">${useCandles ? '🕯' : '〜'}</button>
+            ${tfButtons}
+          </div>
         </div>
         <svg viewBox="0 0 ${w} ${h}" class="chart-svg" preserveAspectRatio="none">
           <defs>
@@ -3218,12 +3463,11 @@
             </linearGradient>
           </defs>
           ${yTicks.join('')}
-          <path d="${areaD}" fill="url(#chart-grad-${esc(ticker.replace(/[^A-Za-z0-9]/g, ''))})"/>
-          ${prevDotted}
-          <path d="${pathD}" stroke="var(--gold)" stroke-width="1.8" fill="none"/>
-          ${lastIndicator}
+          ${useCandles
+            ? `${prevDotted}${candlesSvg}${lastIndicator}`
+            : `<path d="${areaD}" fill="url(#chart-grad-${esc(ticker.replace(/[^A-Za-z0-9]/g, ''))})"/>${prevDotted}<path d="${pathD}" stroke="var(--gold)" stroke-width="1.8" fill="none"/>${lastIndicator}`
+          }
           ${xTicks.join('')}
-          ${markers}
         </svg>
         <div class="chart-stats">
           <span><span class="lbl">Open</span> ${fmtMoney(series[0].o, bundle.current_price < 1 ? 4 : 2)}</span>
@@ -3233,9 +3477,15 @@
           <span><span class="lbl">52W L</span> ${fmtMoney(bundle.low_52w, bundle.current_price < 1 ? 4 : 2)}</span>
           <span><span class="lbl">YTD</span> ${bundle.ytd_change_pct >= 0 ? '+' : ''}${bundle.ytd_change_pct.toFixed(2)}%</span>
         </div>
+        ${agentPanelHtml}
       </div>
     `;
   }
+
+  window.setChartMode = function(mode) {
+    STATE.chartMode = mode;
+    render();
+  };
 
   // Agent color palette — used everywhere
   const AGENT_COLORS = {
@@ -3309,13 +3559,13 @@
     const m = STATE.sports_markets;
     if (!m || !m.markets) return '';
     const rows = m.markets.map(mk => `
-      <div class="pm-row">
+      <a class="pm-row" href="${esc(mk.url || '#')}" target="_blank" rel="noopener" title="Open on ${esc(mk.venue)}">
         <span class="venue">${esc(mk.venue)}</span>
-        <span class="q">${esc(mk.market)}</span>
+        <span class="q">${esc(mk.market)} <span style="opacity:0.5; font-size:9px">↗</span></span>
         <span class="probs">M ${(mk.market_prob * 100).toFixed(0)}% / Mod ${(mk.model_prob * 100).toFixed(0)}%</span>
         <span class="edge ${mk.edge > 0 ? 'positive' : 'negative'}">${mk.edge >= 0 ? '+' : ''}${(mk.edge * 100).toFixed(1)}pp</span>
         <span class="cat">${esc(mk.category)}</span>
-      </div>
+      </a>
     `).join('');
     return `
       <div class="card pm-card">
@@ -3895,6 +4145,54 @@
     }).join('')}</div>`;
   }
 
+  function renderLLMHandoffPanel(handoff_blocks, featured) {
+    if (!handoff_blocks) return '';
+    const tabs = [];
+    if (handoff_blocks.debate_summary) tabs.push({ key: 'debate', label: 'Daily Debate', block: handoff_blocks.debate_summary });
+    if (handoff_blocks.scrooge_narrative) tabs.push({ key: 'scrooge', label: 'SCROOGE', block: handoff_blocks.scrooge_narrative });
+    // Add per-specialist narratives if they exist
+    ['midas_narrative', 'cryptobro_narrative', 'jrr_token_narrative', 'sports_bro_narrative', 'baron_narrative', 'steadfast_narrative'].forEach(k => {
+      if (handoff_blocks[k]) {
+        const lbl = k.replace('_narrative', '').toUpperCase().replace('_', ' ');
+        tabs.push({ key: k, label: lbl, block: handoff_blocks[k] });
+      }
+    });
+    if (featured && handoff_blocks.per_asset && handoff_blocks.per_asset[featured.ticker]) {
+      tabs.push({ key: 'asset', label: `${featured.ticker} Deep Dive`, block: handoff_blocks.per_asset[featured.ticker] });
+    }
+    if (handoff_blocks.macro_brief) {
+      tabs.push({ key: 'macro', label: 'Macro Brief', block: handoff_blocks.macro_brief });
+    }
+
+    if (!tabs.length) return '';
+
+    const active = STATE.handoffTab && tabs.find(t => t.key === STATE.handoffTab) ? STATE.handoffTab : tabs[0].key;
+    const activeTab = tabs.find(t => t.key === active);
+    const tabButtons = tabs.map(t => `
+      <button class="handoff-tab ${t.key === active ? 'active' : ''}" onclick="window.setHandoffTab('${esc(t.key)}')">${esc(t.label)}</button>
+    `).join('');
+
+    return `
+      <div class="card" style="margin-top:24px">
+        <div class="card-header">
+          <div>
+            <div class="card-title"><span class="diamond"></span>LLM Handoff</div>
+            <div class="card-subtitle">Bring your own LLM · stress-test any view from this dashboard · copy + send to ChatGPT, Claude, Gemini, Grok</div>
+          </div>
+        </div>
+        <div class="handoff-tabs">${tabButtons}</div>
+        <div class="handoff-active">
+          ${activeTab ? renderHandoff(activeTab.label, activeTab.block) : ''}
+        </div>
+      </div>
+    `;
+  }
+
+  window.setHandoffTab = function(tab) {
+    STATE.handoffTab = tab;
+    render();
+  };
+
   function renderHandoff(title, block, opts = {}) {
     if (!block) return '';
     const compact = opts.compact === true;
@@ -3909,17 +4207,12 @@
       const cls = isCopyGo ? 'handoff-btn secondary' : 'handoff-btn';
       const label = esc(h.display_name);
       if (isCopyGo) {
-        // copy_and_go: clipboard + open homepage
         return `<button class="${cls}" data-llm="${esc(h.llm)}" data-url="${esc(h.url)}" data-prompt-idx="${i}" onclick="copyGoLLM(this)">${label} ↗</button>`;
       }
       return `<a class="${cls}" href="${esc(h.url)}" target="_blank" rel="noopener">${label} ↗</a>`;
     }).join('');
 
-    // Store the prompt as a data attribute on the card itself, not as a
-    // nested script tag (which would terminate the outer script block
-    // regardless of type attribute). HTML-escape so attribute parsing is clean.
     const promptForAttr = esc(promptText);
-
     return `
       <div class="handoff-card" data-handoff-prompt="${promptForAttr}">
         <div class="handoff-title">${esc(title)}</div>
@@ -4027,17 +4320,7 @@
 
       ${renderTutorials()}
 
-      <div class="card" style="margin-top: 24px">
-        <div class="card-header">
-          <div>
-            <div class="card-title"><span class="diamond"></span>LLM Handoff</div>
-            <div class="card-subtitle">Bring your own LLM · copy + send</div>
-          </div>
-        </div>
-        ${renderHandoff('Daily Debate Summary', handoff_blocks.debate_summary)}
-        ${renderHandoff('SCROOGE Narrative', handoff_blocks.scrooge_narrative)}
-        ${featured && handoff_blocks.per_asset && handoff_blocks.per_asset[featured.ticker] ? renderHandoff(`Deep Dive: ${featured.ticker}`, handoff_blocks.per_asset[featured.ticker]) : ''}
-      </div>
+      ${renderLLMHandoffPanel(handoff_blocks, featured)}
 
       ${renderAbout()}
 

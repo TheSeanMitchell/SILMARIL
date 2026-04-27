@@ -216,11 +216,21 @@ def build_live_contexts() -> List[AssetContext]:
 def build_demo_contexts() -> List[AssetContext]:
     """Hand-crafted sample contexts designed to exercise all 16 agents."""
     # Common price-history fill so statistical agents have data
-    def gen_history(center: float, closes: int = 220, drift: float = 0.0002, vol: float = 0.015) -> List[float]:
-        """Generate a synthetic-but-plausible price history by random walk."""
+    def gen_history(center: float, closes: int = 220, drift: float = 0.0002, vol: float = 0.015, seed_key: str = "") -> List[float]:
+        """Generate a synthetic-but-plausible price history by random walk.
+        Seeded deterministically by today's UTC date + a per-ticker key so
+        every same-day cron run produces identical data (no spurious
+        run-to-run drift), but each new UTC day evolves naturally."""
         import random
-        random.seed(hash(center) & 0xFFFF)
-        out = [center * 0.85]   # start lower
+        from datetime import datetime, timezone
+        today_iso = datetime.now(timezone.utc).date().isoformat()
+        # Stable seed: hash of (ticker_key + today + price_anchor)
+        seed_str = f"{seed_key}:{today_iso}:{int(center*100)}"
+        seed_int = 0
+        for ch in seed_str:
+            seed_int = (seed_int * 31 + ord(ch)) & 0x7FFFFFFF
+        random.seed(seed_int)
+        out = [center * 0.85]
         for _ in range(closes):
             out.append(out[-1] * (1 + drift + random.gauss(0, vol)))
         return out
@@ -766,11 +776,69 @@ def run(mode: str = "demo", output_dir: str = "docs/data") -> None:
 
     # Regime/VIX from the first context (all have the same macro)
     first = contexts[0]
+    # Build per-specialist narratives (lightweight wrappers for each)
+    def _agent_narrative(name, state, role):
+        """Build a generic narrative handoff block for any agent state dict."""
+        from .handoff.deeplinks import build_handoffs
+        balance = state.get('balance', 0) if state else 0
+        history = (state or {}).get('history', [])
+        recent_trades = '\n'.join([
+            f"  - {h.get('date', '?')}: {h.get('action', '?')} {h.get('ticker', h.get('market', '?'))}"
+            for h in history[-5:]
+        ]) or '  (no recent trades)'
+        text = f"""You are reviewing the trading record of {name}, a SILMARIL specialist agent.
+
+Role: {role}
+Current balance: ${balance}
+Lifetime trades: {len(history)}
+Most recent activity:
+{recent_trades}
+
+Stress-test {name}'s recent decisions. Are they consistent with their stated philosophy?
+Where would you push back? What blind spots might {name} have given the current market regime?
+Reply concisely.
+"""
+        return {
+            "title": f"{name} Stress Test",
+            "context_text": text,
+            "handoffs": build_handoffs(text),
+        }
+
+    # Build macro brief from market regime
+    def _macro_brief():
+        from .handoff.deeplinks import build_handoffs
+        text = f"""SILMARIL Daily Macro Brief
+
+Market regime: {first.market_regime}
+VIX: {first.vix:.1f}
+Total assets tracked: {len(contexts)}
+Total debates resolved: {len(debate_dicts)}
+Trade plans surviving risk filter: {len(plans_kept)}
+
+Synthesize the macro picture for an investor reviewing this dashboard.
+What are the 2-3 most important things they should know about today's tape?
+What sectors or asset classes are showing the highest agreement among the agents?
+What's being avoided?
+Reply in 3-5 bullets, no preamble.
+"""
+        return {
+            "title": "Macro Brief",
+            "context_text": text,
+            "handoffs": build_handoffs(text),
+        }
+
     handoff_blocks = {
         "debate_summary": build_debate_summary(
             debate_dicts, market_regime=first.market_regime, vix=first.vix
         ),
         "scrooge_narrative": build_scrooge_narrative(scrooge_dict),
+        "midas_narrative": _agent_narrative("MIDAS", midas_dict, "Hard-currency compounder · 7-day cycle · trades only FXE/FXY/FXF/UUP/GLD"),
+        "cryptobro_narrative": _agent_narrative("CRYPTOBRO", cryptobro_dict, "Multi-trade crypto compounder · 5/day cap · highest volatility tolerance"),
+        "jrr_token_narrative": _agent_narrative("JRR_TOKEN", jrr_token_dict, "Two-tier token trader · 6/day per tier · sub-$100M and over-$100M coins"),
+        "sports_bro_narrative": _agent_narrative("SPORTS_BRO", sports_bro_dict, "Prediction-market bettor · half-Kelly · Polymarket + Kalshi only · never sportsbooks"),
+        "baron_narrative": _agent_narrative("BARON", (portfolios.get("BARON").to_dict() if portfolios.get("BARON") else {}), "Oil & energy specialist · long/short · 2/day max · EIA Wednesday catalyst-aware"),
+        "steadfast_narrative": _agent_narrative("STEADFAST", (portfolios.get("STEADFAST").to_dict() if portfolios.get("STEADFAST") else {}), "American blue-chip patriot · Crown Jewels universe · 30-day minimum hold"),
+        "macro_brief": _macro_brief(),
         "per_asset": per_asset_handoffs,
         "per_plan": per_plan_handoffs,
     }

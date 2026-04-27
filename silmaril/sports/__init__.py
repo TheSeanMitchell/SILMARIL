@@ -80,12 +80,24 @@ DEMO_MARKETS: List[Dict] = [
 
 
 def fetch_markets(mode: str = "demo") -> List[Dict]:
-    """Return markets with edge calculations attached. Live mode would
-    call the real APIs; demo returns the static set."""
+    """Return markets with edge calculations + venue links attached."""
     out = []
     for m in DEMO_MARKETS:
         edge = m["model_prob"] - m["market_prob"] if m.get("side") == "YES" else m["market_prob"] - m["model_prob"]
-        out.append({**m, "edge": edge})
+        # Build a deeplink to the appropriate venue search/listing page
+        venue = m.get("venue", "Polymarket")
+        if venue == "Polymarket":
+            # Polymarket gamma API search by query
+            from urllib.parse import quote
+            search = quote(m["market"][:40])
+            url = f"https://polymarket.com/markets?search={search}"
+        elif venue == "Kalshi":
+            from urllib.parse import quote
+            search = quote(m["market"][:40])
+            url = f"https://kalshi.com/markets?q={search}"
+        else:
+            url = "https://polymarket.com/"
+        out.append({**m, "edge": edge, "url": url})
     out.sort(key=lambda m: m["edge"], reverse=True)
     return out
 

@@ -1,1 +1,0 @@
-"""silmaril.handoff package."""

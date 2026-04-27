@@ -124,21 +124,51 @@ def sports_bro_act(state: SportsBroState, candidates: List[Dict]) -> SportsBroSt
         state.trades_today = 0
         return state
 
-    # Settle yesterday's open bets that have a resolution
+    # Auto-settle bets whose deadline has passed.
+    # Real-world settlement comes from venue resolution APIs. As a
+    # transparent proxy: if the bet's deadline has passed, use the
+    # current market_prob from `candidates` (matched by market name)
+    # as the resolved truth. Above 0.50 → YES wins, below → NO wins.
+    today_dt = datetime.now(timezone.utc).date()
+    market_lookup = {c["market"]: c for c in candidates}
     new_open = []
     for bet in state.open_bets:
-        resolved = bet.get("resolved")
-        if resolved:
-            outcome_payout = bet["stake"] * (1 / bet["entry_price"]) if bet["won"] else 0
-            pnl = outcome_payout - bet["stake"]
-            state.balance += outcome_payout
-            state.history.append({
-                "date": today, "action": "SETTLE", "market": bet["market"],
-                "stake": bet["stake"], "won": bet["won"], "pnl": round(pnl, 4),
-                "balance_after": round(state.balance, 6),
-            })
+        deadline_iso = bet.get("deadline")
+        if deadline_iso:
+            try:
+                deadline_dt = datetime.fromisoformat(deadline_iso).date()
+            except Exception:
+                deadline_dt = None
         else:
+            deadline_dt = None
+        is_expired = deadline_dt is not None and today_dt > deadline_dt
+        explicit = bet.get("resolved")
+        if not (is_expired or explicit):
             new_open.append(bet)
+            continue
+        # Resolve
+        if explicit:
+            won = bet.get("won", False)
+            resolution_basis = "venue API"
+        else:
+            current = market_lookup.get(bet["market"])
+            current_prob = current.get("market_prob", 0.5) if current else 0.5
+            if bet.get("side", "YES") == "YES":
+                won = current_prob >= 0.50
+            else:
+                won = current_prob < 0.50
+            resolution_basis = f"deadline-passed proxy (mkt {current_prob:.0%})"
+        # Payout: YES bet at price p pays 1/p multiplier of stake on win
+        outcome_payout = (bet["stake"] * (1 / bet["entry_price"])) if won else 0
+        pnl = outcome_payout - bet["stake"]
+        state.balance += outcome_payout
+        state.history.append({
+            "date": today, "action": "SETTLE", "market": bet["market"],
+            "venue": bet.get("venue", "Polymarket"),
+            "stake": bet["stake"], "won": won, "pnl": round(pnl, 4),
+            "balance_after": round(state.balance, 6),
+            "resolution": resolution_basis,
+        })
     state.open_bets = new_open
     state.lifetime_peak = max(state.lifetime_peak, state.balance)
 

@@ -2,25 +2,25 @@
   "meta": {
     "version": "2.1.0",
     "project": "SILMARIL",
-    "run_type": "live",
-    "generated_at": "2026-04-27T00:15:48.601814+00:00",
+    "run_type": "demo",
+    "generated_at": "2026-04-27T04:57:43.248754+00:00",
     "disclaimer": "SILMARIL is an educational simulation. All content is for informational and entertainment purposes only. NOT financial advice. Always consult a licensed professional before investing."
   },
   "plans": [
     {
-      "plan_id": "plan_20260427_0022_XLK",
-      "ticker": "XLK",
-      "name": "Technology Select Sector SPDR",
+      "plan_id": "plan_20260427_0457_SPY",
+      "ticker": "SPY",
+      "name": "SPDR S&P 500 ETF",
       "direction": "LONG",
-      "entry": 160.22,
-      "stop": 150.61,
-      "target": 179.45,
-      "shares": 12.4828,
+      "entry": 528.4,
+      "stop": 502.54,
+      "target": 575.03,
+      "shares": 3.785,
       "position_value": 2000.0,
-      "risk_amount": 120.0,
-      "risk_pct_of_portfolio": 0.012,
-      "reward_risk_ratio": 2.0,
-      "invalidation": "Close below $153.90 OR break of SMA50 ($141.08) invalidates the momentum thesis.",
+      "risk_amount": 97.87,
+      "risk_pct_of_portfolio": 0.0098,
+      "reward_risk_ratio": 1.8,
+      "invalidation": "Close below SMA-200 ($460.32) \u2014 trend broken, exit.",
       "backers": [
         {
           "agent": "AEGIS",
@@ -28,14 +28,9 @@
           "rationale": "Cautious constructive: clean uptrend with calm volatility."
         },
         {
-          "agent": "FORGE",
-          "conviction": 0.78,
-          "rationale": "High-conviction build: clean uptrend (+13.6% vs SMA50), strong sentiment +0.40, 5 articles."
-        },
-        {
           "agent": "ZENITH",
-          "conviction": 0.634,
-          "rationale": "Perfect stack: price > SMA20 > SMA50 > SMA200, separation 3.4% \u2014 cosmic trend intact."
+          "conviction": 0.719,
+          "rationale": "Perfect stack: price > SMA20 > SMA50 > SMA200, separation 11.9% \u2014 cosmic trend intact."
         },
         {
           "agent": "SYNTH",
@@ -43,28 +38,28 @@
           "rationale": "Risk-on regime supports cyclical exposure."
         },
         {
-          "agent": "SPECK",
-          "conviction": 0.64,
-          "rationale": "Low coverage (5 articles) but sentiment +0.40 and price above SMA-50 \u2014 small edge before crowd arrives."
+          "agent": "TALON",
+          "conviction": 0.6,
+          "rationale": "Index above both SMAs with rising 50-day \u2014 structurally risk-on."
         }
       ],
       "dissenters": [],
-      "consensus_signal": "STRONG_BUY",
+      "consensus_signal": "BUY",
       "portfolio_size": 10000.0,
-      "generated_at": "2026-04-27T00:22:58.822201+00:00",
+      "generated_at": "2026-04-27T04:57:43.267160+00:00",
       "status": "ACTIVE",
       "execution": {
-        "order_id": "SIM-20260427-002258-XLK-B",
+        "order_id": "SIM-20260427-045743-SPY-B",
         "side": "BUY",
-        "ticker": "XLK",
+        "ticker": "SPY",
         "asset_class": "etf",
         "exchange": "NYSE Arca",
         "venue": "all-electronic ETF/options exchange",
         "broker": "Interactive Brokers (simulated paper account)",
         "order_type": "MARKET",
         "time_in_force": "DAY",
-        "submitted_at_utc": "2026-04-27T00:22:58+00:00",
-        "filled_at_utc": "2026-04-27T00:23:00+00:00",
+        "submitted_at_utc": "2026-04-27T04:57:43+00:00",
+        "filled_at_utc": "2026-04-27T04:57:45+00:00",
         "settlement_date": "2026-04-28",
         "account": {
           "label": "EQUITY-CASH-SIM-001",
@@ -76,13 +71,13 @@
         },
         "fills": [
           {
-            "shares": 12.482836,
-            "price": 160.22,
-            "timestamp": "2026-04-27T00:23:00+00:00",
+            "shares": 3.785011,
+            "price": 528.4,
+            "timestamp": "2026-04-27T04:57:45+00:00",
             "venue": "NYSE Arca"
           }
         ],
-        "avg_fill_price": 160.22,
+        "avg_fill_price": 528.4,
         "gross_notional": 2000.0,
         "fees": {
           "commission": 0.0,
@@ -99,31 +94,31 @@
       "brokers": [
         {
           "name": "Robinhood",
-          "url": "https://robinhood.com/stocks/XLK",
+          "url": "https://robinhood.com/stocks/SPY",
           "fee_label": "$0 commission",
           "key": "robinhood"
         },
         {
           "name": "Fidelity",
-          "url": "https://digital.fidelity.com/prgw/digital/research/quote/dashboard/summary?symbol=XLK",
+          "url": "https://digital.fidelity.com/prgw/digital/research/quote/dashboard/summary?symbol=SPY",
           "fee_label": "$0 commission",
           "key": "fidelity"
         },
         {
           "name": "Schwab",
-          "url": "https://www.schwab.com/research/stocks/quotes?symbol=XLK",
+          "url": "https://www.schwab.com/research/stocks/quotes?symbol=SPY",
           "fee_label": "$0 commission",
           "key": "schwab"
         },
         {
           "name": "IBKR",
-          "url": "https://www.interactivebrokers.com/portal/?action=ACCT_MGMT_MAIN&symbol=XLK",
+          "url": "https://www.interactivebrokers.com/portal/?action=ACCT_MGMT_MAIN&symbol=SPY",
           "fee_label": "$0\u20130.005/sh",
           "key": "ibkr"
         },
         {
           "name": "Webull",
-          "url": "https://www.webull.com/quote/XLK",
+          "url": "https://www.webull.com/quote/SPY",
           "fee_label": "$0 commission",
           "key": "webull"
         },
@@ -136,19 +131,19 @@
       ]
     },
     {
-      "plan_id": "plan_20260427_0022_BNO",
-      "ticker": "BNO",
-      "name": "United States Brent Oil Fund",
+      "plan_id": "plan_20260427_0457_QQQ",
+      "ticker": "QQQ",
+      "name": "Invesco QQQ (Nasdaq-100)",
       "direction": "LONG",
-      "entry": 52.59,
-      "stop": 49.43,
-      "target": 58.9,
-      "shares": 38.03,
+      "entry": 445.2,
+      "stop": 418.49,
+      "target": 486.09,
+      "shares": 4.4924,
       "position_value": 2000.0,
       "risk_amount": 120.0,
       "risk_pct_of_portfolio": 0.012,
-      "reward_risk_ratio": 2.0,
-      "invalidation": "Close below SMA-200 ($33.58) \u2014 trend broken, exit.",
+      "reward_risk_ratio": 1.53,
+      "invalidation": "Close below SMA-200 ($388.60) \u2014 trend broken, exit.",
       "backers": [
         {
           "agent": "AEGIS",
@@ -156,38 +151,50 @@
           "rationale": "Cautious constructive: clean uptrend with calm volatility."
         },
         {
-          "agent": "OBSIDIAN",
-          "conviction": 0.72,
-          "rationale": "Commodity trend intact, RSI 59 healthy, sentiment +0.60."
+          "agent": "FORGE",
+          "conviction": 0.6,
+          "rationale": "Constructive: uptrend intact (+10.8% vs SMA50), sentiment +0.15."
         },
         {
           "agent": "ZENITH",
-          "conviction": 0.85,
-          "rationale": "Perfect stack: price > SMA20 > SMA50 > SMA200, separation 45.9% \u2014 cosmic trend intact."
+          "conviction": 0.682,
+          "rationale": "Perfect stack: price > SMA20 > SMA50 > SMA200, separation 8.2% \u2014 cosmic trend intact."
         },
         {
-          "agent": "SPECK",
-          "conviction": 0.7,
-          "rationale": "Low coverage (5 articles) but sentiment +0.60 and price above SMA-50 \u2014 small edge before crowd arrives."
+          "agent": "SYNTH",
+          "conviction": 0.5,
+          "rationale": "Risk-on regime supports cyclical exposure."
+        },
+        {
+          "agent": "TALON",
+          "conviction": 0.6,
+          "rationale": "Index above both SMAs with rising 50-day \u2014 structurally risk-on."
         }
       ],
-      "dissenters": [],
+      "dissenters": [
+        {
+          "agent": "HEX",
+          "signal": "SELL",
+          "conviction": 0.463,
+          "rationale": "Price 2.13\u03c3 above 20-day mean \u2014 reversion probable."
+        }
+      ],
       "consensus_signal": "BUY",
       "portfolio_size": 10000.0,
-      "generated_at": "2026-04-27T00:22:58.822281+00:00",
+      "generated_at": "2026-04-27T04:57:43.267245+00:00",
       "status": "ACTIVE",
       "execution": {
-        "order_id": "SIM-20260427-002258-BNO-B",
+        "order_id": "SIM-20260427-045743-QQQ-B",
         "side": "BUY",
-        "ticker": "BNO",
-        "asset_class": "equity",
-        "exchange": "NYSE Arca",
-        "venue": "all-electronic ETF/options exchange",
+        "ticker": "QQQ",
+        "asset_class": "etf",
+        "exchange": "NASDAQ",
+        "venue": "electronic equity exchange",
         "broker": "Interactive Brokers (simulated paper account)",
         "order_type": "MARKET",
         "time_in_force": "DAY",
-        "submitted_at_utc": "2026-04-27T00:22:58+00:00",
-        "filled_at_utc": "2026-04-27T00:23:00+00:00",
+        "submitted_at_utc": "2026-04-27T04:57:43+00:00",
+        "filled_at_utc": "2026-04-27T04:57:45+00:00",
         "settlement_date": "2026-04-28",
         "account": {
           "label": "EQUITY-CASH-SIM-001",
@@ -195,58 +202,58 @@
           "broker": "Interactive Brokers (simulated paper account)",
           "funding_source": "ACH funding from simulated bank account (routed via broker cash sweep)",
           "balance_before": 10000.0,
-          "balance_after": 7999.4
+          "balance_after": 7999.8
         },
         "fills": [
           {
-            "shares": 38.030044,
-            "price": 52.59,
-            "timestamp": "2026-04-27T00:23:00+00:00",
-            "venue": "NYSE Arca"
+            "shares": 4.492363,
+            "price": 445.2,
+            "timestamp": "2026-04-27T04:57:45+00:00",
+            "venue": "NASDAQ"
           }
         ],
-        "avg_fill_price": 52.59,
+        "avg_fill_price": 445.2,
         "gross_notional": 2000.0,
         "fees": {
           "commission": 0.0,
           "sec_section_31": 0.0,
           "finra_taf": 0.0,
-          "spread_cost": 0.6,
-          "total": 0.6,
-          "notes": "Spread estimate: 3 bps. Zero commission (IBKR Lite/TD-class simulated)."
+          "spread_cost": 0.2,
+          "total": 0.2,
+          "notes": "Spread estimate: 1 bps. Zero commission (IBKR Lite/TD-class simulated)."
         },
-        "net_cost": 2000.6,
+        "net_cost": 2000.2,
         "net_proceeds": null,
         "disclaimer": "Simulated execution \u2014 no live orders were placed on any exchange. Fees modeled on US market structure: SEC Section 31 ($27.80/$1M of sale proceeds), FINRA Trading Activity Fee ($0.000166/share on sells, capped $9.30), Coinbase Advanced taker 0.40% for crypto. Spread cost estimated per ticker."
       },
       "brokers": [
         {
           "name": "Robinhood",
-          "url": "https://robinhood.com/stocks/BNO",
+          "url": "https://robinhood.com/stocks/QQQ",
           "fee_label": "$0 commission",
           "key": "robinhood"
         },
         {
           "name": "Fidelity",
-          "url": "https://digital.fidelity.com/prgw/digital/research/quote/dashboard/summary?symbol=BNO",
+          "url": "https://digital.fidelity.com/prgw/digital/research/quote/dashboard/summary?symbol=QQQ",
           "fee_label": "$0 commission",
           "key": "fidelity"
         },
         {
           "name": "Schwab",
-          "url": "https://www.schwab.com/research/stocks/quotes?symbol=BNO",
+          "url": "https://www.schwab.com/research/stocks/quotes?symbol=QQQ",
           "fee_label": "$0 commission",
           "key": "schwab"
         },
         {
           "name": "IBKR",
-          "url": "https://www.interactivebrokers.com/portal/?action=ACCT_MGMT_MAIN&symbol=BNO",
+          "url": "https://www.interactivebrokers.com/portal/?action=ACCT_MGMT_MAIN&symbol=QQQ",
           "fee_label": "$0\u20130.005/sh",
           "key": "ibkr"
         },
         {
           "name": "Webull",
-          "url": "https://www.webull.com/quote/BNO",
+          "url": "https://www.webull.com/quote/QQQ",
           "fee_label": "$0 commission",
           "key": "webull"
         },
@@ -259,53 +266,43 @@
       ]
     },
     {
-      "plan_id": "plan_20260427_0022_WMT",
-      "ticker": "WMT",
-      "name": "Walmart Inc.",
+      "plan_id": "plan_20260427_0457_KO",
+      "ticker": "KO",
+      "name": "Coca-Cola",
       "direction": "LONG",
-      "entry": 129.92,
-      "stop": 124.0,
-      "target": 141.05,
-      "shares": 15.3941,
+      "entry": 68.2,
+      "stop": 65.5,
+      "target": 74.38,
+      "shares": 29.3255,
       "position_value": 2000.0,
-      "risk_amount": 91.2,
-      "risk_pct_of_portfolio": 0.0091,
-      "reward_risk_ratio": 1.88,
-      "invalidation": "Sentiment reversal or break of 52-week low invalidates the divergence.",
+      "risk_amount": 79.18,
+      "risk_pct_of_portfolio": 0.0079,
+      "reward_risk_ratio": 2.29,
+      "invalidation": "Another 1\u03c3 lower ($72.33) would invalidate mean-reversion setup.",
       "backers": [
         {
-          "agent": "AEGIS",
-          "conviction": 0.55,
-          "rationale": "Cautious constructive: clean uptrend with calm volatility."
-        },
-        {
-          "agent": "VEIL",
-          "conviction": 0.8,
-          "rationale": "Price down -1.6% but sentiment +0.40 \u2014 crowd has seen the turn the tape hasn't confirmed."
-        },
-        {
-          "agent": "ZENITH",
-          "conviction": 0.737,
-          "rationale": "Perfect stack: price > SMA20 > SMA50 > SMA200, separation 13.7% \u2014 cosmic trend intact."
+          "agent": "HEX",
+          "conviction": 1.0,
+          "rationale": "Price -9.05\u03c3 below 20-day mean \u2014 reversion probable."
         }
       ],
       "dissenters": [],
       "consensus_signal": "BUY",
       "portfolio_size": 10000.0,
-      "generated_at": "2026-04-27T00:22:58.822340+00:00",
+      "generated_at": "2026-04-27T04:57:43.267303+00:00",
       "status": "ACTIVE",
       "execution": {
-        "order_id": "SIM-20260427-002258-WMT-B",
+        "order_id": "SIM-20260427-045743-KO-B",
         "side": "BUY",
-        "ticker": "WMT",
+        "ticker": "KO",
         "asset_class": "equity",
         "exchange": "NYSE",
         "venue": "auction-based equity exchange",
         "broker": "Interactive Brokers (simulated paper account)",
         "order_type": "MARKET",
         "time_in_force": "DAY",
-        "submitted_at_utc": "2026-04-27T00:22:58+00:00",
-        "filled_at_utc": "2026-04-27T00:23:00+00:00",
+        "submitted_at_utc": "2026-04-27T04:57:43+00:00",
+        "filled_at_utc": "2026-04-27T04:57:45+00:00",
         "settlement_date": "2026-04-28",
         "account": {
           "label": "EQUITY-CASH-SIM-001",
@@ -317,13 +314,13 @@
         },
         "fills": [
           {
-            "shares": 15.394089,
-            "price": 129.92,
-            "timestamp": "2026-04-27T00:23:00+00:00",
+            "shares": 29.325513,
+            "price": 68.2,
+            "timestamp": "2026-04-27T04:57:45+00:00",
             "venue": "NYSE"
           }
         ],
-        "avg_fill_price": 129.92,
+        "avg_fill_price": 68.2,
         "gross_notional": 2000.0,
         "fees": {
           "commission": 0.0,
@@ -340,31 +337,31 @@
       "brokers": [
         {
           "name": "Robinhood",
-          "url": "https://robinhood.com/stocks/WMT",
+          "url": "https://robinhood.com/stocks/KO",
           "fee_label": "$0 commission",
           "key": "robinhood"
         },
         {
           "name": "Fidelity",
-          "url": "https://digital.fidelity.com/prgw/digital/research/quote/dashboard/summary?symbol=WMT",
+          "url": "https://digital.fidelity.com/prgw/digital/research/quote/dashboard/summary?symbol=KO",
           "fee_label": "$0 commission",
           "key": "fidelity"
         },
         {
           "name": "Schwab",
-          "url": "https://www.schwab.com/research/stocks/quotes?symbol=WMT",
+          "url": "https://www.schwab.com/research/stocks/quotes?symbol=KO",
           "fee_label": "$0 commission",
           "key": "schwab"
         },
         {
           "name": "IBKR",
-          "url": "https://www.interactivebrokers.com/portal/?action=ACCT_MGMT_MAIN&symbol=WMT",
+          "url": "https://www.interactivebrokers.com/portal/?action=ACCT_MGMT_MAIN&symbol=KO",
           "fee_label": "$0\u20130.005/sh",
           "key": "ibkr"
         },
         {
           "name": "Webull",
-          "url": "https://www.webull.com/quote/WMT",
+          "url": "https://www.webull.com/quote/KO",
           "fee_label": "$0 commission",
           "key": "webull"
         },
@@ -377,19 +374,19 @@
       ]
     },
     {
-      "plan_id": "plan_20260427_0022_TSM",
-      "ticker": "TSM",
-      "name": "Taiwan Semiconductor",
+      "plan_id": "plan_20260427_0457_MSFT",
+      "ticker": "MSFT",
+      "name": "Microsoft Corporation",
       "direction": "LONG",
-      "entry": 402.46,
-      "stop": 378.31,
-      "target": 450.76,
-      "shares": 4.9694,
+      "entry": 414.0,
+      "stop": 391.32,
+      "target": 454.59,
+      "shares": 4.8309,
       "position_value": 2000.0,
-      "risk_amount": 120.0,
-      "risk_pct_of_portfolio": 0.012,
-      "reward_risk_ratio": 2.0,
-      "invalidation": "Close back below $387.44 invalidates breakout.",
+      "risk_amount": 109.57,
+      "risk_pct_of_portfolio": 0.011,
+      "reward_risk_ratio": 1.79,
+      "invalidation": "Close below SMA-200 ($337.59) \u2014 trend broken, exit.",
       "backers": [
         {
           "agent": "AEGIS",
@@ -399,41 +396,43 @@
         {
           "agent": "FORGE",
           "conviction": 0.6,
-          "rationale": "Constructive: uptrend intact (+12.9% vs SMA50), sentiment +0.20."
-        },
-        {
-          "agent": "THUNDERHEAD",
-          "conviction": 0.857,
-          "rationale": "Broke 20-day high ($387.44) on 1.6\u00d7 avg volume \u2014 storm has arrived."
+          "rationale": "Constructive: uptrend intact (+16.4% vs SMA50), sentiment +0.22."
         },
         {
           "agent": "ZENITH",
-          "conviction": 0.8,
-          "rationale": "Perfect stack: price > SMA20 > SMA50 > SMA200, separation 20.0% \u2014 cosmic trend intact."
+          "conviction": 0.673,
+          "rationale": "Perfect stack: price > SMA20 > SMA50 > SMA200, separation 7.3% \u2014 cosmic trend intact."
         },
         {
-          "agent": "SPECK",
-          "conviction": 0.58,
-          "rationale": "Low coverage (5 articles) but sentiment +0.20 and price above SMA-50 \u2014 small edge before crowd arrives."
+          "agent": "SYNTH",
+          "conviction": 0.5,
+          "rationale": "Risk-on regime supports cyclical exposure."
         }
       ],
-      "dissenters": [],
+      "dissenters": [
+        {
+          "agent": "HEX",
+          "signal": "SELL",
+          "conviction": 0.764,
+          "rationale": "Price 5.14\u03c3 above 20-day mean \u2014 reversion probable."
+        }
+      ],
       "consensus_signal": "BUY",
       "portfolio_size": 10000.0,
-      "generated_at": "2026-04-27T00:22:58.822397+00:00",
+      "generated_at": "2026-04-27T04:57:43.267403+00:00",
       "status": "ACTIVE",
       "execution": {
-        "order_id": "SIM-20260427-002258-TSM-B",
+        "order_id": "SIM-20260427-045743-MSFT-B",
         "side": "BUY",
-        "ticker": "TSM",
+        "ticker": "MSFT",
         "asset_class": "equity",
         "exchange": "NASDAQ",
         "venue": "electronic equity exchange",
         "broker": "Interactive Brokers (simulated paper account)",
         "order_type": "MARKET",
         "time_in_force": "DAY",
-        "submitted_at_utc": "2026-04-27T00:22:58+00:00",
-        "filled_at_utc": "2026-04-27T00:23:00+00:00",
+        "submitted_at_utc": "2026-04-27T04:57:43+00:00",
+        "filled_at_utc": "2026-04-27T04:57:45+00:00",
         "settlement_date": "2026-04-28",
         "account": {
           "label": "EQUITY-CASH-SIM-001",
@@ -441,1519 +440,58 @@
           "broker": "Interactive Brokers (simulated paper account)",
           "funding_source": "ACH funding from simulated bank account (routed via broker cash sweep)",
           "balance_before": 10000.0,
-          "balance_after": 7999.4
+          "balance_after": 7999.8
         },
         "fills": [
           {
-            "shares": 4.969438,
-            "price": 402.46,
-            "timestamp": "2026-04-27T00:23:00+00:00",
+            "shares": 4.830918,
+            "price": 414.0,
+            "timestamp": "2026-04-27T04:57:45+00:00",
             "venue": "NASDAQ"
           }
         ],
-        "avg_fill_price": 402.46,
+        "avg_fill_price": 414.0,
         "gross_notional": 2000.0,
         "fees": {
           "commission": 0.0,
           "sec_section_31": 0.0,
           "finra_taf": 0.0,
-          "spread_cost": 0.6,
-          "total": 0.6,
-          "notes": "Spread estimate: 3 bps. Zero commission (IBKR Lite/TD-class simulated)."
+          "spread_cost": 0.2,
+          "total": 0.2,
+          "notes": "Spread estimate: 1 bps. Zero commission (IBKR Lite/TD-class simulated)."
         },
-        "net_cost": 2000.6,
+        "net_cost": 2000.2,
         "net_proceeds": null,
         "disclaimer": "Simulated execution \u2014 no live orders were placed on any exchange. Fees modeled on US market structure: SEC Section 31 ($27.80/$1M of sale proceeds), FINRA Trading Activity Fee ($0.000166/share on sells, capped $9.30), Coinbase Advanced taker 0.40% for crypto. Spread cost estimated per ticker."
       },
       "brokers": [
         {
           "name": "Robinhood",
-          "url": "https://robinhood.com/stocks/TSM",
+          "url": "https://robinhood.com/stocks/MSFT",
           "fee_label": "$0 commission",
           "key": "robinhood"
         },
         {
           "name": "Fidelity",
-          "url": "https://digital.fidelity.com/prgw/digital/research/quote/dashboard/summary?symbol=TSM",
+          "url": "https://digital.fidelity.com/prgw/digital/research/quote/dashboard/summary?symbol=MSFT",
           "fee_label": "$0 commission",
           "key": "fidelity"
         },
         {
           "name": "Schwab",
-          "url": "https://www.schwab.com/research/stocks/quotes?symbol=TSM",
+          "url": "https://www.schwab.com/research/stocks/quotes?symbol=MSFT",
           "fee_label": "$0 commission",
           "key": "schwab"
         },
         {
           "name": "IBKR",
-          "url": "https://www.interactivebrokers.com/portal/?action=ACCT_MGMT_MAIN&symbol=TSM",
+          "url": "https://www.interactivebrokers.com/portal/?action=ACCT_MGMT_MAIN&symbol=MSFT",
           "fee_label": "$0\u20130.005/sh",
           "key": "ibkr"
         },
         {
           "name": "Webull",
-          "url": "https://www.webull.com/quote/TSM",
-          "fee_label": "$0 commission",
-          "key": "webull"
-        },
-        {
-          "name": "Alpaca",
-          "url": "https://app.alpaca.markets/",
-          "fee_label": "$0 commission",
-          "key": "alpaca"
-        }
-      ]
-    },
-    {
-      "plan_id": "plan_20260427_0022_DLR",
-      "ticker": "DLR",
-      "name": "Digital Realty Trust",
-      "direction": "LONG",
-      "entry": 200.0,
-      "stop": 188.0,
-      "target": 224.0,
-      "shares": 10.0,
-      "position_value": 2000.0,
-      "risk_amount": 120.0,
-      "risk_pct_of_portfolio": 0.012,
-      "reward_risk_ratio": 2.0,
-      "invalidation": "Close below SMA-200 ($168.68) \u2014 trend broken, exit.",
-      "backers": [
-        {
-          "agent": "AEGIS",
-          "conviction": 0.55,
-          "rationale": "Cautious constructive: clean uptrend with calm volatility."
-        },
-        {
-          "agent": "ZENITH",
-          "conviction": 0.726,
-          "rationale": "Perfect stack: price > SMA20 > SMA50 > SMA200, separation 12.6% \u2014 cosmic trend intact."
-        },
-        {
-          "agent": "SPECK",
-          "conviction": 0.7,
-          "rationale": "Low coverage (5 articles) but sentiment +0.60 and price above SMA-50 \u2014 small edge before crowd arrives."
-        }
-      ],
-      "dissenters": [],
-      "consensus_signal": "BUY",
-      "portfolio_size": 10000.0,
-      "generated_at": "2026-04-27T00:22:58.822451+00:00",
-      "status": "ACTIVE",
-      "execution": {
-        "order_id": "SIM-20260427-002258-DLR-B",
-        "side": "BUY",
-        "ticker": "DLR",
-        "asset_class": "equity",
-        "exchange": "NYSE Arca",
-        "venue": "all-electronic ETF/options exchange",
-        "broker": "Interactive Brokers (simulated paper account)",
-        "order_type": "MARKET",
-        "time_in_force": "DAY",
-        "submitted_at_utc": "2026-04-27T00:22:58+00:00",
-        "filled_at_utc": "2026-04-27T00:23:00+00:00",
-        "settlement_date": "2026-04-28",
-        "account": {
-          "label": "EQUITY-CASH-SIM-001",
-          "type": "Cash Account",
-          "broker": "Interactive Brokers (simulated paper account)",
-          "funding_source": "ACH funding from simulated bank account (routed via broker cash sweep)",
-          "balance_before": 10000.0,
-          "balance_after": 7999.4
-        },
-        "fills": [
-          {
-            "shares": 10.0,
-            "price": 200.0,
-            "timestamp": "2026-04-27T00:23:00+00:00",
-            "venue": "NYSE Arca"
-          }
-        ],
-        "avg_fill_price": 200.0,
-        "gross_notional": 2000.0,
-        "fees": {
-          "commission": 0.0,
-          "sec_section_31": 0.0,
-          "finra_taf": 0.0,
-          "spread_cost": 0.6,
-          "total": 0.6,
-          "notes": "Spread estimate: 3 bps. Zero commission (IBKR Lite/TD-class simulated)."
-        },
-        "net_cost": 2000.6,
-        "net_proceeds": null,
-        "disclaimer": "Simulated execution \u2014 no live orders were placed on any exchange. Fees modeled on US market structure: SEC Section 31 ($27.80/$1M of sale proceeds), FINRA Trading Activity Fee ($0.000166/share on sells, capped $9.30), Coinbase Advanced taker 0.40% for crypto. Spread cost estimated per ticker."
-      },
-      "brokers": [
-        {
-          "name": "Robinhood",
-          "url": "https://robinhood.com/stocks/DLR",
-          "fee_label": "$0 commission",
-          "key": "robinhood"
-        },
-        {
-          "name": "Fidelity",
-          "url": "https://digital.fidelity.com/prgw/digital/research/quote/dashboard/summary?symbol=DLR",
-          "fee_label": "$0 commission",
-          "key": "fidelity"
-        },
-        {
-          "name": "Schwab",
-          "url": "https://www.schwab.com/research/stocks/quotes?symbol=DLR",
-          "fee_label": "$0 commission",
-          "key": "schwab"
-        },
-        {
-          "name": "IBKR",
-          "url": "https://www.interactivebrokers.com/portal/?action=ACCT_MGMT_MAIN&symbol=DLR",
-          "fee_label": "$0\u20130.005/sh",
-          "key": "ibkr"
-        },
-        {
-          "name": "Webull",
-          "url": "https://www.webull.com/quote/DLR",
-          "fee_label": "$0 commission",
-          "key": "webull"
-        },
-        {
-          "name": "Alpaca",
-          "url": "https://app.alpaca.markets/",
-          "fee_label": "$0 commission",
-          "key": "alpaca"
-        }
-      ]
-    },
-    {
-      "plan_id": "plan_20260427_0022_ASML",
-      "ticker": "ASML",
-      "name": "ASML Holding N.V.",
-      "direction": "LONG",
-      "entry": 1457.7,
-      "stop": 1370.24,
-      "target": 1632.62,
-      "shares": 1.372,
-      "position_value": 2000.0,
-      "risk_amount": 120.0,
-      "risk_pct_of_portfolio": 0.012,
-      "reward_risk_ratio": 2.0,
-      "invalidation": "Close below SMA-200 ($1099.12) \u2014 trend broken, exit.",
-      "backers": [
-        {
-          "agent": "AEGIS",
-          "conviction": 0.55,
-          "rationale": "Cautious constructive: clean uptrend with calm volatility."
-        },
-        {
-          "agent": "FORGE",
-          "conviction": 0.6,
-          "rationale": "Constructive: uptrend intact (+3.9% vs SMA50), sentiment +0.20."
-        },
-        {
-          "agent": "ZENITH",
-          "conviction": 0.85,
-          "rationale": "Perfect stack: price > SMA20 > SMA50 > SMA200, separation 27.9% \u2014 cosmic trend intact."
-        },
-        {
-          "agent": "SPECK",
-          "conviction": 0.58,
-          "rationale": "Low coverage (5 articles) but sentiment +0.20 and price above SMA-50 \u2014 small edge before crowd arrives."
-        }
-      ],
-      "dissenters": [],
-      "consensus_signal": "BUY",
-      "portfolio_size": 10000.0,
-      "generated_at": "2026-04-27T00:22:58.822513+00:00",
-      "status": "ACTIVE",
-      "execution": {
-        "order_id": "SIM-20260427-002258-ASML-B",
-        "side": "BUY",
-        "ticker": "ASML",
-        "asset_class": "equity",
-        "exchange": "NASDAQ",
-        "venue": "electronic equity exchange",
-        "broker": "Interactive Brokers (simulated paper account)",
-        "order_type": "MARKET",
-        "time_in_force": "DAY",
-        "submitted_at_utc": "2026-04-27T00:22:58+00:00",
-        "filled_at_utc": "2026-04-27T00:23:00+00:00",
-        "settlement_date": "2026-04-28",
-        "account": {
-          "label": "EQUITY-CASH-SIM-001",
-          "type": "Cash Account",
-          "broker": "Interactive Brokers (simulated paper account)",
-          "funding_source": "ACH funding from simulated bank account (routed via broker cash sweep)",
-          "balance_before": 10000.0,
-          "balance_after": 7999.4
-        },
-        "fills": [
-          {
-            "shares": 1.372024,
-            "price": 1457.7,
-            "timestamp": "2026-04-27T00:23:00+00:00",
-            "venue": "NASDAQ"
-          }
-        ],
-        "avg_fill_price": 1457.7,
-        "gross_notional": 2000.0,
-        "fees": {
-          "commission": 0.0,
-          "sec_section_31": 0.0,
-          "finra_taf": 0.0,
-          "spread_cost": 0.6,
-          "total": 0.6,
-          "notes": "Spread estimate: 3 bps. Zero commission (IBKR Lite/TD-class simulated)."
-        },
-        "net_cost": 2000.6,
-        "net_proceeds": null,
-        "disclaimer": "Simulated execution \u2014 no live orders were placed on any exchange. Fees modeled on US market structure: SEC Section 31 ($27.80/$1M of sale proceeds), FINRA Trading Activity Fee ($0.000166/share on sells, capped $9.30), Coinbase Advanced taker 0.40% for crypto. Spread cost estimated per ticker."
-      },
-      "brokers": [
-        {
-          "name": "Robinhood",
-          "url": "https://robinhood.com/stocks/ASML",
-          "fee_label": "$0 commission",
-          "key": "robinhood"
-        },
-        {
-          "name": "Fidelity",
-          "url": "https://digital.fidelity.com/prgw/digital/research/quote/dashboard/summary?symbol=ASML",
-          "fee_label": "$0 commission",
-          "key": "fidelity"
-        },
-        {
-          "name": "Schwab",
-          "url": "https://www.schwab.com/research/stocks/quotes?symbol=ASML",
-          "fee_label": "$0 commission",
-          "key": "schwab"
-        },
-        {
-          "name": "IBKR",
-          "url": "https://www.interactivebrokers.com/portal/?action=ACCT_MGMT_MAIN&symbol=ASML",
-          "fee_label": "$0\u20130.005/sh",
-          "key": "ibkr"
-        },
-        {
-          "name": "Webull",
-          "url": "https://www.webull.com/quote/ASML",
-          "fee_label": "$0 commission",
-          "key": "webull"
-        },
-        {
-          "name": "Alpaca",
-          "url": "https://app.alpaca.markets/",
-          "fee_label": "$0 commission",
-          "key": "alpaca"
-        }
-      ]
-    },
-    {
-      "plan_id": "plan_20260427_0022_MU",
-      "ticker": "MU",
-      "name": "Micron Technology",
-      "direction": "LONG",
-      "entry": 496.72,
-      "stop": 466.92,
-      "target": 556.33,
-      "shares": 4.0264,
-      "position_value": 2000.0,
-      "risk_amount": 120.0,
-      "risk_pct_of_portfolio": 0.012,
-      "reward_risk_ratio": 2.0,
-      "invalidation": "Close below SMA-200 ($266.83) \u2014 trend broken, exit.",
-      "backers": [
-        {
-          "agent": "AEGIS",
-          "conviction": 0.55,
-          "rationale": "Cautious constructive: clean uptrend with calm volatility."
-        },
-        {
-          "agent": "FORGE",
-          "conviction": 0.6,
-          "rationale": "Constructive: uptrend intact (+19.8% vs SMA50), sentiment +0.20."
-        },
-        {
-          "agent": "ZENITH",
-          "conviction": 0.85,
-          "rationale": "Perfect stack: price > SMA20 > SMA50 > SMA200, separation 56.4% \u2014 cosmic trend intact."
-        },
-        {
-          "agent": "SPECK",
-          "conviction": 0.58,
-          "rationale": "Low coverage (5 articles) but sentiment +0.20 and price above SMA-50 \u2014 small edge before crowd arrives."
-        }
-      ],
-      "dissenters": [],
-      "consensus_signal": "BUY",
-      "portfolio_size": 10000.0,
-      "generated_at": "2026-04-27T00:22:58.822570+00:00",
-      "status": "ACTIVE",
-      "execution": {
-        "order_id": "SIM-20260427-002258-MU-B",
-        "side": "BUY",
-        "ticker": "MU",
-        "asset_class": "equity",
-        "exchange": "NASDAQ",
-        "venue": "electronic equity exchange",
-        "broker": "Interactive Brokers (simulated paper account)",
-        "order_type": "MARKET",
-        "time_in_force": "DAY",
-        "submitted_at_utc": "2026-04-27T00:22:58+00:00",
-        "filled_at_utc": "2026-04-27T00:23:00+00:00",
-        "settlement_date": "2026-04-28",
-        "account": {
-          "label": "EQUITY-CASH-SIM-001",
-          "type": "Cash Account",
-          "broker": "Interactive Brokers (simulated paper account)",
-          "funding_source": "ACH funding from simulated bank account (routed via broker cash sweep)",
-          "balance_before": 10000.0,
-          "balance_after": 7999.4
-        },
-        "fills": [
-          {
-            "shares": 4.026413,
-            "price": 496.72,
-            "timestamp": "2026-04-27T00:23:00+00:00",
-            "venue": "NASDAQ"
-          }
-        ],
-        "avg_fill_price": 496.72,
-        "gross_notional": 2000.0,
-        "fees": {
-          "commission": 0.0,
-          "sec_section_31": 0.0,
-          "finra_taf": 0.0,
-          "spread_cost": 0.6,
-          "total": 0.6,
-          "notes": "Spread estimate: 3 bps. Zero commission (IBKR Lite/TD-class simulated)."
-        },
-        "net_cost": 2000.6,
-        "net_proceeds": null,
-        "disclaimer": "Simulated execution \u2014 no live orders were placed on any exchange. Fees modeled on US market structure: SEC Section 31 ($27.80/$1M of sale proceeds), FINRA Trading Activity Fee ($0.000166/share on sells, capped $9.30), Coinbase Advanced taker 0.40% for crypto. Spread cost estimated per ticker."
-      },
-      "brokers": [
-        {
-          "name": "Robinhood",
-          "url": "https://robinhood.com/stocks/MU",
-          "fee_label": "$0 commission",
-          "key": "robinhood"
-        },
-        {
-          "name": "Fidelity",
-          "url": "https://digital.fidelity.com/prgw/digital/research/quote/dashboard/summary?symbol=MU",
-          "fee_label": "$0 commission",
-          "key": "fidelity"
-        },
-        {
-          "name": "Schwab",
-          "url": "https://www.schwab.com/research/stocks/quotes?symbol=MU",
-          "fee_label": "$0 commission",
-          "key": "schwab"
-        },
-        {
-          "name": "IBKR",
-          "url": "https://www.interactivebrokers.com/portal/?action=ACCT_MGMT_MAIN&symbol=MU",
-          "fee_label": "$0\u20130.005/sh",
-          "key": "ibkr"
-        },
-        {
-          "name": "Webull",
-          "url": "https://www.webull.com/quote/MU",
-          "fee_label": "$0 commission",
-          "key": "webull"
-        },
-        {
-          "name": "Alpaca",
-          "url": "https://app.alpaca.markets/",
-          "fee_label": "$0 commission",
-          "key": "alpaca"
-        }
-      ]
-    },
-    {
-      "plan_id": "plan_20260427_0022_PLD",
-      "ticker": "PLD",
-      "name": "Prologis",
-      "direction": "LONG",
-      "entry": 142.1,
-      "stop": 135.42,
-      "target": 155.57,
-      "shares": 14.0746,
-      "position_value": 2000.0,
-      "risk_amount": 94.08,
-      "risk_pct_of_portfolio": 0.0094,
-      "reward_risk_ratio": 2.02,
-      "invalidation": "Close below SMA-200 ($122.85) \u2014 trend broken, exit.",
-      "backers": [
-        {
-          "agent": "AEGIS",
-          "conviction": 0.55,
-          "rationale": "Cautious constructive: clean uptrend with calm volatility."
-        },
-        {
-          "agent": "ZENITH",
-          "conviction": 0.718,
-          "rationale": "Perfect stack: price > SMA20 > SMA50 > SMA200, separation 11.8% \u2014 cosmic trend intact."
-        },
-        {
-          "agent": "SPECK",
-          "conviction": 0.64,
-          "rationale": "Low coverage (5 articles) but sentiment +0.40 and price above SMA-50 \u2014 small edge before crowd arrives."
-        }
-      ],
-      "dissenters": [],
-      "consensus_signal": "BUY",
-      "portfolio_size": 10000.0,
-      "generated_at": "2026-04-27T00:22:58.822665+00:00",
-      "status": "ACTIVE",
-      "execution": {
-        "order_id": "SIM-20260427-002258-PLD-B",
-        "side": "BUY",
-        "ticker": "PLD",
-        "asset_class": "equity",
-        "exchange": "NYSE Arca",
-        "venue": "all-electronic ETF/options exchange",
-        "broker": "Interactive Brokers (simulated paper account)",
-        "order_type": "MARKET",
-        "time_in_force": "DAY",
-        "submitted_at_utc": "2026-04-27T00:22:58+00:00",
-        "filled_at_utc": "2026-04-27T00:23:00+00:00",
-        "settlement_date": "2026-04-28",
-        "account": {
-          "label": "EQUITY-CASH-SIM-001",
-          "type": "Cash Account",
-          "broker": "Interactive Brokers (simulated paper account)",
-          "funding_source": "ACH funding from simulated bank account (routed via broker cash sweep)",
-          "balance_before": 10000.0,
-          "balance_after": 7999.4
-        },
-        "fills": [
-          {
-            "shares": 14.074595,
-            "price": 142.1,
-            "timestamp": "2026-04-27T00:23:00+00:00",
-            "venue": "NYSE Arca"
-          }
-        ],
-        "avg_fill_price": 142.1,
-        "gross_notional": 2000.0,
-        "fees": {
-          "commission": 0.0,
-          "sec_section_31": 0.0,
-          "finra_taf": 0.0,
-          "spread_cost": 0.6,
-          "total": 0.6,
-          "notes": "Spread estimate: 3 bps. Zero commission (IBKR Lite/TD-class simulated)."
-        },
-        "net_cost": 2000.6,
-        "net_proceeds": null,
-        "disclaimer": "Simulated execution \u2014 no live orders were placed on any exchange. Fees modeled on US market structure: SEC Section 31 ($27.80/$1M of sale proceeds), FINRA Trading Activity Fee ($0.000166/share on sells, capped $9.30), Coinbase Advanced taker 0.40% for crypto. Spread cost estimated per ticker."
-      },
-      "brokers": [
-        {
-          "name": "Robinhood",
-          "url": "https://robinhood.com/stocks/PLD",
-          "fee_label": "$0 commission",
-          "key": "robinhood"
-        },
-        {
-          "name": "Fidelity",
-          "url": "https://digital.fidelity.com/prgw/digital/research/quote/dashboard/summary?symbol=PLD",
-          "fee_label": "$0 commission",
-          "key": "fidelity"
-        },
-        {
-          "name": "Schwab",
-          "url": "https://www.schwab.com/research/stocks/quotes?symbol=PLD",
-          "fee_label": "$0 commission",
-          "key": "schwab"
-        },
-        {
-          "name": "IBKR",
-          "url": "https://www.interactivebrokers.com/portal/?action=ACCT_MGMT_MAIN&symbol=PLD",
-          "fee_label": "$0\u20130.005/sh",
-          "key": "ibkr"
-        },
-        {
-          "name": "Webull",
-          "url": "https://www.webull.com/quote/PLD",
-          "fee_label": "$0 commission",
-          "key": "webull"
-        },
-        {
-          "name": "Alpaca",
-          "url": "https://app.alpaca.markets/",
-          "fee_label": "$0 commission",
-          "key": "alpaca"
-        }
-      ]
-    },
-    {
-      "plan_id": "plan_20260427_0022_C",
-      "ticker": "C",
-      "name": "Citigroup",
-      "direction": "LONG",
-      "entry": 127.98,
-      "stop": 120.3,
-      "target": 143.34,
-      "shares": 15.6274,
-      "position_value": 2000.0,
-      "risk_amount": 120.0,
-      "risk_pct_of_portfolio": 0.012,
-      "reward_risk_ratio": 2.0,
-      "invalidation": "Close below SMA-200 ($105.76) \u2014 trend broken, exit.",
-      "backers": [
-        {
-          "agent": "AEGIS",
-          "conviction": 0.55,
-          "rationale": "Cautious constructive: clean uptrend with calm volatility."
-        },
-        {
-          "agent": "ZENITH",
-          "conviction": 0.76,
-          "rationale": "Perfect stack: price > SMA20 > SMA50 > SMA200, separation 16.0% \u2014 cosmic trend intact."
-        },
-        {
-          "agent": "SPECK",
-          "conviction": 0.58,
-          "rationale": "Low coverage (5 articles) but sentiment +0.20 and price above SMA-50 \u2014 small edge before crowd arrives."
-        }
-      ],
-      "dissenters": [],
-      "consensus_signal": "BUY",
-      "portfolio_size": 10000.0,
-      "generated_at": "2026-04-27T00:22:58.822726+00:00",
-      "status": "ACTIVE",
-      "execution": {
-        "order_id": "SIM-20260427-002258-C-B",
-        "side": "BUY",
-        "ticker": "C",
-        "asset_class": "equity",
-        "exchange": "NYSE Arca",
-        "venue": "all-electronic ETF/options exchange",
-        "broker": "Interactive Brokers (simulated paper account)",
-        "order_type": "MARKET",
-        "time_in_force": "DAY",
-        "submitted_at_utc": "2026-04-27T00:22:58+00:00",
-        "filled_at_utc": "2026-04-27T00:23:00+00:00",
-        "settlement_date": "2026-04-28",
-        "account": {
-          "label": "EQUITY-CASH-SIM-001",
-          "type": "Cash Account",
-          "broker": "Interactive Brokers (simulated paper account)",
-          "funding_source": "ACH funding from simulated bank account (routed via broker cash sweep)",
-          "balance_before": 10000.0,
-          "balance_after": 7999.4
-        },
-        "fills": [
-          {
-            "shares": 15.627442,
-            "price": 127.98,
-            "timestamp": "2026-04-27T00:23:00+00:00",
-            "venue": "NYSE Arca"
-          }
-        ],
-        "avg_fill_price": 127.98,
-        "gross_notional": 2000.0,
-        "fees": {
-          "commission": 0.0,
-          "sec_section_31": 0.0,
-          "finra_taf": 0.0,
-          "spread_cost": 0.6,
-          "total": 0.6,
-          "notes": "Spread estimate: 3 bps. Zero commission (IBKR Lite/TD-class simulated)."
-        },
-        "net_cost": 2000.6,
-        "net_proceeds": null,
-        "disclaimer": "Simulated execution \u2014 no live orders were placed on any exchange. Fees modeled on US market structure: SEC Section 31 ($27.80/$1M of sale proceeds), FINRA Trading Activity Fee ($0.000166/share on sells, capped $9.30), Coinbase Advanced taker 0.40% for crypto. Spread cost estimated per ticker."
-      },
-      "brokers": [
-        {
-          "name": "Robinhood",
-          "url": "https://robinhood.com/stocks/C",
-          "fee_label": "$0 commission",
-          "key": "robinhood"
-        },
-        {
-          "name": "Fidelity",
-          "url": "https://digital.fidelity.com/prgw/digital/research/quote/dashboard/summary?symbol=C",
-          "fee_label": "$0 commission",
-          "key": "fidelity"
-        },
-        {
-          "name": "Schwab",
-          "url": "https://www.schwab.com/research/stocks/quotes?symbol=C",
-          "fee_label": "$0 commission",
-          "key": "schwab"
-        },
-        {
-          "name": "IBKR",
-          "url": "https://www.interactivebrokers.com/portal/?action=ACCT_MGMT_MAIN&symbol=C",
-          "fee_label": "$0\u20130.005/sh",
-          "key": "ibkr"
-        },
-        {
-          "name": "Webull",
-          "url": "https://www.webull.com/quote/C",
-          "fee_label": "$0 commission",
-          "key": "webull"
-        },
-        {
-          "name": "Alpaca",
-          "url": "https://app.alpaca.markets/",
-          "fee_label": "$0 commission",
-          "key": "alpaca"
-        }
-      ]
-    },
-    {
-      "plan_id": "plan_20260427_0022_CSX",
-      "ticker": "CSX",
-      "name": "CSX",
-      "direction": "LONG",
-      "entry": 45.41,
-      "stop": 42.69,
-      "target": 50.86,
-      "shares": 44.0432,
-      "position_value": 2000.0,
-      "risk_amount": 120.0,
-      "risk_pct_of_portfolio": 0.012,
-      "reward_risk_ratio": 2.0,
-      "invalidation": "Close below SMA-200 ($36.78) \u2014 trend broken, exit.",
-      "backers": [
-        {
-          "agent": "AEGIS",
-          "conviction": 0.55,
-          "rationale": "Cautious constructive: clean uptrend with calm volatility."
-        },
-        {
-          "agent": "ZENITH",
-          "conviction": 0.749,
-          "rationale": "Perfect stack: price > SMA20 > SMA50 > SMA200, separation 14.9% \u2014 cosmic trend intact."
-        },
-        {
-          "agent": "SPECK",
-          "conviction": 0.58,
-          "rationale": "Low coverage (5 articles) but sentiment +0.20 and price above SMA-50 \u2014 small edge before crowd arrives."
-        }
-      ],
-      "dissenters": [],
-      "consensus_signal": "BUY",
-      "portfolio_size": 10000.0,
-      "generated_at": "2026-04-27T00:22:58.822780+00:00",
-      "status": "ACTIVE",
-      "execution": {
-        "order_id": "SIM-20260427-002258-CSX-B",
-        "side": "BUY",
-        "ticker": "CSX",
-        "asset_class": "equity",
-        "exchange": "NYSE Arca",
-        "venue": "all-electronic ETF/options exchange",
-        "broker": "Interactive Brokers (simulated paper account)",
-        "order_type": "MARKET",
-        "time_in_force": "DAY",
-        "submitted_at_utc": "2026-04-27T00:22:58+00:00",
-        "filled_at_utc": "2026-04-27T00:23:00+00:00",
-        "settlement_date": "2026-04-28",
-        "account": {
-          "label": "EQUITY-CASH-SIM-001",
-          "type": "Cash Account",
-          "broker": "Interactive Brokers (simulated paper account)",
-          "funding_source": "ACH funding from simulated bank account (routed via broker cash sweep)",
-          "balance_before": 10000.0,
-          "balance_after": 7999.4
-        },
-        "fills": [
-          {
-            "shares": 44.043162,
-            "price": 45.41,
-            "timestamp": "2026-04-27T00:23:00+00:00",
-            "venue": "NYSE Arca"
-          }
-        ],
-        "avg_fill_price": 45.41,
-        "gross_notional": 2000.0,
-        "fees": {
-          "commission": 0.0,
-          "sec_section_31": 0.0,
-          "finra_taf": 0.0,
-          "spread_cost": 0.6,
-          "total": 0.6,
-          "notes": "Spread estimate: 3 bps. Zero commission (IBKR Lite/TD-class simulated)."
-        },
-        "net_cost": 2000.6,
-        "net_proceeds": null,
-        "disclaimer": "Simulated execution \u2014 no live orders were placed on any exchange. Fees modeled on US market structure: SEC Section 31 ($27.80/$1M of sale proceeds), FINRA Trading Activity Fee ($0.000166/share on sells, capped $9.30), Coinbase Advanced taker 0.40% for crypto. Spread cost estimated per ticker."
-      },
-      "brokers": [
-        {
-          "name": "Robinhood",
-          "url": "https://robinhood.com/stocks/CSX",
-          "fee_label": "$0 commission",
-          "key": "robinhood"
-        },
-        {
-          "name": "Fidelity",
-          "url": "https://digital.fidelity.com/prgw/digital/research/quote/dashboard/summary?symbol=CSX",
-          "fee_label": "$0 commission",
-          "key": "fidelity"
-        },
-        {
-          "name": "Schwab",
-          "url": "https://www.schwab.com/research/stocks/quotes?symbol=CSX",
-          "fee_label": "$0 commission",
-          "key": "schwab"
-        },
-        {
-          "name": "IBKR",
-          "url": "https://www.interactivebrokers.com/portal/?action=ACCT_MGMT_MAIN&symbol=CSX",
-          "fee_label": "$0\u20130.005/sh",
-          "key": "ibkr"
-        },
-        {
-          "name": "Webull",
-          "url": "https://www.webull.com/quote/CSX",
-          "fee_label": "$0 commission",
-          "key": "webull"
-        },
-        {
-          "name": "Alpaca",
-          "url": "https://app.alpaca.markets/",
-          "fee_label": "$0 commission",
-          "key": "alpaca"
-        }
-      ]
-    },
-    {
-      "plan_id": "plan_20260427_0022_MRVL",
-      "ticker": "MRVL",
-      "name": "Marvell Technology",
-      "direction": "LONG",
-      "entry": 164.31,
-      "stop": 154.45,
-      "target": 184.03,
-      "shares": 12.1721,
-      "position_value": 2000.0,
-      "risk_amount": 120.0,
-      "risk_pct_of_portfolio": 0.012,
-      "reward_risk_ratio": 2.0,
-      "invalidation": "Close below SMA-200 ($86.15) \u2014 trend broken, exit.",
-      "backers": [
-        {
-          "agent": "AEGIS",
-          "conviction": 0.55,
-          "rationale": "Cautious constructive: clean uptrend with calm volatility."
-        },
-        {
-          "agent": "ZENITH",
-          "conviction": 0.85,
-          "rationale": "Perfect stack: price > SMA20 > SMA50 > SMA200, separation 42.7% \u2014 cosmic trend intact."
-        },
-        {
-          "agent": "SYNTH",
-          "conviction": 0.5,
-          "rationale": "Risk-on regime supports cyclical exposure."
-        },
-        {
-          "agent": "SPECK",
-          "conviction": 0.58,
-          "rationale": "Low coverage (5 articles) but sentiment +0.20 and price above SMA-50 \u2014 small edge before crowd arrives."
-        }
-      ],
-      "dissenters": [],
-      "consensus_signal": "BUY",
-      "portfolio_size": 10000.0,
-      "generated_at": "2026-04-27T00:22:58.822836+00:00",
-      "status": "ACTIVE",
-      "execution": {
-        "order_id": "SIM-20260427-002258-MRVL-B",
-        "side": "BUY",
-        "ticker": "MRVL",
-        "asset_class": "equity",
-        "exchange": "NYSE Arca",
-        "venue": "all-electronic ETF/options exchange",
-        "broker": "Interactive Brokers (simulated paper account)",
-        "order_type": "MARKET",
-        "time_in_force": "DAY",
-        "submitted_at_utc": "2026-04-27T00:22:58+00:00",
-        "filled_at_utc": "2026-04-27T00:23:00+00:00",
-        "settlement_date": "2026-04-28",
-        "account": {
-          "label": "EQUITY-CASH-SIM-001",
-          "type": "Cash Account",
-          "broker": "Interactive Brokers (simulated paper account)",
-          "funding_source": "ACH funding from simulated bank account (routed via broker cash sweep)",
-          "balance_before": 10000.0,
-          "balance_after": 7999.4
-        },
-        "fills": [
-          {
-            "shares": 12.172114,
-            "price": 164.31,
-            "timestamp": "2026-04-27T00:23:00+00:00",
-            "venue": "NYSE Arca"
-          }
-        ],
-        "avg_fill_price": 164.31,
-        "gross_notional": 2000.0,
-        "fees": {
-          "commission": 0.0,
-          "sec_section_31": 0.0,
-          "finra_taf": 0.0,
-          "spread_cost": 0.6,
-          "total": 0.6,
-          "notes": "Spread estimate: 3 bps. Zero commission (IBKR Lite/TD-class simulated)."
-        },
-        "net_cost": 2000.6,
-        "net_proceeds": null,
-        "disclaimer": "Simulated execution \u2014 no live orders were placed on any exchange. Fees modeled on US market structure: SEC Section 31 ($27.80/$1M of sale proceeds), FINRA Trading Activity Fee ($0.000166/share on sells, capped $9.30), Coinbase Advanced taker 0.40% for crypto. Spread cost estimated per ticker."
-      },
-      "brokers": [
-        {
-          "name": "Robinhood",
-          "url": "https://robinhood.com/stocks/MRVL",
-          "fee_label": "$0 commission",
-          "key": "robinhood"
-        },
-        {
-          "name": "Fidelity",
-          "url": "https://digital.fidelity.com/prgw/digital/research/quote/dashboard/summary?symbol=MRVL",
-          "fee_label": "$0 commission",
-          "key": "fidelity"
-        },
-        {
-          "name": "Schwab",
-          "url": "https://www.schwab.com/research/stocks/quotes?symbol=MRVL",
-          "fee_label": "$0 commission",
-          "key": "schwab"
-        },
-        {
-          "name": "IBKR",
-          "url": "https://www.interactivebrokers.com/portal/?action=ACCT_MGMT_MAIN&symbol=MRVL",
-          "fee_label": "$0\u20130.005/sh",
-          "key": "ibkr"
-        },
-        {
-          "name": "Webull",
-          "url": "https://www.webull.com/quote/MRVL",
-          "fee_label": "$0 commission",
-          "key": "webull"
-        },
-        {
-          "name": "Alpaca",
-          "url": "https://app.alpaca.markets/",
-          "fee_label": "$0 commission",
-          "key": "alpaca"
-        }
-      ]
-    },
-    {
-      "plan_id": "plan_20260427_0022_DELL",
-      "ticker": "DELL",
-      "name": "Dell Technologies",
-      "direction": "LONG",
-      "entry": 216.09,
-      "stop": 203.12,
-      "target": 242.02,
-      "shares": 9.2554,
-      "position_value": 2000.0,
-      "risk_amount": 120.0,
-      "risk_pct_of_portfolio": 0.012,
-      "reward_risk_ratio": 2.0,
-      "invalidation": "Close below SMA-200 ($138.70) \u2014 trend broken, exit.",
-      "backers": [
-        {
-          "agent": "AEGIS",
-          "conviction": 0.55,
-          "rationale": "Cautious constructive: clean uptrend with calm volatility."
-        },
-        {
-          "agent": "ZENITH",
-          "conviction": 0.85,
-          "rationale": "Perfect stack: price > SMA20 > SMA50 > SMA200, separation 32.0% \u2014 cosmic trend intact."
-        },
-        {
-          "agent": "SYNTH",
-          "conviction": 0.5,
-          "rationale": "Risk-on regime supports cyclical exposure."
-        },
-        {
-          "agent": "SPECK",
-          "conviction": 0.58,
-          "rationale": "Low coverage (5 articles) but sentiment +0.20 and price above SMA-50 \u2014 small edge before crowd arrives."
-        }
-      ],
-      "dissenters": [],
-      "consensus_signal": "BUY",
-      "portfolio_size": 10000.0,
-      "generated_at": "2026-04-27T00:22:58.822887+00:00",
-      "status": "ACTIVE",
-      "execution": {
-        "order_id": "SIM-20260427-002258-DELL-B",
-        "side": "BUY",
-        "ticker": "DELL",
-        "asset_class": "equity",
-        "exchange": "NYSE Arca",
-        "venue": "all-electronic ETF/options exchange",
-        "broker": "Interactive Brokers (simulated paper account)",
-        "order_type": "MARKET",
-        "time_in_force": "DAY",
-        "submitted_at_utc": "2026-04-27T00:22:58+00:00",
-        "filled_at_utc": "2026-04-27T00:23:00+00:00",
-        "settlement_date": "2026-04-28",
-        "account": {
-          "label": "EQUITY-CASH-SIM-001",
-          "type": "Cash Account",
-          "broker": "Interactive Brokers (simulated paper account)",
-          "funding_source": "ACH funding from simulated bank account (routed via broker cash sweep)",
-          "balance_before": 10000.0,
-          "balance_after": 7999.4
-        },
-        "fills": [
-          {
-            "shares": 9.255403,
-            "price": 216.09,
-            "timestamp": "2026-04-27T00:23:00+00:00",
-            "venue": "NYSE Arca"
-          }
-        ],
-        "avg_fill_price": 216.09,
-        "gross_notional": 2000.0,
-        "fees": {
-          "commission": 0.0,
-          "sec_section_31": 0.0,
-          "finra_taf": 0.0,
-          "spread_cost": 0.6,
-          "total": 0.6,
-          "notes": "Spread estimate: 3 bps. Zero commission (IBKR Lite/TD-class simulated)."
-        },
-        "net_cost": 2000.6,
-        "net_proceeds": null,
-        "disclaimer": "Simulated execution \u2014 no live orders were placed on any exchange. Fees modeled on US market structure: SEC Section 31 ($27.80/$1M of sale proceeds), FINRA Trading Activity Fee ($0.000166/share on sells, capped $9.30), Coinbase Advanced taker 0.40% for crypto. Spread cost estimated per ticker."
-      },
-      "brokers": [
-        {
-          "name": "Robinhood",
-          "url": "https://robinhood.com/stocks/DELL",
-          "fee_label": "$0 commission",
-          "key": "robinhood"
-        },
-        {
-          "name": "Fidelity",
-          "url": "https://digital.fidelity.com/prgw/digital/research/quote/dashboard/summary?symbol=DELL",
-          "fee_label": "$0 commission",
-          "key": "fidelity"
-        },
-        {
-          "name": "Schwab",
-          "url": "https://www.schwab.com/research/stocks/quotes?symbol=DELL",
-          "fee_label": "$0 commission",
-          "key": "schwab"
-        },
-        {
-          "name": "IBKR",
-          "url": "https://www.interactivebrokers.com/portal/?action=ACCT_MGMT_MAIN&symbol=DELL",
-          "fee_label": "$0\u20130.005/sh",
-          "key": "ibkr"
-        },
-        {
-          "name": "Webull",
-          "url": "https://www.webull.com/quote/DELL",
-          "fee_label": "$0 commission",
-          "key": "webull"
-        },
-        {
-          "name": "Alpaca",
-          "url": "https://app.alpaca.markets/",
-          "fee_label": "$0 commission",
-          "key": "alpaca"
-        }
-      ]
-    },
-    {
-      "plan_id": "plan_20260427_0022_AEP",
-      "ticker": "AEP",
-      "name": "American Electric Power",
-      "direction": "LONG",
-      "entry": 134.73,
-      "stop": 130.21,
-      "target": 143.33,
-      "shares": 14.8445,
-      "position_value": 2000.0,
-      "risk_amount": 67.11,
-      "risk_pct_of_portfolio": 0.0067,
-      "reward_risk_ratio": 1.9,
-      "invalidation": "Close below SMA-200 ($118.09) \u2014 trend broken, exit.",
-      "backers": [
-        {
-          "agent": "AEGIS",
-          "conviction": 0.55,
-          "rationale": "Cautious constructive: clean uptrend with calm volatility."
-        },
-        {
-          "agent": "ZENITH",
-          "conviction": 0.729,
-          "rationale": "Perfect stack: price > SMA20 > SMA50 > SMA200, separation 12.9% \u2014 cosmic trend intact."
-        },
-        {
-          "agent": "WEAVER",
-          "conviction": 0.55,
-          "rationale": "Pullback to SMA-20 ($133.46) in uptrend"
-        },
-        {
-          "agent": "SPECK",
-          "conviction": 0.64,
-          "rationale": "Low coverage (5 articles) but sentiment +0.40 and price above SMA-50 \u2014 small edge before crowd arrives."
-        }
-      ],
-      "dissenters": [],
-      "consensus_signal": "BUY",
-      "portfolio_size": 10000.0,
-      "generated_at": "2026-04-27T00:22:58.822939+00:00",
-      "status": "ACTIVE",
-      "execution": {
-        "order_id": "SIM-20260427-002258-AEP-B",
-        "side": "BUY",
-        "ticker": "AEP",
-        "asset_class": "equity",
-        "exchange": "NYSE Arca",
-        "venue": "all-electronic ETF/options exchange",
-        "broker": "Interactive Brokers (simulated paper account)",
-        "order_type": "MARKET",
-        "time_in_force": "DAY",
-        "submitted_at_utc": "2026-04-27T00:22:58+00:00",
-        "filled_at_utc": "2026-04-27T00:23:00+00:00",
-        "settlement_date": "2026-04-28",
-        "account": {
-          "label": "EQUITY-CASH-SIM-001",
-          "type": "Cash Account",
-          "broker": "Interactive Brokers (simulated paper account)",
-          "funding_source": "ACH funding from simulated bank account (routed via broker cash sweep)",
-          "balance_before": 10000.0,
-          "balance_after": 7999.4
-        },
-        "fills": [
-          {
-            "shares": 14.844504,
-            "price": 134.73,
-            "timestamp": "2026-04-27T00:23:00+00:00",
-            "venue": "NYSE Arca"
-          }
-        ],
-        "avg_fill_price": 134.73,
-        "gross_notional": 2000.0,
-        "fees": {
-          "commission": 0.0,
-          "sec_section_31": 0.0,
-          "finra_taf": 0.0,
-          "spread_cost": 0.6,
-          "total": 0.6,
-          "notes": "Spread estimate: 3 bps. Zero commission (IBKR Lite/TD-class simulated)."
-        },
-        "net_cost": 2000.6,
-        "net_proceeds": null,
-        "disclaimer": "Simulated execution \u2014 no live orders were placed on any exchange. Fees modeled on US market structure: SEC Section 31 ($27.80/$1M of sale proceeds), FINRA Trading Activity Fee ($0.000166/share on sells, capped $9.30), Coinbase Advanced taker 0.40% for crypto. Spread cost estimated per ticker."
-      },
-      "brokers": [
-        {
-          "name": "Robinhood",
-          "url": "https://robinhood.com/stocks/AEP",
-          "fee_label": "$0 commission",
-          "key": "robinhood"
-        },
-        {
-          "name": "Fidelity",
-          "url": "https://digital.fidelity.com/prgw/digital/research/quote/dashboard/summary?symbol=AEP",
-          "fee_label": "$0 commission",
-          "key": "fidelity"
-        },
-        {
-          "name": "Schwab",
-          "url": "https://www.schwab.com/research/stocks/quotes?symbol=AEP",
-          "fee_label": "$0 commission",
-          "key": "schwab"
-        },
-        {
-          "name": "IBKR",
-          "url": "https://www.interactivebrokers.com/portal/?action=ACCT_MGMT_MAIN&symbol=AEP",
-          "fee_label": "$0\u20130.005/sh",
-          "key": "ibkr"
-        },
-        {
-          "name": "Webull",
-          "url": "https://www.webull.com/quote/AEP",
-          "fee_label": "$0 commission",
-          "key": "webull"
-        },
-        {
-          "name": "Alpaca",
-          "url": "https://app.alpaca.markets/",
-          "fee_label": "$0 commission",
-          "key": "alpaca"
-        }
-      ]
-    },
-    {
-      "plan_id": "plan_20260427_0022_AMAT",
-      "ticker": "AMAT",
-      "name": "Applied Materials",
-      "direction": "LONG",
-      "entry": 417.04,
-      "stop": 392.02,
-      "target": 467.08,
-      "shares": 4.7957,
-      "position_value": 2000.0,
-      "risk_amount": 120.0,
-      "risk_pct_of_portfolio": 0.012,
-      "reward_risk_ratio": 2.0,
-      "invalidation": "Close below SMA-200 ($264.03) \u2014 trend broken, exit.",
-      "backers": [
-        {
-          "agent": "AEGIS",
-          "conviction": 0.55,
-          "rationale": "Cautious constructive: clean uptrend with calm volatility."
-        },
-        {
-          "agent": "FORGE",
-          "conviction": 0.6,
-          "rationale": "Constructive: uptrend intact (+13.9% vs SMA50), sentiment +0.20."
-        },
-        {
-          "agent": "ZENITH",
-          "conviction": 0.85,
-          "rationale": "Perfect stack: price > SMA20 > SMA50 > SMA200, separation 42.1% \u2014 cosmic trend intact."
-        },
-        {
-          "agent": "SYNTH",
-          "conviction": 0.5,
-          "rationale": "Risk-on regime supports cyclical exposure."
-        },
-        {
-          "agent": "SPECK",
-          "conviction": 0.58,
-          "rationale": "Low coverage (5 articles) but sentiment +0.20 and price above SMA-50 \u2014 small edge before crowd arrives."
-        }
-      ],
-      "dissenters": [],
-      "consensus_signal": "BUY",
-      "portfolio_size": 10000.0,
-      "generated_at": "2026-04-27T00:22:58.822987+00:00",
-      "status": "ACTIVE",
-      "execution": {
-        "order_id": "SIM-20260427-002258-AMAT-B",
-        "side": "BUY",
-        "ticker": "AMAT",
-        "asset_class": "equity",
-        "exchange": "NYSE Arca",
-        "venue": "all-electronic ETF/options exchange",
-        "broker": "Interactive Brokers (simulated paper account)",
-        "order_type": "MARKET",
-        "time_in_force": "DAY",
-        "submitted_at_utc": "2026-04-27T00:22:58+00:00",
-        "filled_at_utc": "2026-04-27T00:23:00+00:00",
-        "settlement_date": "2026-04-28",
-        "account": {
-          "label": "EQUITY-CASH-SIM-001",
-          "type": "Cash Account",
-          "broker": "Interactive Brokers (simulated paper account)",
-          "funding_source": "ACH funding from simulated bank account (routed via broker cash sweep)",
-          "balance_before": 10000.0,
-          "balance_after": 7999.4
-        },
-        "fills": [
-          {
-            "shares": 4.795703,
-            "price": 417.04,
-            "timestamp": "2026-04-27T00:23:00+00:00",
-            "venue": "NYSE Arca"
-          }
-        ],
-        "avg_fill_price": 417.04,
-        "gross_notional": 2000.0,
-        "fees": {
-          "commission": 0.0,
-          "sec_section_31": 0.0,
-          "finra_taf": 0.0,
-          "spread_cost": 0.6,
-          "total": 0.6,
-          "notes": "Spread estimate: 3 bps. Zero commission (IBKR Lite/TD-class simulated)."
-        },
-        "net_cost": 2000.6,
-        "net_proceeds": null,
-        "disclaimer": "Simulated execution \u2014 no live orders were placed on any exchange. Fees modeled on US market structure: SEC Section 31 ($27.80/$1M of sale proceeds), FINRA Trading Activity Fee ($0.000166/share on sells, capped $9.30), Coinbase Advanced taker 0.40% for crypto. Spread cost estimated per ticker."
-      },
-      "brokers": [
-        {
-          "name": "Robinhood",
-          "url": "https://robinhood.com/stocks/AMAT",
-          "fee_label": "$0 commission",
-          "key": "robinhood"
-        },
-        {
-          "name": "Fidelity",
-          "url": "https://digital.fidelity.com/prgw/digital/research/quote/dashboard/summary?symbol=AMAT",
-          "fee_label": "$0 commission",
-          "key": "fidelity"
-        },
-        {
-          "name": "Schwab",
-          "url": "https://www.schwab.com/research/stocks/quotes?symbol=AMAT",
-          "fee_label": "$0 commission",
-          "key": "schwab"
-        },
-        {
-          "name": "IBKR",
-          "url": "https://www.interactivebrokers.com/portal/?action=ACCT_MGMT_MAIN&symbol=AMAT",
-          "fee_label": "$0\u20130.005/sh",
-          "key": "ibkr"
-        },
-        {
-          "name": "Webull",
-          "url": "https://www.webull.com/quote/AMAT",
-          "fee_label": "$0 commission",
-          "key": "webull"
-        },
-        {
-          "name": "Alpaca",
-          "url": "https://app.alpaca.markets/",
-          "fee_label": "$0 commission",
-          "key": "alpaca"
-        }
-      ]
-    },
-    {
-      "plan_id": "plan_20260427_0022_LRCX",
-      "ticker": "LRCX",
-      "name": "Lam Research",
-      "direction": "LONG",
-      "entry": 267.78,
-      "stop": 251.71,
-      "target": 299.91,
-      "shares": 7.4688,
-      "position_value": 2000.0,
-      "risk_amount": 120.0,
-      "risk_pct_of_portfolio": 0.012,
-      "reward_risk_ratio": 2.0,
-      "invalidation": "Close below SMA-200 ($170.08) \u2014 trend broken, exit.",
-      "backers": [
-        {
-          "agent": "AEGIS",
-          "conviction": 0.55,
-          "rationale": "Cautious constructive: clean uptrend with calm volatility."
-        },
-        {
-          "agent": "FORGE",
-          "conviction": 0.6,
-          "rationale": "Constructive: uptrend intact (+13.9% vs SMA50), sentiment +0.20."
-        },
-        {
-          "agent": "ZENITH",
-          "conviction": 0.85,
-          "rationale": "Perfect stack: price > SMA20 > SMA50 > SMA200, separation 43.0% \u2014 cosmic trend intact."
-        },
-        {
-          "agent": "SYNTH",
-          "conviction": 0.5,
-          "rationale": "Risk-on regime supports cyclical exposure."
-        },
-        {
-          "agent": "SPECK",
-          "conviction": 0.58,
-          "rationale": "Low coverage (5 articles) but sentiment +0.20 and price above SMA-50 \u2014 small edge before crowd arrives."
-        }
-      ],
-      "dissenters": [],
-      "consensus_signal": "BUY",
-      "portfolio_size": 10000.0,
-      "generated_at": "2026-04-27T00:22:58.823034+00:00",
-      "status": "ACTIVE",
-      "execution": {
-        "order_id": "SIM-20260427-002258-LRCX-B",
-        "side": "BUY",
-        "ticker": "LRCX",
-        "asset_class": "equity",
-        "exchange": "NYSE Arca",
-        "venue": "all-electronic ETF/options exchange",
-        "broker": "Interactive Brokers (simulated paper account)",
-        "order_type": "MARKET",
-        "time_in_force": "DAY",
-        "submitted_at_utc": "2026-04-27T00:22:58+00:00",
-        "filled_at_utc": "2026-04-27T00:23:00+00:00",
-        "settlement_date": "2026-04-28",
-        "account": {
-          "label": "EQUITY-CASH-SIM-001",
-          "type": "Cash Account",
-          "broker": "Interactive Brokers (simulated paper account)",
-          "funding_source": "ACH funding from simulated bank account (routed via broker cash sweep)",
-          "balance_before": 10000.0,
-          "balance_after": 7999.4
-        },
-        "fills": [
-          {
-            "shares": 7.468818,
-            "price": 267.78,
-            "timestamp": "2026-04-27T00:23:00+00:00",
-            "venue": "NYSE Arca"
-          }
-        ],
-        "avg_fill_price": 267.78,
-        "gross_notional": 2000.0,
-        "fees": {
-          "commission": 0.0,
-          "sec_section_31": 0.0,
-          "finra_taf": 0.0,
-          "spread_cost": 0.6,
-          "total": 0.6,
-          "notes": "Spread estimate: 3 bps. Zero commission (IBKR Lite/TD-class simulated)."
-        },
-        "net_cost": 2000.6,
-        "net_proceeds": null,
-        "disclaimer": "Simulated execution \u2014 no live orders were placed on any exchange. Fees modeled on US market structure: SEC Section 31 ($27.80/$1M of sale proceeds), FINRA Trading Activity Fee ($0.000166/share on sells, capped $9.30), Coinbase Advanced taker 0.40% for crypto. Spread cost estimated per ticker."
-      },
-      "brokers": [
-        {
-          "name": "Robinhood",
-          "url": "https://robinhood.com/stocks/LRCX",
-          "fee_label": "$0 commission",
-          "key": "robinhood"
-        },
-        {
-          "name": "Fidelity",
-          "url": "https://digital.fidelity.com/prgw/digital/research/quote/dashboard/summary?symbol=LRCX",
-          "fee_label": "$0 commission",
-          "key": "fidelity"
-        },
-        {
-          "name": "Schwab",
-          "url": "https://www.schwab.com/research/stocks/quotes?symbol=LRCX",
-          "fee_label": "$0 commission",
-          "key": "schwab"
-        },
-        {
-          "name": "IBKR",
-          "url": "https://www.interactivebrokers.com/portal/?action=ACCT_MGMT_MAIN&symbol=LRCX",
-          "fee_label": "$0\u20130.005/sh",
-          "key": "ibkr"
-        },
-        {
-          "name": "Webull",
-          "url": "https://www.webull.com/quote/LRCX",
-          "fee_label": "$0 commission",
-          "key": "webull"
-        },
-        {
-          "name": "Alpaca",
-          "url": "https://app.alpaca.markets/",
-          "fee_label": "$0 commission",
-          "key": "alpaca"
-        }
-      ]
-    },
-    {
-      "plan_id": "plan_20260427_0022_SPG",
-      "ticker": "SPG",
-      "name": "Simon Property Group",
-      "direction": "LONG",
-      "entry": 201.16,
-      "stop": 193.09,
-      "target": 217.3,
-      "shares": 9.9423,
-      "position_value": 2000.0,
-      "risk_amount": 80.27,
-      "risk_pct_of_portfolio": 0.008,
-      "reward_risk_ratio": 2.0,
-      "invalidation": "Close below SMA-200 ($180.24) \u2014 trend broken, exit.",
-      "backers": [
-        {
-          "agent": "AEGIS",
-          "conviction": 0.55,
-          "rationale": "Cautious constructive: clean uptrend with calm volatility."
-        },
-        {
-          "agent": "ZENITH",
-          "conviction": 0.69,
-          "rationale": "Perfect stack: price > SMA20 > SMA50 > SMA200, separation 9.0% \u2014 cosmic trend intact."
-        },
-        {
-          "agent": "SPECK",
-          "conviction": 0.58,
-          "rationale": "Low coverage (5 articles) but sentiment +0.20 and price above SMA-50 \u2014 small edge before crowd arrives."
-        }
-      ],
-      "dissenters": [],
-      "consensus_signal": "BUY",
-      "portfolio_size": 10000.0,
-      "generated_at": "2026-04-27T00:22:58.823086+00:00",
-      "status": "ACTIVE",
-      "execution": {
-        "order_id": "SIM-20260427-002258-SPG-B",
-        "side": "BUY",
-        "ticker": "SPG",
-        "asset_class": "equity",
-        "exchange": "NYSE Arca",
-        "venue": "all-electronic ETF/options exchange",
-        "broker": "Interactive Brokers (simulated paper account)",
-        "order_type": "MARKET",
-        "time_in_force": "DAY",
-        "submitted_at_utc": "2026-04-27T00:22:58+00:00",
-        "filled_at_utc": "2026-04-27T00:23:00+00:00",
-        "settlement_date": "2026-04-28",
-        "account": {
-          "label": "EQUITY-CASH-SIM-001",
-          "type": "Cash Account",
-          "broker": "Interactive Brokers (simulated paper account)",
-          "funding_source": "ACH funding from simulated bank account (routed via broker cash sweep)",
-          "balance_before": 10000.0,
-          "balance_after": 7999.4
-        },
-        "fills": [
-          {
-            "shares": 9.942334,
-            "price": 201.16,
-            "timestamp": "2026-04-27T00:23:00+00:00",
-            "venue": "NYSE Arca"
-          }
-        ],
-        "avg_fill_price": 201.16,
-        "gross_notional": 2000.0,
-        "fees": {
-          "commission": 0.0,
-          "sec_section_31": 0.0,
-          "finra_taf": 0.0,
-          "spread_cost": 0.6,
-          "total": 0.6,
-          "notes": "Spread estimate: 3 bps. Zero commission (IBKR Lite/TD-class simulated)."
-        },
-        "net_cost": 2000.6,
-        "net_proceeds": null,
-        "disclaimer": "Simulated execution \u2014 no live orders were placed on any exchange. Fees modeled on US market structure: SEC Section 31 ($27.80/$1M of sale proceeds), FINRA Trading Activity Fee ($0.000166/share on sells, capped $9.30), Coinbase Advanced taker 0.40% for crypto. Spread cost estimated per ticker."
-      },
-      "brokers": [
-        {
-          "name": "Robinhood",
-          "url": "https://robinhood.com/stocks/SPG",
-          "fee_label": "$0 commission",
-          "key": "robinhood"
-        },
-        {
-          "name": "Fidelity",
-          "url": "https://digital.fidelity.com/prgw/digital/research/quote/dashboard/summary?symbol=SPG",
-          "fee_label": "$0 commission",
-          "key": "fidelity"
-        },
-        {
-          "name": "Schwab",
-          "url": "https://www.schwab.com/research/stocks/quotes?symbol=SPG",
-          "fee_label": "$0 commission",
-          "key": "schwab"
-        },
-        {
-          "name": "IBKR",
-          "url": "https://www.interactivebrokers.com/portal/?action=ACCT_MGMT_MAIN&symbol=SPG",
-          "fee_label": "$0\u20130.005/sh",
-          "key": "ibkr"
-        },
-        {
-          "name": "Webull",
-          "url": "https://www.webull.com/quote/SPG",
+          "url": "https://www.webull.com/quote/MSFT",
           "fee_label": "$0 commission",
           "key": "webull"
         },
