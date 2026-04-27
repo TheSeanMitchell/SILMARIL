@@ -1,0 +1,386 @@
+{
+  "codename": "JRR_TOKEN",
+  "title": "The Two-Tier Token Trader",
+  "balance": 10.0,
+  "tiers": {
+    "sub_100m": {
+      "balance": 5.0,
+      "current_position": {
+        "ticker": "PEPE-USD",
+        "name": "Pepe (memecoin)",
+        "shares": 276431.11111111,
+        "entry_price": 1.8e-05,
+        "entry_date": "2026-04-27",
+        "thesis": "JRR SUB_100M bag \u2014 momentum / sentiment edge. Stops are tight, exit fast.",
+        "execution": {
+          "order_id": "SIM-20260427-040620-PEPEUSD-B",
+          "side": "BUY",
+          "ticker": "PEPE-USD",
+          "asset_class": "crypto",
+          "exchange": "NYSE Arca",
+          "venue": "all-electronic ETF/options exchange",
+          "broker": "Coinbase (simulated wallet)",
+          "order_type": "MARKET",
+          "time_in_force": "DAY",
+          "submitted_at_utc": "2026-04-27T04:06:20+00:00",
+          "filled_at_utc": "2026-04-27T04:06:22+00:00",
+          "settlement_date": "2026-04-27",
+          "account": {
+            "label": "CRYPTO-WALLET-SIM-001",
+            "type": "Crypto Wallet",
+            "broker": "Coinbase (simulated wallet)",
+            "funding_source": "Internal USDC balance (simulated deposit from cash sweep)",
+            "balance_before": 5.0,
+            "balance_after": 0.0004
+          },
+          "fills": [
+            {
+              "shares": 276431.111111,
+              "price": 0.0,
+              "timestamp": "2026-04-27T04:06:22+00:00",
+              "venue": "NYSE Arca"
+            }
+          ],
+          "avg_fill_price": 0.0,
+          "gross_notional": 4.9758,
+          "fees": {
+            "commission": 0.019903,
+            "sec_section_31": 0.0,
+            "finra_taf": 0.0,
+            "spread_cost": 0.003981,
+            "total": 0.023884,
+            "notes": "Spread estimate: 8 bps. Crypto taker fee 0.40%."
+          },
+          "net_cost": 4.9996,
+          "net_proceeds": null,
+          "disclaimer": "Simulated execution \u2014 no live orders were placed on any exchange. Fees modeled on US market structure: SEC Section 31 ($27.80/$1M of sale proceeds), FINRA Trading Activity Fee ($0.000166/share on sells, capped $9.30), Coinbase Advanced taker 0.40% for crypto. Spread cost estimated per ticker."
+        }
+      },
+      "recent_history": [
+        {
+          "date": "2026-04-27",
+          "action": "BUY",
+          "ticker": "PEPE-USD",
+          "shares": 276431.11111111,
+          "entry_price": 1.8e-05,
+          "allocated": 5.0,
+          "execution": {
+            "order_id": "SIM-20260427-040620-PEPEUSD-B",
+            "side": "BUY",
+            "ticker": "PEPE-USD",
+            "asset_class": "crypto",
+            "exchange": "NYSE Arca",
+            "venue": "all-electronic ETF/options exchange",
+            "broker": "Coinbase (simulated wallet)",
+            "order_type": "MARKET",
+            "time_in_force": "DAY",
+            "submitted_at_utc": "2026-04-27T04:06:20+00:00",
+            "filled_at_utc": "2026-04-27T04:06:22+00:00",
+            "settlement_date": "2026-04-27",
+            "account": {
+              "label": "CRYPTO-WALLET-SIM-001",
+              "type": "Crypto Wallet",
+              "broker": "Coinbase (simulated wallet)",
+              "funding_source": "Internal USDC balance (simulated deposit from cash sweep)",
+              "balance_before": 5.0,
+              "balance_after": 0.0004
+            },
+            "fills": [
+              {
+                "shares": 276431.111111,
+                "price": 0.0,
+                "timestamp": "2026-04-27T04:06:22+00:00",
+                "venue": "NYSE Arca"
+              }
+            ],
+            "avg_fill_price": 0.0,
+            "gross_notional": 4.9758,
+            "fees": {
+              "commission": 0.019903,
+              "sec_section_31": 0.0,
+              "finra_taf": 0.0,
+              "spread_cost": 0.003981,
+              "total": 0.023884,
+              "notes": "Spread estimate: 8 bps. Crypto taker fee 0.40%."
+            },
+            "net_cost": 4.9996,
+            "net_proceeds": null,
+            "disclaimer": "Simulated execution \u2014 no live orders were placed on any exchange. Fees modeled on US market structure: SEC Section 31 ($27.80/$1M of sale proceeds), FINRA Trading Activity Fee ($0.000166/share on sells, capped $9.30), Coinbase Advanced taker 0.40% for crypto. Spread cost estimated per ticker."
+          }
+        }
+      ]
+    },
+    "over_100m": {
+      "balance": 5.0,
+      "current_position": {
+        "ticker": "ARB-USD",
+        "name": "Arbitrum",
+        "shares": 6.724,
+        "entry_price": 0.74,
+        "entry_date": "2026-04-27",
+        "thesis": "JRR OVER_100M bag \u2014 momentum / sentiment edge. Stops are tight, exit fast.",
+        "execution": {
+          "order_id": "SIM-20260427-040620-ARBUSD-B",
+          "side": "BUY",
+          "ticker": "ARB-USD",
+          "asset_class": "crypto",
+          "exchange": "NYSE Arca",
+          "venue": "all-electronic ETF/options exchange",
+          "broker": "Coinbase (simulated wallet)",
+          "order_type": "MARKET",
+          "time_in_force": "DAY",
+          "submitted_at_utc": "2026-04-27T04:06:20+00:00",
+          "filled_at_utc": "2026-04-27T04:06:22+00:00",
+          "settlement_date": "2026-04-27",
+          "account": {
+            "label": "CRYPTO-WALLET-SIM-001",
+            "type": "Crypto Wallet",
+            "broker": "Coinbase (simulated wallet)",
+            "funding_source": "Internal USDC balance (simulated deposit from cash sweep)",
+            "balance_before": 5.0,
+            "balance_after": 0.0004
+          },
+          "fills": [
+            {
+              "shares": 6.724,
+              "price": 0.74,
+              "timestamp": "2026-04-27T04:06:22+00:00",
+              "venue": "NYSE Arca"
+            }
+          ],
+          "avg_fill_price": 0.74,
+          "gross_notional": 4.9758,
+          "fees": {
+            "commission": 0.019903,
+            "sec_section_31": 0.0,
+            "finra_taf": 0.0,
+            "spread_cost": 0.003981,
+            "total": 0.023884,
+            "notes": "Spread estimate: 8 bps. Crypto taker fee 0.40%."
+          },
+          "net_cost": 4.9996,
+          "net_proceeds": null,
+          "disclaimer": "Simulated execution \u2014 no live orders were placed on any exchange. Fees modeled on US market structure: SEC Section 31 ($27.80/$1M of sale proceeds), FINRA Trading Activity Fee ($0.000166/share on sells, capped $9.30), Coinbase Advanced taker 0.40% for crypto. Spread cost estimated per ticker."
+        }
+      },
+      "recent_history": [
+        {
+          "date": "2026-04-27",
+          "action": "BUY",
+          "ticker": "ARB-USD",
+          "shares": 6.724,
+          "entry_price": 0.74,
+          "allocated": 5.0,
+          "execution": {
+            "order_id": "SIM-20260427-040620-ARBUSD-B",
+            "side": "BUY",
+            "ticker": "ARB-USD",
+            "asset_class": "crypto",
+            "exchange": "NYSE Arca",
+            "venue": "all-electronic ETF/options exchange",
+            "broker": "Coinbase (simulated wallet)",
+            "order_type": "MARKET",
+            "time_in_force": "DAY",
+            "submitted_at_utc": "2026-04-27T04:06:20+00:00",
+            "filled_at_utc": "2026-04-27T04:06:22+00:00",
+            "settlement_date": "2026-04-27",
+            "account": {
+              "label": "CRYPTO-WALLET-SIM-001",
+              "type": "Crypto Wallet",
+              "broker": "Coinbase (simulated wallet)",
+              "funding_source": "Internal USDC balance (simulated deposit from cash sweep)",
+              "balance_before": 5.0,
+              "balance_after": 0.0004
+            },
+            "fills": [
+              {
+                "shares": 6.724,
+                "price": 0.74,
+                "timestamp": "2026-04-27T04:06:22+00:00",
+                "venue": "NYSE Arca"
+              }
+            ],
+            "avg_fill_price": 0.74,
+            "gross_notional": 4.9758,
+            "fees": {
+              "commission": 0.019903,
+              "sec_section_31": 0.0,
+              "finra_taf": 0.0,
+              "spread_cost": 0.003981,
+              "total": 0.023884,
+              "notes": "Spread estimate: 8 bps. Crypto taker fee 0.40%."
+            },
+            "net_cost": 4.9996,
+            "net_proceeds": null,
+            "disclaimer": "Simulated execution \u2014 no live orders were placed on any exchange. Fees modeled on US market structure: SEC Section 31 ($27.80/$1M of sale proceeds), FINRA Trading Activity Fee ($0.000166/share on sells, capped $9.30), Coinbase Advanced taker 0.40% for crypto. Spread cost estimated per ticker."
+          }
+        }
+      ]
+    }
+  },
+  "lifetime_peak": 10.0,
+  "current_life": 1,
+  "life_start_date": "2026-04-27",
+  "days_alive": 0,
+  "deaths": [],
+  "trades_today": 2,
+  "max_trades_per_day": 12,
+  "current_position": {
+    "ticker": "PEPE-USD",
+    "name": "Pepe (memecoin)",
+    "shares": 276431.11111111,
+    "entry_price": 1.8e-05,
+    "entry_date": "2026-04-27",
+    "thesis": "JRR SUB_100M bag \u2014 momentum / sentiment edge. Stops are tight, exit fast.",
+    "execution": {
+      "order_id": "SIM-20260427-040620-PEPEUSD-B",
+      "side": "BUY",
+      "ticker": "PEPE-USD",
+      "asset_class": "crypto",
+      "exchange": "NYSE Arca",
+      "venue": "all-electronic ETF/options exchange",
+      "broker": "Coinbase (simulated wallet)",
+      "order_type": "MARKET",
+      "time_in_force": "DAY",
+      "submitted_at_utc": "2026-04-27T04:06:20+00:00",
+      "filled_at_utc": "2026-04-27T04:06:22+00:00",
+      "settlement_date": "2026-04-27",
+      "account": {
+        "label": "CRYPTO-WALLET-SIM-001",
+        "type": "Crypto Wallet",
+        "broker": "Coinbase (simulated wallet)",
+        "funding_source": "Internal USDC balance (simulated deposit from cash sweep)",
+        "balance_before": 5.0,
+        "balance_after": 0.0004
+      },
+      "fills": [
+        {
+          "shares": 276431.111111,
+          "price": 0.0,
+          "timestamp": "2026-04-27T04:06:22+00:00",
+          "venue": "NYSE Arca"
+        }
+      ],
+      "avg_fill_price": 0.0,
+      "gross_notional": 4.9758,
+      "fees": {
+        "commission": 0.019903,
+        "sec_section_31": 0.0,
+        "finra_taf": 0.0,
+        "spread_cost": 0.003981,
+        "total": 0.023884,
+        "notes": "Spread estimate: 8 bps. Crypto taker fee 0.40%."
+      },
+      "net_cost": 4.9996,
+      "net_proceeds": null,
+      "disclaimer": "Simulated execution \u2014 no live orders were placed on any exchange. Fees modeled on US market structure: SEC Section 31 ($27.80/$1M of sale proceeds), FINRA Trading Activity Fee ($0.000166/share on sells, capped $9.30), Coinbase Advanced taker 0.40% for crypto. Spread cost estimated per ticker."
+    }
+  },
+  "history": [
+    {
+      "date": "2026-04-27",
+      "action": "BUY",
+      "ticker": "PEPE-USD",
+      "shares": 276431.11111111,
+      "entry_price": 1.8e-05,
+      "allocated": 5.0,
+      "execution": {
+        "order_id": "SIM-20260427-040620-PEPEUSD-B",
+        "side": "BUY",
+        "ticker": "PEPE-USD",
+        "asset_class": "crypto",
+        "exchange": "NYSE Arca",
+        "venue": "all-electronic ETF/options exchange",
+        "broker": "Coinbase (simulated wallet)",
+        "order_type": "MARKET",
+        "time_in_force": "DAY",
+        "submitted_at_utc": "2026-04-27T04:06:20+00:00",
+        "filled_at_utc": "2026-04-27T04:06:22+00:00",
+        "settlement_date": "2026-04-27",
+        "account": {
+          "label": "CRYPTO-WALLET-SIM-001",
+          "type": "Crypto Wallet",
+          "broker": "Coinbase (simulated wallet)",
+          "funding_source": "Internal USDC balance (simulated deposit from cash sweep)",
+          "balance_before": 5.0,
+          "balance_after": 0.0004
+        },
+        "fills": [
+          {
+            "shares": 276431.111111,
+            "price": 0.0,
+            "timestamp": "2026-04-27T04:06:22+00:00",
+            "venue": "NYSE Arca"
+          }
+        ],
+        "avg_fill_price": 0.0,
+        "gross_notional": 4.9758,
+        "fees": {
+          "commission": 0.019903,
+          "sec_section_31": 0.0,
+          "finra_taf": 0.0,
+          "spread_cost": 0.003981,
+          "total": 0.023884,
+          "notes": "Spread estimate: 8 bps. Crypto taker fee 0.40%."
+        },
+        "net_cost": 4.9996,
+        "net_proceeds": null,
+        "disclaimer": "Simulated execution \u2014 no live orders were placed on any exchange. Fees modeled on US market structure: SEC Section 31 ($27.80/$1M of sale proceeds), FINRA Trading Activity Fee ($0.000166/share on sells, capped $9.30), Coinbase Advanced taker 0.40% for crypto. Spread cost estimated per ticker."
+      },
+      "tier": "SUB_100M"
+    },
+    {
+      "date": "2026-04-27",
+      "action": "BUY",
+      "ticker": "ARB-USD",
+      "shares": 6.724,
+      "entry_price": 0.74,
+      "allocated": 5.0,
+      "execution": {
+        "order_id": "SIM-20260427-040620-ARBUSD-B",
+        "side": "BUY",
+        "ticker": "ARB-USD",
+        "asset_class": "crypto",
+        "exchange": "NYSE Arca",
+        "venue": "all-electronic ETF/options exchange",
+        "broker": "Coinbase (simulated wallet)",
+        "order_type": "MARKET",
+        "time_in_force": "DAY",
+        "submitted_at_utc": "2026-04-27T04:06:20+00:00",
+        "filled_at_utc": "2026-04-27T04:06:22+00:00",
+        "settlement_date": "2026-04-27",
+        "account": {
+          "label": "CRYPTO-WALLET-SIM-001",
+          "type": "Crypto Wallet",
+          "broker": "Coinbase (simulated wallet)",
+          "funding_source": "Internal USDC balance (simulated deposit from cash sweep)",
+          "balance_before": 5.0,
+          "balance_after": 0.0004
+        },
+        "fills": [
+          {
+            "shares": 6.724,
+            "price": 0.74,
+            "timestamp": "2026-04-27T04:06:22+00:00",
+            "venue": "NYSE Arca"
+          }
+        ],
+        "avg_fill_price": 0.74,
+        "gross_notional": 4.9758,
+        "fees": {
+          "commission": 0.019903,
+          "sec_section_31": 0.0,
+          "finra_taf": 0.0,
+          "spread_cost": 0.003981,
+          "total": 0.023884,
+          "notes": "Spread estimate: 8 bps. Crypto taker fee 0.40%."
+        },
+        "net_cost": 4.9996,
+        "net_proceeds": null,
+        "disclaimer": "Simulated execution \u2014 no live orders were placed on any exchange. Fees modeled on US market structure: SEC Section 31 ($27.80/$1M of sale proceeds), FINRA Trading Activity Fee ($0.000166/share on sells, capped $9.30), Coinbase Advanced taker 0.40% for crypto. Spread cost estimated per ticker."
+      },
+      "tier": "OVER_100M"
+    }
+  ],
+  "actions_this_life": 2
+}

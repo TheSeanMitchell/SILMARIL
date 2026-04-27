@@ -1,0 +1,128 @@
+{
+  "codename": "MIDAS",
+  "style": "hard-currency compounder",
+  "inspiration": "King Midas",
+  "balance": 10.0,
+  "current_position": {
+    "ticker": "GLD",
+    "name": "Gold (SPDR)",
+    "shares": 0.045783,
+    "entry_price": 218.4,
+    "entry_date": "2026-04-27",
+    "thesis": "Consensus BUY on hard asset (Gold (SPDR)) \u2014 Midas accumulates.",
+    "execution": {
+      "order_id": "SIM-20260427-040620-GLD-B",
+      "side": "BUY",
+      "ticker": "GLD",
+      "asset_class": "etf",
+      "exchange": "NYSE Arca",
+      "venue": "all-electronic ETF/options exchange",
+      "broker": "Interactive Brokers (simulated paper account)",
+      "order_type": "MARKET",
+      "time_in_force": "DAY",
+      "submitted_at_utc": "2026-04-27T04:06:20+00:00",
+      "filled_at_utc": "2026-04-27T04:06:22+00:00",
+      "settlement_date": "2026-04-28",
+      "account": {
+        "label": "EQUITY-CASH-SIM-001",
+        "type": "Cash Account",
+        "broker": "Interactive Brokers (simulated paper account)",
+        "funding_source": "ACH funding from simulated bank account (routed via broker cash sweep)",
+        "balance_before": 10.0,
+        "balance_after": 0.0
+      },
+      "fills": [
+        {
+          "shares": 0.045783,
+          "price": 218.4,
+          "timestamp": "2026-04-27T04:06:22+00:00",
+          "venue": "NYSE Arca"
+        }
+      ],
+      "avg_fill_price": 218.4,
+      "gross_notional": 9.999,
+      "fees": {
+        "commission": 0.0,
+        "sec_section_31": 0.0,
+        "finra_taf": 0.0,
+        "spread_cost": 0.001,
+        "total": 0.001,
+        "notes": "Spread estimate: 1 bps. Zero commission (IBKR Lite/TD-class simulated)."
+      },
+      "net_cost": 10.0,
+      "net_proceeds": null,
+      "disclaimer": "Simulated execution \u2014 no live orders were placed on any exchange. Fees modeled on US market structure: SEC Section 31 ($27.80/$1M of sale proceeds), FINRA Trading Activity Fee ($0.000166/share on sells, capped $9.30), Coinbase Advanced taker 0.40% for crypto. Spread cost estimated per ticker."
+    }
+  },
+  "lifetime_peak": 10.0,
+  "current_life": 1,
+  "life_start_date": "2026-04-27",
+  "actions_this_life": 1,
+  "days_alive": 0,
+  "history": [
+    {
+      "date": "2026-04-27",
+      "action": "BUY",
+      "ticker": "GLD",
+      "shares": 0.045783,
+      "price": 218.4,
+      "cost": 10.0,
+      "execution": {
+        "order_id": "SIM-20260427-040620-GLD-B",
+        "side": "BUY",
+        "ticker": "GLD",
+        "asset_class": "etf",
+        "exchange": "NYSE Arca",
+        "venue": "all-electronic ETF/options exchange",
+        "broker": "Interactive Brokers (simulated paper account)",
+        "order_type": "MARKET",
+        "time_in_force": "DAY",
+        "submitted_at_utc": "2026-04-27T04:06:20+00:00",
+        "filled_at_utc": "2026-04-27T04:06:22+00:00",
+        "settlement_date": "2026-04-28",
+        "account": {
+          "label": "EQUITY-CASH-SIM-001",
+          "type": "Cash Account",
+          "broker": "Interactive Brokers (simulated paper account)",
+          "funding_source": "ACH funding from simulated bank account (routed via broker cash sweep)",
+          "balance_before": 10.0,
+          "balance_after": 0.0
+        },
+        "fills": [
+          {
+            "shares": 0.045783,
+            "price": 218.4,
+            "timestamp": "2026-04-27T04:06:22+00:00",
+            "venue": "NYSE Arca"
+          }
+        ],
+        "avg_fill_price": 218.4,
+        "gross_notional": 9.999,
+        "fees": {
+          "commission": 0.0,
+          "sec_section_31": 0.0,
+          "finra_taf": 0.0,
+          "spread_cost": 0.001,
+          "total": 0.001,
+          "notes": "Spread estimate: 1 bps. Zero commission (IBKR Lite/TD-class simulated)."
+        },
+        "net_cost": 10.0,
+        "net_proceeds": null,
+        "disclaimer": "Simulated execution \u2014 no live orders were placed on any exchange. Fees modeled on US market structure: SEC Section 31 ($27.80/$1M of sale proceeds), FINRA Trading Activity Fee ($0.000166/share on sells, capped $9.30), Coinbase Advanced taker 0.40% for crypto. Spread cost estimated per ticker."
+      }
+    }
+  ],
+  "deaths": [],
+  "universe": [
+    "GLD",
+    "IAU",
+    "SLV",
+    "SIVR",
+    "PPLT",
+    "PALL",
+    "UUP",
+    "FXE",
+    "FXY",
+    "FXF"
+  ]
+}

@@ -1,99 +1,69 @@
-# ✦ SILMARIL
+"""
+silmaril.charts — price history bundles for chart rendering.
 
-**A transparent, multi-agent financial intelligence operating system.**
+Generates per-asset OHLC-ish series for the dashboard's chart panel.
+In demo mode synthesizes from the price_history list. In live mode this
+would pull yfinance multi-timeframe.
+"""
 
-> *"The Silmarils held the light of the Two Trees — gold of Laurelin and silver of Telperion — preserved against the night. This system does something smaller: it preserves the reasoning behind every trade signal, so nothing is lost to a black box."*
+from __future__ import annotations
+from datetime import datetime, timezone, timedelta
+from pathlib import Path
+from typing import Dict, List
+import json
+import math
+import math as _math
+def _sanitize_json(obj):
+    """Recursively convert NaN/Inf to None for valid JSON output."""
+    if isinstance(obj, float):
+        if _math.isnan(obj) or _math.isinf(obj):
+            return None
+        return obj
+    if isinstance(obj, dict):
+        return {k: _sanitize_json(v) for k, v in obj.items()}
+    if isinstance(obj, (list, tuple)):
+        return [_sanitize_json(v) for v in obj]
+    return obj
 
-> ⚠️ **EDUCATIONAL SIMULATION ONLY. NOT FINANCIAL ADVICE.**
 
----
+def build_chart_series(ticker: str, price_history: List[float], current_price: float) -> Dict:
+    """Build chart data for a single ticker."""
+    if not price_history or len(price_history) < 5:
+        # synthesize a flat series so the UI can still render something
+        price_history = [current_price] * 30
+    series = []
+    end = datetime.now(timezone.utc)
+    n = len(price_history)
+    for i, p in enumerate(price_history):
+        ts = end - timedelta(days=n - 1 - i)
+        series.append({
+            "t": ts.date().isoformat(),
+            "o": round(p * 0.998, 6),
+            "h": round(p * 1.005, 6),
+            "l": round(p * 0.995, 6),
+            "c": round(p, 6),
+        })
+    high_52w = max(price_history)
+    low_52w = min(price_history)
+    return {
+        "ticker": ticker,
+        "series": series,
+        "current_price": round(current_price, 6),
+        "high_52w": round(high_52w, 6),
+        "low_52w": round(low_52w, 6),
+        "first_price": round(price_history[0], 6),
+        "ytd_change_pct": round(((current_price / price_history[0]) - 1) * 100, 2) if price_history[0] else 0,
+    }
 
-## What it is
 
-SILMARIL is not a trading bot. It's a **financial intelligence operating system** — a team of sixteen specialist agents that each analyze the market through a distinct lens, debate publicly, and produce fully-specified trade plans with the reasoning preserved.
-
-Every number on the site is inspectable. Every agent's logic is a readable Python module. Every trade plan has an entry, a stop, a target, and an invalidation condition. Every debate shows who dissented and why.
-
-**Zero paid APIs. Zero hidden LLM calls. 100% transparent.**
-
----
-
-## The sixteen agents
-
-Fifteen specialists + one saver. Each agent is a self-contained strategy with its own personality, its own portfolio, and its own reputation on the leaderboard.
-
-| Codename | Specialty | Temperament |
-|---|---|---|
-| **AEGIS** | Capital Preservation | The veto cop — defends against drawdowns |
-| **FORGE** | Tech-Sector Momentum | Calculated-risk innovator |
-| **THUNDERHEAD** | Volatility Breakout | Explosive, high-conviction swings |
-| **JADE** | Oversold Mean Reversion | Rage-buys the panic |
-| **VEIL** | Sentiment Divergence | Sees what the market misses |
-| **KESTREL** | Precision Entries | Patient hunter, tight stops |
-| **OBSIDIAN** | Commodities & Resources | Sovereign plays, hard assets |
-| **ZENITH** | Long-Duration Trend | Rides momentum to the peak |
-| **WEAVER** | Micro Scalper | Many small, quick wins |
-| **HEX** | Probabilistic Edge | Statistical arbitrage |
-| **SYNTH** | Cross-Market Correlation | Connects the dots across assets |
-| **SPECK** | Small-Cap & Overlooked | Finds the forgotten |
-| **VESPA** | Event-Driven | Earnings, Fed, FDA, catalysts |
-| **MAGUS** | Seasonality & Time | History rhymes |
-| **TALON** | Market Structure | Index-level, breadth, regime |
-| **SCROOGE** | The $1 Compounder | A single dollar, compounded forever |
-
-SCROOGE is special. He starts with $1. Every day, he takes whatever he has and puts it entirely into the single highest-consensus trade plan. Next day, he sells and rolls it into the next. When he blows up — and he will — the counter resets to $1 and we show the reset. The pain of the reset is part of the lesson. *If you had invested just one dollar a day, here's where you'd be.*
-
----
-
-## The Handoff Block
-
-Every asset page, every debate, every trade plan ends with a **Handoff Block** — a copy-ready context bundle with one-click deep-links to your LLM of choice (ChatGPT, Claude, Gemini, Perplexity, Grok). Click the icon, your LLM opens with the full context and a pre-framed question already loaded.
-
-SILMARIL doesn't compete with your LLM. SILMARIL makes you a better prompter.
-
----
-
-## Architecture
-
-```
-ingestion  →  universe  →  analytics  →  agents  →  debate  →  trade_engine  →  output
-    ↑                                                                              ↓
-    └────────────────────────── leaderboard ← performance  ←─────────────────────┘
-```
-
-- **Ingestion**: RSS, Google News, SEC EDGAR, yfinance — all free, all cached
-- **Universe**: ~100-asset core + user watchlists + news-discovered tickers
-- **Analytics**: sentiment, technicals, correlations, event calendar, regime classification
-- **Agents**: sixteen independent strategies, one Python module each
-- **Debate**: arbiter collects verdicts, computes consensus, identifies dissent
-- **Trade engine**: full trade plans with entry/stop/target/invalidation
-- **Output**: canonical JSON → static site → GitHub Pages
-- **Leaderboard**: historical performance tracking with git-replay backfill
-
----
-
-## Running it
-
-Public repo, GitHub Actions (unlimited minutes on public repos), GitHub Pages. No paid services.
-
-```bash
-git clone https://github.com/YOUR/silmaril
-cd silmaril
-pip install -r requirements.txt
-
-python -m silmaril --demo    # sample contexts, offline (great for dev)
-python -m silmaril --live    # fetch real prices + news, write docs/data/*.json
-```
-
-The GitHub Actions workflow (`.github/workflows/daily.yml`) runs `--live`
-automatically after every US market close and commits fresh data to the repo.
-
----
-
-## The disclaimer that matters
-
-SILMARIL is an **educational simulation**. Every portfolio, every trade plan, every leaderboard number is hypothetical. Nothing here is financial advice. Past simulated performance does not predict future results — especially when the "past" is itself a backtest. Consult a licensed professional before putting real money anywhere.
-
----
-
-*Built for learning. Powered by open data. Preserved against the night.*
+def write_charts_json(out_path: Path, debate_dicts, ctx_lookup) -> None:
+    """Build chart bundle for all debate tickers."""
+    bundles = {}
+    for d in debate_dicts:
+        ticker = d["ticker"]
+        ctx = ctx_lookup.get(ticker)
+        if not ctx:
+            continue
+        ph = list(getattr(ctx, "price_history", []) or [])
+        bundles[ticker] = build_chart_series(ticker, ph, ctx.price)
+    out_path.write_text(json.dumps(_sanitize_json({"charts": bundles}), indent=2, allow_nan=False))
