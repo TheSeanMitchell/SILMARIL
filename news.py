@@ -1,128 +1,93 @@
-{
-  "codename": "MIDAS",
-  "style": "hard-currency compounder",
-  "inspiration": "King Midas",
-  "balance": 10.0,
-  "current_position": {
-    "ticker": "GLD",
-    "name": "Gold (SPDR)",
-    "shares": 0.045783,
-    "entry_price": 218.4,
-    "entry_date": "2026-04-27",
-    "thesis": "Consensus BUY on hard asset (Gold (SPDR)) \u2014 Midas accumulates.",
-    "execution": {
-      "order_id": "SIM-20260427-040620-GLD-B",
-      "side": "BUY",
-      "ticker": "GLD",
-      "asset_class": "etf",
-      "exchange": "NYSE Arca",
-      "venue": "all-electronic ETF/options exchange",
-      "broker": "Interactive Brokers (simulated paper account)",
-      "order_type": "MARKET",
-      "time_in_force": "DAY",
-      "submitted_at_utc": "2026-04-27T04:06:20+00:00",
-      "filled_at_utc": "2026-04-27T04:06:22+00:00",
-      "settlement_date": "2026-04-28",
-      "account": {
-        "label": "EQUITY-CASH-SIM-001",
-        "type": "Cash Account",
-        "broker": "Interactive Brokers (simulated paper account)",
-        "funding_source": "ACH funding from simulated bank account (routed via broker cash sweep)",
-        "balance_before": 10.0,
-        "balance_after": 0.0
-      },
-      "fills": [
-        {
-          "shares": 0.045783,
-          "price": 218.4,
-          "timestamp": "2026-04-27T04:06:22+00:00",
-          "venue": "NYSE Arca"
-        }
-      ],
-      "avg_fill_price": 218.4,
-      "gross_notional": 9.999,
-      "fees": {
-        "commission": 0.0,
-        "sec_section_31": 0.0,
-        "finra_taf": 0.0,
-        "spread_cost": 0.001,
-        "total": 0.001,
-        "notes": "Spread estimate: 1 bps. Zero commission (IBKR Lite/TD-class simulated)."
-      },
-      "net_cost": 10.0,
-      "net_proceeds": null,
-      "disclaimer": "Simulated execution \u2014 no live orders were placed on any exchange. Fees modeled on US market structure: SEC Section 31 ($27.80/$1M of sale proceeds), FINRA Trading Activity Fee ($0.000166/share on sells, capped $9.30), Coinbase Advanced taker 0.40% for crypto. Spread cost estimated per ticker."
+"""
+silmaril.scoring.regime_tags — Market-condition labels attached to every
+decision so we can later answer questions like:
+
+  "Does FORGE only work in trending markets?"
+  "Does HEX make money in ranging markets but lose in trends?"
+  "Does VEIL fire well only when there's news?"
+
+Without these labels, performance numbers are noise. With them, you can
+detect regime-specific edge and downweight agents outside their comfort zone.
+
+Tags applied at decision time (snapshot of the world):
+  market_regime:       RISK_ON | NEUTRAL | RISK_OFF        (from VIX + breadth)
+  trend_state:         TRENDING | RANGING | UNCLEAR        (from SMA stack + slope)
+  vol_state:           HIGH_VOL | NORMAL | LOW_VOL          (from ATR/price ratio)
+  news_state:          NEWS_DRIVEN | NORMAL                 (from article_count)
+  liquidity_state:     LIQUID | THIN                        (from volume)
+"""
+
+from __future__ import annotations
+
+from typing import Any, Dict, List, Optional
+
+
+def tag_context(ctx_dict: Dict[str, Any]) -> Dict[str, str]:
+    """
+    Build the regime tag set for a single asset's debate context.
+    `ctx_dict` is what you'd see in a debate dict — has price, sma_50,
+    sma_200, atr_14, volume, avg_volume_30d, article_count, vix, etc.
+    """
+    return {
+        "market_regime": ctx_dict.get("market_regime", "NEUTRAL"),
+        "trend_state":   _trend_state(ctx_dict),
+        "vol_state":     _vol_state(ctx_dict),
+        "news_state":    _news_state(ctx_dict),
+        "liquidity_state": _liquidity_state(ctx_dict),
     }
-  },
-  "lifetime_peak": 10.0,
-  "current_life": 1,
-  "life_start_date": "2026-04-27",
-  "actions_this_life": 1,
-  "days_alive": 0,
-  "history": [
-    {
-      "date": "2026-04-27",
-      "action": "BUY",
-      "ticker": "GLD",
-      "shares": 0.045783,
-      "price": 218.4,
-      "cost": 10.0,
-      "execution": {
-        "order_id": "SIM-20260427-040620-GLD-B",
-        "side": "BUY",
-        "ticker": "GLD",
-        "asset_class": "etf",
-        "exchange": "NYSE Arca",
-        "venue": "all-electronic ETF/options exchange",
-        "broker": "Interactive Brokers (simulated paper account)",
-        "order_type": "MARKET",
-        "time_in_force": "DAY",
-        "submitted_at_utc": "2026-04-27T04:06:20+00:00",
-        "filled_at_utc": "2026-04-27T04:06:22+00:00",
-        "settlement_date": "2026-04-28",
-        "account": {
-          "label": "EQUITY-CASH-SIM-001",
-          "type": "Cash Account",
-          "broker": "Interactive Brokers (simulated paper account)",
-          "funding_source": "ACH funding from simulated bank account (routed via broker cash sweep)",
-          "balance_before": 10.0,
-          "balance_after": 0.0
-        },
-        "fills": [
-          {
-            "shares": 0.045783,
-            "price": 218.4,
-            "timestamp": "2026-04-27T04:06:22+00:00",
-            "venue": "NYSE Arca"
-          }
-        ],
-        "avg_fill_price": 218.4,
-        "gross_notional": 9.999,
-        "fees": {
-          "commission": 0.0,
-          "sec_section_31": 0.0,
-          "finra_taf": 0.0,
-          "spread_cost": 0.001,
-          "total": 0.001,
-          "notes": "Spread estimate: 1 bps. Zero commission (IBKR Lite/TD-class simulated)."
-        },
-        "net_cost": 10.0,
-        "net_proceeds": null,
-        "disclaimer": "Simulated execution \u2014 no live orders were placed on any exchange. Fees modeled on US market structure: SEC Section 31 ($27.80/$1M of sale proceeds), FINRA Trading Activity Fee ($0.000166/share on sells, capped $9.30), Coinbase Advanced taker 0.40% for crypto. Spread cost estimated per ticker."
-      }
-    }
-  ],
-  "deaths": [],
-  "universe": [
-    "GLD",
-    "IAU",
-    "SLV",
-    "SIVR",
-    "PPLT",
-    "PALL",
-    "UUP",
-    "FXE",
-    "FXY",
-    "FXF"
-  ]
-}
+
+
+def _trend_state(d: Dict[str, Any]) -> str:
+    price = d.get("price")
+    sma20 = d.get("sma_20")
+    sma50 = d.get("sma_50")
+    sma200 = d.get("sma_200")
+    if not price or not sma50 or not sma200:
+        return "UNCLEAR"
+    above_50 = price > sma50
+    above_200 = price > sma200
+    stacked_up = (sma20 or sma50) > sma50 > sma200
+    stacked_dn = (sma20 or sma50) < sma50 < sma200
+    if above_50 and above_200 and stacked_up:
+        return "TRENDING"
+    if not above_50 and not above_200 and stacked_dn:
+        return "TRENDING"  # downtrend is still a trend
+    spread = abs(sma50 - sma200) / sma200 if sma200 else 0
+    if spread < 0.02:
+        return "RANGING"
+    return "UNCLEAR"
+
+
+def _vol_state(d: Dict[str, Any]) -> str:
+    atr = d.get("atr_14")
+    price = d.get("price")
+    vix = d.get("vix")
+    if atr and price:
+        atr_pct = atr / price
+        if atr_pct > 0.04:
+            return "HIGH_VOL"
+        if atr_pct < 0.01:
+            return "LOW_VOL"
+    if vix:
+        if vix > 25:
+            return "HIGH_VOL"
+        if vix < 14:
+            return "LOW_VOL"
+    return "NORMAL"
+
+
+def _news_state(d: Dict[str, Any]) -> str:
+    n = d.get("article_count", 0) or 0
+    return "NEWS_DRIVEN" if n >= 8 else "NORMAL"
+
+
+def _liquidity_state(d: Dict[str, Any]) -> str:
+    vol = d.get("volume") or 0
+    avg = d.get("avg_volume_30d") or 0
+    if not avg:
+        return "LIQUID"  # crypto / forex have no avg_volume meaning
+    if vol > avg * 1.5:
+        return "LIQUID"   # high turnover
+    if vol < avg * 0.4:
+        return "THIN"
+    return "LIQUID"

@@ -1,291 +1,376 @@
 """
-silmaril.handoff.blocks — Build Handoff Blocks from debate context.
+silmaril.agents.jrr_token — JRR Token, the penny-token compounder.
 
-A Handoff Block is a pre-framed prompt the user can copy into any LLM
-(ChatGPT, Claude, Gemini, Perplexity, Grok) to continue their research.
-SILMARIL does the hardest part of prompting — turning "I'm curious about
-AAPL" into a question loaded with context: the full debate, the price
-action, the dissenting agents, the recent headlines.
+Plays the lowest tier of the crypto market: tokens, not majors.
+Splits his $1 budget 50/50:
+  - $0.50 in the SUB tier  (under $100M market cap)  — high rug risk
+  - $0.50 in the OVER tier ($100M – $1B market cap)  — established small caps
 
-Every Handoff Block has two parts:
-  1. context_text — the copyable context (what the user pastes)
-  2. handoffs     — deep-links with the context pre-loaded where supported
+Each tier acts independently, with its own position and rotation logic.
+12 trades / 24h cap across both tiers combined. Pump-and-dump windows
+close fast; JRR rotates often.
 
-Templates live here so the prompts are editable without touching the
-core pipeline.
+Reincarnates at $0.05 like the other $1 compounders. The rug rate is
+real: tokens vanish, projects abandon, JRR dies. He always comes back.
 """
 
 from __future__ import annotations
 
+from dataclasses import dataclass, field
 from datetime import datetime, timezone
-from typing import Any, Dict, List, Optional
+from typing import Dict, List, Optional, Tuple
 
-from .deeplinks import build_handoffs
-
-
-# ─────────────────────────────────────────────────────────────────
-# Prompt templates
-# ─────────────────────────────────────────────────────────────────
-
-ASSET_DEEP_DIVE = """I'm researching {ticker} ({name}) and want your independent take.
-
-Here is the current multi-agent analysis from SILMARIL (an educational simulation, not advice):
-
-Price: ${price:.2f} ({change_pct:+.2f}% today)
-Consensus signal: {consensus_signal} (agreement score {agreement:.0%})
-
-Agent verdicts:
-{verdict_block}
-
-Dissent: {dissent_summary}
-
-Recent headlines:
-{headlines_block}
-
-Questions I'd like you to address:
-1. Do you agree or disagree with the consensus? Why?
-2. Which dissenting agent's view most deserves serious consideration, and what would have to happen for them to be right?
-3. What critical data or perspective is missing from this analysis?
-4. If I were considering a position, what questions should I ask myself first?
-
-Please be direct. This is for learning, not execution."""
+from .base import Agent, AssetContext, Signal, Verdict
+from ..execution.detail import build_execution
 
 
-SCROOGE_NARRATIVE = """I'm tracking an educational simulation called SCROOGE: a hypothetical account that started with $1 on {life_start_date} and puts its entire balance into the single highest-consensus trade each day.
+# Tokens grouped by tier (market cap). In live mode this would come from
+# CoinGecko's market-cap-ranked list; for demo purposes we hand-curate.
+SUB_100M_TOKENS: Dict[str, str] = {
+    "PEPE-USD":   "Pepe (memecoin)",
+    "FLOKI-USD":  "Floki",
+    "BONK-USD":   "Bonk",
+    "WIF-USD":    "dogwifhat",
+    "MOG-USD":    "Mog Coin",
+    "TURBO-USD":  "Turbo",
+    "BRETT-USD":  "Brett",
+    "POPCAT-USD": "Popcat",
+}
 
-SCROOGE's current state:
-- Life #{current_life}
-- Current balance: ${balance:.4f}
-- Days alive: {days_alive}
-- Lifetime peak: ${lifetime_peak:.4f}
-- Previous deaths: {death_count}
+OVER_100M_TOKENS: Dict[str, str] = {
+    "SHIB-USD":  "Shiba Inu",
+    "PEPE-USD":  "Pepe",  # straddles tiers; placement varies by market cap
+    "INJ-USD":   "Injective",
+    "ARB-USD":   "Arbitrum",
+    "OP-USD":    "Optimism",
+    "STX-USD":   "Stacks",
+    "RUNE-USD":  "THORChain",
+    "FET-USD":   "Fetch.ai",
+    "LDO-USD":   "Lido DAO",
+    "GRT-USD":   "The Graph",
+}
 
-Most recent actions:
-{recent_actions}
+JRR_UNIVERSE = {**SUB_100M_TOKENS, **OVER_100M_TOKENS}
 
-I'd like to understand:
-1. What does this simulation teach about position sizing and concentration?
-2. What are the realistic failure modes of an all-in-one-name strategy?
-3. What's the mathematical expected outcome of full-conviction daily rolls over time?
-4. What would change if the same strategy were applied with 10%, 25%, or 50% position sizing instead of 100%?
-
-Help me reason about this like a student of markets, not a gambler."""
-
-
-DEBATE_SUMMARY = """I'm reviewing today's output from SILMARIL, a transparent multi-agent market analysis simulation. Here's the headline debate:
-
-Market regime: {market_regime} (VIX {vix})
-
-Top opportunities by consensus:
-{top_block}
-
-Today's most contested asset: {contested_ticker}
-  - Consensus: {contested_signal} (agreement {contested_agreement:.0%})
-  - {contested_dissent}
-
-I want to stress-test the day's top-consensus picks. For each, ask:
-  - What is the strongest argument AGAINST this trade?
-  - What specific price or news event would invalidate the thesis?
-  - What is the base rate of success for this kind of setup historically?
-
-Be skeptical. My default assumption is that consensus can be wrong."""
+MAX_TRADES_PER_DAY = 12
+DEATH_THRESHOLD = 0.50
+TIER_BUDGET_PCT = 0.50  # 50/50 split
 
 
-# ─────────────────────────────────────────────────────────────────
-# Block builders
-# ─────────────────────────────────────────────────────────────────
+@dataclass
+class TierState:
+    """Per-tier state inside JRR Token."""
+    name: str                            # 'SUB_100M' or 'OVER_100M'
+    balance: float = 5.00                # half of $1.00
+    current_position: Optional[Dict] = None
+    history: List[Dict] = field(default_factory=list)
 
-def build_asset_deep_dive(debate: Dict[str, Any]) -> Dict[str, Any]:
-    """Build a Handoff Block for one asset's debate."""
-    verdicts = debate.get("verdicts", [])
-    voting = [v for v in verdicts if v.get("signal") != "ABSTAIN"]
 
-    verdict_block = "\n".join(
-        f"  - {v['agent']}: {v['signal']} "
-        f"(conviction {v['conviction']:.0%}) — {v['rationale']}"
-        for v in voting
-    ) or "  - (no agents weighed in)"
-
-    headlines = debate.get("recent_headlines") or []
-    headlines_block = "\n".join(
-        f"  - {h.get('title', '(untitled)')} [{h.get('source', '?')}]"
-        for h in headlines[:5]
-    ) or "  - (no headlines captured in this run)"
-
-    context_text = ASSET_DEEP_DIVE.format(
-        ticker=debate["ticker"],
-        name=debate.get("name", debate["ticker"]),
-        price=debate.get("price") or 0.0,
-        change_pct=debate.get("change_pct") or 0.0,
-        consensus_signal=debate["consensus"]["signal"],
-        agreement=debate["consensus"]["agreement_score"],
-        verdict_block=verdict_block,
-        dissent_summary=debate.get("dissent_summary", "None"),
-        headlines_block=headlines_block,
+@dataclass
+class JRRTokenState:
+    """Persistent two-tier state for JRR Token."""
+    sub_tier: TierState = field(default_factory=lambda: TierState(name="SUB_100M", balance=5.00))
+    over_tier: TierState = field(default_factory=lambda: TierState(name="OVER_100M", balance=5.00))
+    lifetime_peak: float = 10.00
+    current_life: int = 1
+    life_start_date: str = field(
+        default_factory=lambda: datetime.now(timezone.utc).date().isoformat()
     )
+    deaths: List[Dict] = field(default_factory=list)
+    trades_today: int = 0
+    last_action_date: str = ""
 
-    return {
-        "template": "asset_deep_dive",
-        "context_text": context_text,
-        "handoffs": build_handoffs(context_text),
-        "generated_at": datetime.now(timezone.utc).isoformat(),
-    }
+    @property
+    def balance(self) -> float:
+        """Total balance across both tiers."""
+        return self.sub_tier.balance + self.over_tier.balance
+
+    def to_dict(self) -> Dict:
+        return {
+            "codename": "JRR_TOKEN",
+            "title": "The Two-Tier Token Trader",
+            "balance": round(self.balance, 6),
+            "tiers": {
+                "sub_100m": {
+                    "balance": round(self.sub_tier.balance, 6),
+                    "current_position": self.sub_tier.current_position,
+                    "recent_history": self.sub_tier.history[-15:],
+                },
+                "over_100m": {
+                    "balance": round(self.over_tier.balance, 6),
+                    "current_position": self.over_tier.current_position,
+                    "recent_history": self.over_tier.history[-15:],
+                },
+            },
+            "lifetime_peak": round(self.lifetime_peak, 6),
+            "current_life": self.current_life,
+            "life_start_date": self.life_start_date,
+            "days_alive": self._days_alive(),
+            "deaths": self.deaths,
+            "trades_today": self.trades_today,
+            "max_trades_per_day": MAX_TRADES_PER_DAY,
+            "current_position": self._composite_position(),
+            "history": self._merged_history(),
+            "actions_this_life": len(self._merged_history()),
+        }
+
+    def _days_alive(self) -> int:
+        try:
+            start = datetime.fromisoformat(self.life_start_date).date()
+            today = datetime.now(timezone.utc).date()
+            return max(0, (today - start).days)
+        except Exception:
+            return 0
+
+    def _composite_position(self) -> Optional[Dict]:
+        """Returns the larger of the two tier positions, for headline display."""
+        positions = []
+        if self.sub_tier.current_position:
+            positions.append((self.sub_tier.current_position, "SUB"))
+        if self.over_tier.current_position:
+            positions.append((self.over_tier.current_position, "OVER"))
+        if not positions:
+            return None
+        # Return the more recent / larger
+        return positions[0][0]
+
+    def _merged_history(self) -> List[Dict]:
+        """Sorted merge of both tiers' histories."""
+        merged = []
+        for h in self.sub_tier.history:
+            merged.append({**h, "tier": "SUB_100M"})
+        for h in self.over_tier.history:
+            merged.append({**h, "tier": "OVER_100M"})
+        merged.sort(key=lambda h: h.get("date", ""), reverse=True)
+        return merged
 
 
-def build_scrooge_narrative(scrooge_state: Dict[str, Any]) -> Dict[str, Any]:
-    """Build a Handoff Block for the SCROOGE storyline."""
-    history = scrooge_state.get("history", [])
-    recent = history[-5:]
-    recent_lines = []
-    for h in recent:
-        action = h.get("action", "?")
-        date = h.get("date", "?")
-        ticker = h.get("ticker", "—")
-        if action == "BUY":
-            recent_lines.append(f"  - {date}: BUY {ticker} with ${h.get('allocated', 0):.4f}")
-        elif action == "SELL":
-            recent_lines.append(
-                f"  - {date}: SELL {ticker} → ${h.get('balance_after', 0):.4f} "
-                f"({h.get('pnl_pct', 0):+.1f}%)"
+class JRRToken(Agent):
+    codename = "JRR_TOKEN"
+    specialty = "Penny tokens — pump and dump"
+    temperament = "Hyperactive, cynical, knows the rug is coming"
+    inspiration = "The guy on Telegram who calls every coin '100x' until it isn't"
+    asset_classes = ("crypto",)
+
+    def applies_to(self, ctx: AssetContext) -> bool:
+        if not super().applies_to(ctx):
+            return False
+        return ctx.ticker in JRR_UNIVERSE
+
+    def _judge(self, ctx: AssetContext) -> Verdict:
+        if ctx.ticker not in JRR_UNIVERSE:
+            return Verdict(
+                agent=self.codename, ticker=ctx.ticker,
+                signal=Signal.ABSTAIN, conviction=0.0,
+                rationale="JRR Token only trades the bottom of the barrel. This is too clean.",
             )
-        elif action == "REINCARNATION":
-            recent_lines.append(f"  - {date}: DEATH & REBIRTH (new life)")
-        elif action == "CASH":
-            recent_lines.append(f"  - {date}: HELD CASH ({h.get('reason', '')})")
-    recent_actions = "\n".join(recent_lines) if recent_lines else "  - (no actions yet)"
 
-    context_text = SCROOGE_NARRATIVE.format(
-        life_start_date=scrooge_state.get("life_start_date", "?"),
-        current_life=scrooge_state.get("current_life", 1),
-        balance=scrooge_state.get("balance", 0.0),
-        days_alive=scrooge_state.get("days_alive", 0),
-        lifetime_peak=scrooge_state.get("lifetime_peak", 0.0),
-        death_count=len(scrooge_state.get("deaths", [])),
-        recent_actions=recent_actions,
-    )
+        chg = ctx.change_pct or 0.0
+        sent = ctx.sentiment_score or 0.0
+        is_sub = ctx.ticker in SUB_100M_TOKENS
 
-    return {
-        "template": "scrooge_narrative",
-        "context_text": context_text,
-        "handoffs": build_handoffs(context_text),
-        "generated_at": datetime.now(timezone.utc).isoformat(),
-    }
+        # Sub tier: pure momentum / pump detection
+        if is_sub:
+            if chg > 15:
+                return Verdict(
+                    agent=self.codename, ticker=ctx.ticker,
+                    signal=Signal.STRONG_BUY, conviction=0.9,
+                    rationale=f"{ctx.ticker} pumping {chg:+.0f}%. JRR sends. Rug coming but we're early.",
+                )
+            if chg > 5:
+                return Verdict(
+                    agent=self.codename, ticker=ctx.ticker,
+                    signal=Signal.BUY, conviction=0.7,
+                    rationale=f"{ctx.ticker} {chg:+.1f}%. JRR enters small. Tight stops.",
+                )
+            if chg < -25:
+                return Verdict(
+                    agent=self.codename, ticker=ctx.ticker,
+                    signal=Signal.HOLD, conviction=0.3,
+                    rationale=f"{ctx.ticker} got rugged {chg:+.0f}%. JRR doesn't catch falling knives at this tier.",
+                )
+            return Verdict(
+                agent=self.codename, ticker=ctx.ticker,
+                signal=Signal.HOLD, conviction=0.4,
+                rationale=f"{ctx.ticker} mid. JRR waits for a real pump.",
+            )
+
+        # Over tier: more measured, sentiment matters
+        if chg > 8 and sent > 0.2:
+            return Verdict(
+                agent=self.codename, ticker=ctx.ticker,
+                signal=Signal.STRONG_BUY, conviction=0.8,
+                rationale=f"{ctx.ticker} pumping {chg:+.1f}% with sentiment. JRR loads.",
+            )
+        if chg > 3:
+            return Verdict(
+                agent=self.codename, ticker=ctx.ticker,
+                signal=Signal.BUY, conviction=0.6,
+                rationale=f"{ctx.ticker} {chg:+.1f}%. Decent setup, JRR opens a bag.",
+            )
+        if chg < -10 and sent < -0.2:
+            return Verdict(
+                agent=self.codename, ticker=ctx.ticker,
+                signal=Signal.SELL, conviction=0.5,
+                rationale=f"{ctx.ticker} bleeding with negative sentiment. JRR exits.",
+            )
+        return Verdict(
+            agent=self.codename, ticker=ctx.ticker,
+            signal=Signal.HOLD, conviction=0.4,
+            rationale=f"{ctx.ticker} consolidating. JRR waits.",
+        )
 
 
-def build_debate_summary(
-    debates: List[Dict[str, Any]],
-    market_regime: str = "NEUTRAL",
-    vix: Optional[float] = None,
-) -> Dict[str, Any]:
-    """Build a Handoff Block for the overall daily debate."""
-    top = sorted(
-        [d for d in debates if d["consensus"]["signal"] in ("BUY", "STRONG_BUY")],
-        key=lambda d: -d["consensus"]["score"],
-    )[:5]
-    top_block = "\n".join(
-        f"  - {d['ticker']}: {d['consensus']['signal']} "
-        f"(score {d['consensus']['score']:.2f}, agreement {d['consensus']['agreement_score']:.0%})"
-        for d in top
-    ) or "  - (no BUY-consensus picks today)"
-
-    # Most contested = lowest agreement with non-HOLD consensus
-    contested_candidates = [
-        d for d in debates
-        if d["consensus"]["signal"] != "HOLD"
-        and d["consensus"]["agreement_score"] < 0.6
-    ]
-    contested = (
-        min(contested_candidates, key=lambda d: d["consensus"]["agreement_score"])
-        if contested_candidates
-        else None
-    )
-
-    context_text = DEBATE_SUMMARY.format(
-        market_regime=market_regime,
-        vix=f"{vix:.1f}" if vix else "n/a",
-        top_block=top_block,
-        contested_ticker=contested["ticker"] if contested else "—",
-        contested_signal=contested["consensus"]["signal"] if contested else "—",
-        contested_agreement=contested["consensus"]["agreement_score"] if contested else 0,
-        contested_dissent=contested.get("dissent_summary", "—") if contested else "no contested names today",
-    )
-
-    return {
-        "template": "debate_summary",
-        "context_text": context_text,
-        "handoffs": build_handoffs(context_text),
-        "generated_at": datetime.now(timezone.utc).isoformat(),
-    }
+jrr_token = JRRToken()
 
 
 # ─────────────────────────────────────────────────────────────────
-# Per-trade-plan handoff (Phase A addition)
+# Two-tier action logic
 # ─────────────────────────────────────────────────────────────────
 
-TRADE_PLAN_TEMPLATE = """I'm evaluating a specific trade idea. SILMARIL (an educational multi-agent simulation, not a financial advisor) generated this plan:
+def jrr_token_act(
+    state: JRRTokenState,
+    ranked_candidates: List[Dict],
+    prices: Dict[str, float],
+) -> JRRTokenState:
+    """
+    JRR acts on both tiers independently. Each tier draws from its own
+    50% budget. Combined trades/day cap is 12.
+    """
+    today = datetime.now(timezone.utc).date().isoformat()
 
-{ticker} ({name}) — {direction} @ ${entry:.2f}
-Stop: ${stop:.2f}  ·  Target: ${target:.2f}  ·  Reward/Risk: {rr:.2f}:1
-Position: {shares:.2f} shares  ·  ${position_value:,.0f} notional  ·  {risk_pct:.2f}% portfolio risk
+    if state.last_action_date != today:
+        state.trades_today = 0
+        state.last_action_date = today
 
-Backers among the agents:
-{backers_block}
+    # Death check (combined balance)
+    if state.balance < DEATH_THRESHOLD:
+        state.deaths.append({
+            "date": today,
+            "life": state.current_life,
+            "final_balance": round(state.balance, 6),
+            "peak_balance": round(state.lifetime_peak, 6),
+            "epitaph": (f"JRR Token rugged on Life #{state.current_life}. "
+                        f"Peaked at ${state.lifetime_peak:.4f}, busted at ${state.balance:.4f}. "
+                        f"Tokens taketh away."),
+        })
+        # Reset both tiers to 50/50 of fresh $1
+        state.sub_tier = TierState(name="SUB_100M", balance=5.00)
+        state.over_tier = TierState(name="OVER_100M", balance=5.00)
+        state.current_life += 1
+        state.life_start_date = today
+        state.lifetime_peak = 10.00
+        state.trades_today = 0
+        return state
 
-Dissent against this trade:
-{dissenters_block}
+    # Filter candidates by tier
+    sub_picks = [c for c in ranked_candidates if c.get("ticker") in SUB_100M_TOKENS]
+    over_picks = [c for c in ranked_candidates if c.get("ticker") in OVER_100M_TOKENS]
 
-Invalidation rule: {invalidation}
+    # Act each tier independently if we have budget left for trades
+    for tier, picks, tier_universe in [
+        (state.sub_tier, sub_picks, SUB_100M_TOKENS),
+        (state.over_tier, over_picks, OVER_100M_TOKENS),
+    ]:
+        if state.trades_today >= MAX_TRADES_PER_DAY:
+            break
+        _act_on_tier(state, tier, picks, prices, today, tier_universe)
 
-I want your independent stress test of this plan. Specifically:
-1. Is the stop placement reasonable for {ticker}'s recent volatility, or is it too tight/loose?
-2. Is the {rr:.1f}:1 reward/risk realistic given current market structure?
-3. What single piece of news or price action would make you abandon this thesis tomorrow?
-4. Are the agent rationales above logically consistent, or are any of them weak?
-5. Is there a SAFER variation of this trade (different entry, different size, hedge) that captures the same edge with less risk?
-
-Be skeptical. Assume I'm prone to overconfidence."""
+    return state
 
 
-def build_trade_plan_handoff(plan: Dict[str, Any]) -> Dict[str, Any]:
-    """Build a Handoff Block for a single trade plan."""
-    backers = plan.get("backers", []) or []
-    dissenters = plan.get("dissenters", []) or []
+def _act_on_tier(
+    state: JRRTokenState,
+    tier: TierState,
+    picks: List[Dict],
+    prices: Dict[str, float],
+    today: str,
+    tier_universe: Dict[str, str],
+) -> None:
+    """Run one tier's decision."""
+    if not picks:
+        tier.history.append({
+            "date": today,
+            "action": "HODL",
+            "reason": f"No qualifying tokens in {tier.name} today.",
+            "balance": round(tier.balance, 6),
+        })
+        return
 
-    if backers:
-        backers_block = "\n".join(
-            f"  - {b['agent']} (conv {b['conviction']:.2f}): {b.get('rationale', '')[:140]}"
-            for b in backers
+    target = picks[0]
+    target_ticker = target["ticker"]
+    target_price = prices.get(target_ticker)
+    if not target_price:
+        return
+
+    # If we already hold the same ticker, HODL
+    if tier.current_position and tier.current_position["ticker"] == target_ticker:
+        tier.history.append({
+            "date": today,
+            "action": "HODL",
+            "ticker": target_ticker,
+            "reason": f"Still JRR's top {tier.name} pick. HODL.",
+            "balance": round(tier.balance, 6),
+        })
+        return
+
+    # Sell existing position
+    if tier.current_position:
+        old = tier.current_position
+        old_current = prices.get(old["ticker"], old["entry_price"])
+        execution = build_execution(
+            ticker=old["ticker"], asset_class="crypto", side="SELL",
+            shares=old["shares"], price=old_current, available_before=0.0,
         )
-    else:
-        backers_block = "  - (none — speculative idea)"
+        proceeds = execution["net_proceeds"] or (old["shares"] * old_current)
+        pnl_pct = ((old_current / old["entry_price"]) - 1) * 100 if old["entry_price"] else 0.0
+        tier.history.append({
+            "date": today,
+            "action": "SELL",
+            "ticker": old["ticker"],
+            "shares": old["shares"],
+            "price": old_current,
+            "proceeds": round(proceeds, 6),
+            "pnl_pct": round(pnl_pct, 2),
+            "execution": execution,
+        })
+        tier.balance = round(proceeds, 6)
+        state.lifetime_peak = max(state.lifetime_peak, state.balance)
+        state.trades_today += 1
 
-    if dissenters:
-        dissenters_block = "\n".join(
-            f"  - {d['agent']} ({d['signal']}, conv {d.get('conviction', 0):.2f}): {d.get('rationale', '')[:140]}"
-            for d in dissenters
+    # Buy the new target
+    available = tier.balance
+    shares = available / target_price
+    for _ in range(3):
+        test_exec = build_execution(
+            ticker=target_ticker, asset_class="crypto", side="BUY",
+            shares=shares, price=target_price, available_before=available,
         )
-    else:
-        dissenters_block = "  - (no dissent)"
-
-    context_text = TRADE_PLAN_TEMPLATE.format(
-        ticker=plan["ticker"],
-        name=plan.get("name", plan["ticker"]),
-        direction=plan.get("direction", "LONG"),
-        entry=plan["entry"],
-        stop=plan["stop"],
-        target=plan["target"],
-        rr=plan["reward_risk_ratio"],
-        shares=plan["shares"],
-        position_value=plan["position_value"],
-        risk_pct=plan["risk_pct_of_portfolio"] * 100,
-        backers_block=backers_block,
-        dissenters_block=dissenters_block,
-        invalidation=plan.get("invalidation", "Stop hit"),
+        over_amt = (test_exec["net_cost"] or 0) - available
+        if over_amt <= 0.00001:
+            break
+        shares -= (over_amt / target_price) * 1.01
+    execution = build_execution(
+        ticker=target_ticker, asset_class="crypto", side="BUY",
+        shares=shares, price=target_price, available_before=available,
     )
-
-    return {
-        "template": "trade_plan",
-        "context_text": context_text,
-        "handoffs": build_handoffs(context_text),
-        "generated_at": datetime.now(timezone.utc).isoformat(),
+    tier.current_position = {
+        "ticker": target_ticker,
+        "name": tier_universe.get(target_ticker, target_ticker),
+        "shares": round(shares, 8),
+        "entry_price": round(target_price, 6),
+        "entry_date": today,
+        "thesis": (f"JRR {tier.name} bag — momentum / sentiment edge. "
+                   f"Stops are tight, exit fast."),
+        "execution": execution,
     }
+    tier.history.append({
+        "date": today,
+        "action": "BUY",
+        "ticker": target_ticker,
+        "shares": round(shares, 8),
+        "entry_price": round(target_price, 6),
+        "allocated": round(available, 6),
+        "execution": execution,
+    })
+    state.trades_today += 1

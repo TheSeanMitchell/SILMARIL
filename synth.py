@@ -1,251 +1,105 @@
 """
-silmaril.execution.detail — Professional trade execution metadata.
+silmaril.agents.fee_aware_rotation — Should we rotate or HODL?
 
-Every trade SILMARIL produces — whether from a trade plan, a SCROOGE rotation,
-or a MIDAS allocation — gets wrapped in execution metadata that mirrors what
-a real professional trade would look like:
+Every $1 compounder uses this. Compares the expected edge of rotating
+into a new ticker against the round-trip fee cost. Rotates only when
+edge meaningfully exceeds friction.
 
-  • Order ID and timestamp (submit + fill)
-  • Exchange and venue
-  • Broker routing and account
-  • Funding source (cash account, simulated wallet)
-  • Available balance before/after
-  • Order type, time-in-force
-  • Fill details (shares, price, time)
-  • Settlement date (T+2 for equities, instant for crypto)
-  • Fee breakdown (SEC Section 31, FINRA TAF, spread cost, broker commission)
+The learning rule:
+  expected_edge_pct >= round_trip_fees_pct * MULTIPLIER
 
-All simulated. No orders leave the machine. But the numbers use real 2025
-fee schedules so the dashboard shows what the trade would actually cost
-in reality.
+  MULTIPLIER varies by archetype:
+    - 1.5×  fast traders (CryptoBro, JRR Token)
+    - 2.0×  patient traders (SCROOGE, MIDAS)
+
+Edge is approximated from the consensus delta between current holding
+and target. A larger consensus_score gap implies more expected return.
 """
 
 from __future__ import annotations
 
-from datetime import datetime, timezone, timedelta
-from typing import Dict, Optional
+from typing import Any, Dict, Optional, Tuple
+
+from ..execution.detail import build_execution
 
 
-# ─────────────────────────────────────────────────────────────────
-# Ticker → primary listing exchange
-# ─────────────────────────────────────────────────────────────────
-
-_NASDAQ = {
-    "AAPL", "MSFT", "GOOGL", "GOOG", "AMZN", "META", "NVDA", "TSLA",
-    "AMD", "AVGO", "QCOM", "INTC", "MU", "ADBE", "NFLX", "COST",
-    "CRWD", "PANW", "PLTR", "SNOW", "ASML", "TSM", "QQQ", "SMH", "SOXX",
-    "TLT", "IEF", "SHY",
+# Map consensus signal → expected pct return (rough heuristic)
+SIGNAL_EXPECTED_RETURN = {
+    "STRONG_BUY":  3.0,
+    "BUY":         1.5,
+    "HOLD":        0.0,
+    "SELL":       -1.5,
+    "STRONG_SELL": -3.0,
 }
-_NYSE = {
-    "JPM", "V", "MA", "JNJ", "UNH", "LLY", "XOM", "CVX", "HD", "PG",
-    "KO", "WMT", "DIS", "BRK-B", "ORCL", "CRM", "UBER", "SHOP", "NOW",
-}
-_NYSE_ARCA = {
-    "SPY", "DIA", "IWM", "VTI", "EFA", "EEM",
-    "XLK", "XLF", "XLE", "XLV", "XLI", "XLP", "XLY", "XLU", "XLB",
-    "XLRE", "XLC", "IGV", "ARKK",
-    "GLD", "SLV", "IAU", "SIVR", "PPLT", "PALL",
-    "USO", "UNG", "DBC", "CPER",
-    "HYG", "LQD", "UUP", "FXE", "FXY", "FXF",
-}
-_COINBASE = {"BTC-USD", "ETH-USD", "SOL-USD"}
 
 
-def exchange_for(ticker: str) -> str:
-    t = ticker.upper()
-    if t in _NASDAQ:      return "NASDAQ"
-    if t in _NYSE:        return "NYSE"
-    if t in _NYSE_ARCA:   return "NYSE Arca"
-    if t in _COINBASE:    return "Coinbase Advanced Trade"
-    if t == "^VIX":       return "CBOE"
-    return "NYSE Arca"
+def estimate_edge_pct(consensus_signal: str, consensus_score: float) -> float:
+    """Estimate the expected % return from a position based on consensus."""
+    base = SIGNAL_EXPECTED_RETURN.get(consensus_signal, 0.0)
+    # Consensus score adds nuance. Score is roughly -2 to +2.
+    score_lift = consensus_score * 0.6
+    return base + score_lift
 
 
-def venue_description(exchange: str) -> str:
-    """A short parenthetical describing what the exchange actually is."""
-    return {
-        "NASDAQ":                 "electronic equity exchange",
-        "NYSE":                   "auction-based equity exchange",
-        "NYSE Arca":              "all-electronic ETF/options exchange",
-        "Coinbase Advanced Trade": "US-regulated crypto exchange",
-        "CBOE":                   "options and volatility index exchange",
-    }.get(exchange, "registered securities exchange")
-
-
-# ─────────────────────────────────────────────────────────────────
-# Broker + account profiles
-# ─────────────────────────────────────────────────────────────────
-
-def broker_for(asset_class: str) -> str:
-    if asset_class == "crypto":
-        return "Coinbase (simulated wallet)"
-    return "Interactive Brokers (simulated paper account)"
-
-
-def account_label_for(asset_class: str) -> str:
-    return {
-        "equity": "EQUITY-CASH-SIM-001",
-        "etf":    "EQUITY-CASH-SIM-001",
-        "crypto": "CRYPTO-WALLET-SIM-001",
-    }.get(asset_class, "SIM-CASH-001")
-
-
-def funding_source_for(asset_class: str) -> str:
-    return {
-        "equity": "ACH funding from simulated bank account (routed via broker cash sweep)",
-        "etf":    "ACH funding from simulated bank account (routed via broker cash sweep)",
-        "crypto": "Internal USDC balance (simulated deposit from cash sweep)",
-    }.get(asset_class, "Internal simulated wallet")
-
-
-# ─────────────────────────────────────────────────────────────────
-# Settlement
-# ─────────────────────────────────────────────────────────────────
-
-_T_PLUS_1 = {"equity", "etf"}  # US equities moved to T+1 in May 2024
-
-
-def settlement_date(trade_date: datetime, asset_class: str) -> str:
-    if asset_class in _T_PLUS_1:
-        d = trade_date
-        added = 0
-        while added < 1:
-            d += timedelta(days=1)
-            if d.weekday() < 5:
-                added += 1
-        return d.date().isoformat()
-    return trade_date.date().isoformat()  # crypto: instant
-
-
-# ─────────────────────────────────────────────────────────────────
-# Fee modeling — 2025 US rates
-# ─────────────────────────────────────────────────────────────────
-
-_LIQUID_ETFS = {"SPY", "QQQ", "DIA", "IWM", "VTI", "GLD", "SLV", "TLT", "HYG",
-                "XLK", "XLF", "XLE", "XLV", "XLY"}
-_MEGA_EQUITIES = {"AAPL", "MSFT", "NVDA", "AMZN", "GOOGL", "META", "TSLA",
-                  "JPM", "XOM", "V", "MA", "JNJ"}
-
-
-def _spread_bps(ticker: str, asset_class: str) -> int:
-    t = ticker.upper()
-    if asset_class == "crypto":    return 8
-    if t in _LIQUID_ETFS:           return 1
-    if t in _MEGA_EQUITIES:         return 1
-    if asset_class == "etf":        return 4
-    return 3  # default equity
-
-
-def compute_fees(
+def estimate_round_trip_fee_pct(
     ticker: str,
     asset_class: str,
-    side: str,
-    shares: float,
     price: float,
-) -> Dict[str, float]:
-    notional = shares * price
-    commission = 0.0
-    sec_31 = 0.0
-    finra_taf = 0.0
-
-    if asset_class in _T_PLUS_1:
-        # US equities: SEC Section 31 fee on sells only, FINRA TAF on sells only
-        if side == "SELL":
-            sec_31 = notional * 27.80 / 1_000_000        # $27.80 per $1M
-            finra_taf = min(shares * 0.000166, 9.30)     # capped per trade
-        # Most modern retail brokers charge $0 on equities
-    elif asset_class == "crypto":
-        # Coinbase Advanced taker fee on market orders (simulated)
-        commission = notional * 0.0040
-
-    spread_bps = _spread_bps(ticker, asset_class)
-    spread_cost = notional * spread_bps / 10_000
-
-    total = commission + sec_31 + finra_taf + spread_cost
-
-    return {
-        "commission":    round(commission, 6),
-        "sec_section_31": round(sec_31, 6),
-        "finra_taf":     round(finra_taf, 6),
-        "spread_cost":   round(spread_cost, 6),
-        "total":         round(total, 6),
-        "notes": (
-            f"Spread estimate: {spread_bps} bps. "
-            + ("Crypto taker fee 0.40%. " if asset_class == "crypto" else "")
-            + ("Zero commission (IBKR Lite/TD-class simulated). " if asset_class in _T_PLUS_1 else "")
-        ).strip(),
-    }
+    notional: float,
+) -> float:
+    """
+    Round-trip = sell current + buy target. Returns fees as % of notional.
+    """
+    if notional <= 0:
+        return 0.0
+    shares = notional / price if price > 0 else 0
+    sell_exec = build_execution(
+        ticker=ticker, asset_class=asset_class, side="SELL",
+        shares=shares, price=price, available_before=0.0,
+    )
+    buy_exec = build_execution(
+        ticker=ticker, asset_class=asset_class, side="BUY",
+        shares=shares, price=price, available_before=notional,
+    )
+    total_fees = sell_exec["fees"]["total"] + buy_exec["fees"]["total"]
+    return (total_fees / notional) * 100 if notional > 0 else 0.0
 
 
-# ─────────────────────────────────────────────────────────────────
-# Main builder
-# ─────────────────────────────────────────────────────────────────
-
-def build_execution(
-    ticker: str,
+def should_rotate(
+    current_consensus_signal: Optional[str],
+    current_consensus_score: float,
+    target_consensus_signal: str,
+    target_consensus_score: float,
     asset_class: str,
-    side: str,                       # "BUY" or "SELL"
-    shares: float,
     price: float,
-    available_before: float,
-    trade_date: Optional[datetime] = None,
-) -> Dict:
-    """Wrap a simulated trade in full execution metadata."""
-    now = trade_date or datetime.now(timezone.utc)
-    ts = now.isoformat(timespec="seconds")
+    notional: float,
+    multiplier: float = 2.0,
+) -> Tuple[bool, str]:
+    """
+    Returns (rotate, explanation).
 
-    fees = compute_fees(ticker, asset_class, side, shares, price)
-    notional = shares * price
-    if side == "BUY":
-        net_cost = notional + fees["total"]
-        net_proceeds = None
-        available_after = available_before - net_cost
-    else:
-        net_cost = None
-        net_proceeds = notional - fees["total"]
-        available_after = available_before + net_proceeds
+    Rotate when:
+      (target_edge - current_edge) >= round_trip_fee × multiplier
 
-    exchange = exchange_for(ticker)
+    Always returns (True, "...") when current_consensus is None (we're flat
+    and need to deploy capital).
+    """
+    target_edge = estimate_edge_pct(target_consensus_signal, target_consensus_score)
+    fee_pct = estimate_round_trip_fee_pct("PROXY", asset_class, max(1.0, price), notional)
 
-    # Fill time is plausibly 1-3 seconds after submit for a market order
-    fill_time = (now + timedelta(seconds=2)).isoformat(timespec="seconds")
+    if current_consensus_signal is None:
+        return True, f"Initial entry — no current position. Target edge {target_edge:+.2f}%."
 
-    return {
-        "order_id": f"SIM-{now.strftime('%Y%m%d-%H%M%S')}-{ticker.replace('-', '')}-{side[0]}",
-        "side": side,
-        "ticker": ticker,
-        "asset_class": asset_class,
-        "exchange": exchange,
-        "venue": venue_description(exchange),
-        "broker": broker_for(asset_class),
-        "order_type": "MARKET",
-        "time_in_force": "DAY",
-        "submitted_at_utc": ts,
-        "filled_at_utc": fill_time,
-        "settlement_date": settlement_date(now, asset_class),
-        "account": {
-            "label":          account_label_for(asset_class),
-            "type":           "Cash Account" if asset_class != "crypto" else "Crypto Wallet",
-            "broker":         broker_for(asset_class),
-            "funding_source": funding_source_for(asset_class),
-            "balance_before": round(available_before, 4),
-            "balance_after":  round(available_after, 4),
-        },
-        "fills": [{
-            "shares":    round(shares, 6),
-            "price":     round(price, 4),
-            "timestamp": fill_time,
-            "venue":     exchange,
-        }],
-        "avg_fill_price": round(price, 4),
-        "gross_notional": round(notional, 4),
-        "fees":           fees,
-        "net_cost":       round(net_cost, 4) if net_cost is not None else None,
-        "net_proceeds":   round(net_proceeds, 4) if net_proceeds is not None else None,
-        "disclaimer": (
-            "Simulated execution — no live orders were placed on any exchange. "
-            "Fees modeled on US market structure: SEC Section 31 ($27.80/$1M of sale "
-            "proceeds), FINRA Trading Activity Fee ($0.000166/share on sells, capped $9.30), "
-            "Coinbase Advanced taker 0.40% for crypto. Spread cost estimated per ticker."
-        ),
-    }
+    current_edge = estimate_edge_pct(current_consensus_signal, current_consensus_score)
+    edge_gain = target_edge - current_edge
+    threshold = fee_pct * multiplier
+
+    if edge_gain >= threshold:
+        return (True, (
+            f"Rotate: edge gain {edge_gain:+.2f}% ≥ "
+            f"{multiplier}× round-trip fees ({fee_pct:.3f}% × {multiplier} = {threshold:.3f}%)."
+        ))
+    return (False, (
+        f"HODL: edge gain {edge_gain:+.2f}% < {threshold:.3f}% (fee threshold). "
+        f"Not worth the round-trip cost."
+    ))

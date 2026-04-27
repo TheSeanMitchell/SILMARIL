@@ -1,1 +1,1 @@
-"""silmaril.ingestion package."""
+"""silmaril.agents package."""

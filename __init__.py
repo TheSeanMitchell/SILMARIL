@@ -107,6 +107,13 @@
             "net_proceeds": null,
             "disclaimer": "Simulated execution \u2014 no live orders were placed on any exchange. Fees modeled on US market structure: SEC Section 31 ($27.80/$1M of sale proceeds), FINRA Trading Activity Fee ($0.000166/share on sells, capped $9.30), Coinbase Advanced taker 0.40% for crypto. Spread cost estimated per ticker."
           }
+        },
+        {
+          "date": "2026-04-27",
+          "action": "HODL",
+          "ticker": "PEPE-USD",
+          "reason": "Still JRR's top SUB_100M pick. HODL.",
+          "balance": 5.0
         }
       ]
     },
@@ -214,6 +221,13 @@
             "net_proceeds": null,
             "disclaimer": "Simulated execution \u2014 no live orders were placed on any exchange. Fees modeled on US market structure: SEC Section 31 ($27.80/$1M of sale proceeds), FINRA Trading Activity Fee ($0.000166/share on sells, capped $9.30), Coinbase Advanced taker 0.40% for crypto. Spread cost estimated per ticker."
           }
+        },
+        {
+          "date": "2026-04-27",
+          "action": "HODL",
+          "ticker": "ARB-USD",
+          "reason": "Still JRR's top OVER_100M pick. HODL.",
+          "balance": 5.0
         }
       ]
     }
@@ -223,7 +237,7 @@
   "life_start_date": "2026-04-27",
   "days_alive": 0,
   "deaths": [],
-  "trades_today": 2,
+  "trades_today": 0,
   "max_trades_per_day": 12,
   "current_position": {
     "ticker": "PEPE-USD",
@@ -331,6 +345,14 @@
     },
     {
       "date": "2026-04-27",
+      "action": "HODL",
+      "ticker": "PEPE-USD",
+      "reason": "Still JRR's top SUB_100M pick. HODL.",
+      "balance": 5.0,
+      "tier": "SUB_100M"
+    },
+    {
+      "date": "2026-04-27",
       "action": "BUY",
       "ticker": "ARB-USD",
       "shares": 6.724,
@@ -380,7 +402,15 @@
         "disclaimer": "Simulated execution \u2014 no live orders were placed on any exchange. Fees modeled on US market structure: SEC Section 31 ($27.80/$1M of sale proceeds), FINRA Trading Activity Fee ($0.000166/share on sells, capped $9.30), Coinbase Advanced taker 0.40% for crypto. Spread cost estimated per ticker."
       },
       "tier": "OVER_100M"
+    },
+    {
+      "date": "2026-04-27",
+      "action": "HODL",
+      "ticker": "ARB-USD",
+      "reason": "Still JRR's top OVER_100M pick. HODL.",
+      "balance": 5.0,
+      "tier": "OVER_100M"
     }
   ],
-  "actions_this_life": 2
+  "actions_this_life": 4
 }

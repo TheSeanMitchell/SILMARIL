@@ -1,169 +1,127 @@
-"""
-silmaril.ingestion.prices — Price data ingestion via yfinance.
-
-Batch-downloads OHLCV history for the entire universe in one call. Falls
-back gracefully when individual tickers fail (delisted, symbol change,
-weekend/holiday data gap).
-
-yfinance is our entire price stack. It is:
-  - Free (Yahoo Finance is the data source)
-  - Widely supported (millions of tickers across asset classes)
-  - Fast for batch downloads (concurrent underneath)
-  - Reliable enough that we cache and retry on transient failures
-
-No API keys anywhere. No paid tiers. No rate limits beyond what's sensible.
-"""
-
-from __future__ import annotations
-
-import logging
-from dataclasses import dataclass
-from typing import Dict, List, Optional
-
-log = logging.getLogger("silmaril.prices")
-
-
-@dataclass
-class PriceSnapshot:
-    """OHLCV + derived fields for one ticker."""
-    ticker: str
-    price: float
-    change_pct: float
-    volume: int
-    avg_volume_30d: int
-    closes: List[float]          # last 220 closes (enough for SMA-200 + buffer)
-    highs: List[float]
-    lows: List[float]
-
-    def has_enough_history(self, min_days: int = 200) -> bool:
-        return len(self.closes) >= min_days
-
-
-def fetch_universe_prices(
-    tickers: List[str],
-    period: str = "14mo",
-) -> Dict[str, PriceSnapshot]:
-    """Batch-download prices for every ticker. Returns {ticker: PriceSnapshot}.
-
-    Tickers that fail to download (rare, usually symbol issues) are silently
-    omitted. The caller should handle missing tickers as 'no opinion possible'.
-    """
-    if not tickers:
-        return {}
-
-    # yfinance import is lazy so the rest of the package imports cleanly
-    # even in environments without the dep installed yet
-    try:
-        import yfinance as yf
-    except ImportError:
-        log.error("yfinance not installed; run: pip install yfinance")
-        return {}
-
-    snapshots: Dict[str, PriceSnapshot] = {}
-
-    try:
-        # Batch download — much faster than looping
-        data = yf.download(
-            tickers=" ".join(tickers),
-            period=period,
-            interval="1d",
-            group_by="ticker",
-            auto_adjust=True,
-            prepost=False,
-            threads=True,
-            progress=False,
-        )
-    except Exception as e:
-        log.exception("Batch yfinance download failed: %s", e)
-        return {}
-
-    for ticker in tickers:
-        try:
-            # When a single ticker is requested, data has flat columns;
-            # for multi-ticker, data is grouped by ticker as the top level.
-            if len(tickers) == 1:
-                df = data
-            else:
-                if ticker not in data.columns.levels[0]:
-                    continue
-                df = data[ticker]
-
-            # Drop rows that are all NaN (e.g. market-closed days)
-            df = df.dropna(subset=["Close"])
-            if df.empty or len(df) < 2:
-                continue
-
-            closes = df["Close"].tolist()
-            highs = df["High"].tolist()
-            lows = df["Low"].tolist()
-            volumes = df["Volume"].tolist()
-
-            price = float(closes[-1])
-            prev = float(closes[-2])
-            change_pct = ((price / prev) - 1.0) * 100.0 if prev else 0.0
-
-            volume = int(volumes[-1]) if volumes[-1] and volumes[-1] == volumes[-1] else 0
-            recent_vols = [v for v in volumes[-30:] if v and v == v]
-            avg_vol = int(sum(recent_vols) / len(recent_vols)) if recent_vols else 0
-
-            snapshots[ticker] = PriceSnapshot(
-                ticker=ticker,
-                price=price,
-                change_pct=change_pct,
-                volume=volume,
-                avg_volume_30d=avg_vol,
-                closes=[float(c) for c in closes[-220:]],
-                highs=[float(h) for h in highs[-220:]],
-                lows=[float(l) for l in lows[-220:]],
-            )
-        except Exception as e:
-            log.warning("Could not parse %s: %s", ticker, e)
-            continue
-
-    log.info("Fetched prices for %d/%d tickers", len(snapshots), len(tickers))
-    return snapshots
-
-
-def fetch_vix() -> Optional[float]:
-    """Fetch latest VIX close. Returns None if unavailable."""
-    snap = fetch_universe_prices(["^VIX"], period="5d")
-    v = snap.get("^VIX")
-    return v.price if v else None
-
-
-def fetch_earnings_dates(tickers: List[str]) -> Dict[str, Optional[str]]:
-    """Fetch next earnings date per ticker via yfinance calendar.
-
-    Best-effort. Tickers without known earnings (ETFs, indices, crypto) return None.
-    """
-    try:
-        import yfinance as yf
-    except ImportError:
-        return {t: None for t in tickers}
-
-    results: Dict[str, Optional[str]] = {}
-    for tkr in tickers:
-        try:
-            ticker_obj = yf.Ticker(tkr)
-            cal = ticker_obj.calendar
-            if cal is None or (hasattr(cal, "empty") and cal.empty):
-                results[tkr] = None
-                continue
-            # yfinance returns either a DataFrame or dict depending on version
-            if isinstance(cal, dict):
-                date = cal.get("Earnings Date")
-                if isinstance(date, list) and date:
-                    results[tkr] = str(date[0])[:10]
-                else:
-                    results[tkr] = None
-            else:
-                # DataFrame path
-                if "Earnings Date" in cal.index:
-                    val = cal.loc["Earnings Date"].iloc[0]
-                    results[tkr] = str(val)[:10] if val else None
-                else:
-                    results[tkr] = None
-        except Exception:
-            results[tkr] = None
-
-    return results
+{
+  "codename": "CRYPTOBRO",
+  "title": "The Degenerate Optimist",
+  "balance": 10.0,
+  "current_position": {
+    "ticker": "BTC-USD",
+    "name": "Bitcoin",
+    "shares": 0.00014545,
+    "entry_price": 68420,
+    "entry_date": "2026-04-27",
+    "thesis": "CryptoBro is sending it on BTC-USD. Consensus SELL. Wagmi \ud83d\ude80",
+    "execution": {
+      "order_id": "SIM-20260427-040620-BTCUSD-B",
+      "side": "BUY",
+      "ticker": "BTC-USD",
+      "asset_class": "crypto",
+      "exchange": "Coinbase Advanced Trade",
+      "venue": "US-regulated crypto exchange",
+      "broker": "Coinbase (simulated wallet)",
+      "order_type": "MARKET",
+      "time_in_force": "DAY",
+      "submitted_at_utc": "2026-04-27T04:06:20+00:00",
+      "filled_at_utc": "2026-04-27T04:06:22+00:00",
+      "settlement_date": "2026-04-27",
+      "account": {
+        "label": "CRYPTO-WALLET-SIM-001",
+        "type": "Crypto Wallet",
+        "broker": "Coinbase (simulated wallet)",
+        "funding_source": "Internal USDC balance (simulated deposit from cash sweep)",
+        "balance_before": 10.0,
+        "balance_after": 0.0007
+      },
+      "fills": [
+        {
+          "shares": 0.000145,
+          "price": 68420,
+          "timestamp": "2026-04-27T04:06:22+00:00",
+          "venue": "Coinbase Advanced Trade"
+        }
+      ],
+      "avg_fill_price": 68420,
+      "gross_notional": 9.9515,
+      "fees": {
+        "commission": 0.039806,
+        "sec_section_31": 0.0,
+        "finra_taf": 0.0,
+        "spread_cost": 0.007961,
+        "total": 0.047767,
+        "notes": "Spread estimate: 8 bps. Crypto taker fee 0.40%."
+      },
+      "net_cost": 9.9993,
+      "net_proceeds": null,
+      "disclaimer": "Simulated execution \u2014 no live orders were placed on any exchange. Fees modeled on US market structure: SEC Section 31 ($27.80/$1M of sale proceeds), FINRA Trading Activity Fee ($0.000166/share on sells, capped $9.30), Coinbase Advanced taker 0.40% for crypto. Spread cost estimated per ticker."
+    }
+  },
+  "lifetime_peak": 10.0,
+  "current_life": 1,
+  "life_start_date": "2026-04-27",
+  "days_alive": 0,
+  "actions_this_life": 2,
+  "history": [
+    {
+      "date": "2026-04-27",
+      "action": "BUY",
+      "ticker": "BTC-USD",
+      "shares": 0.00014545,
+      "entry_price": 68420,
+      "allocated": 10.0,
+      "life": 1,
+      "execution": {
+        "order_id": "SIM-20260427-040620-BTCUSD-B",
+        "side": "BUY",
+        "ticker": "BTC-USD",
+        "asset_class": "crypto",
+        "exchange": "Coinbase Advanced Trade",
+        "venue": "US-regulated crypto exchange",
+        "broker": "Coinbase (simulated wallet)",
+        "order_type": "MARKET",
+        "time_in_force": "DAY",
+        "submitted_at_utc": "2026-04-27T04:06:20+00:00",
+        "filled_at_utc": "2026-04-27T04:06:22+00:00",
+        "settlement_date": "2026-04-27",
+        "account": {
+          "label": "CRYPTO-WALLET-SIM-001",
+          "type": "Crypto Wallet",
+          "broker": "Coinbase (simulated wallet)",
+          "funding_source": "Internal USDC balance (simulated deposit from cash sweep)",
+          "balance_before": 10.0,
+          "balance_after": 0.0007
+        },
+        "fills": [
+          {
+            "shares": 0.000145,
+            "price": 68420,
+            "timestamp": "2026-04-27T04:06:22+00:00",
+            "venue": "Coinbase Advanced Trade"
+          }
+        ],
+        "avg_fill_price": 68420,
+        "gross_notional": 9.9515,
+        "fees": {
+          "commission": 0.039806,
+          "sec_section_31": 0.0,
+          "finra_taf": 0.0,
+          "spread_cost": 0.007961,
+          "total": 0.047767,
+          "notes": "Spread estimate: 8 bps. Crypto taker fee 0.40%."
+        },
+        "net_cost": 9.9993,
+        "net_proceeds": null,
+        "disclaimer": "Simulated execution \u2014 no live orders were placed on any exchange. Fees modeled on US market structure: SEC Section 31 ($27.80/$1M of sale proceeds), FINRA Trading Activity Fee ($0.000166/share on sells, capped $9.30), Coinbase Advanced taker 0.40% for crypto. Spread cost estimated per ticker."
+      },
+      "narrative": "CryptoBro is buying BTC. Diamond hands activated."
+    },
+    {
+      "date": "2026-04-27",
+      "action": "HODL",
+      "ticker": "BTC-USD",
+      "reason": "CryptoBro is HODLing BTC-USD. Still his top conviction. Diamond hands.",
+      "balance": 10.0,
+      "trades_today": 0
+    }
+  ],
+  "deaths": [],
+  "trades_today": 0,
+  "max_trades_per_day": 5
+}

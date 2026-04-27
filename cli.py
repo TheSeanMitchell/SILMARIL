@@ -1,402 +1,179 @@
 """
-silmaril.agents.bios — Rich biographical profiles for every agent.
+silmaril.agents.steadfast — STEADFAST, the blue-chip patriot.
 
-These bios are the long-form explanation of each agent's:
-  • Trading style and strategy
-  • Temperament and personality
-  • Universe of what they'll evaluate
-  • Strengths and failure modes
-  • How to read their votes
+The agent your grandfather would approve of. Buys only from the
+"Crown Jewels" — long-standing American blue chips with dividend
+histories and household-name moats. Holds for a minimum of 30 days.
+Lectures the rest of the cohort about discipline and patience.
 
-Surfaced in the agent roster drawer on the dashboard. Keeping them in
-one file rather than on each agent class makes them easy to edit and
-keeps the agent files focused on logic.
+Plays:
+  - Dividend payers with 25+ year track records
+  - Defensive consumer staples (KO, PG, JNJ, PEP)
+  - American institutional brands (DIS, MCD, WMT, HD)
+  - Industrials with century-long histories (CAT, MMM, GE, BA)
+  - Pharma & healthcare quality (PFE, MRK, JNJ, ABBV)
+  - Banks with dividend reliability (JPM, BAC, BRK-B)
+  - Energy majors when they yield (XOM, CVX)
+  - Telecoms when valuations rationalize (T, VZ)
+  - Tobacco when nobody wants it (MO)
+
+Refuses to buy:
+  - Anything without a 10+ year dividend history (excl. AAPL grandfathered in)
+  - Crypto (obviously)
+  - Tech speculative
+  - Foreign-listed
+  - Biotech without a marketed product
+
+STEADFAST does not get excited. STEADFAST gets paid quarterly.
 """
 
 from __future__ import annotations
 
-from typing import Dict
+from typing import Optional
+
+from .base import Agent, AssetContext, Signal, Verdict
 
 
-BIOS: Dict[str, Dict[str, str]] = {
-
-    "AEGIS": {
-        "title": "The Capital Shield",
-        "strategy": (
-            "Defensive overlay. AEGIS evaluates regime, volatility, and "
-            "drawdown risk rather than chasing specific setups. Its votes "
-            "are almost always HOLD or SELL. Its purpose is not to find "
-            "opportunity — it's to preserve capital during dangerous regimes."
-        ),
-        "style": (
-            "Cautious, methodical, conservative. Reads VIX, trend breaks, "
-            "and correlation clusters. Rarely excited, never panicked."
-        ),
-        "personality": (
-            "The voice that pulls you back from the cliff. Unpopular when "
-            "markets trend up, essential when they break."
-        ),
-        "universe": "Every asset. Always votes.",
-        "strength": "Keeping the book alive through bear markets and vol spikes.",
-        "failure_mode": (
-            "Misses early stages of powerful rallies by staying defensive. "
-            "Accept that; the insurance is worth the premium."
-        ),
-        "power": "VETO — can downgrade any bullish consensus when its defensive conviction is high.",
-    },
-
-    "FORGE": {
-        "title": "The Builder of Trends",
-        "strategy": (
-            "Momentum-following tech specialist. FORGE looks for clean "
-            "uptrends in tech and growth names — price above SMA-20 above "
-            "SMA-50, constructive RSI, supportive sentiment. Buys strength."
-        ),
-        "style": "Aggressive but systematic. Favors names with durable trend structure.",
-        "personality": "Optimistic, builder-archetype — sees a working system and wants to own it.",
-        "universe": "Equities and tech-heavy ETFs (XLK, SMH, IGV, QQQ, ARKK).",
-        "strength": "Catches and rides powerful secular moves in tech.",
-        "failure_mode": "Late to exit when trends break. Pairs well with AEGIS's caution.",
-    },
-
-    "THUNDERHEAD": {
-        "title": "The Storm",
-        "strategy": (
-            "Volatility-expansion breakout specialist. Requires price to "
-            "break its 20-day range on 1.4×+ average volume. Otherwise "
-            "abstains completely — no breakout, no opinion."
-        ),
-        "style": "Binary. Either absent or maximally committed. No half-measures.",
-        "personality": "Loud, confident, occasionally spectacularly wrong.",
-        "universe": "Equities, ETFs, crypto — anywhere volatility expansion happens.",
-        "strength": "Catches the first 20% of powerful breakouts.",
-        "failure_mode": "Fake-outs on low-conviction breaks; stops get run.",
-    },
-
-    "JADE": {
-        "title": "The Rage-Buyer",
-        "strategy": (
-            "Deep oversold reversion. Waits for RSI under 30 at major "
-            "support (near SMA-200) combined with negative sentiment — "
-            "capitulation conditions. Only takes long trades, never shorts."
-        ),
-        "style": "Contrarian, silent most days, decisive in panic.",
-        "personality": (
-            "Hulk-archetype. Rare outbursts, but when he moves, he moves "
-            "with everything he has."
-        ),
-        "universe": "Equities and broad ETFs.",
-        "strength": "Catches capitulation bottoms other agents refuse to touch.",
-        "failure_mode": "Occasionally buys a falling knife — but with 1.5 ATR stops.",
-    },
-
-    "VEIL": {
-        "title": "The Hidden Watcher",
-        "strategy": (
-            "Sentiment–price divergence. Looks for situations where price "
-            "and news sentiment disagree — a crowd turning negative on a "
-            "stock that keeps rising (sell signal) or warming on a stock "
-            "that keeps falling (buy signal)."
-        ),
-        "style": "Subtle, patient, data-driven. Needs ≥4 articles for a valid read.",
-        "personality": (
-            "Reads the room. Trades on what the crowd feels but the tape "
-            "has not yet priced."
-        ),
-        "universe": "Equities and sector ETFs with meaningful news flow.",
-        "strength": "Catches turns before they show up on charts.",
-        "failure_mode": "Blind on low-news tickers. Thin sentiment samples are noise.",
-    },
-
-    "KESTREL": {
-        "title": "The Patient Hunter",
-        "strategy": (
-            "Coiled Bollinger bands plus directional trigger. Abstains most "
-            "days. When the bands compress (width < 6%) AND the trend is "
-            "clean, takes tight-stop entries with 3:1 reward-to-risk."
-        ),
-        "style": "Precision over volume. Takes maybe one setup a week per ticker.",
-        "personality": "Patient, quiet, lethal when opportunity aligns.",
-        "universe": "Equities and liquid ETFs.",
-        "strength": "Best reward-to-risk of any agent by design.",
-        "failure_mode": "Misses moves that never compress — pure breakouts.",
-    },
-
-    "OBSIDIAN": {
-        "title": "The Resource King",
-        "strategy": (
-            "Commodities and resource-equity specialist. Evaluates only "
-            "energy, materials, precious metals, and commodity ETFs. "
-            "Bias toward uptrending hard assets with constructive sentiment."
-        ),
-        "style": "Patient hoarder. Plays inflation, scarcity, sovereign flows.",
-        "personality": "Ancient wealth. Believes in things you can hold.",
-        "universe": "XLE, XLB, GLD, SLV, USO, UNG, DBC, CPER, XOM, CVX, FCX, NEM, GOLD.",
-        "strength": "Only agent with meaningful opinions on hard assets.",
-        "failure_mode": "Silent during long risk-on regimes when commodities underperform.",
-    },
-
-    "ZENITH": {
-        "title": "The Long Rider",
-        "strategy": (
-            "Multi-timeframe trend follower. Requires perfect SMA stack "
-            "(price > 20 > 50 > 200) and rides positions with wide 3-ATR "
-            "stops. Won't exit on minor pullbacks."
-        ),
-        "style": "High altitude, long horizon. Ignores daily noise.",
-        "personality": "Cosmic patience. Thinks in months, not days.",
-        "universe": "Equities, ETFs, crypto.",
-        "strength": "Captures the full body of secular moves.",
-        "failure_mode": "Gives back significant open profits during corrections.",
-    },
-
-    "WEAVER": {
-        "title": "The Micro Scalper",
-        "strategy": (
-            "Short-horizon RSI reversals and SMA-20 pullbacks in uptrends. "
-            "Tight 1.5 ATR stops, 2.5 ATR targets. Takes many small wins."
-        ),
-        "style": "Fast, nimble, high activity.",
-        "personality": "Hyperactive. Would rather be wrong quickly than right slowly.",
-        "universe": "Equities and liquid ETFs.",
-        "strength": "Produces regular, bounded-risk opportunities in any regime.",
-        "failure_mode": "Whipsaws in choppy, directionless markets.",
-    },
-
-    "HEX": {
-        "title": "The Probabilist",
-        "strategy": (
-            "Statistical mean-reversion. Trades prices more than 2 standard "
-            "deviations from their 20-day mean, expecting reversion. Size "
-            "scales with how extreme the deviation is."
-        ),
-        "style": "Cold-blooded, mathematical. No narrative — just numbers.",
-        "personality": "Reads probability like a second language.",
-        "universe": "Equities, ETFs, crypto.",
-        "strength": "Profitable in consolidations and range-bound markets.",
-        "failure_mode": "Fights the tape during strong trends — loses to ZENITH/FORGE there.",
-    },
-
-    "SYNTH": {
-        "title": "The Synthesist",
-        "strategy": (
-            "Cross-market regime and rotation. Watches bonds, dollar, gold, "
-            "equities together. Favors defensives in risk-off regimes, "
-            "cyclicals in risk-on."
-        ),
-        "style": "Macro lens. Evaluates the whole chessboard, not one square.",
-        "personality": "Synthetic perception across systems. Sees the pattern others miss.",
-        "universe": "Sector ETFs and indices primarily.",
-        "strength": "Adds strong regime-aware bias to the debate.",
-        "failure_mode": "Can be early on rotations — macro plays unfold in weeks.",
-    },
-
-    "SPECK": {
-        "title": "The Small Thing",
-        "strategy": (
-            "Small-cap and overlooked. Actively avoids mega-caps. Looks "
-            "for low-coverage tickers with positive sentiment and price "
-            "above SMA-50 — small edges before the crowd arrives."
-        ),
-        "style": "Under the radar. Small scale, outsized leverage.",
-        "personality": "Ant-Man archetype. Size is an advantage when you're small.",
-        "universe": "IWM, ARKK, non-mega-cap equities.",
-        "strength": "Finds overlooked setups big agents won't touch.",
-        "failure_mode": "Low-coverage names are illiquid; execution slippage matters.",
-    },
-
-    "VESPA": {
-        "title": "The Catalyst Striker",
-        "strategy": (
-            "Event-driven. Takes directional bets into earnings (within "
-            "5 days) when sentiment is one-sided, and trades declared "
-            "event flags (FDA, FOMC, deal close)."
-        ),
-        "style": "Fast in, fast out. Exits around the catalyst, not after.",
-        "personality": "Opportunistic, tactical, short attention span.",
-        "universe": "Equities with known catalysts.",
-        "strength": "Captures positioning into known events before the market prices them.",
-        "failure_mode": "Vulnerable to event-outcome surprise — binary risk.",
-    },
-
-    "MAGUS": {
-        "title": "The Time Reader",
-        "strategy": (
-            "Seasonality and calendar effects. Plays Santa Rally, sell-in-"
-            "May, turn-of-month, Friday drift on the major indices."
-        ),
-        "style": "Cyclical, rhythm-based. Small individual edges, accumulates.",
-        "personality": "Doctor Strange archetype — reading the timelines.",
-        "universe": "SPY, QQQ, DIA, IWM, VTI only.",
-        "strength": "Non-correlated edge — works in any regime.",
-        "failure_mode": "Seasonal effects erode as they become widely known.",
-    },
-
-    "TALON": {
-        "title": "The Aerial View",
-        "strategy": (
-            "Market structure on the indices themselves. Evaluates SPY, "
-            "QQQ, DIA, IWM, VTI based on SMA stack and VIX context."
-        ),
-        "style": "Top-down, macro-structural. Doesn't care about individual names.",
-        "personality": "Falcon archetype — sees the whole board from altitude.",
-        "universe": "Broad indices only.",
-        "strength": "Clean structural read on the market itself.",
-        "failure_mode": "Silent on anything outside the index ETFs.",
-    },
-
-    "SCROOGE": {
-        "title": "The $1 Compounder",
-        "strategy": (
-            "Takes whatever SCROOGE has (starts at $1) and buys the single "
-            "highest-consensus pick every day. Sells next day, rolls into "
-            "the next. Full conviction, every day, forever. When he dies "
-            "(balance under $0.05), he is reborn at $1."
-        ),
-        "style": "Zero diversification. Zero risk management. Pure compounding ceremony.",
-        "personality": "Parsimonious, patient, brutally compounded.",
-        "universe": "Whatever the team ranks highest — any asset class.",
-        "strength": "Demonstrates the raw output of the consensus system.",
-        "failure_mode": "When consensus is wrong, SCROOGE loses everything and resets.",
-    },
-
-    "MIDAS": {
-        "title": "The Hard-Currency Sovereign",
-        "strategy": (
-            "Parallel compounder to SCROOGE, restricted to hard currencies "
-            "and precious metals only. Gold, silver, platinum, palladium, "
-            "USD, EUR, JPY, CHF. Rotates only among these. Refuses to "
-            "touch stocks or crypto."
-        ),
-        "style": "Ancient, patient, sovereign. Wealth that outlasts empires.",
-        "personality": "King Midas — slow accumulation of things that have always been wealth.",
-        "universe": "GLD, IAU, SLV, SIVR, PPLT, PALL, UUP, FXE, FXY, FXF.",
-        "strength": "Uncorrelated to SCROOGE. Survives regimes that break equities.",
-        "failure_mode": "Misses multi-year equity bull markets entirely.",
-    },
-
-    "CRYPTOBRO": {
-        "title": "The Degenerate Optimist",
-        "strategy": (
-            "Third $1 compounder, crypto-only, multi-trade per day. Where "
-            "SCROOGE and MIDAS each take exactly one position daily, "
-            "CryptoBro can rotate up to five times per cycle if the vibes "
-            "shift. He plays momentum and the dip with equal conviction."
-        ),
-        "style": (
-            "Hyperactive, impatient, talks in third person. CryptoBro "
-            "doesn't read 10-Ks. He reads Twitter and the chart."
-        ),
-        "personality": (
-            "Every guy at the bar in 2021. Says 'wagmi' and 'ser' "
-            "unironically. Diamond hands on the way down, paper hands "
-            "at all-time highs, never the other way around."
-        ),
-        "universe": "BTC, ETH, SOL, AVAX, DOGE, LINK, MATIC, ADA, XRP, DOT, ATOM.",
-        "strength": (
-            "Multi-trade-per-day permission. Catches intraday rotations "
-            "that single-shot agents like SCROOGE and MIDAS structurally miss."
-        ),
-        "failure_mode": (
-            "Overtrades. Pays Coinbase 40 bps every rotation, which is "
-            "expensive when conviction is low. Reincarnates often."
-        ),
-        "power": (
-            "MULTI-TRADE — can execute up to 5 transactions per day, "
-            "where SCROOGE and MIDAS are limited to one."
-        ),
-    },
-
-    "BARON": {
-        "title": "The Oil Baron",
-        "strategy": (
-            "Trades the entire oil and energy complex with both directions: "
-            "long crude via USO/BNO, short via SCO/DRIP, plus refiners, E&P "
-            "pure-plays, services, integrated majors, and natural gas. "
-            "Watches WTI/Brent spreads, EIA inventory reports (Wed 10:30 AM), "
-            "OPEC+ production decisions, and crack spreads. Patient and asymmetric."
-        ),
-        "style": (
-            "Patient, asymmetric, two-sided. Sits in cash for weeks "
-            "waiting for the right setup. When he moves, he moves with conviction."
-        ),
-        "personality": (
-            "John D. Rockefeller crossed with a Texas wildcatter. "
-            "Reads inventory reports for fun. Knows what 'contango' means."
-        ),
-        "universe": "USO, BNO, UCO/SCO, UNG/BOIL/KOLD, XLE/XOP/OIH, XOM, CVX, COP, OXY, EOG, SLB, HAL, VLO, PSX, MPC, GUSH, DRIP",
-        "strength": "Captures asymmetric oil moves on EIA + OPEC catalysts that other agents miss.",
-        "failure_mode": "Quiet during long energy bear markets. Patient by design.",
-        "power": (
-            "TWO-SIDED — the only specialist who actively shorts via inverse ETFs. "
-            "2 trades / 24h cap."
-        ),
-    },
-
-    "STEADFAST": {
-        "title": "The Patriot",
-        "strategy": (
-            "Buys only American blue-chip 'Crown Jewels' — KO, JNJ, PG, "
-            "WMT, MCD, DIS, CAT, JPM, BRK-B, etc. Long-history dividend "
-            "payers and household-name moats. Holds for a minimum of 30 days. "
-            "Buys on dips below SMA-200 or RSI under 40."
-        ),
-        "style": (
-            "Quarterly-dividend pace. Slow accumulation. Ignores all hype. "
-            "Refuses to chase — would rather miss a 5% rally than risk it."
-        ),
-        "personality": (
-            "Your grandfather, who bought IBM in 1962 and never sold. "
-            "Lectures everyone else about discipline. Never gets excited."
-        ),
-        "universe": "~45 American blue-chip names — Coca-Cola, Disney, Walmart, Caterpillar, JPMorgan, Berkshire, etc.",
-        "strength": "Never blows up. Compounds slowly through every regime.",
-        "failure_mode": "Misses every multi-bagger. Watches tech rallies he refused to buy.",
-        "power": (
-            "PATIENCE — minimum 30-day hold. 1 trade / 30 days cap. "
-            "The system's anti-impulsivity counterweight."
-        ),
-    },
-
-    "JRR_TOKEN": {
-        "title": "The Two-Tier Token Trader",
-        "strategy": (
-            "Splits his $1 budget 50/50 across two crypto-token tiers: "
-            "the SUB tier (under $100M market cap, high rug risk) and "
-            "the OVER tier ($100M–$1B, established small caps). Each "
-            "tier runs independent rotation. Plays pure momentum on "
-            "the sub tier, sentiment-confirmed momentum on the over tier."
-        ),
-        "style": (
-            "Hyperactive, cynical. Rotates fast — pump windows close in hours. "
-            "Up to 12 trades per 24h across both tiers combined."
-        ),
-        "personality": (
-            "The guy on Telegram who calls every coin '100x' until it isn't. "
-            "Has been rugged a hundred times and will be rugged a hundred more."
-        ),
-        "universe": "SUB tier: PEPE, FLOKI, BONK, WIF, MOG, TURBO, BRETT, POPCAT. OVER tier: SHIB, INJ, ARB, OP, STX, RUNE, FET, LDO, GRT.",
-        "strength": "Catches the first leg of memecoin pumps. High variance, high upside.",
-        "failure_mode": (
-            "Reincarnates often. Tokens vanish, projects abandon, JRR dies. "
-            "By design — this is what penny-token trading actually looks like."
-        ),
-        "power": (
-            "TWO-TIER — operates two independent positions, one per market-cap tier. "
-            "12 trades/24h cap. Highest reincarnation rate of any compounder."
-        ),
-    },
+# The "Crown Jewels" — STEADFAST's permitted buy universe.
+# Curated to American institutional blue chips with long track records.
+CROWN_JEWELS = {
+    # Consumer Staples
+    "KO":   "Coca-Cola",
+    "PEP":  "PepsiCo",
+    "PG":   "Procter & Gamble",
+    "JNJ":  "Johnson & Johnson",
+    "WMT":  "Walmart",
+    "COST": "Costco",
+    "MO":   "Altria",
+    "PM":   "Philip Morris",
+    "CL":   "Colgate-Palmolive",
+    # Consumer Discretionary
+    "MCD":  "McDonald's",
+    "DIS":  "Disney",
+    "HD":   "Home Depot",
+    "LOW":  "Lowe's",
+    "NKE":  "Nike",
+    "SBUX": "Starbucks",
+    # Industrials
+    "CAT":  "Caterpillar",
+    "MMM":  "3M",
+    "GE":   "General Electric",
+    "BA":   "Boeing",
+    "DE":   "Deere",
+    "HON":  "Honeywell",
+    "F":    "Ford",
+    "GM":   "General Motors",
+    # Energy majors (only when yielding)
+    "XOM":  "Exxon Mobil",
+    "CVX":  "Chevron",
+    # Healthcare / Pharma
+    "PFE":  "Pfizer",
+    "MRK":  "Merck",
+    "ABBV": "AbbVie",
+    "BMY":  "Bristol-Myers Squibb",
+    "LLY":  "Eli Lilly",
+    "UNH":  "UnitedHealth",
+    # Financials
+    "JPM":  "JPMorgan Chase",
+    "BAC":  "Bank of America",
+    "WFC":  "Wells Fargo",
+    "BRK-B": "Berkshire Hathaway",
+    "V":    "Visa",
+    "MA":   "Mastercard",
+    # Telecom
+    "T":    "AT&T",
+    "VZ":   "Verizon",
+    # Utilities
+    "DUK":  "Duke Energy",
+    "SO":   "Southern Company",
+    "NEE":  "NextEra Energy",
+    # Grandfathered tech (long enough history for STEADFAST)
+    "AAPL": "Apple",
+    "MSFT": "Microsoft",
+    "IBM":  "IBM",
 }
 
+MINIMUM_HOLD_DAYS = 30
 
-def get_bio(codename: str) -> Dict[str, str]:
-    """Return the full bio dict for an agent, or a default skeleton."""
-    return BIOS.get(codename, {
-        "title": codename,
-        "strategy": "No extended bio available.",
-        "style": "",
-        "personality": "",
-        "universe": "",
-        "strength": "",
-        "failure_mode": "",
-    })
+
+class Steadfast(Agent):
+    codename = "STEADFAST"
+    specialty = "American blue-chip dividend payers"
+    temperament = "Patient. Skeptical of hype. Quarterly-dividend pace."
+    inspiration = "Your grandfather, who bought IBM in 1962 and never sold"
+    asset_classes = ("equity",)
+
+    def applies_to(self, ctx: AssetContext) -> bool:
+        if not super().applies_to(ctx):
+            return False
+        return ctx.ticker.upper() in CROWN_JEWELS
+
+    def _judge(self, ctx: AssetContext) -> Verdict:
+        ticker = ctx.ticker.upper()
+        chg = ctx.change_pct or 0.0
+        sent = ctx.sentiment_score or 0.0
+        price = ctx.price or 0.0
+        sma_200 = getattr(ctx, "sma_200", None)
+        rsi = getattr(ctx, "rsi_14", None)
+
+        name = CROWN_JEWELS.get(ticker, ticker)
+
+        # ── STEADFAST's rules ─
+        # Buy on dips (below 200-day SMA or RSI < 40), with long-term sentiment OK
+        below_sma = sma_200 and price < sma_200 * 0.98
+        oversold = rsi and rsi < 40
+        very_negative_news = sent < -0.4
+
+        if very_negative_news:
+            # Even crown jewels can crack — STEADFAST waits when sentiment is awful
+            return Verdict(
+                agent=self.codename, ticker=ticker,
+                signal=Signal.HOLD, conviction=0.5,
+                rationale=(f"Even {name} can have a bad quarter. Sentiment is "
+                           f"sharply negative. STEADFAST waits for the dust to settle "
+                           f"rather than catching a falling knife on principle."),
+            )
+
+        if (below_sma or oversold) and sent > -0.2:
+            return Verdict(
+                agent=self.codename, ticker=ticker,
+                signal=Signal.BUY, conviction=0.7,
+                rationale=(f"STEADFAST sees value in {name}. Quality compounds. "
+                           f"This is what your grandfather would've bought. "
+                           f"Hold for the dividend, not for the candle."),
+            )
+
+        if chg > 5.0:
+            return Verdict(
+                agent=self.codename, ticker=ticker,
+                signal=Signal.HOLD, conviction=0.4,
+                rationale=(f"{name} ran {chg:+.1f}% today. STEADFAST does not chase. "
+                           f"Quality compounds; chasing rarely does."),
+            )
+
+        if chg < -3.0 and sent > -0.3:
+            return Verdict(
+                agent=self.codename, ticker=ticker,
+                signal=Signal.BUY, conviction=0.6,
+                rationale=(f"{name} -{abs(chg):.1f}% on no fundamental change. "
+                           f"STEADFAST adds to quality on weakness. "
+                           f"You buy umbrellas when it rains."),
+            )
+
+        if sent > 0.3 and chg > 0.5:
+            return Verdict(
+                agent=self.codename, ticker=ticker,
+                signal=Signal.BUY, conviction=0.55,
+                rationale=(f"Constructive backdrop on {name}. STEADFAST initiates "
+                           f"or adds. Slow and steady wins the race."),
+            )
+
+        return Verdict(
+            agent=self.codename, ticker=ticker,
+            signal=Signal.HOLD, conviction=0.4,
+            rationale=(f"{name} in equilibrium. STEADFAST is patient. "
+                       f"He'd rather miss a 5% rally than chase one."),
+        )
+
+
+steadfast = Steadfast()

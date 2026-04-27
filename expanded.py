@@ -1,84 +1,61 @@
 """
-silmaril.agents.obsidian — The Resource King.
+silmaril.analytics.regime — Market regime classifier.
 
-OBSIDIAN evaluates only commodities and resource-related assets: gold,
-oil, silver, copper, natural gas, energy ETFs, materials. Its lens
-is scarcity, inflation, and sovereign positioning. Black Panther's
-archetype: wealth drawn from the earth itself.
+Classifies today's market into one of three regimes:
+  RISK_ON   — trend up + calm volatility
+  NEUTRAL   — mixed signals or consolidation
+  RISK_OFF  — broken trend + elevated volatility
 
-Decision logic:
-  - Only applies to XLE, XLB, GLD, SLV, USO, UNG, DBC, CPER, and OBSIDIAN-tagged equities
-  - Gold strength + weakening dollar → STRONG_BUY gold-adjacent
-  - Energy strength + oil momentum → BUY energy
-  - Otherwise abstain (outside specialty)
+Inputs are SPY's price relative to its 200-day SMA and the VIX level.
+Every agent sees the regime and adjusts accordingly. AEGIS uses it
+directly in its veto logic.
 """
 
 from __future__ import annotations
 
-from .base import Agent, AssetContext, Signal, Verdict
+from typing import Optional
 
 
-OBSIDIAN_UNIVERSE = {
-    "XLE", "XLB",                     # Energy, Materials sectors
-    "GLD", "SLV", "USO", "UNG",       # Precious metals + oil/gas
-    "DBC", "CPER",                    # Broad commodities, copper
-    "XOM", "CVX", "COP", "SLB",       # Energy majors
-    "FCX", "NEM", "GOLD",             # Mining
-}
+def classify_regime(
+    spy_price: Optional[float],
+    spy_sma_50: Optional[float],
+    spy_sma_200: Optional[float],
+    vix: Optional[float],
+) -> str:
+    """Return 'RISK_ON' | 'NEUTRAL' | 'RISK_OFF'."""
+    if not spy_price or not spy_sma_200:
+        # Insufficient data — default to NEUTRAL
+        return "NEUTRAL"
 
+    spy_above_200 = spy_price > spy_sma_200
+    spy_above_50 = spy_sma_50 and spy_price > spy_sma_50
 
-class Obsidian(Agent):
-    codename = "OBSIDIAN"
-    specialty = "Commodities & Resources"
-    temperament = "Patient hoarder of hard assets. Bets on scarcity and inflation."
-    inspiration = "Black Panther — the wealth drawn from the earth"
-    asset_classes = ("equity", "etf")
-
-    def applies_to(self, ctx: AssetContext) -> bool:
-        if not super().applies_to(ctx):
-            return False
-        return ctx.ticker.upper() in OBSIDIAN_UNIVERSE or ctx.sector in {"Energy", "Materials", "Commodities"}
-
-    def _judge(self, ctx: AssetContext) -> Verdict:
-        if not ctx.price or not ctx.sma_50 or not ctx.sma_200:
-            return self._hold(ctx, "insufficient data for commodity thesis")
-
-        trend_up = ctx.price > ctx.sma_50 and ctx.sma_50 > ctx.sma_200
-        trend_down = ctx.price < ctx.sma_50 and ctx.sma_50 < ctx.sma_200
-        rsi = ctx.rsi_14 or 50
-        sent = ctx.sentiment_score or 0
-
-        if trend_up and rsi < 70 and sent >= 0:
-            conv = 0.6 + (sent * 0.2)
-            entry = ctx.price
-            stop = ctx.price * 0.95
-            target = ctx.price * 1.12
-            return Verdict(
-                agent=self.codename, ticker=ctx.ticker,
-                signal=Signal.BUY, conviction=self._clamp(conv),
-                rationale=f"Commodity trend intact, RSI {rsi:.0f} healthy, sentiment {sent:+.2f}.",
-                factors={"trend": "up", "rsi": round(rsi, 1)},
-                suggested_entry=round(entry, 2),
-                suggested_stop=round(stop, 2),
-                suggested_target=round(target, 2),
-                invalidation="Close below SMA-50 breaks commodity thesis.",
-            )
-
-        if trend_down:
-            return Verdict(
-                agent=self.codename, ticker=ctx.ticker,
-                signal=Signal.SELL, conviction=0.5,
-                rationale="Resource asset in downtrend below both SMAs.",
-                factors={"trend": "down"},
-            )
-
-        return self._hold(ctx, "commodity consolidation — no edge")
-
-    def _hold(self, ctx: AssetContext, reason: str) -> Verdict:
-        return Verdict(
-            agent=self.codename, ticker=ctx.ticker,
-            signal=Signal.HOLD, conviction=0.3, rationale=reason,
+    # Without VIX, degrade to trend-only
+    if vix is None:
+        return "RISK_ON" if (spy_above_200 and spy_above_50) else (
+            "RISK_OFF" if not spy_above_200 else "NEUTRAL"
         )
 
+    # RISK_OFF conditions — any one triggers it
+    if vix >= 28:
+        return "RISK_OFF"
+    if not spy_above_200:
+        return "RISK_OFF"
 
-obsidian = Obsidian()
+    # RISK_ON conditions — all must be true
+    if spy_above_200 and spy_above_50 and vix < 18:
+        return "RISK_ON"
+
+    return "NEUTRAL"
+
+
+def spy_trend_label(spy_price: Optional[float], spy_sma_50: Optional[float]) -> str:
+    """Return 'UP' | 'DOWN' | 'FLAT'."""
+    if not spy_price or not spy_sma_50:
+        return "FLAT"
+    pct = (spy_price - spy_sma_50) / spy_sma_50
+    if pct > 0.02:
+        return "UP"
+    if pct < -0.02:
+        return "DOWN"
+    return "FLAT"

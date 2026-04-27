@@ -1,105 +1,79 @@
 """
-silmaril.agents.fee_aware_rotation — Should we rotate or HODL?
+silmaril.agents.hex — The Probabilist.
 
-Every $1 compounder uses this. Compares the expected edge of rotating
-into a new ticker against the round-trip fee cost. Rotates only when
-edge meaningfully exceeds friction.
+HEX looks for statistical extremes where mean reversion is probable.
+Its setups are quiet but mathematically grounded: multi-sigma moves
+from recent average, gap fills, historical base-rate edges.
 
-The learning rule:
-  expected_edge_pct >= round_trip_fees_pct * MULTIPLIER
+Scarlet Witch's archetype: bends probability, reads the odds.
 
-  MULTIPLIER varies by archetype:
-    - 1.5×  fast traders (CryptoBro, JRR Token)
-    - 2.0×  patient traders (SCROOGE, MIDAS)
-
-Edge is approximated from the consensus delta between current holding
-and target. A larger consensus_score gap implies more expected return.
+Decision logic:
+  - 2+ sigma move below 20-day mean → BUY (mean reversion)
+  - 2+ sigma move above 20-day mean (on waning volume) → SELL
+  - Measured conviction scales with how extreme the deviation is
 """
 
 from __future__ import annotations
 
-from typing import Any, Dict, Optional, Tuple
-
-from ..execution.detail import build_execution
+from .base import Agent, AssetContext, Signal, Verdict
 
 
-# Map consensus signal → expected pct return (rough heuristic)
-SIGNAL_EXPECTED_RETURN = {
-    "STRONG_BUY":  3.0,
-    "BUY":         1.5,
-    "HOLD":        0.0,
-    "SELL":       -1.5,
-    "STRONG_SELL": -3.0,
-}
+class Hex(Agent):
+    codename = "HEX"
+    specialty = "Probabilistic Edge"
+    temperament = "Reads the odds. Trades extremes when the probability bends its way."
+    inspiration = "Scarlet Witch — probability-bending, hex of fortune"
+    asset_classes = ("equity", "etf", "crypto")
+
+    SIGMA_THRESHOLD = 2.0
+
+    def _judge(self, ctx: AssetContext) -> Verdict:
+        if not ctx.price or len(ctx.price_history) < 21 or not ctx.atr_14:
+            return self._abstain(ctx, "insufficient history for statistical measure")
+
+        window = ctx.price_history[-20:]
+        mean = sum(window) / len(window)
+        variance = sum((x - mean) ** 2 for x in window) / len(window)
+        stdev = variance ** 0.5
+        if stdev == 0:
+            return self._abstain(ctx, "zero volatility — no edge")
+
+        z = (ctx.price - mean) / stdev
+
+        # ── Deeply below mean → reversion buy ───────────────────
+        if z <= -self.SIGMA_THRESHOLD:
+            conv = self._clamp(0.5 + (abs(z) - self.SIGMA_THRESHOLD) * 0.1)
+            entry = ctx.price
+            stop = ctx.price - 1.5 * ctx.atr_14
+            target = mean
+            return Verdict(
+                agent=self.codename, ticker=ctx.ticker,
+                signal=Signal.BUY, conviction=conv,
+                rationale=f"Price {z:.2f}σ below 20-day mean — reversion probable.",
+                factors={"z_score": round(z, 2), "mean_20d": round(mean, 2)},
+                suggested_entry=round(entry, 2),
+                suggested_stop=round(stop, 2),
+                suggested_target=round(target, 2),
+                invalidation=f"Another 1σ lower (${mean - 3*stdev:.2f}) would invalidate mean-reversion setup.",
+            )
+
+        # ── Deeply above mean → reversion sell ──────────────────
+        if z >= self.SIGMA_THRESHOLD:
+            conv = self._clamp(0.45 + (z - self.SIGMA_THRESHOLD) * 0.1)
+            return Verdict(
+                agent=self.codename, ticker=ctx.ticker,
+                signal=Signal.SELL, conviction=conv,
+                rationale=f"Price {z:.2f}σ above 20-day mean — reversion probable.",
+                factors={"z_score": round(z, 2), "mean_20d": round(mean, 2)},
+            )
+
+        return self._abstain(ctx, f"z-score {z:+.2f} — within normal range")
+
+    def _abstain(self, ctx: AssetContext, reason: str) -> Verdict:
+        return Verdict(
+            agent=self.codename, ticker=ctx.ticker,
+            signal=Signal.ABSTAIN, conviction=0.0, rationale=reason,
+        )
 
 
-def estimate_edge_pct(consensus_signal: str, consensus_score: float) -> float:
-    """Estimate the expected % return from a position based on consensus."""
-    base = SIGNAL_EXPECTED_RETURN.get(consensus_signal, 0.0)
-    # Consensus score adds nuance. Score is roughly -2 to +2.
-    score_lift = consensus_score * 0.6
-    return base + score_lift
-
-
-def estimate_round_trip_fee_pct(
-    ticker: str,
-    asset_class: str,
-    price: float,
-    notional: float,
-) -> float:
-    """
-    Round-trip = sell current + buy target. Returns fees as % of notional.
-    """
-    if notional <= 0:
-        return 0.0
-    shares = notional / price if price > 0 else 0
-    sell_exec = build_execution(
-        ticker=ticker, asset_class=asset_class, side="SELL",
-        shares=shares, price=price, available_before=0.0,
-    )
-    buy_exec = build_execution(
-        ticker=ticker, asset_class=asset_class, side="BUY",
-        shares=shares, price=price, available_before=notional,
-    )
-    total_fees = sell_exec["fees"]["total"] + buy_exec["fees"]["total"]
-    return (total_fees / notional) * 100 if notional > 0 else 0.0
-
-
-def should_rotate(
-    current_consensus_signal: Optional[str],
-    current_consensus_score: float,
-    target_consensus_signal: str,
-    target_consensus_score: float,
-    asset_class: str,
-    price: float,
-    notional: float,
-    multiplier: float = 2.0,
-) -> Tuple[bool, str]:
-    """
-    Returns (rotate, explanation).
-
-    Rotate when:
-      (target_edge - current_edge) >= round_trip_fee × multiplier
-
-    Always returns (True, "...") when current_consensus is None (we're flat
-    and need to deploy capital).
-    """
-    target_edge = estimate_edge_pct(target_consensus_signal, target_consensus_score)
-    fee_pct = estimate_round_trip_fee_pct("PROXY", asset_class, max(1.0, price), notional)
-
-    if current_consensus_signal is None:
-        return True, f"Initial entry — no current position. Target edge {target_edge:+.2f}%."
-
-    current_edge = estimate_edge_pct(current_consensus_signal, current_consensus_score)
-    edge_gain = target_edge - current_edge
-    threshold = fee_pct * multiplier
-
-    if edge_gain >= threshold:
-        return (True, (
-            f"Rotate: edge gain {edge_gain:+.2f}% ≥ "
-            f"{multiplier}× round-trip fees ({fee_pct:.3f}% × {multiplier} = {threshold:.3f}%)."
-        ))
-    return (False, (
-        f"HODL: edge gain {edge_gain:+.2f}% < {threshold:.3f}% (fee threshold). "
-        f"Not worth the round-trip cost."
-    ))
+hex_agent = Hex()   # `hex` is a Python builtin; use a non-colliding module name

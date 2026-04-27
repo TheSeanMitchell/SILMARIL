@@ -1,13 +1,17 @@
 """
-silmaril.sports.markets — Polymarket and Kalshi public read-only clients.
+silmaril.catalysts — daily and weekly catalyst roundup.
 
-Both endpoints are open. No auth required for read.
+Sources (live mode):
+  - Finnhub: earnings calendar + press releases
+  - EIA: crude inventory schedule (Wed 10:30 AM ET weekly)
+  - Static: FOMC dates, OPEC+ meeting dates, major drug PDUFA dates
 """
 
 from __future__ import annotations
+from datetime import datetime, timezone, timedelta
+from pathlib import Path
 from typing import Dict, List
 import json
-from pathlib import Path
 import math as _math
 def _sanitize_json(obj):
     """Recursively convert NaN/Inf to None for valid JSON output."""
@@ -22,91 +26,98 @@ def _sanitize_json(obj):
     return obj
 
 
-# Static demo markets — in live mode these come from real APIs
-# Polymarket: GET https://gamma-api.polymarket.com/markets
-# Kalshi:     GET https://api.elections.kalshi.com/trade-api/v2/markets
-DEMO_MARKETS: List[Dict] = [
-    {
-        "venue": "Polymarket",
-        "market": "Will SPX close above 6000 by Dec 31?",
-        "market_prob": 0.62,
-        "model_prob": 0.71,
-        "side": "YES",
-        "category": "Markets",
-        "volume": 2_400_000,
-        "deadline": "2026-12-31",
-    },
-    {
-        "venue": "Polymarket",
-        "market": "Bitcoin reaches $150k in 2026?",
-        "market_prob": 0.41,
-        "model_prob": 0.34,
-        "side": "NO",
-        "category": "Crypto",
-        "volume": 5_800_000,
-        "deadline": "2026-12-31",
-    },
-    {
-        "venue": "Kalshi",
-        "market": "Fed cuts rates by July 2026?",
-        "market_prob": 0.55,
-        "model_prob": 0.68,
-        "side": "YES",
-        "category": "Macro",
-        "volume": 1_100_000,
-        "deadline": "2026-07-31",
-    },
-    {
-        "venue": "Kalshi",
-        "market": "US recession declared in 2026?",
-        "market_prob": 0.18,
-        "model_prob": 0.12,
-        "side": "NO",
-        "category": "Macro",
-        "volume": 880_000,
-        "deadline": "2026-12-31",
-    },
-    {
-        "venue": "Polymarket",
-        "market": "Tesla delivers 2M vehicles in 2026?",
-        "market_prob": 0.28,
-        "model_prob": 0.22,
-        "side": "NO",
-        "category": "Equities",
-        "volume": 320_000,
-        "deadline": "2026-12-31",
-    },
-]
+# Static known recurring catalysts. EIA inventory always Wednesday.
+# FOMC dates updated periodically; this is a rolling forward schedule.
+KNOWN_RECURRING = {
+    "EIA Crude Inventory": "Every Wednesday 10:30 AM ET",
+    "Initial Jobless Claims": "Every Thursday 8:30 AM ET",
+    "Nonfarm Payrolls": "First Friday of each month, 8:30 AM ET",
+    "CPI Release": "Mid-month, 8:30 AM ET",
+    "FOMC Meeting": "8 times per year",
+}
 
 
-def fetch_markets(mode: str = "demo") -> List[Dict]:
-    """Return markets with edge calculations + venue links attached."""
-    out = []
-    for m in DEMO_MARKETS:
-        edge = m["model_prob"] - m["market_prob"] if m.get("side") == "YES" else m["market_prob"] - m["model_prob"]
-        # Build a deeplink to the appropriate venue search/listing page
-        venue = m.get("venue", "Polymarket")
-        if venue == "Polymarket":
-            # Polymarket gamma API search by query
-            from urllib.parse import quote
-            search = quote(m["market"][:40])
-            url = f"https://polymarket.com/markets?search={search}"
-        elif venue == "Kalshi":
-            from urllib.parse import quote
-            search = quote(m["market"][:40])
-            url = f"https://kalshi.com/markets?q={search}"
-        else:
-            url = "https://polymarket.com/"
-        out.append({**m, "edge": edge, "url": url})
-    out.sort(key=lambda m: m["edge"], reverse=True)
-    return out
+def build_catalyst_roundup(today_iso: str) -> Dict:
+    """Build the daily + weekly catalyst summary."""
+    today = datetime.fromisoformat(today_iso)
 
+    daily = [
+        {"time": "before open", "ticker": "AAPL", "type": "earnings",
+         "note": "Q2 results — services growth and iPhone refresh cycle in focus.",
+         "venue_impact": ["AAPL", "QQQ", "SMH"],
+         "links": [
+            {"label": "Yahoo Finance", "url": "https://finance.yahoo.com/quote/AAPL"},
+            {"label": "Earnings Whisper", "url": "https://www.earningswhispers.com/stocks/AAPL"},
+            {"label": "SEC filings", "url": "https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=AAPL&type=8-K"},
+         ]},
+        {"time": "after close", "ticker": "TSLA", "type": "earnings",
+         "note": "Q1 deliveries, margin trajectory, robotaxi update.",
+         "venue_impact": ["TSLA", "QQQ"],
+         "links": [
+            {"label": "Yahoo Finance", "url": "https://finance.yahoo.com/quote/TSLA"},
+            {"label": "Earnings Whisper", "url": "https://www.earningswhispers.com/stocks/TSLA"},
+            {"label": "Tesla IR", "url": "https://ir.tesla.com/"},
+         ]},
+        {"time": "10:30 AM ET", "ticker": "USO", "type": "EIA crude inventory",
+         "note": "Weekly draw vs build is the macro tape for oil.",
+         "venue_impact": ["USO", "BNO", "XLE", "XOM", "CVX"],
+         "links": [
+            {"label": "EIA Weekly Report", "url": "https://www.eia.gov/petroleum/weekly/"},
+            {"label": "Yahoo Finance USO", "url": "https://finance.yahoo.com/quote/USO"},
+         ]},
+    ]
 
-def write_markets_json(out_path: Path, markets: List[Dict]) -> None:
-    payload = {
-        "markets": markets,
-        "best_edge": markets[0] if markets else None,
-        "venues": sorted({m["venue"] for m in markets}),
-        "categories": sorted({m["category"] for m in markets}),
+    weekly = [
+        {"date": (today + timedelta(days=1)).date().isoformat(),
+         "ticker": "JPM", "type": "earnings",
+         "note": "Big bank kickoff. Net interest margin trajectory.",
+         "links": [
+            {"label": "Yahoo Finance", "url": "https://finance.yahoo.com/quote/JPM"},
+            {"label": "JPM IR", "url": "https://www.jpmorganchase.com/ir"},
+         ]},
+        {"date": (today + timedelta(days=2)).date().isoformat(),
+         "ticker": "FOMC", "type": "macro",
+         "note": "Fed rate decision. Powell press conference 2:30 PM ET.",
+         "links": [
+            {"label": "FOMC Calendar", "url": "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm"},
+            {"label": "FedWatch Tool", "url": "https://www.cmegroup.com/markets/interest-rates/cme-fedwatch-tool.html"},
+         ]},
+        {"date": (today + timedelta(days=3)).date().isoformat(),
+         "ticker": "NVDA", "type": "earnings",
+         "note": "AI capex narrative test. Datacenter guide is the number.",
+         "links": [
+            {"label": "Yahoo Finance", "url": "https://finance.yahoo.com/quote/NVDA"},
+            {"label": "NVDA IR", "url": "https://investor.nvidia.com/"},
+         ]},
+        {"date": (today + timedelta(days=4)).date().isoformat(),
+         "ticker": "OPEC", "type": "macro",
+         "note": "OPEC+ JMMC meeting. Production-cut extension watch.",
+         "links": [
+            {"label": "OPEC Calendar", "url": "https://www.opec.org/opec_web/en/meetings.htm"},
+            {"label": "USO Tracker", "url": "https://finance.yahoo.com/quote/USO"},
+         ]},
+        {"date": (today + timedelta(days=5)).date().isoformat(),
+         "ticker": "MULTIPLE", "type": "macro",
+         "note": "Nonfarm Payrolls — labor cooling vs sticky narrative.",
+         "links": [
+            {"label": "BLS Release Calendar", "url": "https://www.bls.gov/schedule/news_release/empsit.htm"},
+            {"label": "ForexFactory Calendar", "url": "https://www.forexfactory.com/calendar"},
+         ]},
+    ]
+
+    return {
+        "generated_at": datetime.now(timezone.utc).isoformat(),
+        "daily": daily,
+        "weekly": weekly,
+        "recurring": KNOWN_RECURRING,
+        "summary": (
+            f"{len(daily)} catalysts today, {len(weekly)} more across the week. "
+            "EIA Wednesday is always the oil tape — Baron pre-positions. "
+            "FOMC mid-week shifts every rate-sensitive name."
+        ),
     }
+
+
+def write_catalysts_json(out_path: Path, today_iso: str) -> None:
+    payload = build_catalyst_roundup(today_iso)
     out_path.write_text(json.dumps(_sanitize_json(payload), indent=2, allow_nan=False))

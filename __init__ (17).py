@@ -1,85 +1,133 @@
 """
-silmaril.agents.thunderhead — The Storm.
+silmaril.analytics.technicals — Pure-Python technical indicators.
 
-THUNDERHEAD strikes when volatility expands and price breaks a recent
-range with volume. It is loud, confident, and occasionally wrong in
-grand fashion. Thor's archetype: tremendous power when the weather
-turns, asleep otherwise.
+Computes SMA, RSI, ATR, and Bollinger-band width from a list of closes
+(or highs/lows/closes where applicable). No numpy required — we keep it
+dependency-free for portability and for ease of reasoning.
 
-Decision logic:
-  - Requires bullish break of 20-day high AND expanding ATR AND volume surge
-  - Short-side mirror: break of 20-day low with expansion → SELL
-  - Otherwise ABSTAIN (no breakout, no opinion)
+Performance is not a concern: even 100 tickers × 5 indicators = 500 quick
+loops over ~200-point arrays.
 """
 
 from __future__ import annotations
 
-from .base import Agent, AssetContext, Signal, Verdict
+from typing import List, Optional
 
 
-class Thunderhead(Agent):
-    codename = "THUNDERHEAD"
-    specialty = "Volatility Breakout"
-    temperament = "Dormant until the storm. When skies break, strikes with full conviction."
-    inspiration = "Thor — the hammer, the thunder, the open sky"
-    asset_classes = ("equity", "etf", "crypto")
-
-    VOL_SURGE_RATIO = 1.4      # today's volume vs 30d avg
-    ATR_EXPANSION = 1.15       # current ATR vs implied calm ATR
-
-    def _judge(self, ctx: AssetContext) -> Verdict:
-        if not ctx.price or len(ctx.price_history) < 25 or not ctx.atr_14:
-            return self._abstain(ctx, "insufficient data for breakout detection")
-
-        recent_high = max(ctx.price_history[-21:-1])   # 20-day high excluding today
-        recent_low = min(ctx.price_history[-21:-1])
-
-        volume_ratio = 0.0
-        if ctx.volume and ctx.avg_volume_30d:
-            volume_ratio = ctx.volume / ctx.avg_volume_30d
-
-        # ── Upside breakout ─────────────────────────────────────
-        if ctx.price > recent_high and volume_ratio >= self.VOL_SURGE_RATIO:
-            conv = 0.7 + min(volume_ratio - 1.4, 0.25)  # more volume = higher conviction, capped
-            rationale = (
-                f"Broke 20-day high (${recent_high:.2f}) on "
-                f"{volume_ratio:.1f}× avg volume — storm has arrived."
-            )
-            entry = ctx.price
-            stop = ctx.price - 2.0 * ctx.atr_14
-            target = ctx.price + 4.0 * ctx.atr_14
-            return Verdict(
-                agent=self.codename, ticker=ctx.ticker,
-                signal=Signal.STRONG_BUY if volume_ratio >= 2.0 else Signal.BUY,
-                conviction=self._clamp(conv),
-                rationale=rationale,
-                factors={"breakout_high": recent_high, "volume_ratio": round(volume_ratio, 2)},
-                suggested_entry=round(entry, 2),
-                suggested_stop=round(stop, 2),
-                suggested_target=round(target, 2),
-                invalidation=f"Close back below ${recent_high:.2f} invalidates breakout.",
-            )
-
-        # ── Downside breakout ───────────────────────────────────
-        if ctx.price < recent_low and volume_ratio >= self.VOL_SURGE_RATIO:
-            conv = 0.65
-            return Verdict(
-                agent=self.codename, ticker=ctx.ticker,
-                signal=Signal.SELL,
-                conviction=conv,
-                rationale=f"Broke 20-day low (${recent_low:.2f}) on heavy volume.",
-                factors={"breakdown_low": recent_low, "volume_ratio": round(volume_ratio, 2)},
-            )
-
-        # ── No breakout — THUNDERHEAD sleeps ────────────────────
-        return self._abstain(ctx, "no breakout; awaiting the storm")
-
-    def _abstain(self, ctx: AssetContext, reason: str) -> Verdict:
-        return Verdict(
-            agent=self.codename, ticker=ctx.ticker,
-            signal=Signal.ABSTAIN, conviction=0.0,
-            rationale=reason,
-        )
+def sma(closes: List[float], period: int) -> Optional[float]:
+    """Simple moving average over the last `period` closes."""
+    if len(closes) < period:
+        return None
+    window = closes[-period:]
+    return sum(window) / period
 
 
-thunderhead = Thunderhead()
+def rsi(closes: List[float], period: int = 14) -> Optional[float]:
+    """Relative Strength Index (Wilder's smoothing)."""
+    if len(closes) < period + 1:
+        return None
+
+    gains, losses = [], []
+    for i in range(1, len(closes)):
+        delta = closes[i] - closes[i - 1]
+        if delta > 0:
+            gains.append(delta)
+            losses.append(0.0)
+        else:
+            gains.append(0.0)
+            losses.append(-delta)
+
+    # Initial average over the first `period` diffs
+    avg_gain = sum(gains[:period]) / period
+    avg_loss = sum(losses[:period]) / period
+
+    # Wilder's smoothing for the rest
+    for i in range(period, len(gains)):
+        avg_gain = (avg_gain * (period - 1) + gains[i]) / period
+        avg_loss = (avg_loss * (period - 1) + losses[i]) / period
+
+    if avg_loss == 0:
+        return 100.0
+    rs = avg_gain / avg_loss
+    return 100.0 - (100.0 / (1.0 + rs))
+
+
+def atr(highs: List[float], lows: List[float], closes: List[float], period: int = 14) -> Optional[float]:
+    """Average True Range over `period` bars. Skips NaN data points."""
+    import math
+    if len(closes) < period + 1:
+        return None
+    trs = []
+    for i in range(1, len(closes)):
+        h, l, c_prev = highs[i], lows[i], closes[i - 1]
+        if any(x is None or (isinstance(x, float) and math.isnan(x)) for x in (h, l, c_prev)):
+            continue
+        tr = max(h - l, abs(h - c_prev), abs(l - c_prev))
+        trs.append(tr)
+    if len(trs) < period:
+        return None
+    atr_val = sum(trs[:period]) / period
+    for i in range(period, len(trs)):
+        atr_val = (atr_val * (period - 1) + trs[i]) / period
+    if math.isnan(atr_val) or math.isinf(atr_val):
+        return None
+    return atr_val
+
+
+def bollinger_width(closes: List[float], period: int = 20, stdev_mult: float = 2.0) -> Optional[float]:
+    """Width of Bollinger bands as a fraction of the middle band.
+
+    Returns (upper - lower) / middle, a unitless measure of volatility.
+    A narrow value (< 0.05) means the bands are coiled — often precedes a breakout.
+    """
+    if len(closes) < period:
+        return None
+    window = closes[-period:]
+    mean = sum(window) / period
+    variance = sum((x - mean) ** 2 for x in window) / period
+    stdev = variance ** 0.5
+    if mean == 0:
+        return None
+    return (2 * stdev_mult * stdev) / mean
+
+
+def percent_above(price: float, reference: Optional[float]) -> Optional[float]:
+    """Return (price - reference) / reference. None-safe."""
+    if not reference or reference == 0:
+        return None
+    return (price - reference) / reference
+
+
+def highest_in(closes: List[float], lookback: int) -> Optional[float]:
+    """Highest close in the last `lookback` bars."""
+    if len(closes) < lookback:
+        return None
+    return max(closes[-lookback:])
+
+
+def lowest_in(closes: List[float], lookback: int) -> Optional[float]:
+    """Lowest close in the last `lookback` bars."""
+    if len(closes) < lookback:
+        return None
+    return min(closes[-lookback:])
+
+
+def compute_all(closes: List[float], highs: List[float], lows: List[float]) -> dict:
+    """Compute every indicator. Returns dict with None for anything too short
+    or numerically degenerate (NaN/Inf)."""
+    import math
+    raw = {
+        "sma_20":   sma(closes, 20),
+        "sma_50":   sma(closes, 50),
+        "sma_200":  sma(closes, 200),
+        "rsi_14":   rsi(closes, 14),
+        "atr_14":   atr(highs, lows, closes, 14),
+        "bb_width": bollinger_width(closes, 20),
+    }
+    out = {}
+    for k, v in raw.items():
+        if v is None or (isinstance(v, float) and (math.isnan(v) or math.isinf(v))):
+            out[k] = None
+        else:
+            out[k] = v
+    return out

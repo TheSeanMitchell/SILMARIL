@@ -1,70 +1,167 @@
-name: SILMARIL Reset
-
-# Manual-trigger workflow to wipe all accumulated data and start fresh.
-# Use this when you want to begin a clean tracking period for live data.
-#
-# Trigger from Actions tab → "SILMARIL Reset" → Run workflow.
-
-on:
-  workflow_dispatch:
-    inputs:
-      confirm:
-        description: 'Type "RESET" to confirm wipe of all tracking data'
-        required: true
-        default: ''
-
-permissions:
-  contents: write
-
-jobs:
-  reset:
-    runs-on: ubuntu-latest
-    if: github.event.inputs.confirm == 'RESET'
-    steps:
-      - name: Check out repo
-        uses: actions/checkout@v4
-
-      - name: Wipe data
-        run: |
-          cd docs/data
-          # Wipe all stateful data files. Keep only metadata files.
-          for f in scoring.json history.json risk_state.json \
-                   agent_portfolios.json scrooge.json midas.json \
-                   cryptobro.json jrr_token.json sports_bro.json \
-                   sports_markets.json catalysts.json charts.json \
-                   handoff_blocks.json signals.json trade_plans.json; do
-            if [ -f "$f" ]; then
-              rm -f "$f"
-              echo "Removed $f"
-            fi
-          done
-
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
-          cache: 'pip'
-
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
-
-      - name: Run SILMARIL with clean state
-        env:
-          FINNHUB_API_KEY: ${{ secrets.FINNHUB_API_KEY }}
-          EIA_API_KEY: ${{ secrets.EIA_API_KEY }}
-        run: |
-          python -m silmaril --live --output docs/data --verbose
-
-      - name: Commit clean state
-        run: |
-          git config --local user.email "silmaril-bot@users.noreply.github.com"
-          git config --local user.name "SILMARIL Bot"
-          git add docs/data/
-          if git diff --staged --quiet; then
-            echo "No changes."
-          else
-            git commit -m "✦ SILMARIL clean reset — $(date -u +%Y-%m-%d)"
-            git push
-          fi
+{
+  "generated_at": "2026-04-27T04:57:43.269935+00:00",
+  "daily": [
+    {
+      "time": "before open",
+      "ticker": "AAPL",
+      "type": "earnings",
+      "note": "Q2 results \u2014 services growth and iPhone refresh cycle in focus.",
+      "venue_impact": [
+        "AAPL",
+        "QQQ",
+        "SMH"
+      ],
+      "links": [
+        {
+          "label": "Yahoo Finance",
+          "url": "https://finance.yahoo.com/quote/AAPL"
+        },
+        {
+          "label": "Earnings Whisper",
+          "url": "https://www.earningswhispers.com/stocks/AAPL"
+        },
+        {
+          "label": "SEC filings",
+          "url": "https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=AAPL&type=8-K"
+        }
+      ]
+    },
+    {
+      "time": "after close",
+      "ticker": "TSLA",
+      "type": "earnings",
+      "note": "Q1 deliveries, margin trajectory, robotaxi update.",
+      "venue_impact": [
+        "TSLA",
+        "QQQ"
+      ],
+      "links": [
+        {
+          "label": "Yahoo Finance",
+          "url": "https://finance.yahoo.com/quote/TSLA"
+        },
+        {
+          "label": "Earnings Whisper",
+          "url": "https://www.earningswhispers.com/stocks/TSLA"
+        },
+        {
+          "label": "Tesla IR",
+          "url": "https://ir.tesla.com/"
+        }
+      ]
+    },
+    {
+      "time": "10:30 AM ET",
+      "ticker": "USO",
+      "type": "EIA crude inventory",
+      "note": "Weekly draw vs build is the macro tape for oil.",
+      "venue_impact": [
+        "USO",
+        "BNO",
+        "XLE",
+        "XOM",
+        "CVX"
+      ],
+      "links": [
+        {
+          "label": "EIA Weekly Report",
+          "url": "https://www.eia.gov/petroleum/weekly/"
+        },
+        {
+          "label": "Yahoo Finance USO",
+          "url": "https://finance.yahoo.com/quote/USO"
+        }
+      ]
+    }
+  ],
+  "weekly": [
+    {
+      "date": "2026-04-28",
+      "ticker": "JPM",
+      "type": "earnings",
+      "note": "Big bank kickoff. Net interest margin trajectory.",
+      "links": [
+        {
+          "label": "Yahoo Finance",
+          "url": "https://finance.yahoo.com/quote/JPM"
+        },
+        {
+          "label": "JPM IR",
+          "url": "https://www.jpmorganchase.com/ir"
+        }
+      ]
+    },
+    {
+      "date": "2026-04-29",
+      "ticker": "FOMC",
+      "type": "macro",
+      "note": "Fed rate decision. Powell press conference 2:30 PM ET.",
+      "links": [
+        {
+          "label": "FOMC Calendar",
+          "url": "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm"
+        },
+        {
+          "label": "FedWatch Tool",
+          "url": "https://www.cmegroup.com/markets/interest-rates/cme-fedwatch-tool.html"
+        }
+      ]
+    },
+    {
+      "date": "2026-04-30",
+      "ticker": "NVDA",
+      "type": "earnings",
+      "note": "AI capex narrative test. Datacenter guide is the number.",
+      "links": [
+        {
+          "label": "Yahoo Finance",
+          "url": "https://finance.yahoo.com/quote/NVDA"
+        },
+        {
+          "label": "NVDA IR",
+          "url": "https://investor.nvidia.com/"
+        }
+      ]
+    },
+    {
+      "date": "2026-05-01",
+      "ticker": "OPEC",
+      "type": "macro",
+      "note": "OPEC+ JMMC meeting. Production-cut extension watch.",
+      "links": [
+        {
+          "label": "OPEC Calendar",
+          "url": "https://www.opec.org/opec_web/en/meetings.htm"
+        },
+        {
+          "label": "USO Tracker",
+          "url": "https://finance.yahoo.com/quote/USO"
+        }
+      ]
+    },
+    {
+      "date": "2026-05-02",
+      "ticker": "MULTIPLE",
+      "type": "macro",
+      "note": "Nonfarm Payrolls \u2014 labor cooling vs sticky narrative.",
+      "links": [
+        {
+          "label": "BLS Release Calendar",
+          "url": "https://www.bls.gov/schedule/news_release/empsit.htm"
+        },
+        {
+          "label": "ForexFactory Calendar",
+          "url": "https://www.forexfactory.com/calendar"
+        }
+      ]
+    }
+  ],
+  "recurring": {
+    "EIA Crude Inventory": "Every Wednesday 10:30 AM ET",
+    "Initial Jobless Claims": "Every Thursday 8:30 AM ET",
+    "Nonfarm Payrolls": "First Friday of each month, 8:30 AM ET",
+    "CPI Release": "Mid-month, 8:30 AM ET",
+    "FOMC Meeting": "8 times per year"
+  },
+  "summary": "3 catalysts today, 5 more across the week. EIA Wednesday is always the oil tape \u2014 Baron pre-positions. FOMC mid-week shifts every rate-sensitive name."
+}
