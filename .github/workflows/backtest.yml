@@ -68,8 +68,13 @@ jobs:
         run: |
           git config --local user.email "silmaril-bot@users.noreply.github.com"
           git config --local user.name "SILMARIL Bot"
-          # v2.0: commit ALL backtest_*.json output files, not just the report
-          git add docs/data/backtest_*.json
+          # v2.1: commit only the small report files. The predictions file
+          # (millions of rows) frequently exceeds GitHub's 100MB single-file
+          # limit on full-universe runs and is debug data anyway.
+          git add docs/data/backtest_report.json docs/data/backtest_walk_forward.json
+          # Also remove any predictions file from the working tree so it
+          # doesn't get auto-staged in future runs
+          rm -f docs/data/backtest_predictions.json || true
           if git diff --staged --quiet; then
             echo "No backtest output to commit (run failed?)."
             exit 1
