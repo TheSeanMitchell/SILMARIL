@@ -1,73 +1,97 @@
-"""NIGHTSHADE — Form 4 insider transaction watcher.
+"""
+silmaril.agents.nightshade — The Insider Watcher.
 
-Adapter following SILMARIL agent interface. Reads optional fields off
-the AssetContext if upstream wires them in:
-    ctx.insider_buys_30d, ctx.insider_sells_30d, ctx.insider_net_dollars_30d
+NIGHTSHADE only watches one thing: SEC Form 4 filings. When 3+ company
+insiders buy in a 30-day window with no offsetting sales, that's a
+cluster signal. Same logic in reverse for sells.
 
-If those fields aren't present on the context, NIGHTSHADE abstains
+Wired-upstream fields (optional on AssetContext):
+  - insider_buys_30d:   int, count of insider buys last 30 days
+  - insider_sells_30d:  int, count of insider sells last 30 days
+  - insider_net_dollars_30d: float, net dollar value (buys - sells)
+
+If these fields aren't present on the context, NIGHTSHADE abstains
 gracefully — no false signals from missing data.
 """
 from __future__ import annotations
 
-from .base import Agent, AssetContext, Verdict, Signal
+from .base import Agent, AssetContext, Signal, Verdict
 
 
-SKIP_CLASSES = {"crypto", "fx", "commodities", "energy_etf"}
-
-
-class _NightshadeAgent(Agent):
+class Nightshade(Agent):
     codename = "NIGHTSHADE"
-    bio = (
-        "NIGHTSHADE watches the executives. When three or more insiders "
-        "buy in a 30-day window with no offsetting sales, that's a signal "
-        "people closer to the books are confident. Same logic in reverse: "
-        "cluster selling without buying is a yellow flag."
+    specialty = "Form 4 Insider Cluster Detection"
+    temperament = (
+        "Patient, watches the executives. Believes the people closest "
+        "to the books know things the market doesn't yet. Stays silent "
+        "until cluster activity is unambiguous."
     )
+    inspiration = "The deadly nightshade — quiet, watchful, decisive"
+    asset_classes = ("equity",)
 
-    def applies_to(self, ctx: AssetContext) -> bool:
-        ac = getattr(ctx, "asset_class", "equity")
-        if ac in SKIP_CLASSES:
-            return False
-        # Only votes when actual insider data is wired in
-        return (
-            getattr(ctx, "insider_buys_30d", None) is not None
-            or getattr(ctx, "insider_sells_30d", None) is not None
-        )
+    def _judge(self, ctx: AssetContext) -> Verdict:
+        buys = getattr(ctx, "insider_buys_30d", None)
+        sells = getattr(ctx, "insider_sells_30d", None)
+        net = getattr(ctx, "insider_net_dollars_30d", None)
 
-    def evaluate(self, ctx: AssetContext) -> Verdict:
-        buys = getattr(ctx, "insider_buys_30d", 0) or 0
-        sells = getattr(ctx, "insider_sells_30d", 0) or 0
-        net_dollars = getattr(ctx, "insider_net_dollars_30d", 0) or 0
-
-        if buys >= 3 and sells == 0:
-            conv = min(0.85, 0.55 + 0.08 * buys)
+        # If no insider data wired in, abstain rather than guess
+        if buys is None and sells is None:
             return Verdict(
                 agent=self.codename,
-                signal=Signal.STRONG_BUY,
-                conviction=conv,
-                rationale=f"{buys} insider buys / 0 sells last 30d (net ${net_dollars:,.0f})",
+                ticker=ctx.ticker,
+                signal=Signal.ABSTAIN,
+                conviction=0.0,
+                rationale="no insider transaction data available",
+                factors={"data_missing": True},
             )
+
+        buys = buys or 0
+        sells = sells or 0
+        factors = {"buys_30d": buys, "sells_30d": sells}
+        if net is not None:
+            factors["net_dollars_30d"] = net
+
+        # Strong cluster buy
+        if buys >= 3 and sells == 0:
+            return Verdict(
+                agent=self.codename,
+                ticker=ctx.ticker,
+                signal=Signal.STRONG_BUY,
+                conviction=min(0.85, 0.55 + 0.08 * buys),
+                rationale=f"{buys} insider buys, 0 sells in 30d — strong cluster",
+                factors=factors,
+            )
+
+        # Mild cluster buy
         if buys >= 2 and sells <= 1:
             return Verdict(
                 agent=self.codename,
+                ticker=ctx.ticker,
                 signal=Signal.BUY,
                 conviction=0.55,
-                rationale=f"{buys} insider buys / {sells} sells last 30d",
+                rationale=f"{buys} insider buys vs {sells} sells in 30d",
+                factors=factors,
             )
+
+        # Cluster sell
         if sells >= 3 and buys == 0:
             return Verdict(
                 agent=self.codename,
+                ticker=ctx.ticker,
                 signal=Signal.SELL,
                 conviction=0.55,
-                rationale=f"{sells} insider sells / 0 buys last 30d (net ${net_dollars:,.0f})",
+                rationale=f"{sells} insider sells, 0 buys in 30d — distribution",
+                factors=factors,
             )
 
         return Verdict(
             agent=self.codename,
+            ticker=ctx.ticker,
             signal=Signal.HOLD,
             conviction=0.0,
-            rationale="no decisive insider cluster in last 30d",
+            rationale=f"no decisive insider cluster ({buys}b/{sells}s)",
+            factors=factors,
         )
 
 
-nightshade = _NightshadeAgent()
+nightshade = Nightshade()

@@ -53,10 +53,7 @@ from .agents.sports_bro import (
     sports_bro, sports_bro_act, SportsBroState,
 )
 
-# ── v2.0 agents (Sean Mitchell, April 2026) ─────────────────────────
-# These adapters live in silmaril/agents/<name>.py and expose the same
-# applies_to / evaluate interface as the existing 15 main voters.
-# They abstain gracefully when their required upstream data isn't wired.
+# ── v2.0 agents ─────────────────────────────────────────────────
 from .agents.atlas import atlas
 from .agents.nightshade import nightshade
 from .agents.cicada import cicada
@@ -624,47 +621,6 @@ def run(mode: str = "demo", output_dir: str = "docs/data") -> None:
 
     # ── Catalysts roundup ───────────────────────────────────────
     write_catalysts_json(out / "catalysts.json", today_iso)
-
-    # ── v2.0 expanded catalysts ─────────────────────────────────
-    # Append OPEX, index rebalance, macro release, ex-dividend, crypto
-    # unlock, and earnings calendar entries to the existing roundup.
-    # Each module is best-effort — a single source failing won't block
-    # the rest of the pipeline.
-    try:
-        from .catalysts.opex import fetch_opex_calendar
-        from .catalysts.index_rebalance import fetch_index_rebalances
-        from .catalysts.macro_releases import fetch_macro_calendar
-        from .catalysts.crypto_unlocks import fetch_crypto_unlocks
-        from .catalysts.ex_dividend import fetch_ex_dividend_calendar
-        from .catalysts.earnings_calendar import fetch_earnings_calendar
-
-        v2_extra = []
-        for fn in (
-            fetch_opex_calendar, fetch_index_rebalances, fetch_macro_calendar,
-            fetch_crypto_unlocks, fetch_ex_dividend_calendar, fetch_earnings_calendar,
-        ):
-            try:
-                items = fn() or []
-                v2_extra.extend(items)
-            except Exception as e:
-                log.info("[v2 catalysts] %s skipped: %s", fn.__name__, e)
-
-        if v2_extra:
-            cat_path = out / "catalysts.json"
-            try:
-                with cat_path.open() as f:
-                    existing = json.load(f)
-            except Exception:
-                existing = {}
-            existing.setdefault("events", []).extend(v2_extra)
-            existing["v2_extra_count"] = len(v2_extra)
-            with cat_path.open("w") as f:
-                json.dump(_sanitize_for_json(existing), f, indent=2,
-                          default=str, allow_nan=False)
-            log.info("[v2 catalysts] appended %d events", len(v2_extra))
-    except Exception as e:
-        log.info("[v2 catalysts] integration skipped: %s", e)
-
 
     # ── Chart bundles for each debated ticker ───────────────────
     write_charts_json(out / "charts.json", debate_dicts, ctx_lookup)

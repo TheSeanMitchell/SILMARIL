@@ -1,71 +1,113 @@
-"""BARNACLE — 13F whale follower.
+"""
+silmaril.agents.barnacle — The 13F Whale Follower.
 
-Reads ctx.whale_data when wired upstream. Otherwise abstains.
+BARNACLE rides the whales. When 2+ institutional 13F filers initiate
+the same position in the same quarter, that's a thesis cluster. Same
+in reverse for exits.
+
+Optional upstream field:
+  - whale_data: dict with keys
+      whales_buying:    list[str] of fund names accumulating
+      whales_selling:   list[str] of fund names reducing
+      whales_initiating: list[str] of fund names with brand-new positions
+      whales_exiting:   list[str] of fund names fully closing
+
+If whale_data isn't wired in, BARNACLE abstains.
 """
 from __future__ import annotations
 
-from .base import Agent, AssetContext, Verdict, Signal
+from .base import Agent, AssetContext, Signal, Verdict
 
 
-WHALE_CIKS = {
-    "BERKSHIRE": "0001067983", "PERSHING_SQUARE": "0001336528",
-    "BRIDGEWATER": "0001350694", "RENAISSANCE": "0001037389",
-    "BAUPOST": "0001061165", "GREENLIGHT": "0001079114",
-    "SOROS": "0001029160", "TIGER_GLOBAL": "0001167483",
-    "LONE_PINE": "0001061768", "COATUE": "0001135730",
-    "TWO_SIGMA": "0001179392", "AQR": "0001167557",
-}
-
-SKIP_CLASSES = {"crypto", "fx", "commodities", "token"}
-
-
-class _BarnacleAgent(Agent):
+class Barnacle(Agent):
     codename = "BARNACLE"
-    bio = (
-        "BARNACLE rides the whales. When two or more 13F filers initiate "
-        "the same position in the same quarter, that's a thesis cluster. "
-        "Followers don't lead, but they don't drown either."
+    specialty = "13F Whale Cluster Follower"
+    temperament = (
+        "Doesn't lead, doesn't drown. Attaches to ships that have "
+        "already proven they sail. Looks for clusters — one whale is "
+        "noise, three are a thesis."
     )
+    inspiration = "The barnacle — small, patient, rides the largest movers"
+    asset_classes = ("equity",)
 
-    def applies_to(self, ctx: AssetContext) -> bool:
-        if getattr(ctx, "asset_class", "equity") in SKIP_CLASSES:
-            return False
+    def _judge(self, ctx: AssetContext) -> Verdict:
         wd = getattr(ctx, "whale_data", None)
-        return bool(wd)
+        if not wd:
+            return Verdict(
+                agent=self.codename,
+                ticker=ctx.ticker,
+                signal=Signal.ABSTAIN,
+                conviction=0.0,
+                rationale="no 13F whale data wired in",
+                factors={"data_missing": True},
+            )
 
-    def evaluate(self, ctx: AssetContext) -> Verdict:
-        wd = getattr(ctx, "whale_data", {}) or {}
         initiating = wd.get("whales_initiating", []) or []
         buying = wd.get("whales_buying", []) or []
         selling = wd.get("whales_selling", []) or []
         exiting = wd.get("whales_exiting", []) or []
 
+        factors = {
+            "n_initiating": len(initiating),
+            "n_buying": len(buying),
+            "n_selling": len(selling),
+            "n_exiting": len(exiting),
+        }
+
+        # Strong cluster initiation
         if len(initiating) >= 2:
+            sample = ", ".join(initiating[:3])
             return Verdict(
-                agent=self.codename, signal=Signal.STRONG_BUY,
+                agent=self.codename,
+                ticker=ctx.ticker,
+                signal=Signal.STRONG_BUY,
                 conviction=min(0.85, 0.55 + 0.10 * len(initiating)),
-                rationale=f"{len(initiating)} whales initiating ({', '.join(initiating[:3])})",
+                rationale=f"{len(initiating)} whales initiating ({sample})",
+                factors=factors,
             )
-        if (len(buying) + len(initiating)) >= 3:
+
+        # General accumulation
+        if len(buying) + len(initiating) >= 3:
             return Verdict(
-                agent=self.codename, signal=Signal.BUY, conviction=0.60,
-                rationale=f"{len(buying)+len(initiating)} whales accumulating",
+                agent=self.codename,
+                ticker=ctx.ticker,
+                signal=Signal.BUY,
+                conviction=0.60,
+                rationale=f"{len(buying) + len(initiating)} whales accumulating",
+                factors=factors,
             )
+
+        # Cluster exit
         if len(exiting) >= 2:
+            sample = ", ".join(exiting[:3])
             return Verdict(
-                agent=self.codename, signal=Signal.SELL, conviction=0.60,
-                rationale=f"{len(exiting)} whales exiting ({', '.join(exiting[:3])})",
+                agent=self.codename,
+                ticker=ctx.ticker,
+                signal=Signal.SELL,
+                conviction=0.60,
+                rationale=f"{len(exiting)} whales exiting ({sample})",
+                factors=factors,
             )
-        if (len(selling) + len(exiting)) >= 3:
+
+        # General distribution
+        if len(selling) + len(exiting) >= 3:
             return Verdict(
-                agent=self.codename, signal=Signal.SELL, conviction=0.50,
-                rationale=f"{len(selling)+len(exiting)} whales reducing",
+                agent=self.codename,
+                ticker=ctx.ticker,
+                signal=Signal.SELL,
+                conviction=0.50,
+                rationale=f"{len(selling) + len(exiting)} whales reducing",
+                factors=factors,
             )
 
         return Verdict(
-            agent=self.codename, signal=Signal.HOLD, conviction=0.0,
+            agent=self.codename,
+            ticker=ctx.ticker,
+            signal=Signal.HOLD,
+            conviction=0.0,
             rationale="no decisive whale cluster",
+            factors=factors,
         )
 
 
-barnacle = _BarnacleAgent()
+barnacle = Barnacle()

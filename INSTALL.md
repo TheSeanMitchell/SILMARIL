@@ -1,164 +1,99 @@
-# SILMARIL v2.0 — Drop-in install
+# SILMARIL v2.0 — Drop-in Install
 
-## What's in this folder
+## What this is
 
-```
-silmaril_v2_FINAL/
-├── INSTALL.md                <- you are reading this
-├── verify_v2.py              <- run after installing to confirm health
-├── ANSWERS.md                <- your open questions answered
-├── ROADMAP_V2.md             <- v2 priority list
-├── README_V2.md              <- overview
-└── silmaril/                 <- merge with your existing silmaril/ folder
-    ├── cli.py                <- already wired with v2 imports + cohort
-    ├── agents/               <- 7 new agent files (no __init__.py)
-    │   ├── atlas.py
-    │   ├── barnacle.py
-    │   ├── cicada.py
-    │   ├── kestrel_plus.py
-    │   ├── nightshade.py
-    │   ├── nomad.py
-    │   └── shepherd.py
-    ├── backtest/             <- brand new folder
-    │   ├── __init__.py
-    │   ├── __main__.py
-    │   ├── README.md
-    │   ├── data_loader.py
-    │   ├── engine.py
-    │   ├── metrics.py
-    │   ├── replay.py
-    │   └── walk_forward.py
-    ├── scoring/              <- brand new folder
-    │   ├── __init__.py
-    │   └── regime_sliced.py
-    ├── catalysts/            <- 6 new files (no __init__.py)
-    │   ├── crypto_unlocks.py
-    │   ├── earnings_calendar.py
-    │   ├── ex_dividend.py
-    │   ├── index_rebalance.py
-    │   ├── macro_releases.py
-    │   └── opex.py
-    └── handoff/              <- 1 new file (no __init__.py)
-        └── multi_llm_consensus.py
-```
+A complete repo replacement. You delete your current repo's contents
+and drop these in. After this, your repo will have:
 
-The folders that already exist in your repo (`agents/`, `catalysts/`,
-`handoff/`) ship with **only the new files** — no `__init__.py`, so
-nothing of yours gets overwritten. The two brand-new folders
-(`backtest/`, `scoring/`) ship complete with their own `__init__.py`.
+- All 22 of your original agents, untouched
+- 7 new v2 agents (atlas, nightshade, cicada, shepherd, nomad, barnacle, kestrel_plus)
+- A backtest framework (silmaril/backtest/)
+- 6 new catalyst sources (OPEX, index rebalance, macro releases, crypto unlocks, ex-dividend, earnings)
+- Regime-sliced live scoring (silmaril/scoring/regime_sliced.py)
+- Manual multi-LLM consensus prompts (silmaril/handoff/multi_llm_consensus.py)
+- A new GitHub Actions workflow (Backtest) you can trigger with one click
 
-The one existing file we **do** replace is `silmaril/cli.py` — it's
-been merged with the seven new agent imports and the v2 catalyst
-hookup already in place. Your existing logic is unchanged.
+## Install — 4 steps
 
----
-
-## Install (3 steps, ~2 minutes)
-
-### 1. Drop into github.dev
+### 1. Open github.dev
 
 1. Go to `github.com/TheSeanMitchell/SILMARIL`
-2. Press `.` (the period key) to open github.dev
-3. In the file explorer on the left, drag the **contents** of this
-   folder into your repo:
-   - `INSTALL.md`, `verify_v2.py`, `ANSWERS.md`, `ROADMAP_V2.md`,
-     `README_V2.md` go at repo root
-   - The `silmaril/` folder merges with your existing `silmaril/` —
-     new files appear in the right subfolders, `cli.py` gets replaced
-4. github.dev will prompt you to confirm the `cli.py` overwrite.
-   Confirm it. Your existing version is preserved in git history if
-   you ever need it.
+2. Press `.` (period) — github.dev opens
 
-### 2. Commit and push
+### 2. Delete the entire `silmaril/` folder
+
+In the file explorer on the left:
+1. Right-click on the `silmaril/` folder → **Delete**
+2. Confirm
+
+(Don't worry — git history preserves everything.)
+
+### 3. Drag the new folders in
+
+In your File Explorer (Windows), open the unzipped `SILMARIL_v2_complete/` folder.
+
+Press **Ctrl+A** to select everything inside it (the 4 .md files plus
+the `silmaril/`, `docs/`, and `.github/` folders).
+
+Drag everything into the github.dev file tree on the left, dropping at
+the very top (on the line that shows the repo name).
+
+When prompted to overwrite existing files, click **Yes / Replace**.
+
+### 4. Commit and push
 
 In github.dev:
-1. Click the source-control icon on the left (the branchy thing)
-2. Type a commit message:
-   `v2.0: backtest framework, 7 new agents, expanded catalysts`
+1. Click the source-control icon (third icon down, looks like a branch)
+2. Type a commit message: `v2.0 complete: 7 new agents, backtest framework, expanded catalysts`
 3. Click **Commit & Push**
 
-### 3. Verify (optional but recommended)
+Wait ~30 seconds. The repo is now v2.0.
 
-In your local terminal (not github.dev), pull and run:
+## Run the reset
 
-```bash
-git pull
-pip install yfinance pandas numpy pyarrow
-python verify_v2.py
-```
+1. Go to your repo on GitHub.com
+2. Click the **Actions** tab
+3. In the left sidebar, click **SILMARIL Reset**
+4. Click **Run workflow** (right side)
+5. In the box that appears, type `RESET`
+6. Click the green **Run workflow** button
+7. Wait ~2 minutes — the reset wipes accumulated state and runs one
+   clean live cycle with the new 22-agent cohort.
 
-You should see `ALL CHECKS PASSED -- v2.0 install is healthy.`
+If the reset job fails, click into it and read the error. Most likely:
+- `ModuleNotFoundError: silmaril.charts` — your real charts module
+  wasn't in the build. Paste your original `silmaril/charts/__init__.py`
+  contents over the stub I shipped.
+- `ModuleNotFoundError: silmaril.sports` — same situation. Stub is in
+  place, paste your real one over it.
 
-If something fails, the verify script tells you exactly which file
-is missing or which import broke.
+## Run the backtest
 
----
+1. Actions tab → **SILMARIL Backtest** → **Run workflow**
+2. Defaults are: 2022-01-01 to 2026-01-01, demo universe, walk-forward enabled
+3. Click the green button. Wait ~5–10 minutes.
+4. Output lands in `docs/data/backtest_report.json` (auto-committed)
 
-## After install — run the backtest
-
-This is the priority-#1 thing v2.0 was built for: getting honest
-numbers on whether the agents have edge before any live trading.
-
-```bash
-python -m silmaril.backtest \
-    --start 2022-01-01 \
-    --end 2026-01-01 \
-    --universe demo \
-    --walk-forward \
-    --out-dir docs/data
-```
-
-First run downloads ~25 tickers of OHLC history (a few minutes).
-Subsequent runs are fast — data is cached at
-`~/.cache/silmaril_backtest/`.
-
-Output: `docs/data/backtest_report.json`. The
-`walk_forward.stability` section is the section to read first —
-agents flagged BRITTLE there should not be weighted equally with
-STABLE ones in your live cohort.
-
----
-
-## What got changed in `cli.py` (just so you know)
-
-Three small surgical edits, nothing removed:
-
-1. **Seven new imports** added next to the existing agent imports
-   (lowercase instances `atlas`, `nightshade`, `cicada`, `shepherd`,
-   `nomad`, `barnacle`, `kestrel_plus`).
-2. **`MAIN_VOTERS` list extended** to include the new 7. Your
-   existing 15 are unchanged. The cohort is now 22 main voters.
-3. **Catalysts roundup augmented** — after `write_catalysts_json()`
-   runs, the v2 sources (OPEX, index rebalance, macro, crypto
-   unlocks, ex-dividend, earnings) get appended to `catalysts.json`
-   under a new `events` key. Each source is wrapped in try/except
-   so if any one source fails, the others still go through.
-
-If you want to see the changes diff against your original, github
-will show them when you commit.
-
----
+Read `walk_forward.stability` first — agents flagged BRITTLE there
+should not be weighted equally with STABLE ones in your live cohort.
 
 ## Read these for context
 
-- `ANSWERS.md` — out-of-sample validation explained, Polymarket and
-  Kalshi auth (you don't need to submit your DL/SSN), mobile and
-  paid-automation deferral.
-- `ROADMAP_V2.md` — full v2.0 priority list and what's deferred.
-- `silmaril/backtest/README.md` — backtest framework quick-start.
-- `README_V2.md` — package overview.
+- `ANSWERS.md` — out-of-sample validation explained, Polymarket/Kalshi
+  auth reality, mobile, paid-automation deferral
+- `ROADMAP_V2.md` — full v2.0 priority list and what's deferred
+- `silmaril/backtest/README.md` — backtest framework details
+- `README_V2.md` — package overview
 
----
+## Known stubs
 
-## If something breaks
+Two files in your live repo weren't included in the v2 build because
+they weren't in the upload. I shipped working stubs that prevent
+crashes:
 
-The `verify_v2.py` script tells you exactly which file is missing
-or which import broke. Past that:
+- `silmaril/charts/__init__.py` — stub returns empty charts
+- `silmaril/sports/__init__.py` — stub returns no markets
 
-- **`from .agents.X import Y` errors**: a v2 agent file landed
-  somewhere wrong, or `cli.py` didn't get replaced.
-- **`fetch_X catalysts skipped: ...`** in pipeline logs: that's
-  expected behavior — each catalyst source is best-effort. The rest
-  of the pipeline keeps running.
-- **Backtest can't reach yfinance**: try `pip install --upgrade
-  yfinance`, or use `--no-cache` to bypass the local cache.
+If your dashboard is missing chart data or sports markets after the
+reset succeeds, paste your original versions of these two files back
+over the stubs.
