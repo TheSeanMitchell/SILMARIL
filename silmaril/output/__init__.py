@@ -1,1 +1,0 @@
-"""silmaril.output package."""

@@ -1,1 +1,0 @@
-"""silmaril.ingestion package."""

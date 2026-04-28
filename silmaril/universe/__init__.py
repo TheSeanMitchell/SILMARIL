@@ -1,1 +1,0 @@
-"""silmaril.universe package."""

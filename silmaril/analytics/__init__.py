@@ -1,1 +1,0 @@
-"""silmaril.analytics package."""
