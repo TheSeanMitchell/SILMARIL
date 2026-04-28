@@ -29,11 +29,22 @@ Stable across windows = trustworthy agent.
 """
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, is_dataclass, asdict
 from datetime import date, timedelta
 from typing import Any, Dict, List, Optional
 
 from .metrics import AgentScore, score_backtest
+
+
+def _as_dict(p: Any) -> Dict[str, Any]:
+    """Normalize a prediction (dict or dataclass) to a dict."""
+    if isinstance(p, dict):
+        return p
+    if is_dataclass(p):
+        return asdict(p)
+    if hasattr(p, "to_dict"):
+        return p.to_dict()
+    return dict(getattr(p, "__dict__", {}))
 
 
 @dataclass
@@ -53,48 +64,42 @@ class WindowResult:
 
 
 def split_by_windows(
-    predictions: List[Dict[str, Any]],
+    predictions: List[Any],
     *,
     n_splits: int = 4,
-) -> List[List[Dict[str, Any]]]:
+) -> List[List[Any]]:
     """Divides predictions into n equal-time windows by date."""
     if not predictions:
         return [[] for _ in range(n_splits)]
 
-    sorted_preds = sorted(predictions, key=lambda p: p["date"])
-    first = date.fromisoformat(sorted_preds[0]["date"])
-    last = date.fromisoformat(sorted_preds[-1]["date"])
+    sorted_preds = sorted(predictions, key=lambda p: _as_dict(p)["date"])
+    first = date.fromisoformat(_as_dict(sorted_preds[0])["date"])
+    last = date.fromisoformat(_as_dict(sorted_preds[-1])["date"])
     span_days = (last - first).days
     chunk_days = max(1, span_days // n_splits)
 
-    windows: List[List[Dict[str, Any]]] = [[] for _ in range(n_splits)]
-    for p in sorted_preds:
+    windows: List[List[Any]] = [[] for _ in range(n_splits)]
+    for raw in sorted_preds:
+        p = _as_dict(raw)
         d = date.fromisoformat(p["date"])
         idx = min(n_splits - 1, (d - first).days // chunk_days)
-        windows[idx].append(p)
+        windows[idx].append(raw)
     return windows
 
 
 def walk_forward_validation(
-    predictions: List[Dict[str, Any]],
+    predictions: List[Any],
     *,
     n_splits: int = 4,
 ) -> Dict[str, Any]:
-    """Score each window independently. Returns full report.
-
-    Interpretation:
-      - For each agent, look at its win_rate across the windows.
-      - A consistent agent: 0.55, 0.53, 0.57, 0.52  (boring, trustworthy)
-      - A brittle agent:    0.72, 0.61, 0.42, 0.31  (overfit to early window)
-      - A noisy agent:      0.60, 0.40, 0.65, 0.35  (no edge, just variance)
-    """
+    """Score each window independently. Returns full report."""
     windows = split_by_windows(predictions, n_splits=n_splits)
     results: List[WindowResult] = []
 
     for i, window_preds in enumerate(windows):
         if not window_preds:
             continue
-        dates = [p["date"] for p in window_preds]
+        dates = [_as_dict(p)["date"] for p in window_preds]
         scores = score_backtest(window_preds)
         results.append(WindowResult(
             window_start=min(dates),

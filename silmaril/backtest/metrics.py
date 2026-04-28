@@ -23,8 +23,25 @@ from __future__ import annotations
 
 import math
 from collections import defaultdict
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, is_dataclass, asdict
 from typing import Any, Dict, Iterable, List, Optional, Tuple
+
+
+def _as_dict(p: Any) -> Dict[str, Any]:
+    """Normalize a prediction (dict or dataclass) to a dict.
+
+    Defensive helper. Some callers pass Prediction dataclass instances,
+    others pass already-converted dicts. Both must work.
+    """
+    if isinstance(p, dict):
+        return p
+    if is_dataclass(p):
+        return asdict(p)
+    if hasattr(p, "to_dict"):
+        return p.to_dict()
+    # last resort: dict() of the object's attributes
+    return dict(getattr(p, "__dict__", {}))
+
 
 # Signal sign: +1 long, -1 short, 0 no-position
 SIGNAL_SIGN: Dict[str, int] = {
@@ -69,10 +86,11 @@ class AgentScore:
         }
 
 
-def _signed_returns(predictions: Iterable[Dict[str, Any]]) -> List[float]:
+def _signed_returns(predictions: Iterable[Any]) -> List[float]:
     """Convert active predictions into signed return series (long: +ret, short: -ret)."""
     out: List[float] = []
-    for p in predictions:
+    for raw in predictions:
+        p = _as_dict(raw)
         sig = p.get("signal", "ABSTAIN")
         sign = SIGNAL_SIGN.get(sig, 0)
         if sign == 0:
@@ -109,13 +127,14 @@ def _max_drawdown(equity_curve: List[float]) -> float:
 
 def score_agent(
     agent_name: str,
-    predictions: List[Dict[str, Any]],
+    predictions: List[Any],
     *,
     push_threshold: float = 0.005,
 ) -> AgentScore:
     score = AgentScore(agent=agent_name, n_predictions=len(predictions))
     active = []
-    for p in predictions:
+    for raw in predictions:
+        p = _as_dict(raw)
         sig = p.get("signal", "ABSTAIN")
         sign = SIGNAL_SIGN.get(sig, 0)
         if sign == 0:
@@ -158,32 +177,35 @@ def score_agent(
 
 
 def score_backtest(
-    predictions: List[Dict[str, Any]],
+    predictions: List[Any],
 ) -> Dict[str, AgentScore]:
     """Score every agent. Returns {agent_name: AgentScore}."""
-    by_agent: Dict[str, List[Dict[str, Any]]] = defaultdict(list)
-    for p in predictions:
-        by_agent[p["agent"]].append(p)
+    by_agent: Dict[str, List[Any]] = defaultdict(list)
+    for raw in predictions:
+        p = _as_dict(raw)
+        by_agent[p["agent"]].append(raw)  # keep original shape for downstream
     return {name: score_agent(name, preds) for name, preds in by_agent.items()}
 
 
 def regime_sliced_metrics(
-    predictions: List[Dict[str, Any]],
+    predictions: List[Any],
 ) -> Dict[str, Dict[str, AgentScore]]:
     """Score every agent within each regime separately. Returns {regime: {agent: AgentScore}}."""
-    by_regime: Dict[str, List[Dict[str, Any]]] = defaultdict(list)
-    for p in predictions:
-        by_regime[p.get("regime", "UNKNOWN")].append(p)
+    by_regime: Dict[str, List[Any]] = defaultdict(list)
+    for raw in predictions:
+        p = _as_dict(raw)
+        by_regime[p.get("regime", "UNKNOWN")].append(raw)
     return {regime: score_backtest(preds) for regime, preds in by_regime.items()}
 
 
 def asset_class_sliced_metrics(
-    predictions: List[Dict[str, Any]],
+    predictions: List[Any],
 ) -> Dict[str, Dict[str, AgentScore]]:
     """Score every agent within each asset class separately."""
-    by_class: Dict[str, List[Dict[str, Any]]] = defaultdict(list)
-    for p in predictions:
-        by_class[p.get("asset_class", "unknown")].append(p)
+    by_class: Dict[str, List[Any]] = defaultdict(list)
+    for raw in predictions:
+        p = _as_dict(raw)
+        by_class[p.get("asset_class", "unknown")].append(raw)
     return {ac: score_backtest(preds) for ac, preds in by_class.items()}
 
 

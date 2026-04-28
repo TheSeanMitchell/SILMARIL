@@ -224,18 +224,22 @@ def main():
     result = engine.run()
     print(f"[backtest] {len(result.predictions)} predictions written to {config.output_path}")
 
+    # The scoring/walk-forward code reads predictions as dicts (p["agent"], p["signal"], ...)
+    # so convert the Prediction dataclasses once here.
+    pred_dicts = [p.to_dict() for p in result.predictions]
+
     # Score and write report
-    score_backtest(result.predictions)
+    scores = score_backtest(pred_dicts)
     report_path = out_dir / "backtest_report.json"
-    write_report_json(result.predictions, report_path, config)
+    write_report_json(pred_dicts, str(report_path))
     print(f"[backtest] report written to {report_path}")
     print()
-    render_leaderboard(result.predictions)
+    print(render_leaderboard(scores))
 
     # Walk-forward
     if args.walk_forward:
         wf_path = out_dir / "backtest_walk_forward.json"
-        wf = walk_forward_validation(result.predictions, n_splits=args.splits)
+        wf = walk_forward_validation(pred_dicts, n_splits=args.splits)
         with wf_path.open("w") as f:
             json.dump(wf, f, indent=2, default=str)
         print(f"[backtest] walk-forward report written to {wf_path}")
