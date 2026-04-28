@@ -225,7 +225,12 @@ def build_context(
 
 
 def next_day_return(bundle: HistoryBundle, as_of: date) -> Optional[float]:
-    """Next-day price change for outcome scoring. None if no next bar."""
+    """Next-day price change for outcome scoring. None if no next bar.
+
+    v2.0: clips extreme returns at +/-50%. yfinance has bad bars on
+    illiquid tokens that show up as 1000%+ daily moves (split adjustments,
+    delisting, etc). These corrupt equity curves. Real trading uses stops.
+    """
     df = bundle.df
     idx = df.index.get_indexer([pd.Timestamp(as_of)], method=None)
     if len(idx) == 0 or idx[0] == -1 or idx[0] + 1 >= len(df):
@@ -234,4 +239,5 @@ def next_day_return(bundle: HistoryBundle, as_of: date) -> Optional[float]:
     next_close = df["Close"].iloc[idx[0] + 1]
     if pd.isna(today_close) or pd.isna(next_close) or today_close == 0:
         return None
-    return float(next_close / today_close - 1.0)
+    raw = float(next_close / today_close - 1.0)
+    return max(-0.5, min(0.5, raw))

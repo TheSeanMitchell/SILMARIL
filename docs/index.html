@@ -1756,6 +1756,154 @@
     ::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.15); border-radius: 4px; }
     ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
     ::-webkit-scrollbar-thumb:hover { background: var(--gold); }
+    /* ── v2.0: tabs, rank badges, leaderboard ───────────────────── */
+    .tab-nav {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 4px;
+      margin: 16px 0 24px;
+      padding: 4px;
+      background: rgba(255,255,255,0.02);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+    }
+    .tab-btn {
+      background: transparent;
+      border: 1px solid transparent;
+      color: var(--silver);
+      padding: 10px 8px;
+      cursor: pointer;
+      border-radius: 6px;
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      align-items: center;
+      transition: all 0.15s ease;
+    }
+    .tab-btn:hover {
+      background: rgba(212, 175, 55, 0.06);
+      color: var(--gold);
+    }
+    .tab-btn.active {
+      background: rgba(212, 175, 55, 0.1);
+      border-color: var(--gold);
+      color: var(--gold);
+    }
+    .tab-label {
+      font-weight: 600;
+    }
+    .tab-sub {
+      font-size: 9px;
+      opacity: 0.65;
+      letter-spacing: 0.06em;
+      text-transform: none;
+      font-family: var(--sans);
+      font-weight: 400;
+      text-align: center;
+    }
+    @media (max-width: 768px) {
+      .tab-nav { grid-template-columns: repeat(2, 1fr); }
+      .tab-sub { display: none; }
+    }
+
+    /* Rank badges shown next to agent names on debate rows */
+    .rank-badge {
+      display: inline-block;
+      padding: 2px 7px;
+      border-radius: 999px;
+      font-family: var(--mono);
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      vertical-align: middle;
+    }
+    .rank-top {
+      background: linear-gradient(135deg, rgba(212,175,55,0.30), rgba(212,175,55,0.15));
+      color: var(--gold);
+      border: 1px solid rgba(212,175,55,0.5);
+    }
+    .rank-mid {
+      background: rgba(192,192,192,0.10);
+      color: var(--silver);
+      border: 1px solid rgba(192,192,192,0.3);
+    }
+    .rank-bot {
+      background: rgba(180,80,80,0.10);
+      color: #cc7777;
+      border: 1px solid rgba(180,80,80,0.3);
+    }
+
+    /* Backtest leaderboard table */
+    .leaderboard-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+      font-family: var(--mono);
+    }
+    .leaderboard-table th {
+      text-align: left;
+      padding: 8px 10px;
+      border-bottom: 1px solid var(--line);
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      color: var(--silver);
+      opacity: 0.7;
+    }
+    .leaderboard-table td {
+      padding: 8px 10px;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+    .leaderboard-table tr:hover td {
+      background: rgba(212,175,55,0.04);
+    }
+
+    /* Asset logo with letter fallback */
+    .asset-logo {
+      width: 28px; height: 28px;
+      border-radius: 6px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      object-fit: contain;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--line);
+    }
+    .asset-logo-letter {
+      font-family: var(--mono);
+      font-weight: 600;
+      font-size: 13px;
+    }
+
+    /* Chart projection legend (entry/stop/target lines) */
+    .chart-projection-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      align-items: center;
+      padding: 8px 14px;
+      margin-top: 6px;
+      background: rgba(255,255,255,0.02);
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      font-family: var(--mono);
+      font-size: 11px;
+    }
+    .chart-projection-legend .leg-item {
+      font-weight: 600;
+      letter-spacing: 0.04em;
+    }
+    .chart-projection-legend .leg-note {
+      font-size: 10px;
+      opacity: 0.55;
+      flex-basis: 100%;
+      letter-spacing: 0;
+      font-weight: 400;
+      font-family: var(--sans);
+    }
   </style>
 </head>
 <body>
@@ -1792,7 +1940,7 @@
         return fallback;
       }
     };
-    const [signals, trade_plans, scrooge, midas, cryptobro, jrr_token, sports_bro, sports_markets, agent_portfolios, scoring, risk_state, catalysts, charts, handoff_blocks, history] = await Promise.all([
+    const [signals, trade_plans, scrooge, midas, cryptobro, jrr_token, sports_bro, sports_markets, agent_portfolios, scoring, risk_state, catalysts, charts, handoff_blocks, history, backtest_report] = await Promise.all([
       safeFetch(DATA_BASE + 'signals.json', { debates: [], meta: {} }),
       safeFetch(DATA_BASE + 'trade_plans.json', { plans: [], rejected: [] }),
       safeFetch(DATA_BASE + 'scrooge.json', null),
@@ -1808,8 +1956,9 @@
       safeFetch(DATA_BASE + 'charts.json', null),
       safeFetch(DATA_BASE + 'handoff_blocks.json', { per_plan: {}, per_asset: {} }),
       safeFetch(DATA_BASE + 'history.json', { runs: [] }),
+      safeFetch(DATA_BASE + 'backtest_report.json', null),
     ]);
-    return { signals, trade_plans, scrooge, midas, cryptobro, jrr_token, sports_bro, sports_markets, agent_portfolios, scoring, risk_state, catalysts, charts, handoff_blocks, history };
+    return { signals, trade_plans, scrooge, midas, cryptobro, jrr_token, sports_bro, sports_markets, agent_portfolios, scoring, risk_state, catalysts, charts, handoff_blocks, history, backtest_report };
   }
 
   const fmt = (n, d = 2) => n == null ? '—' : Number(n).toFixed(d);
@@ -1934,13 +2083,24 @@
     const verdicts = (debate.verdicts || [])
       .filter(v => v.signal !== 'ABSTAIN')
       .sort((a, b) => b.conviction - a.conviction)
-      .map(v => `
-        <div class="verdict">
-          <div class="agent">${esc(v.agent)}</div>
-          <div class="signal-mini ${v.signal}">${v.signal.replace('_', ' ')}</div>
-          <div class="rationale">${esc(v.rationale)}<span class="conviction">· ${fmt(v.conviction, 2)}</span></div>
-        </div>
-      `).join('');
+      .map(v => {
+        // v2.0: pull rank from backtest leaderboard if available.
+        // window.__silmaril_rank is populated by renderBacktestPanel.
+        const rankInfo = (window.__silmaril_rank || {})[v.agent];
+        let badge = '';
+        if (rankInfo) {
+          const r = rankInfo.rank, total = rankInfo.total;
+          const tier = r <= 3 ? 'top' : (r <= total/2 ? 'mid' : 'bot');
+          badge = `<span class="rank-badge rank-${tier}" title="Backtest rank #${r} of ${total}">#${r}</span>`;
+        }
+        return `
+          <div class="verdict">
+            <div class="agent">${esc(v.agent)} ${badge}</div>
+            <div class="signal-mini ${v.signal}">${v.signal.replace('_', ' ')}</div>
+            <div class="rationale">${esc(v.rationale)}<span class="conviction">· ${fmt(v.conviction, 2)}</span></div>
+          </div>
+        `;
+      }).join('');
 
     return `
       <div class="card">
@@ -2055,7 +2215,7 @@
       `;
     }).join('');
     return `
-      <div class="card">
+      <div class="card full-debate-card">
         <div class="card-header" style="align-items:flex-start">
           <div style="flex:1">
             <div class="card-title"><span class="diamond"></span>Full Debate</div>
@@ -2064,9 +2224,11 @@
           <input class="fd-search" type="text" placeholder="Quick search ticker, name, sector…" value="${esc(STATE.fullDebateSearch || '')}" oninput="window.fullDebateSearch(this.value)"/>
         </div>
         ${renderSummary(signals)}
-        <div class="debate-table">${rows || '<div class="empty-track" style="padding:20px">No assets match your search.</div>'}</div>
-        <div class="abstention-note">
-          ✦ <strong>Why don't all 15 agents vote on every asset?</strong> Each agent has a specialty. TALON only votes on indices, OBSIDIAN only on commodities, MAGUS only on the major index ETFs, MIDAS only on hard currencies. When an asset is outside an agent's expertise, they <em>abstain</em> — that silence is a vote that says "this is not my domain." Forcing them to vote outside their lane would generate noise, not signal.
+        <div class="fd-rows-wrap">
+          <div class="debate-table">${rows || '<div class="empty-track" style="padding:20px">No assets match your search.</div>'}</div>
+          <div class="abstention-note">
+            ✦ <strong>Why don't all 22 strategists vote on every asset?</strong> Each agent has a specialty. TALON only votes on indices, OBSIDIAN only on commodities, MAGUS only on the major index ETFs, MIDAS only on hard currencies. When an asset is outside an agent's expertise, they <em>abstain</em> — that silence is a vote that says "this is not my domain." Forcing them to vote outside their lane would generate noise, not signal.
+          </div>
         </div>
       </div>
     `;
@@ -2074,7 +2236,28 @@
 
   window.fullDebateSearch = function(val) {
     STATE.fullDebateSearch = val;
-    render();
+    // v2.0: only re-render the debate table, NOT the whole page.
+    // Re-rendering the whole page would replace the input element and
+    // kick the cursor out of the search bar between every keystroke.
+    const fd = document.querySelector('.full-debate-card');
+    if (fd) {
+      const debates = (STATE.signals && STATE.signals.debates) || [];
+      const featuredTicker = STATE.featured ? STATE.featured.ticker : null;
+      const fresh = renderFullDebate(debates, featuredTicker, STATE.signals);
+      // Replace just the inner table container, preserve the input
+      const tmp = document.createElement('div');
+      tmp.innerHTML = fresh;
+      const newRowsContainer = tmp.querySelector('.fd-rows-wrap');
+      const oldRowsContainer = fd.querySelector('.fd-rows-wrap');
+      if (newRowsContainer && oldRowsContainer) {
+        oldRowsContainer.replaceWith(newRowsContainer);
+      } else {
+        // fallback: full re-render
+        render();
+      }
+    } else {
+      render();
+    }
   };
 
   function renderCompounder(s, variant) {
@@ -2993,17 +3176,19 @@
           <select class="at-select" onchange="window.assetTableUpdate('sort', this.value)">${sortDropdown}</select>
           <span class="at-count">${rows.length} of ${debates.length}</span>
         </div>
-        <div class="at-head">
-          <span></span>
-          <span>Ticker</span>
-          <span>Type</span>
-          <span style="text-align:right">Price</span>
-          <span style="text-align:right">Change</span>
-          <span>Signal</span>
-          <span>Agreement</span>
+        <div class="at-rows-wrap">
+          <div class="at-head">
+            <span></span>
+            <span>Ticker</span>
+            <span>Type</span>
+            <span style="text-align:right">Price</span>
+            <span style="text-align:right">Change</span>
+            <span>Signal</span>
+            <span>Agreement</span>
+          </div>
+          <div class="at-list">${tableRows || '<div class="empty-track" style="padding:30px">No assets match the filter.</div>'}</div>
+          ${rows.length > 100 ? `<div class="at-truncated">Showing first 100 of ${rows.length} matches. Refine your filter for more.</div>` : ''}
         </div>
-        <div class="at-list">${tableRows || '<div class="empty-track" style="padding:30px">No assets match the filter.</div>'}</div>
-        ${rows.length > 100 ? `<div class="at-truncated">Showing first 100 of ${rows.length} matches. Refine your filter for more.</div>` : ''}
       </div>
     `;
   }
@@ -3011,6 +3196,19 @@
   window.assetTableUpdate = function(field, value) {
     if (!STATE.assetTableFilter) STATE.assetTableFilter = { signal: 'ALL', class: 'ALL', search: '', sort: 'consensus' };
     STATE.assetTableFilter[field] = value;
+    // v2.0: only re-render the asset table rows, not the whole page,
+    // so search input keeps focus.
+    if (field === 'search') {
+      const at = document.querySelector('.at-card');
+      if (at) {
+        const fresh = renderAssetTable();
+        const tmp = document.createElement('div');
+        tmp.innerHTML = fresh;
+        const newRows = tmp.querySelector('.at-rows-wrap');
+        const oldRows = at.querySelector('.at-rows-wrap');
+        if (newRows && oldRows) { oldRows.replaceWith(newRows); return; }
+      }
+    }
     render();
   };
 
@@ -3442,6 +3640,34 @@
       </div>
     ` : '';
 
+    // v2.0: Forward-projected confidence indicators.
+    // When a trade plan exists for this ticker, draw dotted horizontal lines
+    // extending past the right edge of the chart showing entry / stop / target.
+    // Educational: shows the user where the strategists think price is going
+    // and what would invalidate their thesis.
+    let projectionLines = '';
+    let projectionLabels = '';
+    const plans = (STATE.trade_plans && STATE.trade_plans.plans) || [];
+    const plan = plans.find(p => p.ticker === ticker);
+    if (plan) {
+      const projStart = padL + innerW * 0.72;
+      const projEnd = padL + innerW * 1.10;
+      const labelX = projEnd + 4;
+      const drawLine = (price, label, color) => {
+        if (price == null) return;
+        let y = yScale(price);
+        let outOfBand = false;
+        if (y < padT) { y = padT + 4; outOfBand = true; }
+        else if (y > padT + innerH) { y = padT + innerH - 4; outOfBand = true; }
+        const arrow = outOfBand ? (price > pmax ? ' ↑' : ' ↓') : '';
+        projectionLines += `<line x1="${projStart.toFixed(1)}" y1="${y.toFixed(1)}" x2="${projEnd.toFixed(1)}" y2="${y.toFixed(1)}" stroke="${color}" stroke-width="1.4" stroke-dasharray="3 3" opacity="0.85"/>`;
+        projectionLabels += `<text x="${labelX.toFixed(1)}" y="${(y + 3).toFixed(1)}" font-size="9" font-family="ui-monospace,monospace" fill="${color}" font-weight="600">${label}${arrow}</text>`;
+      };
+      drawLine(plan.entry,  'ENTRY '  + (plan.entry  != null ? plan.entry.toFixed(plan.entry  < 1 ? 4 : 2) : ''), '#9fc7e6');
+      drawLine(plan.target, 'TARGET ' + (plan.target != null ? plan.target.toFixed(plan.target < 1 ? 4 : 2) : ''), '#7ed3c8');
+      drawLine(plan.stop,   'STOP '   + (plan.stop   != null ? plan.stop.toFixed(plan.stop   < 1 ? 4 : 2) : ''), '#cc7777');
+    }
+
     return `
       <div class="chart-panel">
         <div class="chart-head">
@@ -3455,7 +3681,7 @@
             ${tfButtons}
           </div>
         </div>
-        <svg viewBox="0 0 ${w} ${h}" class="chart-svg" preserveAspectRatio="none">
+        <svg viewBox="0 0 ${w + 80} ${h}" class="chart-svg" preserveAspectRatio="none">
           <defs>
             <linearGradient id="chart-grad-${esc(ticker.replace(/[^A-Za-z0-9]/g, ''))}" x1="0" y1="0" x2="0" y2="1">
               <stop offset="0%" stop-color="var(--gold)" stop-opacity="0.35"/>
@@ -3467,8 +3693,16 @@
             ? `${prevDotted}${candlesSvg}${lastIndicator}`
             : `<path d="${areaD}" fill="url(#chart-grad-${esc(ticker.replace(/[^A-Za-z0-9]/g, ''))})"/>${prevDotted}<path d="${pathD}" stroke="var(--gold)" stroke-width="1.8" fill="none"/>${lastIndicator}`
           }
+          ${projectionLines}
+          ${projectionLabels}
           ${xTicks.join('')}
         </svg>
+        ${plan ? `<div class="chart-projection-legend">
+          <span class="leg-item" style="color:#9fc7e6">━ ━ ENTRY</span>
+          <span class="leg-item" style="color:#7ed3c8">━ ━ TARGET</span>
+          <span class="leg-item" style="color:#cc7777">━ ━ STOP</span>
+          <span class="leg-note">Projected forward from active trade plan · dashed lines show strategist targets · arrows mark prices outside the visible range.</span>
+        </div>` : ''}
         <div class="chart-stats">
           <span><span class="lbl">Open</span> ${fmtMoney(series[0].o, bundle.current_price < 1 ? 4 : 2)}</span>
           <span><span class="lbl">High</span> ${fmtMoney(Math.max(...series.map(s => s.h)), bundle.current_price < 1 ? 4 : 2)}</span>
@@ -4275,59 +4509,206 @@
     app.innerHTML = `
       ${renderTopbar(signals)}
       ${banner}
-      <div class="main-grid">
-        ${renderFeaturedDebate(featured)}
-        ${renderFullDebate(debates, featured ? featured.ticker : null, signals)}
-      </div>
-
-      <div class="compounders-grid">
-        ${renderCompounder(scrooge, 'scrooge')}
-        ${renderCompounder(midas, 'midas')}
-        ${renderCompounder(cryptobro, 'cryptobro')}
-        ${renderCompounder(jrr_token, 'jrr_token')}
-        ${renderSportsBroCompact(STATE.sports_bro, STATE.sports_markets)}
-      </div>
-
-      ${renderMatchup(scrooge, midas, cryptobro, jrr_token, sports_bro)}
-
-      ${renderSpecialists()}
-
-      ${renderRiskDashboard()}
-
-      ${renderCareerMode()}
-
-      ${renderTruthDashboard(STATE.scoring)}
-
-      ${renderAssetTable()}
-
-      ${renderPredictionMarkets()}
-
-      ${renderRoster(signals)}
-
-      <div class="card" style="margin-top: 24px">
-        <div class="card-header">
-          <div>
-            <div class="card-title"><span class="diamond"></span>Actionable Trade Plans</div>
-            <div class="card-subtitle">${(trade_plans.plans || []).length} plans with full execution detail · broker deeplinks below each plan</div>
-          </div>
-        </div>
-        ${renderPlans(trade_plans.plans || [], handoff_blocks.per_plan || {})}
-      </div>
-
-      ${renderCatalysts()}
-
-      ${renderDeathChart()}
-
-      ${renderTutorials()}
-
-      ${renderLLMHandoffPanel(handoff_blocks, featured)}
-
-      ${renderAbout()}
+      ${renderTabNav()}
+      <div id="tabContent">${renderActiveTab(featured, debates, signals, scrooge, midas, cryptobro, jrr_token, sports_bro, trade_plans, handoff_blocks)}</div>
 
       <div class="footer">
         <div><strong>SILMARIL</strong> · Multi-Agent Financial Intelligence · Powered by open RSS + yfinance</div>
         <div style="margin-top: 6px">Two Trees: <span style="color:var(--gold)">Laurelin</span> & <span style="color:var(--silver)">Telperion</span></div>
         <div class="disclaimer">${esc(signals.meta?.disclaimer || '')}</div>
+      </div>
+    `;
+  }
+
+  // ── Tab navigation ───────────────────────────────────────────────
+  // Five tabs grouped by professional industry function:
+  //   MARKETS         — what the market is doing right now (debates, asset table, prediction markets)
+  //   STRATEGISTS     — the 22 specialist agents (roster, profiles, career mode, risk + truth dashboards, backtest)
+  //   PORTFOLIO MANAGERS — the 5 compounders running their own books (scrooge/midas/cryptobro/jrr/sports)
+  //   EXECUTION       — actionable trade plans with full broker detail and LLM handoff blocks
+  //   RESEARCH        — catalysts, tutorials, glossary, about
+  function renderTabNav() {
+    const t = STATE.activeTab || 'markets';
+    const tabs = [
+      ['markets',     'MARKETS',         'Live debates, asset table, prediction markets'],
+      ['strategists', 'STRATEGISTS',     'The 22 specialist agents and their performance'],
+      ['managers',    'PORTFOLIO MGRS',  'Scrooge, Midas, CryptoBro, JRR, Sports Bro'],
+      ['execution',   'EXECUTION',       'Trade plans with broker deeplinks'],
+      ['research',    'RESEARCH',        'Catalysts, tutorials, about'],
+    ];
+    return `
+      <nav class="tab-nav" role="tablist">
+        ${tabs.map(([id, label, sub]) => `
+          <button class="tab-btn ${id === t ? 'active' : ''}"
+                  role="tab" aria-selected="${id === t}"
+                  onclick="window.silmarilSwitchTab('${id}')"
+                  title="${esc(sub)}">
+            <span class="tab-label">${label}</span>
+            <span class="tab-sub">${esc(sub)}</span>
+          </button>
+        `).join('')}
+      </nav>
+    `;
+  }
+
+  function renderActiveTab(featured, debates, signals, scrooge, midas, cryptobro, jrr_token, sports_bro, trade_plans, handoff_blocks) {
+    const tab = STATE.activeTab || 'markets';
+    if (tab === 'markets') {
+      return `
+        <div class="main-grid">
+          ${renderFeaturedDebate(featured)}
+          ${renderFullDebate(debates, featured ? featured.ticker : null, signals)}
+        </div>
+        ${renderAssetTable()}
+        ${renderPredictionMarkets()}
+      `;
+    }
+    if (tab === 'strategists') {
+      return `
+        ${renderBacktestPanel()}
+        ${renderSpecialists()}
+        ${renderRoster(signals)}
+        ${renderCareerMode()}
+        ${renderRiskDashboard()}
+        ${renderTruthDashboard(STATE.scoring)}
+      `;
+    }
+    if (tab === 'managers') {
+      return `
+        <div class="compounders-grid">
+          ${renderCompounder(scrooge, 'scrooge')}
+          ${renderCompounder(midas, 'midas')}
+          ${renderCompounder(cryptobro, 'cryptobro')}
+          ${renderCompounder(jrr_token, 'jrr_token')}
+          ${renderSportsBroCompact(STATE.sports_bro, STATE.sports_markets)}
+        </div>
+        ${renderMatchup(scrooge, midas, cryptobro, jrr_token, sports_bro)}
+        ${renderDeathChart()}
+      `;
+    }
+    if (tab === 'execution') {
+      return `
+        <div class="card" style="margin-top: 24px">
+          <div class="card-header">
+            <div>
+              <div class="card-title"><span class="diamond"></span>Actionable Trade Plans</div>
+              <div class="card-subtitle">${(trade_plans.plans || []).length} plans with full execution detail · broker deeplinks below each plan</div>
+            </div>
+          </div>
+          ${renderPlans(trade_plans.plans || [], handoff_blocks.per_plan || {})}
+        </div>
+        ${renderLLMHandoffPanel(handoff_blocks, featured)}
+      `;
+    }
+    if (tab === 'research') {
+      return `
+        ${renderCatalysts()}
+        ${renderTutorials()}
+        ${renderAbout()}
+      `;
+    }
+    return '<div>Unknown tab</div>';
+  }
+
+  // Tab switching — only re-renders the tab content area, not the whole page,
+  // which preserves search input focus among other things.
+  window.silmarilSwitchTab = function(id) {
+    STATE.activeTab = id;
+    try { localStorage.setItem('silmaril_tab', id); } catch(_){}
+    // Re-render just the nav (for active state) and the content
+    const navEl = document.querySelector('.tab-nav');
+    if (navEl) navEl.outerHTML = renderTabNav();
+    const tc = document.getElementById('tabContent');
+    if (tc) {
+      const data = STATE;
+      const featured = data.featured;
+      const debates = (data.signals && data.signals.debates) || [];
+      tc.innerHTML = renderActiveTab(
+        featured, debates, data.signals,
+        data.scrooge, data.midas, data.cryptobro, data.jrr_token, data.sports_bro,
+        data.trade_plans, data.handoff_blocks
+      );
+    }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  // ── Backtest performance panel ──────────────────────────────────
+  function renderBacktestPanel() {
+    const r = STATE.backtest_report;
+    if (!r || !r.overall) {
+      return `
+        <div class="card" style="margin-top:18px">
+          <div class="card-header">
+            <div>
+              <div class="card-title"><span class="diamond"></span>Backtest Performance</div>
+              <div class="card-subtitle">Run the SILMARIL Backtest workflow to populate this section</div>
+            </div>
+          </div>
+          <div style="padding:16px;opacity:0.7;font-size:13px">
+            No backtest report found. Trigger the workflow:
+            <code>Actions → SILMARIL Backtest → Run workflow</code>
+          </div>
+        </div>
+      `;
+    }
+    // Sort agents by sharpe_ish; only show those with n_active >= 30
+    const overall = Object.values(r.overall || {});
+    const ranked = overall
+      .filter(a => a.n_active >= 30)
+      .sort((a, b) => (b.sharpe_ish || 0) - (a.sharpe_ish || 0));
+    const total = ranked.length;
+    // Build a global rank map for use elsewhere (debate badges)
+    window.__silmaril_rank = {};
+    ranked.forEach((a, i) => { window.__silmaril_rank[a.agent] = { rank: i+1, total }; });
+
+    const rows = ranked.map((a, i) => {
+      const rank = i + 1;
+      const winColor = a.win_rate >= 0.55 ? 'var(--gold)' : a.win_rate >= 0.50 ? 'var(--silver)' : '#cc7777';
+      return `
+        <tr>
+          <td><span class="rank-badge rank-${rank <= 3 ? 'top' : (rank <= total/2 ? 'mid' : 'bot')}">#${rank}</span></td>
+          <td><strong>${esc(a.agent)}</strong></td>
+          <td>${a.n_active.toLocaleString()}</td>
+          <td style="color:${winColor}">${(a.win_rate * 100).toFixed(1)}%</td>
+          <td>${a.expectancy_pct >= 0 ? '+' : ''}${a.expectancy_pct.toFixed(3)}%</td>
+          <td>${a.sharpe_ish >= 0 ? '+' : ''}${a.sharpe_ish.toFixed(2)}</td>
+          <td>${a.max_drawdown_pct.toFixed(1)}%</td>
+          <td>${a.final_equity_from_1.toFixed(3)}</td>
+        </tr>
+      `;
+    }).join('');
+
+    return `
+      <div class="card" style="margin-top:18px">
+        <div class="card-header">
+          <div>
+            <div class="card-title"><span class="diamond"></span>Backtest Performance Leaderboard</div>
+            <div class="card-subtitle">
+              4-year out-of-sample replay · ${total} qualifying strategists · sorted by risk-adjusted return (Sharpe-ish)
+            </div>
+          </div>
+        </div>
+        <div style="overflow-x:auto;padding:0 12px 12px">
+          <table class="leaderboard-table">
+            <thead>
+              <tr>
+                <th>RANK</th><th>STRATEGIST</th><th>ACTIVE CALLS</th>
+                <th>WIN RATE</th><th>EXPECTANCY</th><th>SHARPE-ISH</th>
+                <th>MAX DD</th><th>EQUITY ($1)</th>
+              </tr>
+            </thead>
+            <tbody>${rows}</tbody>
+          </table>
+        </div>
+        <div style="padding: 0 16px 14px;font-size:12px;opacity:0.65">
+          <strong>What this means:</strong>
+          Win rate is the share of decisive (non-HOLD) calls that ended with the next-day move
+          in the agent's favor. Expectancy is the average signed next-day return per active call.
+          Sharpe-ish is expectancy divided by standard deviation, scaled to annual — useful for
+          ranking strategists relative to each other, not for portfolio sizing.
+          Equity is the result of $1 with 1% sizing per call.
+          Agents flagged in the live cohort but not present here had &lt;30 active calls.
+        </div>
       </div>
     `;
   }
@@ -4351,10 +4732,12 @@
         charts: data.charts,
         handoff_blocks: data.handoff_blocks,
         history: data.history,
+        backtest_report: data.backtest_report,
         careers: loadCareers(),
         watchlist: loadWatchlist(),
         featured: null,
         chartTimeframe: '1M',
+        activeTab: localStorage.getItem('silmaril_tab') || 'markets',
       };
       render();
     } catch (e) {

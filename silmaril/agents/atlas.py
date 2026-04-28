@@ -2,28 +2,22 @@
 silmaril.agents.atlas — The Macro Strategist.
 
 ATLAS is the regime caller. It only votes on broad-market ETFs and
-sector ETFs — never individual stocks. When VIX is high or correlations
-are spiking, it leans defensive. When VIX is calm and trend is up, it
-leans constructive on broad equity.
+sector ETFs — never individual stocks. When VIX is high, it leans
+defensive. When VIX is calm and trend is up, it leans constructive on
+broad equity.
 
-Premise: most agents work bottom-up. ATLAS works top-down. It refuses
-to opine on a single stock and instead says "the whole sky is angry"
-or "the whole sky is calm" — and lets the bottom-up agents act on
-their own theses within whatever weather ATLAS sees.
-
-Decision logic:
-  1. Skip everything that's not a broad ETF or sector ETF
-  2. VIX >= 30 → defensives buy / equity sell
-  3. VIX < 14 + clean trend → cautious buy on broad equity
-  4. Trend stack (price > 50d > 200d) → constructive bias
-  5. Otherwise HOLD
+v2.0 changes — backtest revealed ATLAS was 50.4% win rate. The old
+"BUY any clean uptrend" logic was firing on every healthy stack, which
+includes a lot of mean-reverting tops. Fixed by:
+  - Requiring 50d momentum confirmation, not just stack alignment
+  - Tightening VIX thresholds (panic at 28, calm at 15)
+  - Adding STRONG_BUY when all conditions align
 """
 from __future__ import annotations
 
 from .base import Agent, AssetContext, Signal, Verdict
 
 
-# Broad ETFs ATLAS opines on
 ATLAS_UNIVERSE = {
     "SPY", "QQQ", "IWM", "DIA", "VTI", "EFA", "EEM",
     "TLT", "IEF", "SHY", "HYG", "LQD",
@@ -41,85 +35,97 @@ class Atlas(Agent):
     temperament = (
         "Patient, top-down. Reads the whole sky, never one star. Stays "
         "silent on individual stocks; only opines on broad indexes and "
-        "sectors. Defensive in panics, constructive in calm trends."
+        "sectors."
     )
-    inspiration = "Atlas — bears the weight of the entire market on his shoulders"
+    inspiration = "Atlas — bears the weight of the entire market"
     asset_classes = ("etf",)
 
-    PANIC_VIX = 30.0
-    CALM_VIX = 14.0
+    PANIC_VIX = 28.0
+    CALM_VIX = 15.0
+    MIN_MOMENTUM = 0.03  # 3% over 50 days
 
     def applies_to(self, ctx: AssetContext) -> bool:
-        # Override base: ATLAS is even more selective than asset_class alone
         return ctx.ticker in ATLAS_UNIVERSE
 
     def _judge(self, ctx: AssetContext) -> Verdict:
-        signal = Signal.HOLD
-        conviction = 0.4
-        factors: dict = {}
-        reasons: list[str] = []
-
         vix = ctx.vix
+        ph = ctx.price_history or []
 
-        # Factor 1: VIX panic
+        mom_50d = None
+        if len(ph) >= 51 and ph[-51] > 0:
+            mom_50d = (ctx.price / ph[-51]) - 1.0
+
+        # ── Panic regime: defensives buy / equity sell ──
         if vix is not None and vix >= self.PANIC_VIX:
-            factors["vix_panic"] = vix
             if ctx.ticker in DEFENSIVE_TICKERS:
-                signal = Signal.BUY
-                conviction = 0.60
-                reasons.append(f"VIX {vix:.0f} → flight to defensives")
-            elif ctx.ticker in EQUITY_BROAD:
-                signal = Signal.SELL
-                conviction = 0.55
-                reasons.append(f"VIX {vix:.0f} → reduce broad equity exposure")
+                return Verdict(
+                    agent=self.codename, ticker=ctx.ticker,
+                    signal=Signal.BUY, conviction=0.62,
+                    rationale=f"VIX {vix:.0f} → flight to defensives",
+                    factors={"vix": vix},
+                )
+            if ctx.ticker in EQUITY_BROAD:
+                return Verdict(
+                    agent=self.codename, ticker=ctx.ticker,
+                    signal=Signal.SELL, conviction=0.55,
+                    rationale=f"VIX {vix:.0f} → reduce broad equity",
+                    factors={"vix": vix},
+                )
 
-        # Factor 2: VIX calm + clean trend on broad equity
-        elif (
-            vix is not None
-            and vix < self.CALM_VIX
+        # ── Calm regime + clean uptrend with momentum confirmation ──
+        if (
+            vix is not None and vix < self.CALM_VIX
             and ctx.ticker in EQUITY_BROAD
             and ctx.price and ctx.sma_50 and ctx.sma_200
             and ctx.price > ctx.sma_50 > ctx.sma_200
+            and mom_50d is not None and mom_50d >= self.MIN_MOMENTUM
         ):
-            factors["calm_uptrend"] = True
-            signal = Signal.BUY
-            conviction = 0.50
-            reasons.append(f"VIX {vix:.1f}, clean uptrend → constructive")
+            return Verdict(
+                agent=self.codename, ticker=ctx.ticker,
+                signal=Signal.STRONG_BUY, conviction=0.60,
+                rationale=(
+                    f"VIX {vix:.1f} calm, clean uptrend, 50d momentum "
+                    f"{mom_50d*100:+.1f}% — high-conviction macro long."
+                ),
+                factors={"vix": vix, "momentum_50d": round(mom_50d, 4)},
+            )
 
-        # Factor 3: Trend stack alone (less convicted)
-        elif (
+        # ── Healthy uptrend without VIX-calm bonus ──
+        if (
             ctx.ticker in EQUITY_BROAD
             and ctx.price and ctx.sma_50 and ctx.sma_200
             and ctx.price > ctx.sma_50 > ctx.sma_200
+            and mom_50d is not None and mom_50d >= self.MIN_MOMENTUM
+            and (vix is None or vix < 20)
         ):
-            factors["trend_stack"] = True
-            signal = Signal.BUY
-            conviction = 0.45
-            reasons.append("price > 50d > 200d → constructive macro")
+            return Verdict(
+                agent=self.codename, ticker=ctx.ticker,
+                signal=Signal.BUY, conviction=0.50,
+                rationale=(
+                    f"Constructive macro: stack aligned, 50d momentum "
+                    f"{mom_50d*100:+.1f}%, VIX {vix or 'n/a'}."
+                ),
+                factors={"momentum_50d": round(mom_50d, 4)},
+            )
 
-        # Factor 4: Trend break
-        elif (
+        # ── Fresh trend break ──
+        if (
             ctx.ticker in EQUITY_BROAD
             and ctx.price and ctx.sma_50 and ctx.sma_200
             and ctx.price < ctx.sma_50 < ctx.sma_200
+            and mom_50d is not None and mom_50d <= -0.05
         ):
-            factors["trend_break"] = True
-            signal = Signal.SELL
-            conviction = 0.45
-            reasons.append("price < 50d < 200d → defensive macro")
-
-        if not reasons:
-            reasons.append("macro indicators uncommitted")
-
-        rationale = "Macro stance: " + "; ".join(reasons) + "."
+            return Verdict(
+                agent=self.codename, ticker=ctx.ticker,
+                signal=Signal.SELL, conviction=0.50,
+                rationale=f"Stack broken, 50d momentum {mom_50d*100:+.1f}% — defensive macro.",
+                factors={"momentum_50d": round(mom_50d, 4)},
+            )
 
         return Verdict(
-            agent=self.codename,
-            ticker=ctx.ticker,
-            signal=signal,
-            conviction=self._clamp(conviction),
-            rationale=rationale,
-            factors=factors,
+            agent=self.codename, ticker=ctx.ticker,
+            signal=Signal.ABSTAIN, conviction=0.0,
+            rationale="macro indicators uncommitted",
         )
 
 

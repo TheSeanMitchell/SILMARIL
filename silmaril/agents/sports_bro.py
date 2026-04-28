@@ -103,6 +103,29 @@ class SportsBro(Agent):
 sports_bro = SportsBro()
 
 
+def _hours_until(deadline_iso: Optional[str]) -> Optional[float]:
+    """Return hours from now until the given ISO deadline. None if invalid."""
+    if not deadline_iso:
+        return None
+    try:
+        # Handle both 'YYYY-MM-DD' and full ISO with time
+        if "T" in deadline_iso:
+            dl = datetime.fromisoformat(deadline_iso.replace("Z", "+00:00"))
+        else:
+            dl = datetime.fromisoformat(deadline_iso).replace(tzinfo=timezone.utc)
+        now = datetime.now(timezone.utc)
+        return (dl - now).total_seconds() / 3600.0
+    except Exception:
+        return None
+
+
+# v2.0: Sports Bro only takes positions on markets resolving within
+# 48 hours so the user can actually see outcomes accumulate quickly.
+# Markets with longer horizons (multi-month politics, year-end events)
+# are filtered out — they tie up bankroll without producing data.
+MAX_HOURS_TO_CLOSE = 48
+
+
 def sports_bro_act(state: SportsBroState, candidates: List[Dict]) -> SportsBroState:
     today = datetime.now(timezone.utc).date().isoformat()
     if state.last_action_date != today:
@@ -172,8 +195,16 @@ def sports_bro_act(state: SportsBroState, candidates: List[Dict]) -> SportsBroSt
     state.open_bets = new_open
     state.lifetime_peak = max(state.lifetime_peak, state.balance)
 
-    # Open new positions on top edge candidates
-    for c in candidates[:3]:
+    # Open new positions on top edge candidates that resolve within 48 hours
+    short_horizon = []
+    for c in candidates:
+        hours = _hours_until(c.get("deadline"))
+        if hours is not None and 0 < hours <= MAX_HOURS_TO_CLOSE:
+            short_horizon.append(c)
+    # Sort by edge descending so the best opportunities go first
+    short_horizon.sort(key=lambda c: c.get("edge", 0), reverse=True)
+
+    for c in short_horizon[:3]:
         if state.trades_today >= MAX_TRADES_PER_DAY:
             break
         edge = c.get("edge", 0)

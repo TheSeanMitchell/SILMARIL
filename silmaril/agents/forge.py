@@ -5,18 +5,19 @@ FORGE is the offensive innovator of the team. Where AEGIS defends,
 FORGE builds. Its domain is technology — the sector where disruption,
 iteration, and scale compound fastest.
 
+v2.0 changes — backtest revealed FORGE was 46% win rate on 16K calls
+because in backtest mode (no sentiment) its bullish path required
+sentiment >= 0.15 (impossible in backtest), while its bearish path
+fired on simple "price < SMA50". Result: FORGE was systematically
+shorting tech without ever going long. Fixed by:
+  - Adding a sentiment-optional BUY path on clean technical setups
+  - Tightening SELL trigger so it doesn't fire on every shallow pullback
+
 Trading philosophy (Iron Man archetype):
   - Calculated risk, not reckless risk
   - Biases toward quality technology names in momentum
   - Values earnings beats, guidance raises, product launches
   - Comfortable with higher volatility than AEGIS tolerates
-
-Decision logic:
-  1. Applies only to tech-sector equities and the tech-heavy ETFs (QQQ, XLK, SMH, SOXX).
-  2. Strong uptrend stack + positive sentiment + earnings beat → STRONG_BUY
-  3. Clean uptrend + positive sentiment → BUY
-  4. Downtrend or RSI < 40 in tech → SELL (FORGE does not bottom-fish; that's JADE's job)
-  5. Otherwise → HOLD
 """
 
 from __future__ import annotations
@@ -26,14 +27,10 @@ from typing import Optional
 from .base import Agent, AssetContext, Signal, Verdict
 
 
-# Tech-sector anchor tickers FORGE evaluates. Everything else → ABSTAIN.
 TECH_ANCHORS = {
-    # Mega-cap tech
     "AAPL", "MSFT", "GOOGL", "GOOG", "AMZN", "META", "NVDA", "TSLA",
     "ORCL", "CRM", "ADBE", "AVGO", "AMD", "INTC", "CSCO", "IBM",
-    # Tech ETFs
     "QQQ", "XLK", "SMH", "SOXX", "VGT", "IGV", "ARKK", "ARKW",
-    # Growth-tech secondary
     "NFLX", "DIS", "PYPL", "SQ", "SHOP", "SNOW", "PLTR", "NOW",
     "PANW", "ZS", "CRWD", "DDOG", "NET", "MDB", "TEAM", "WDAY",
     "ASML", "TSM", "QCOM", "MU", "AMAT", "LRCX", "KLAC",
@@ -51,11 +48,11 @@ class Forge(Agent):
     inspiration = "Iron Man — the suit is built, piece by piece"
     asset_classes = ("equity", "etf")
 
-    # Thresholds
     STRONG_BUY_SENTIMENT = 0.4
     BUY_SENTIMENT = 0.15
-    OVERSOLD_RSI = 40.0
-    TREND_STRENGTH_MIN = 0.03     # price must be 3%+ above 50-day SMA to call it trend
+    OVERSOLD_RSI = 35.0           # was 40 — now requires deeper oversold for SELL
+    TREND_STRENGTH_MIN = 0.03
+    SELL_TREND_BREAK = -0.03      # need 3%+ below SMA50 to call it broken
 
     def applies_to(self, ctx: AssetContext) -> bool:
         if not super().applies_to(ctx):
@@ -66,11 +63,12 @@ class Forge(Agent):
         reasons: list[str] = []
         factors: dict = {}
 
-        # ── Guard: need core data ────────────────────────────────
         if not all([ctx.price, ctx.sma_20, ctx.sma_50]):
             return self._hold_for_data(ctx)
 
-        # ── Trend stack ──────────────────────────────────────────
+        sent_available = ctx.sentiment_score is not None
+        sentiment = ctx.sentiment_score or 0.0
+
         price_above_20 = ctx.price > ctx.sma_20
         price_above_50 = ctx.price > ctx.sma_50
         stack_aligned = ctx.sma_20 > ctx.sma_50
@@ -84,23 +82,17 @@ class Forge(Agent):
             and trend_strength >= self.TREND_STRENGTH_MIN
         )
 
-        # ── Sentiment heat ───────────────────────────────────────
-        sentiment = ctx.sentiment_score or 0.0
-        factors["sentiment_score"] = round(sentiment, 3)
-        factors["article_count"] = ctx.article_count
+        if sent_available:
+            factors["sentiment_score"] = round(sentiment, 3)
+            factors["article_count"] = ctx.article_count
 
-        # ── Earnings catalyst ────────────────────────────────────
-        earnings_soon = (
-            ctx.days_to_earnings is not None and 0 <= ctx.days_to_earnings <= 7
-        )
-        if earnings_soon:
-            factors["earnings_window"] = ctx.days_to_earnings
-            reasons.append(f"earnings in {ctx.days_to_earnings} days")
-
-        # ── Decision tree ────────────────────────────────────────
-
-        # STRONG_BUY: clean uptrend + strong sentiment + decent volume
-        if clean_uptrend and sentiment >= self.STRONG_BUY_SENTIMENT and ctx.article_count >= 3:
+        # ── STRONG_BUY: clean uptrend + strong sentiment (live only) ─
+        if (
+            clean_uptrend
+            and sent_available
+            and sentiment >= self.STRONG_BUY_SENTIMENT
+            and ctx.article_count >= 3
+        ):
             reasons.append(
                 f"clean uptrend (+{trend_strength*100:.1f}% vs SMA50), "
                 f"strong sentiment {sentiment:+.2f}, {ctx.article_count} articles"
@@ -111,8 +103,8 @@ class Forge(Agent):
                 atr_mult_stop=2.0, atr_mult_target=4.0,
             )
 
-        # BUY: clean uptrend + positive sentiment
-        if clean_uptrend and sentiment >= self.BUY_SENTIMENT:
+        # ── BUY (sentiment available): clean uptrend + positive sentiment ──
+        if clean_uptrend and sent_available and sentiment >= self.BUY_SENTIMENT:
             reasons.append(
                 f"uptrend intact (+{trend_strength*100:.1f}% vs SMA50), "
                 f"sentiment {sentiment:+.2f}"
@@ -123,26 +115,41 @@ class Forge(Agent):
                 atr_mult_stop=2.0, atr_mult_target=3.5,
             )
 
-        # SELL: downtrend or oversold-and-no-bounce-catalyst
-        if (ctx.rsi_14 and ctx.rsi_14 < self.OVERSOLD_RSI) or not price_above_50:
+        # ── BUY (sentiment unavailable): require stronger technical setup ──
+        if clean_uptrend and not sent_available:
+            rsi = ctx.rsi_14 or 50
+            # In sentiment-blind mode, demand RSI room to run AND trend strength
+            if 45 <= rsi <= 70 and trend_strength >= 0.04:
+                factors["technical_only"] = True
+                reasons.append(
+                    f"clean uptrend +{trend_strength*100:.1f}% vs SMA50, "
+                    f"RSI {rsi:.0f} healthy — momentum continuation"
+                )
+                return self._build_verdict(
+                    ctx, Signal.BUY, conviction=0.55,
+                    reasons=reasons, factors=factors,
+                    atr_mult_stop=2.0, atr_mult_target=3.5,
+                )
+
+        # ── SELL: tightened — needs material trend break, not shallow pullback ──
+        deeply_oversold = ctx.rsi_14 is not None and ctx.rsi_14 < self.OVERSOLD_RSI
+        materially_below_50 = trend_strength <= self.SELL_TREND_BREAK
+        if deeply_oversold or materially_below_50:
             rsi_val = ctx.rsi_14 or 0
-            reasons.append(
-                f"tech name in downtrend (below SMA50)" if not price_above_50
-                else f"oversold RSI {rsi_val:.0f} without trend support"
-            )
+            if materially_below_50:
+                reasons.append(f"tech name {abs(trend_strength)*100:.1f}% below SMA50")
+            else:
+                reasons.append(f"oversold RSI {rsi_val:.0f} without trend support")
             return self._build_verdict(
-                ctx, Signal.SELL, conviction=0.55,
+                ctx, Signal.SELL, conviction=0.5,
                 reasons=reasons, factors=factors,
             )
 
-        # HOLD: setup not clean enough
         reasons.append("setup not yet aligned; awaiting clearer trend")
         return self._build_verdict(
             ctx, Signal.HOLD, conviction=0.4,
             reasons=reasons, factors=factors,
         )
-
-    # ─────────────────────────────────────────────────────────────
 
     def _hold_for_data(self, ctx: AssetContext) -> Verdict:
         return Verdict(
@@ -165,7 +172,6 @@ class Forge(Agent):
         atr_mult_target: Optional[float] = None,
     ) -> Verdict:
         rationale = self._compose(reasons, signal)
-
         entry = stop = target = None
         invalidation = None
         if signal in (Signal.BUY, Signal.STRONG_BUY) and ctx.price and ctx.atr_14:

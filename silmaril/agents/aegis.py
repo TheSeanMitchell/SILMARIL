@@ -11,23 +11,23 @@ Trading philosophy (Captain America archetype):
   - Prefers inaction to a bad entry
   - Protects the team's capital so everyone lives to trade tomorrow
 
-Decision logic (rule-based, fully inspectable):
-  1. If market regime is RISK_OFF → bias toward SELL/HOLD across the board
-  2. If VIX > 30 (fear regime) → downgrade any BUY conviction by 40%
-  3. If price is more than 5% below its 200-day SMA → HOLD (falling knives are not bargains)
-  4. If RSI > 75 AND sentiment heat is extreme → SELL (euphoria is the sell signal)
-  5. If sentiment is mildly positive AND price is above all moving averages AND VIX is calm →
-     cautious BUY with tight stop
-  6. Otherwise → HOLD
+v2.0 changes — backtest revealed AEGIS was 44% win rate on 21K calls,
+because in backtest mode (no sentiment data) its bullish path was
+gated on `sentiment_score > 0.1`, which can never be true. Result:
+AEGIS only ever issued SELL signals, systematically biased to the
+short side. Fixed by adding a sentiment-optional bullish path that
+fires on a clean technical setup alone.
 
-Every output includes an invalidation clause — the specific condition
-that would prove the thesis wrong. AEGIS never trades without knowing
-where it would admit defeat.
+Decision logic:
+  1. RISK_OFF regime → bias toward SELL/HOLD across the board
+  2. VIX > 30 (panic) → SELL across the board
+  3. Price > 5% below 200-day SMA → HOLD (don't catch falling knives)
+  4. RSI > 75 + euphoric sentiment → SELL (or RSI > 80 alone if sentiment unavailable)
+  5. Clean uptrend stack + calm VIX + positive-or-neutral sentiment → BUY
+  6. Otherwise → HOLD
 """
 
 from __future__ import annotations
-
-from typing import Optional
 
 from .base import Agent, AssetContext, Signal, Verdict
 
@@ -40,22 +40,23 @@ class Aegis(Agent):
         "than lose once. Carries veto power when the team's capital is at risk."
     )
     inspiration = "Captain America — the shield, not the sword"
-    asset_classes = ("equity", "etf", "crypto")   # AEGIS cares about everything
+    asset_classes = ("equity", "etf", "crypto")
 
-    # Thresholds — all explicitly tunable constants, no magic numbers buried in code
+    # Thresholds
     PANIC_VIX = 30.0
     CAUTION_VIX = 22.0
     EUPHORIA_RSI = 75.0
+    EXTREME_RSI = 80.0                # used when sentiment unavailable
     OVERSOLD_RSI = 30.0
-    DEFENSIVE_SMA_BAND = 0.05   # within 5% of 200-day SMA
-    FALLING_KNIFE_THRESHOLD = -0.05  # price > 5% below 200-day SMA
+    FALLING_KNIFE_THRESHOLD = -0.05   # price > 5% below 200-day SMA
 
     def _judge(self, ctx: AssetContext) -> Verdict:
-        # Start neutral, adjust based on evidence
         signal = Signal.HOLD
         conviction = 0.4
         factors: dict = {}
         reasons: list[str] = []
+
+        sent_available = ctx.sentiment_score is not None
 
         # ── Factor 1: Market regime gate ─────────────────────────
         if ctx.market_regime == "RISK_OFF":
@@ -75,7 +76,7 @@ class Aegis(Agent):
                 factors["vix_caution"] = ctx.vix
                 reasons.append(f"VIX at {ctx.vix:.1f} warrants caution")
 
-        # ── Factor 3: Falling-knife check ────────────────────────
+        # ── Factor 3: Falling-knife check (HOLD, not SELL) ───────
         if ctx.price and ctx.sma_200:
             pct_vs_200 = self._pct_above(ctx.price, ctx.sma_200)
             factors["pct_vs_sma200"] = round(pct_vs_200, 4)
@@ -84,41 +85,58 @@ class Aegis(Agent):
                     f"price {abs(pct_vs_200)*100:.1f}% below 200-day SMA — falling knife"
                 )
                 signal = Signal.HOLD
-                conviction = 0.7  # high conviction NOT to touch
+                conviction = max(conviction, 0.65)
 
         # ── Factor 4: Euphoria check ─────────────────────────────
-        if (
-            ctx.rsi_14 is not None
-            and ctx.rsi_14 >= self.EUPHORIA_RSI
-            and ctx.sentiment_score is not None
-            and ctx.sentiment_score > 0.5
-        ):
-            factors["euphoria"] = {"rsi": ctx.rsi_14, "sentiment": ctx.sentiment_score}
-            reasons.append(
-                f"RSI {ctx.rsi_14:.0f} + sentiment {ctx.sentiment_score:+.2f} = euphoric top risk"
-            )
-            signal = Signal.SELL
-            conviction = max(conviction, 0.65)
+        if ctx.rsi_14 is not None:
+            if sent_available and ctx.rsi_14 >= self.EUPHORIA_RSI and ctx.sentiment_score > 0.5:
+                factors["euphoria"] = {"rsi": ctx.rsi_14, "sentiment": ctx.sentiment_score}
+                reasons.append(
+                    f"RSI {ctx.rsi_14:.0f} + sentiment {ctx.sentiment_score:+.2f} = euphoric top risk"
+                )
+                signal = Signal.SELL
+                conviction = max(conviction, 0.60)
+            elif not sent_available and ctx.rsi_14 >= self.EXTREME_RSI:
+                # Backtest fallback: extreme RSI alone is the euphoria signal
+                factors["extreme_rsi"] = ctx.rsi_14
+                reasons.append(f"RSI {ctx.rsi_14:.0f} extreme — top-risk")
+                signal = Signal.SELL
+                conviction = max(conviction, 0.55)
 
-        # ── Factor 5: Clean-cautious-BUY conditions ──────────────
-        # Only trigger if nothing above fired a SELL/HOLD-high-conviction
-        clean_setup = (
+        # ── Factor 5: Clean BUY conditions ───────────────────────
+        # Now sentiment-optional: if sentiment is available, demand >= 0.1
+        # If sentiment is None (backtest), require a stronger technical setup
+        if (
             signal == Signal.HOLD
-            and conviction < 0.7
+            and conviction < 0.65
             and ctx.price is not None
             and ctx.sma_20 is not None
             and ctx.sma_50 is not None
             and ctx.sma_200 is not None
-            and ctx.price > ctx.sma_20 > ctx.sma_50 > ctx.sma_200  # clean uptrend stack
+            and ctx.price > ctx.sma_20 > ctx.sma_50 > ctx.sma_200
             and (ctx.vix is None or ctx.vix < self.CAUTION_VIX)
-            and (ctx.sentiment_score or 0) > 0.1
             and ctx.market_regime != "RISK_OFF"
-        )
-        if clean_setup:
-            factors["uptrend_stack"] = True
-            reasons.append("clean uptrend with calm volatility")
-            signal = Signal.BUY
-            conviction = 0.55   # AEGIS is never more than moderately convicted on BUY
+        ):
+            if sent_available:
+                if ctx.sentiment_score >= 0.1:
+                    factors["uptrend_stack"] = True
+                    reasons.append("clean uptrend with calm volatility, sentiment supportive")
+                    signal = Signal.BUY
+                    conviction = 0.55
+            else:
+                # Backtest: require slightly more confirmation since no sentiment
+                # 1) RSI in a healthy zone (40-65)
+                # 2) Price not stretched (within reasonable band of SMA-20)
+                rsi = ctx.rsi_14 or 50
+                stretch = abs((ctx.price - ctx.sma_20) / ctx.sma_20) if ctx.sma_20 else 0
+                if 40 <= rsi <= 65 and stretch < 0.04:
+                    factors["uptrend_stack"] = True
+                    factors["technical_only"] = True
+                    reasons.append(
+                        f"clean uptrend, RSI {rsi:.0f}, calm volatility — defensible long"
+                    )
+                    signal = Signal.BUY
+                    conviction = 0.50
 
         # ── Factor 6: Insufficient data guard ────────────────────
         if ctx.price is None or ctx.sma_200 is None:
@@ -137,9 +155,7 @@ class Aegis(Agent):
         invalidation = None
         if signal == Signal.BUY and ctx.price and ctx.atr_14:
             entry = round(ctx.price, 2)
-            # AEGIS uses tight stops: 1.5× ATR below entry
             stop = round(ctx.price - 1.5 * ctx.atr_14, 2)
-            # Conservative target: 2× ATR above entry (1.33:1 reward/risk)
             target = round(ctx.price + 2.0 * ctx.atr_14, 2)
             invalidation = (
                 f"Close below ${stop:.2f} (1.5 ATR stop) OR VIX spike above "
@@ -159,11 +175,8 @@ class Aegis(Agent):
             invalidation=invalidation,
         )
 
-    # ─────────────────────────────────────────────────────────────
-
     @staticmethod
     def _compose_rationale(reasons: list[str], signal: Signal) -> str:
-        """Compose a one-sentence human-readable rationale."""
         stance = {
             Signal.BUY: "Cautious constructive: ",
             Signal.SELL: "Defensive posture: ",
@@ -175,5 +188,4 @@ class Aegis(Agent):
         return f"{stance}{joined}."
 
 
-# Module-level singleton for easy import
 aegis = Aegis()

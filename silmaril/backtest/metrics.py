@@ -142,7 +142,18 @@ def score_agent(
         ndr = p.get("next_day_return")
         if ndr is None:
             continue
-        active.append((sign, float(ndr)))
+        # v2.0: clip extreme single-bar returns. yfinance occasionally has
+        # bad bars (split adjustments, low-liquidity moves) that show as
+        # 500%+ daily returns. These corrupt the equity curve. Real position
+        # sizing has stops anyway, so clipping at ±50% is realistic.
+        try:
+            ndr_f = float(ndr)
+        except (ValueError, TypeError):
+            continue
+        if ndr_f != ndr_f:  # NaN check
+            continue
+        ndr_f = max(-0.5, min(0.5, ndr_f))
+        active.append((sign, ndr_f))
 
     score.n_active = len(active)
     if score.n_active == 0:
