@@ -57,10 +57,12 @@ jobs:
           if [ "${{ github.event.inputs.walk_forward }}" = "yes" ]; then
             WF="--walk-forward"
           fi
+          # Lowercase the universe input so 'FULL' or 'Full' both work
+          UNIVERSE=$(echo "${{ github.event.inputs.universe }}" | tr '[:upper:]' '[:lower:]')
           python -m silmaril.backtest \
             --start "${{ github.event.inputs.start }}" \
             --end "${{ github.event.inputs.end }}" \
-            --universe "${{ github.event.inputs.universe }}" \
+            --universe "$UNIVERSE" \
             $WF \
             --out-dir docs/data
 
