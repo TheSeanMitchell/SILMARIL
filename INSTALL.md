@@ -1,99 +1,87 @@
-# SILMARIL v2.0 — Drop-in Install
+# SILMARIL v1.6 — Install Guide
 
-## What this is
+This drop is the "end of week" comprehensive update. It addresses every
+issue from the latest conversation thread:
 
-A complete repo replacement. You delete your current repo's contents
-and drop these in. After this, your repo will have:
+- Workflow push collisions (daily + backtest pushing simultaneously) → **fixed** with concurrency lock
+- Backtest 100MB file limit error → **fixed** by excluding predictions file from commit
+- SportsBro placing zero bets → **debugged** with filter diagnostic panel + multi-field deadline support
+- Trade history rows showing date but not timestamp → **fixed**
+- HOLD action not visible in trade history → **fixed** (renderTradeHistory now handles HOLD)
+- Empty Research tab → **fixed** with new Consolidated News Feed
+- Confusion about Baron/Steadfast tab placement → **clarified** with new subtitle
+- VESPA/CICADA always abstaining in backtest → **partially fixed** by wiring days_to_earnings via yfinance
 
-- All 22 of your original agents, untouched
-- 7 new v2 agents (atlas, nightshade, cicada, shepherd, nomad, barnacle, kestrel_plus)
-- A backtest framework (silmaril/backtest/)
-- 6 new catalyst sources (OPEX, index rebalance, macro releases, crypto unlocks, ex-dividend, earnings)
-- Regime-sliced live scoring (silmaril/scoring/regime_sliced.py)
-- Manual multi-LLM consensus prompts (silmaril/handoff/multi_llm_consensus.py)
-- A new GitHub Actions workflow (Backtest) you can trigger with one click
+Plus three new documents at the repo root for handoff to a fresh conversation:
 
-## Install — 4 steps
+- **SILMARIL_PROJECT_SUMMARY.md** — comprehensive project state, file inventory, conventions
+- **SILMARIL_AGENT_CRITIQUE.md** — agent-by-agent diagnosis with prescriptions
+- **SILMARIL_SITE_CRITIQUE.md** — site assessment + prioritized improvement list
 
-### 1. Open github.dev
+## Files in this drop
 
-1. Go to `github.com/TheSeanMitchell/SILMARIL`
-2. Press `.` (period) — github.dev opens
+```
+silmaril_alpha16/
+├── SILMARIL_PROJECT_SUMMARY.md        ← read this first when starting a new conversation
+├── SILMARIL_AGENT_CRITIQUE.md
+├── SILMARIL_SITE_CRITIQUE.md
+├── INSTALL.md                          ← this file
+├── silmaril/
+│   ├── agents/
+│   │   └── sports_bro.py               ← multi-field deadline support, filter diagnostics
+│   └── backtest/
+│       ├── replay.py                   ← wires days_to_earnings via yfinance
+│       └── metrics.py                  ← (unchanged from v2.1, included for completeness)
+├── .github/workflows/
+│   ├── backtest.yml                    ← concurrency lock + predictions file excluded + retry-on-rejection
+│   └── daily.yml                       ← concurrency lock + retry-on-rejection
+└── docs/
+    └── index.html                      ← consolidated news feed, HOLD action, trade timestamps, sports diagnostic
+```
 
-### 2. Delete the entire `silmaril/` folder
+## Install steps
 
-In the file explorer on the left:
-1. Right-click on the `silmaril/` folder → **Delete**
-2. Confirm
+1. Right-click `silmaril_alpha16.zip` → Extract All → Desktop
+2. Press `.` on your repo at github.com/TheSeanMitchell/SILMARIL
+3. Drag the contents of `silmaril_alpha16/` (the inner files, not the wrapper folder)
+   onto the github.dev tree at the repo root
+4. Replace prompts will appear for ~7 files. Click **Replace All**
+5. Source-control panel → message: `v1.6: workflow lock, news feed, trade timestamps, HOLD viz, sports diagnostic, project summary docs` → Commit & Push
 
-(Don't worry — git history preserves everything.)
+## Verify after push
 
-### 3. Drag the new folders in
+1. Visit Actions tab — both workflows should show "main" running with the
+   concurrency group `silmaril-repo-write` listed
+2. Open the live site, click the **RESEARCH** tab — should now show the
+   Consolidated News Feed at the top
+3. Click any compounder card — trade history rows should show MM-DD HH:MM,
+   not just MM-DD
+4. Click **PORTFOLIO MANAGERS** tab → Sports Bro card → scroll to bottom of
+   the card. Should see "Filter Activity · last run …" panel showing
+   total candidates / filtered out / qualified counts.
 
-In your File Explorer (Windows), open the unzipped `SILMARIL_v2_complete/` folder.
+## After verifying — re-run backtest if you want fresh agent rankings
 
-Press **Ctrl+A** to select everything inside it (the 4 .md files plus
-the `silmaril/`, `docs/`, and `.github/` folders).
+The v1.6 wiring of days_to_earnings means VESPA and CICADA should now
+produce non-zero predictions. Run **SILMARIL Backtest** with:
+- start: `2022-01-01`
+- end: `2026-01-01`
+- universe: `full`
+- walk_forward: `yes`
 
-Drag everything into the github.dev file tree on the left, dropping at
-the very top (on the line that shows the repo name).
+Wait ~30-40 min. New `backtest_report.json` and `backtest_walk_forward.json`
+will land in `docs/data/`. Open them on github.com to confirm VESPA/CICADA
+now have non-zero call counts.
 
-When prompted to overwrite existing files, click **Yes / Replace**.
+## What's NOT in this drop
 
-### 4. Commit and push
+The Tier A improvements from `SILMARIL_AGENT_CRITIQUE.md` are NOT in this drop:
 
-In github.dev:
-1. Click the source-control icon (third icon down, looks like a branch)
-2. Type a commit message: `v2.0 complete: 7 new agents, backtest framework, expanded catalysts`
-3. Click **Commit & Push**
+- AEGIS volume cut + veto-gating
+- Regime-weighted consensus
+- HOLD-action recording for Baron/Steadfast (UI is ready but backend needs work)
+- Stale-data indicator on topbar
 
-Wait ~30 seconds. The repo is now v2.0.
-
-## Run the reset
-
-1. Go to your repo on GitHub.com
-2. Click the **Actions** tab
-3. In the left sidebar, click **SILMARIL Reset**
-4. Click **Run workflow** (right side)
-5. In the box that appears, type `RESET`
-6. Click the green **Run workflow** button
-7. Wait ~2 minutes — the reset wipes accumulated state and runs one
-   clean live cycle with the new 22-agent cohort.
-
-If the reset job fails, click into it and read the error. Most likely:
-- `ModuleNotFoundError: silmaril.charts` — your real charts module
-  wasn't in the build. Paste your original `silmaril/charts/__init__.py`
-  contents over the stub I shipped.
-- `ModuleNotFoundError: silmaril.sports` — same situation. Stub is in
-  place, paste your real one over it.
-
-## Run the backtest
-
-1. Actions tab → **SILMARIL Backtest** → **Run workflow**
-2. Defaults are: 2022-01-01 to 2026-01-01, demo universe, walk-forward enabled
-3. Click the green button. Wait ~5–10 minutes.
-4. Output lands in `docs/data/backtest_report.json` (auto-committed)
-
-Read `walk_forward.stability` first — agents flagged BRITTLE there
-should not be weighted equally with STABLE ones in your live cohort.
-
-## Read these for context
-
-- `ANSWERS.md` — out-of-sample validation explained, Polymarket/Kalshi
-  auth reality, mobile, paid-automation deferral
-- `ROADMAP_V2.md` — full v2.0 priority list and what's deferred
-- `silmaril/backtest/README.md` — backtest framework details
-- `README_V2.md` — package overview
-
-## Known stubs
-
-Two files in your live repo weren't included in the v2 build because
-they weren't in the upload. I shipped working stubs that prevent
-crashes:
-
-- `silmaril/charts/__init__.py` — stub returns empty charts
-- `silmaril/sports/__init__.py` — stub returns no markets
-
-If your dashboard is missing chart data or sports markets after the
-reset succeeds, paste your original versions of these two files back
-over the stubs.
+Those are the right starting point for the next conversation. The three
+documents at the repo root are designed to give a fresh assistant everything
+needed to pick up where this conversation left off.

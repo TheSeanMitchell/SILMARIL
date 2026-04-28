@@ -4,18 +4,18 @@ silmaril.backtest.replay
 Builds point-in-time AssetContext objects from historical OHLCV data
 so the real SILMARIL agents can be replayed against past markets.
 
-Key invariant: as of date `D`, every field on the context is computed
-from data strictly available at the close of `D` (or earlier). The
-next-day return is computed separately for outcome scoring and is
-NEVER visible to the agent at decision time.
-
-Sentiment, headlines, and news fields are nulled out in backtest mode
-because we don't have a historical news archive. Agents that depend
-on those (VEIL, SPECK) will produce HOLD/ABSTAIN — expected behavior,
-flagged in the metrics report.
+v1.6 additions:
+  - Best-effort earnings-date enrichment via yfinance's Ticker.earnings_dates.
+    When available, days_to_earnings is set on the context, allowing
+    VESPA / CICADA to vote during the 7-day pre-earnings window. Cached
+    per-ticker for the run.
+  - Sentiment / news fields remain None in backtest because we don't have
+    a historical news archive. VEIL / SPECK / news-dependent paths in
+    other agents will continue to abstain — by design, not as a bug.
 """
 from __future__ import annotations
 
+import logging
 from dataclasses import dataclass, field
 from datetime import date, timedelta
 from typing import Any, Dict, List, Optional
@@ -27,6 +27,50 @@ from .data_loader import HistoryBundle
 
 # Import the REAL AssetContext that the SILMARIL agents read.
 from silmaril.agents.base import AssetContext
+
+log = logging.getLogger(__name__)
+
+
+# Per-run cache of earnings dates by ticker. Built on first request.
+_EARNINGS_CACHE: Dict[str, List[pd.Timestamp]] = {}
+
+
+def _load_earnings_dates(ticker: str) -> List[pd.Timestamp]:
+    """Fetch quarterly earnings dates for a ticker via yfinance.
+    Returns sorted list of timestamps (oldest first). Empty if unavailable.
+    """
+    if ticker in _EARNINGS_CACHE:
+        return _EARNINGS_CACHE[ticker]
+    out: List[pd.Timestamp] = []
+    try:
+        import yfinance as yf  # local import — keeps module importable in stub envs
+        t = yf.Ticker(ticker)
+        df = t.earnings_dates if hasattr(t, "earnings_dates") else None
+        if df is not None and not df.empty:
+            # df is indexed by datetime
+            for ts in df.index:
+                try:
+                    out.append(pd.Timestamp(ts).tz_localize(None) if pd.Timestamp(ts).tzinfo else pd.Timestamp(ts))
+                except Exception:
+                    continue
+            out.sort()
+    except Exception as e:
+        log.debug("[backtest] earnings lookup failed for %s: %s", ticker, e)
+    _EARNINGS_CACHE[ticker] = out
+    return out
+
+
+def _days_to_next_earnings(ticker: str, as_of: date) -> Optional[int]:
+    """Days from `as_of` to the next-scheduled earnings date (inclusive)."""
+    dates = _load_earnings_dates(ticker)
+    if not dates:
+        return None
+    target = pd.Timestamp(as_of)
+    for d in dates:
+        diff = (d.normalize() - target.normalize()).days
+        if diff >= 0:
+            return diff
+    return None
 
 
 def _safe_last(series: pd.Series) -> Optional[float]:
@@ -216,7 +260,7 @@ def build_context(
         source_count=0,
         recent_headlines=[],
         earnings_date=None,
-        days_to_earnings=None,
+        days_to_earnings=_days_to_next_earnings(ticker, as_of),  # v1.6: wire for VESPA/CICADA
         event_flags=[],
         correlations={},
         market_regime=_regime_to_live(regime),

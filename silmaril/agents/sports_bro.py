@@ -38,6 +38,9 @@ class SportsBroState:
     deaths: List[Dict] = field(default_factory=list)
     trades_today: int = 0
     last_action_date: str = ""
+    # v1.6: diagnostic — why didn't SportsBro place bets this run?
+    last_filter_stats: Optional[Dict] = None
+    last_run_at: str = ""
 
     def to_dict(self) -> Dict:
         return {
@@ -55,6 +58,8 @@ class SportsBroState:
             "history": self.history[-30:],
             "actions_this_life": len(self.history),
             "days_alive": self._days_alive(),
+            "last_filter_stats": self.last_filter_stats,
+            "last_run_at": self.last_run_at,
         }
 
     def _days_alive(self) -> int:
@@ -108,21 +113,39 @@ def _hours_until(deadline_iso: Optional[str]) -> Optional[float]:
     if not deadline_iso:
         return None
     try:
-        # Handle both 'YYYY-MM-DD' and full ISO with time
         if "T" in deadline_iso:
             dl = datetime.fromisoformat(deadline_iso.replace("Z", "+00:00"))
         else:
             dl = datetime.fromisoformat(deadline_iso).replace(tzinfo=timezone.utc)
+        if dl.tzinfo is None:
+            dl = dl.replace(tzinfo=timezone.utc)
         now = datetime.now(timezone.utc)
         return (dl - now).total_seconds() / 3600.0
     except Exception:
         return None
 
 
+def _candidate_deadline(c: Dict) -> Optional[str]:
+    """Pick whichever deadline-like field a market dict provides.
+
+    Different prediction-market feeds use different field names:
+      - Polymarket-style:  'end_date_iso', 'end_date'
+      - Kalshi-style:      'close_time', 'expiration_time'
+      - SILMARIL internal: 'deadline'
+
+    Returning the first non-empty one keeps the 48h filter working even
+    if upstream feed format changes.
+    """
+    for k in ("deadline", "close_time", "end_date_iso", "end_date",
+              "expiration_time", "expires_at", "close_date"):
+        v = c.get(k)
+        if v:
+            return v
+    return None
+
+
 # v2.0: Sports Bro only takes positions on markets resolving within
 # 48 hours so the user can actually see outcomes accumulate quickly.
-# Markets with longer horizons (multi-month politics, year-end events)
-# are filtered out — they tie up bankroll without producing data.
 MAX_HOURS_TO_CLOSE = 48
 
 
@@ -195,14 +218,41 @@ def sports_bro_act(state: SportsBroState, candidates: List[Dict]) -> SportsBroSt
     state.open_bets = new_open
     state.lifetime_peak = max(state.lifetime_peak, state.balance)
 
-    # Open new positions on top edge candidates that resolve within 48 hours
+    # Open new positions on top edge candidates that resolve within 48 hours.
+    # If nothing comes through the filter, log why so the dashboard can show
+    # "no qualifying markets" instead of pretending all markets are filtered.
     short_horizon = []
+    no_deadline = 0
+    too_far = 0
+    in_past = 0
     for c in candidates:
-        hours = _hours_until(c.get("deadline"))
-        if hours is not None and 0 < hours <= MAX_HOURS_TO_CLOSE:
-            short_horizon.append(c)
-    # Sort by edge descending so the best opportunities go first
+        dl = _candidate_deadline(c)
+        if not dl:
+            no_deadline += 1
+            continue
+        hours = _hours_until(dl)
+        if hours is None:
+            no_deadline += 1
+            continue
+        if hours <= 0:
+            in_past += 1
+            continue
+        if hours > MAX_HOURS_TO_CLOSE:
+            too_far += 1
+            continue
+        short_horizon.append(c)
     short_horizon.sort(key=lambda c: c.get("edge", 0), reverse=True)
+
+    # Stash the diagnostic so the dashboard can render it
+    state.last_filter_stats = {
+        "total_candidates": len(candidates),
+        "no_deadline": no_deadline,
+        "in_past": in_past,
+        "outside_48h": too_far,
+        "qualified": len(short_horizon),
+        "horizon_hours": MAX_HOURS_TO_CLOSE,
+    }
+    state.last_run_at = datetime.now(timezone.utc).isoformat()
 
     for c in short_horizon[:3]:
         if state.trades_today >= MAX_TRADES_PER_DAY:

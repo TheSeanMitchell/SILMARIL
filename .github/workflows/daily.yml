@@ -1,23 +1,22 @@
 name: SILMARIL Daily Run
 
-# Runs every weekday evening after US market close (21:00 UTC ≈ 5pm ET / 4pm CT),
-# plus a once-daily weekend keepalive so the dashboard never shows stale data.
-#
-# You can also trigger it manually from the Actions tab (workflow_dispatch).
+# Runs every 30 minutes during US market hours (Mon-Fri 13:30-21:00 UTC),
+# plus 4x daily on weekends for crypto. Manual trigger also available.
 
 on:
   schedule:
-    # Every 30 minutes during US market hours (Mon-Fri 13:30-21:00 UTC = 9:30am-5pm ET)
     - cron: '*/30 13-21 * * 1-5'
-    # Crypto-only refresh on weekends, 4x daily
     - cron: '0 0,6,12,18 * * 0,6'
   workflow_dispatch:
 
 permissions:
-  contents: write              # so the workflow can commit the updated JSON
+  contents: write
 
+# v1.6: shares concurrency group with backtest.yml. Whichever workflow runs
+# second waits for the first to release the lock, so the two never collide
+# on git push (the cause of the 'fetch first' rejection seen on 2026-04-28).
 concurrency:
-  group: silmaril-daily
+  group: silmaril-repo-write
   cancel-in-progress: false
 
 jobs:
@@ -28,6 +27,8 @@ jobs:
     steps:
       - name: Check out repo
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -52,10 +53,17 @@ jobs:
           git config --local user.email "silmaril-bot@users.noreply.github.com"
           git config --local user.name "SILMARIL Bot"
           git add docs/data/
-          # Only commit if there are actual changes
           if git diff --staged --quiet; then
             echo "No changes to commit."
-          else
-            git commit -m "✦ SILMARIL data refresh — $(date -u +%Y-%m-%d)"
-            git push
+            exit 0
           fi
+          git commit -m "✦ SILMARIL data refresh — $(date -u +%Y-%m-%d)"
+
+          # v1.6: rebase against incoming work before push, with retry.
+          # Belt-and-suspenders: even though concurrency group should serialize,
+          # if a backtest pushes between our checkout and our push, we recover.
+          for attempt in 1 2 3; do
+            git pull --rebase origin main && git push origin main && break
+            echo "push attempt $attempt failed; retrying after fetch..."
+            sleep 5
+          done

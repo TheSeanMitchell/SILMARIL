@@ -1,9 +1,5 @@
 name: SILMARIL Backtest
 
-# Manual-trigger workflow to run the 4-year backtest framework against
-# the current agent cohort. Output lands in docs/data/backtest_*.json
-# and is committed to the repo so the dashboard can read it.
-
 on:
   workflow_dispatch:
     inputs:
@@ -27,6 +23,13 @@ on:
 permissions:
   contents: write
 
+# v1.6: serialize all repo-writing workflows so daily runs and backtests
+# can't collide on git push. Both this and daily.yml share the same group;
+# whichever runs second waits for the first to finish.
+concurrency:
+  group: silmaril-repo-write
+  cancel-in-progress: false
+
 jobs:
   backtest:
     runs-on: ubuntu-latest
@@ -35,6 +38,8 @@ jobs:
     steps:
       - name: Check out repo
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0       # full history so rebase works cleanly
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -55,7 +60,6 @@ jobs:
           if [ "${{ github.event.inputs.walk_forward }}" = "yes" ]; then
             WF="--walk-forward"
           fi
-          # Lowercase the universe input so 'FULL' or 'Full' both work
           UNIVERSE=$(echo "${{ github.event.inputs.universe }}" | tr '[:upper:]' '[:lower:]')
           python -m silmaril.backtest \
             --start "${{ github.event.inputs.start }}" \
@@ -68,17 +72,24 @@ jobs:
         run: |
           git config --local user.email "silmaril-bot@users.noreply.github.com"
           git config --local user.name "SILMARIL Bot"
-          # v2.1: commit only the small report files. The predictions file
-          # (millions of rows) frequently exceeds GitHub's 100MB single-file
-          # limit on full-universe runs and is debug data anyway.
-          git add docs/data/backtest_report.json docs/data/backtest_walk_forward.json
-          # Also remove any predictions file from the working tree so it
-          # doesn't get auto-staged in future runs
+
+          # v1.6: only commit small files. The predictions file can hit
+          # 150MB+ on full-universe runs, exceeding GitHub's 100MB limit.
+          # The dashboard only needs the report and walk_forward.
           rm -f docs/data/backtest_predictions.json || true
+          git add docs/data/backtest_report.json docs/data/backtest_walk_forward.json
+
           if git diff --staged --quiet; then
             echo "No backtest output to commit (run failed?)."
             exit 1
-          else
-            git commit -m "✦ SILMARIL backtest run — $(date -u +%Y-%m-%d)"
-            git push
           fi
+
+          git commit -m "✦ SILMARIL backtest run — $(date -u +%Y-%m-%d)"
+
+          # v1.6: rebase against any incoming work before pushing.
+          # Prevents 'fetch first' rejections when daily run lands while we're computing.
+          for attempt in 1 2 3; do
+            git pull --rebase origin main && git push origin main && break
+            echo "push attempt $attempt failed; retrying after fetch..."
+            sleep 5
+          done

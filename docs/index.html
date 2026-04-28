@@ -1904,6 +1904,91 @@
       font-weight: 400;
       font-family: var(--sans);
     }
+
+    /* v1.6 — consolidated news feed */
+    .news-search {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--line);
+      color: var(--text);
+      padding: 6px 10px;
+      border-radius: 4px;
+      font-family: var(--mono);
+      font-size: 12px;
+      width: 280px;
+      max-width: 100%;
+    }
+    .news-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+      max-height: 720px;
+      overflow-y: auto;
+      padding: 0 14px 14px;
+    }
+    .news-row {
+      display: grid;
+      grid-template-columns: 50px 64px 1fr 220px;
+      gap: 10px;
+      padding: 8px 10px;
+      align-items: center;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+      text-decoration: none;
+      color: var(--text);
+      font-size: 12px;
+      transition: background 0.1s ease;
+    }
+    .news-row:hover { background: rgba(212,175,55,0.05); }
+    .news-ago {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--silver);
+      opacity: 0.7;
+    }
+    .news-tk {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--gold);
+      font-weight: 600;
+      letter-spacing: 0.05em;
+    }
+    .news-title {
+      font-size: 12px;
+      line-height: 1.4;
+      color: var(--text);
+    }
+    .news-meta {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+      justify-content: flex-end;
+      font-family: var(--mono);
+      font-size: 10px;
+      flex-wrap: wrap;
+    }
+    .news-src {
+      opacity: 0.5;
+      font-style: italic;
+    }
+    .news-sent {
+      padding: 1px 5px;
+      border-radius: 3px;
+      font-weight: 600;
+    }
+    .news-sent.pos { background: rgba(126, 211, 200, 0.15); color: #7ed3c8; }
+    .news-sent.neg { background: rgba(204, 119, 119, 0.15); color: #cc7777; }
+    .news-cons {
+      padding: 1px 5px;
+      border-radius: 3px;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+    }
+    .news-cons.STRONG_BUY, .news-cons.BUY { background: rgba(126,211,200,0.15); color: #7ed3c8; }
+    .news-cons.SELL, .news-cons.STRONG_SELL { background: rgba(204,119,119,0.15); color: #cc7777; }
+    .news-cons.HOLD { background: rgba(255,255,255,0.05); color: var(--silver); }
+    @media (max-width: 768px) {
+      .news-row { grid-template-columns: 40px 50px 1fr; }
+      .news-meta { display: none; }
+    }
   </style>
 </head>
 <body>
@@ -3311,8 +3396,12 @@
       <div class="card" style="margin-top:24px">
         <div class="card-header">
           <div>
-            <div class="card-title"><span class="diamond"></span>Specialists</div>
-            <div class="card-subtitle">$10K career operators · deep expertise in a narrow domain · take consensus as input, apply their own discipline as filter</div>
+            <div class="card-title"><span class="diamond"></span>Specialist Strategists with Portfolios</div>
+            <div class="card-subtitle">
+              These two strategists also run their own $10,000 career portfolios — domain experts who trade their own books.
+              They live in this STRATEGISTS tab (not PORTFOLIO MANAGERS) because they vote in the team debate AND manage capital;
+              the PORTFOLIO MANAGERS tab is reserved for the five pure $1 compounders (Scrooge, Midas, CryptoBro, JRR, Sports Bro).
+            </div>
           </div>
         </div>
         <div class="specialists-grid">
@@ -3323,6 +3412,23 @@
         </div>
       </div>
     `;
+  }
+
+  // v1.6: shared helper — converts an ISO date or datetime to "MM-DD HH:MM" UTC
+  // so trade history rows always carry a timestamp, not just a date.
+  function _fmtTradeTimestamp(iso) {
+    if (!iso) return '—';
+    try {
+      const d = new Date(iso);
+      if (isNaN(d.getTime())) return esc(String(iso).slice(0, 16));
+      const mm = String(d.getMonth() + 1).padStart(2, '0');
+      const dd = String(d.getDate()).padStart(2, '0');
+      const hh = String(d.getHours()).padStart(2, '0');
+      const mn = String(d.getMinutes()).padStart(2, '0');
+      return `${mm}-${dd} ${hh}:${mn}`;
+    } catch (_) {
+      return esc(String(iso).slice(0, 16));
+    }
   }
 
   function renderTradeHistory(history, label = 'Trade History') {
@@ -3343,8 +3449,10 @@
           ? `<span class="${pnlCls}">${h.pnl >= 0 ? '+' : ''}${fmtMoney(h.pnl, 4)}${h.pnl_pct != null ? ` (${h.pnl_pct >= 0 ? '+' : ''}${h.pnl_pct.toFixed(2)}%)` : ''}</span>`
           : '';
         detail = `${h.shares ? fmt(h.shares, 4) + ' sh @ ' + (h.price ? fmtMoney(h.price, h.price < 1 ? 4 : 2) : '—') : ''} · ${pnlText}`;
-      } else if (action === 'HODL') {
-        detail = h.reason ? esc(h.reason).slice(0, 80) : 'HODL';
+      } else if (action === 'HODL' || action === 'HOLD') {
+        // v1.6: surface HOLD actions so the user knows the strategist is alive
+        // and got pinged on this run, even when no trade fired.
+        detail = h.reason ? esc(h.reason).slice(0, 80) : 'No trade signal — held position';
       } else if (action === 'FROZEN') {
         detail = esc(h.reason || 'Frozen');
       } else if (action === 'SETTLE') {
@@ -3353,9 +3461,12 @@
       } else {
         detail = h.reason ? esc(h.reason).slice(0, 80) : '';
       }
+      // v1.6: prefer full timestamp from h.timestamp / h.date_time / h.at;
+      // fall back to h.date if that's all we have.
+      const tsRaw = h.timestamp || h.date_time || h.at || h.iso || h.date;
       return `
         <div class="th-row">
-          <span class="th-date">${esc((h.date || '').slice(5))}</span>
+          <span class="th-date" title="${esc(String(tsRaw || ''))}">${_fmtTradeTimestamp(tsRaw)}</span>
           <span class="th-action ${action}">${esc(action)}</span>
           <span class="th-tk">${esc(String(ticker).slice(0, 10))}</span>
           <span class="th-detail">${detail}</span>
@@ -3442,6 +3553,22 @@
         </div>
         ${openHtml}
         ${bestHtml}
+        ${(() => {
+          // v1.6: Surface why SportsBro placed (or didn't place) bets.
+          // Educational + debugging — never leave the user wondering why a strategist is silent.
+          const fs = sb.last_filter_stats;
+          if (!fs) return '';
+          const ranAt = sb.last_run_at ? _fmtTradeTimestamp(sb.last_run_at) : '—';
+          const explain = fs.qualified > 0
+            ? `${fs.qualified} of ${fs.total_candidates} markets qualified (close within ${fs.horizon_hours}h).`
+            : `<strong>0 markets qualified.</strong> Of ${fs.total_candidates} markets fetched: ${fs.outside_48h} close beyond ${fs.horizon_hours}h, ${fs.no_deadline} have no deadline field, ${fs.in_past} have already closed. Sports Bro is a 48-hour-only better — most political/year-end markets fall outside the window by design.`;
+          return `
+            <div class="sports-debug" style="margin-top:10px;padding:10px;border:1px solid var(--line);border-radius:6px;background:rgba(255,255,255,0.02);font-family:var(--mono);font-size:10px;line-height:1.5">
+              <div style="color:var(--gold);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:4px">Filter Activity · last run ${ranAt}</div>
+              <div style="opacity:0.8">${explain}</div>
+            </div>
+          `;
+        })()}
         ${renderTradeHistory(sb.history, 'Bet History')}
       </div>
     `;
@@ -3739,6 +3866,134 @@
   };
 
   // ── Phase H: Catalysts roundup ──────────────────────────────
+  // v1.6: Consolidated news feed.
+  // Aggregates every recent_headlines list across all debates into one
+  // time-sorted feed. Educational + transparency: shows every article
+  // that contributed signal to today's data, without forcing the user
+  // to click through individual asset cards.
+  function renderConsolidatedNewsFeed() {
+    const debates = (STATE.signals && STATE.signals.debates) || [];
+    if (!debates.length) return '';
+
+    // Flatten: pull every headline, tag with its ticker
+    const items = [];
+    debates.forEach(d => {
+      (d.recent_headlines || []).forEach(h => {
+        if (!h || !h.title) return;
+        items.push({
+          ticker: d.ticker,
+          name: d.name || d.ticker,
+          consensus: d.consensus && d.consensus.signal,
+          title: h.title,
+          url: h.url,
+          source: h.source || '',
+          published: h.published || h.timestamp || '',
+          sentiment: h.sentiment != null ? h.sentiment : null,
+        });
+      });
+    });
+
+    if (!items.length) {
+      return `
+        <div class="card" style="margin-top:18px">
+          <div class="card-header">
+            <div>
+              <div class="card-title"><span class="diamond"></span>Consolidated News Feed</div>
+              <div class="card-subtitle">Every article gathered today, time-sorted across all tracked assets</div>
+            </div>
+          </div>
+          <div class="empty-track" style="padding:30px">No headlines collected this run. The next scheduled daily run (every 30min during market hours) will populate this feed.</div>
+        </div>
+      `;
+    }
+
+    // Dedupe by URL; sort by published desc
+    const seen = new Set();
+    const unique = [];
+    items.forEach(it => {
+      const key = it.url || (it.title + '|' + it.ticker);
+      if (seen.has(key)) return;
+      seen.add(key);
+      unique.push(it);
+    });
+    unique.sort((a, b) => {
+      const ta = Date.parse(a.published) || 0;
+      const tb = Date.parse(b.published) || 0;
+      return tb - ta;
+    });
+
+    // Search filter
+    const searchTerm = (STATE.newsSearch || '').toLowerCase().trim();
+    const filtered = searchTerm
+      ? unique.filter(it =>
+          it.title.toLowerCase().includes(searchTerm)
+          || it.ticker.toLowerCase().includes(searchTerm)
+          || it.source.toLowerCase().includes(searchTerm)
+        )
+      : unique;
+
+    const rows = filtered.slice(0, 200).map(it => {
+      const ago = (() => {
+        const t = Date.parse(it.published);
+        if (!t) return '';
+        const min = Math.floor((Date.now() - t) / 60000);
+        if (min < 60) return min + 'm';
+        const h = Math.floor(min / 60);
+        if (h < 24) return h + 'h';
+        return Math.floor(h / 24) + 'd';
+      })();
+      const sentChip = it.sentiment != null
+        ? `<span class="news-sent ${it.sentiment >= 0 ? 'pos' : 'neg'}">${it.sentiment >= 0 ? '+' : ''}${it.sentiment.toFixed(2)}</span>`
+        : '';
+      const consChip = it.consensus
+        ? `<span class="news-cons ${it.consensus}">${it.consensus.replace('_', ' ')}</span>`
+        : '';
+      return `
+        <a class="news-row" href="${esc(it.url || '#')}" target="_blank" rel="noopener" onclick="${it.url ? '' : 'return false'}">
+          <span class="news-ago">${ago}</span>
+          <span class="news-tk">${esc(it.ticker)}</span>
+          <span class="news-title">${esc(it.title)}</span>
+          <span class="news-meta">
+            <span class="news-src">${esc(it.source).slice(0, 20)}</span>
+            ${sentChip}
+            ${consChip}
+          </span>
+        </a>
+      `;
+    }).join('');
+
+    return `
+      <div class="card news-feed-card" style="margin-top:18px">
+        <div class="card-header" style="align-items:flex-start">
+          <div style="flex:1">
+            <div class="card-title"><span class="diamond"></span>Consolidated News Feed</div>
+            <div class="card-subtitle">${filtered.length.toLocaleString()} of ${unique.length.toLocaleString()} headlines · time-sorted across every tracked asset · click any row to read source</div>
+          </div>
+          <input class="news-search" type="text" placeholder="Filter headlines, tickers, sources…"
+                 value="${esc(STATE.newsSearch || '')}"
+                 oninput="window.newsFeedSearch(this.value)" />
+        </div>
+        <div class="news-rows-wrap">
+          <div class="news-list">${rows || '<div class="empty-track" style="padding:20px">No headlines match your filter.</div>'}</div>
+          ${filtered.length > 200 ? `<div class="at-truncated">Showing first 200 of ${filtered.length}. Refine the filter for more.</div>` : ''}
+        </div>
+      </div>
+    `;
+  }
+  // Search-input focus-preserving update
+  window.newsFeedSearch = function(val) {
+    STATE.newsSearch = val;
+    const card = document.querySelector('.news-feed-card');
+    if (!card) { render(); return; }
+    const fresh = renderConsolidatedNewsFeed();
+    const tmp = document.createElement('div');
+    tmp.innerHTML = fresh;
+    const newRows = tmp.querySelector('.news-rows-wrap');
+    const oldRows = card.querySelector('.news-rows-wrap');
+    if (newRows && oldRows) { oldRows.replaceWith(newRows); return; }
+    render();
+  };
+
   function renderCatalysts() {
     const c = STATE.catalysts;
     if (!c) return '';
@@ -4602,6 +4857,7 @@
     }
     if (tab === 'research') {
       return `
+        ${renderConsolidatedNewsFeed()}
         ${renderCatalysts()}
         ${renderTutorials()}
         ${renderAbout()}
