@@ -1,56 +1,56 @@
 {
-  "generated_at": "2026-04-28T22:09:49.560372+00:00",
+  "generated_at": "2026-04-29T07:33:58.939883+00:00",
   "starting_capital": 10000.0,
   "portfolios": {
     "AEGIS": {
       "agent": "AEGIS",
-      "balance": 0.0101,
+      "balance": 0.0309,
       "current_position": {
-        "ticker": "AAPL",
-        "shares": 36.997655,
-        "entry_price": 270.2601,
-        "entry_date": "2026-04-28",
+        "ticker": "TSM",
+        "shares": 25.516961,
+        "entry_price": 392.34,
+        "entry_date": "2026-04-29",
         "thesis": "Cautious constructive: clean uptrend with calm volatility, sentiment supportive.",
         "execution": {
-          "order_id": "SIM-20260428-185407-AAPL-B",
+          "order_id": "SIM-20260429-073358-TSM-B",
           "side": "BUY",
-          "ticker": "AAPL",
+          "ticker": "TSM",
           "asset_class": "equity",
           "exchange": "NASDAQ",
           "venue": "electronic equity exchange",
           "broker": "Interactive Brokers (simulated paper account)",
           "order_type": "MARKET",
           "time_in_force": "DAY",
-          "submitted_at_utc": "2026-04-28T18:54:07+00:00",
-          "filled_at_utc": "2026-04-28T18:54:09+00:00",
-          "settlement_date": "2026-04-29",
+          "submitted_at_utc": "2026-04-29T07:33:58+00:00",
+          "filled_at_utc": "2026-04-29T07:34:00+00:00",
+          "settlement_date": "2026-04-30",
           "account": {
             "label": "EQUITY-CASH-SIM-001",
             "type": "Cash Account",
             "broker": "Interactive Brokers (simulated paper account)",
             "funding_source": "ACH funding from simulated bank account (routed via broker cash sweep)",
-            "balance_before": 10000.0,
-            "balance_after": 0.0101
+            "balance_before": 10014.3588,
+            "balance_after": 0.0309
           },
           "fills": [
             {
-              "shares": 36.997655,
-              "price": 270.2601,
-              "timestamp": "2026-04-28T18:54:09+00:00",
+              "shares": 25.516961,
+              "price": 392.34,
+              "timestamp": "2026-04-29T07:34:00+00:00",
               "venue": "NASDAQ"
             }
           ],
-          "avg_fill_price": 270.2601,
-          "gross_notional": 9998.99,
+          "avg_fill_price": 392.34,
+          "gross_notional": 10011.3245,
           "fees": {
             "commission": 0.0,
             "sec_section_31": 0.0,
             "finra_taf": 0.0,
-            "spread_cost": 0.999899,
-            "total": 0.999899,
-            "notes": "Spread estimate: 1 bps. Zero commission (IBKR Lite/TD-class simulated)."
+            "spread_cost": 3.003397,
+            "total": 3.003397,
+            "notes": "Spread estimate: 3 bps. Zero commission (IBKR Lite/TD-class simulated)."
           },
-          "net_cost": 9999.9899,
+          "net_cost": 10014.3279,
           "net_proceeds": null,
           "disclaimer": "Simulated execution \u2014 no live orders were placed on any exchange. Fees modeled on US market structure: SEC Section 31 ($27.80/$1M of sale proceeds), FINRA Trading Activity Fee ($0.000166/share on sells, capped $9.30), Coinbase Advanced taker 0.40% for crypto. Spread cost estimated per ticker."
         }
@@ -59,6 +59,10 @@
         {
           "date": "2026-04-28",
           "equity": 9999.0001
+        },
+        {
+          "date": "2026-04-29",
+          "equity": 10011.3553
         }
       ],
       "history": [
@@ -114,62 +118,170 @@
             "disclaimer": "Simulated execution \u2014 no live orders were placed on any exchange. Fees modeled on US market structure: SEC Section 31 ($27.80/$1M of sale proceeds), FINRA Trading Activity Fee ($0.000166/share on sells, capped $9.30), Coinbase Advanced taker 0.40% for crypto. Spread cost estimated per ticker."
           },
           "thesis": "Cautious constructive: clean uptrend with calm volatility, sentiment supportive."
+        },
+        {
+          "date": "2026-04-29",
+          "action": "SELL",
+          "ticker": "AAPL",
+          "shares": 36.997655,
+          "entry_price": 270.2601,
+          "exit_price": 270.71,
+          "proceeds": 10014.3487,
+          "pnl": 15.3588,
+          "pnl_pct": 0.17,
+          "balance_after": 10014.3588,
+          "execution": {
+            "order_id": "SIM-20260429-073358-AAPL-S",
+            "side": "SELL",
+            "ticker": "AAPL",
+            "asset_class": "equity",
+            "exchange": "NASDAQ",
+            "venue": "electronic equity exchange",
+            "broker": "Interactive Brokers (simulated paper account)",
+            "order_type": "MARKET",
+            "time_in_force": "DAY",
+            "submitted_at_utc": "2026-04-29T07:33:58+00:00",
+            "filled_at_utc": "2026-04-29T07:34:00+00:00",
+            "settlement_date": "2026-04-30",
+            "account": {
+              "label": "EQUITY-CASH-SIM-001",
+              "type": "Cash Account",
+              "broker": "Interactive Brokers (simulated paper account)",
+              "funding_source": "ACH funding from simulated bank account (routed via broker cash sweep)",
+              "balance_before": 0.0101,
+              "balance_after": 10014.3588
+            },
+            "fills": [
+              {
+                "shares": 36.997655,
+                "price": 270.71,
+                "timestamp": "2026-04-29T07:34:00+00:00",
+                "venue": "NASDAQ"
+              }
+            ],
+            "avg_fill_price": 270.71,
+            "gross_notional": 10015.6349,
+            "fees": {
+              "commission": 0.0,
+              "sec_section_31": 0.278435,
+              "finra_taf": 0.006142,
+              "spread_cost": 1.001563,
+              "total": 1.28614,
+              "notes": "Spread estimate: 1 bps. Zero commission (IBKR Lite/TD-class simulated)."
+            },
+            "net_cost": null,
+            "net_proceeds": 10014.3487,
+            "disclaimer": "Simulated execution \u2014 no live orders were placed on any exchange. Fees modeled on US market structure: SEC Section 31 ($27.80/$1M of sale proceeds), FINRA Trading Activity Fee ($0.000166/share on sells, capped $9.30), Coinbase Advanced taker 0.40% for crypto. Spread cost estimated per ticker."
+          }
+        },
+        {
+          "date": "2026-04-29",
+          "action": "BUY",
+          "ticker": "TSM",
+          "shares": 25.516961,
+          "entry_price": 392.34,
+          "cost": 10014.3279,
+          "balance_after": 0.0309,
+          "execution": {
+            "order_id": "SIM-20260429-073358-TSM-B",
+            "side": "BUY",
+            "ticker": "TSM",
+            "asset_class": "equity",
+            "exchange": "NASDAQ",
+            "venue": "electronic equity exchange",
+            "broker": "Interactive Brokers (simulated paper account)",
+            "order_type": "MARKET",
+            "time_in_force": "DAY",
+            "submitted_at_utc": "2026-04-29T07:33:58+00:00",
+            "filled_at_utc": "2026-04-29T07:34:00+00:00",
+            "settlement_date": "2026-04-30",
+            "account": {
+              "label": "EQUITY-CASH-SIM-001",
+              "type": "Cash Account",
+              "broker": "Interactive Brokers (simulated paper account)",
+              "funding_source": "ACH funding from simulated bank account (routed via broker cash sweep)",
+              "balance_before": 10014.3588,
+              "balance_after": 0.0309
+            },
+            "fills": [
+              {
+                "shares": 25.516961,
+                "price": 392.34,
+                "timestamp": "2026-04-29T07:34:00+00:00",
+                "venue": "NASDAQ"
+              }
+            ],
+            "avg_fill_price": 392.34,
+            "gross_notional": 10011.3245,
+            "fees": {
+              "commission": 0.0,
+              "sec_section_31": 0.0,
+              "finra_taf": 0.0,
+              "spread_cost": 3.003397,
+              "total": 3.003397,
+              "notes": "Spread estimate: 3 bps. Zero commission (IBKR Lite/TD-class simulated)."
+            },
+            "net_cost": 10014.3279,
+            "net_proceeds": null,
+            "disclaimer": "Simulated execution \u2014 no live orders were placed on any exchange. Fees modeled on US market structure: SEC Section 31 ($27.80/$1M of sale proceeds), FINRA Trading Activity Fee ($0.000166/share on sells, capped $9.30), Coinbase Advanced taker 0.40% for crypto. Spread cost estimated per ticker."
+          },
+          "thesis": "Cautious constructive: clean uptrend with calm volatility, sentiment supportive."
         }
       ],
       "inception_date": "2026-04-28",
-      "realized_pnl": 0.0,
-      "total_fees_paid": 0.9999,
-      "trades_count": 1
+      "realized_pnl": 15.3588,
+      "total_fees_paid": 5.2894,
+      "trades_count": 3
     },
     "FORGE": {
       "agent": "FORGE",
-      "balance": 0.0101,
+      "balance": 0.0309,
       "current_position": {
-        "ticker": "AAPL",
-        "shares": 36.997655,
-        "entry_price": 270.2601,
-        "entry_date": "2026-04-28",
-        "thesis": "High-conviction build: clean uptrend (+3.7% vs SMA50), strong sentiment +0.40, 5 articles.",
+        "ticker": "TSM",
+        "shares": 25.516961,
+        "entry_price": 392.34,
+        "entry_date": "2026-04-29",
+        "thesis": "High-conviction build: clean uptrend (+9.6% vs SMA50), strong sentiment +0.40, 5 articles.",
         "execution": {
-          "order_id": "SIM-20260428-185407-AAPL-B",
+          "order_id": "SIM-20260429-073358-TSM-B",
           "side": "BUY",
-          "ticker": "AAPL",
+          "ticker": "TSM",
           "asset_class": "equity",
           "exchange": "NASDAQ",
           "venue": "electronic equity exchange",
           "broker": "Interactive Brokers (simulated paper account)",
           "order_type": "MARKET",
           "time_in_force": "DAY",
-          "submitted_at_utc": "2026-04-28T18:54:07+00:00",
-          "filled_at_utc": "2026-04-28T18:54:09+00:00",
-          "settlement_date": "2026-04-29",
+          "submitted_at_utc": "2026-04-29T07:33:58+00:00",
+          "filled_at_utc": "2026-04-29T07:34:00+00:00",
+          "settlement_date": "2026-04-30",
           "account": {
             "label": "EQUITY-CASH-SIM-001",
             "type": "Cash Account",
             "broker": "Interactive Brokers (simulated paper account)",
             "funding_source": "ACH funding from simulated bank account (routed via broker cash sweep)",
-            "balance_before": 10000.0,
-            "balance_after": 0.0101
+            "balance_before": 10014.3588,
+            "balance_after": 0.0309
           },
           "fills": [
             {
-              "shares": 36.997655,
-              "price": 270.2601,
-              "timestamp": "2026-04-28T18:54:09+00:00",
+              "shares": 25.516961,
+              "price": 392.34,
+              "timestamp": "2026-04-29T07:34:00+00:00",
               "venue": "NASDAQ"
             }
           ],
-          "avg_fill_price": 270.2601,
-          "gross_notional": 9998.99,
+          "avg_fill_price": 392.34,
+          "gross_notional": 10011.3245,
           "fees": {
             "commission": 0.0,
             "sec_section_31": 0.0,
             "finra_taf": 0.0,
-            "spread_cost": 0.999899,
-            "total": 0.999899,
-            "notes": "Spread estimate: 1 bps. Zero commission (IBKR Lite/TD-class simulated)."
+            "spread_cost": 3.003397,
+            "total": 3.003397,
+            "notes": "Spread estimate: 3 bps. Zero commission (IBKR Lite/TD-class simulated)."
           },
-          "net_cost": 9999.9899,
+          "net_cost": 10014.3279,
           "net_proceeds": null,
           "disclaimer": "Simulated execution \u2014 no live orders were placed on any exchange. Fees modeled on US market structure: SEC Section 31 ($27.80/$1M of sale proceeds), FINRA Trading Activity Fee ($0.000166/share on sells, capped $9.30), Coinbase Advanced taker 0.40% for crypto. Spread cost estimated per ticker."
         }
@@ -178,6 +290,10 @@
         {
           "date": "2026-04-28",
           "equity": 9999.0001
+        },
+        {
+          "date": "2026-04-29",
+          "equity": 10011.3553
         }
       ],
       "history": [
@@ -233,62 +349,170 @@
             "disclaimer": "Simulated execution \u2014 no live orders were placed on any exchange. Fees modeled on US market structure: SEC Section 31 ($27.80/$1M of sale proceeds), FINRA Trading Activity Fee ($0.000166/share on sells, capped $9.30), Coinbase Advanced taker 0.40% for crypto. Spread cost estimated per ticker."
           },
           "thesis": "High-conviction build: clean uptrend (+3.7% vs SMA50), strong sentiment +0.40, 5 articles."
+        },
+        {
+          "date": "2026-04-29",
+          "action": "SELL",
+          "ticker": "AAPL",
+          "shares": 36.997655,
+          "entry_price": 270.2601,
+          "exit_price": 270.71,
+          "proceeds": 10014.3487,
+          "pnl": 15.3588,
+          "pnl_pct": 0.17,
+          "balance_after": 10014.3588,
+          "execution": {
+            "order_id": "SIM-20260429-073358-AAPL-S",
+            "side": "SELL",
+            "ticker": "AAPL",
+            "asset_class": "equity",
+            "exchange": "NASDAQ",
+            "venue": "electronic equity exchange",
+            "broker": "Interactive Brokers (simulated paper account)",
+            "order_type": "MARKET",
+            "time_in_force": "DAY",
+            "submitted_at_utc": "2026-04-29T07:33:58+00:00",
+            "filled_at_utc": "2026-04-29T07:34:00+00:00",
+            "settlement_date": "2026-04-30",
+            "account": {
+              "label": "EQUITY-CASH-SIM-001",
+              "type": "Cash Account",
+              "broker": "Interactive Brokers (simulated paper account)",
+              "funding_source": "ACH funding from simulated bank account (routed via broker cash sweep)",
+              "balance_before": 0.0101,
+              "balance_after": 10014.3588
+            },
+            "fills": [
+              {
+                "shares": 36.997655,
+                "price": 270.71,
+                "timestamp": "2026-04-29T07:34:00+00:00",
+                "venue": "NASDAQ"
+              }
+            ],
+            "avg_fill_price": 270.71,
+            "gross_notional": 10015.6349,
+            "fees": {
+              "commission": 0.0,
+              "sec_section_31": 0.278435,
+              "finra_taf": 0.006142,
+              "spread_cost": 1.001563,
+              "total": 1.28614,
+              "notes": "Spread estimate: 1 bps. Zero commission (IBKR Lite/TD-class simulated)."
+            },
+            "net_cost": null,
+            "net_proceeds": 10014.3487,
+            "disclaimer": "Simulated execution \u2014 no live orders were placed on any exchange. Fees modeled on US market structure: SEC Section 31 ($27.80/$1M of sale proceeds), FINRA Trading Activity Fee ($0.000166/share on sells, capped $9.30), Coinbase Advanced taker 0.40% for crypto. Spread cost estimated per ticker."
+          }
+        },
+        {
+          "date": "2026-04-29",
+          "action": "BUY",
+          "ticker": "TSM",
+          "shares": 25.516961,
+          "entry_price": 392.34,
+          "cost": 10014.3279,
+          "balance_after": 0.0309,
+          "execution": {
+            "order_id": "SIM-20260429-073358-TSM-B",
+            "side": "BUY",
+            "ticker": "TSM",
+            "asset_class": "equity",
+            "exchange": "NASDAQ",
+            "venue": "electronic equity exchange",
+            "broker": "Interactive Brokers (simulated paper account)",
+            "order_type": "MARKET",
+            "time_in_force": "DAY",
+            "submitted_at_utc": "2026-04-29T07:33:58+00:00",
+            "filled_at_utc": "2026-04-29T07:34:00+00:00",
+            "settlement_date": "2026-04-30",
+            "account": {
+              "label": "EQUITY-CASH-SIM-001",
+              "type": "Cash Account",
+              "broker": "Interactive Brokers (simulated paper account)",
+              "funding_source": "ACH funding from simulated bank account (routed via broker cash sweep)",
+              "balance_before": 10014.3588,
+              "balance_after": 0.0309
+            },
+            "fills": [
+              {
+                "shares": 25.516961,
+                "price": 392.34,
+                "timestamp": "2026-04-29T07:34:00+00:00",
+                "venue": "NASDAQ"
+              }
+            ],
+            "avg_fill_price": 392.34,
+            "gross_notional": 10011.3245,
+            "fees": {
+              "commission": 0.0,
+              "sec_section_31": 0.0,
+              "finra_taf": 0.0,
+              "spread_cost": 3.003397,
+              "total": 3.003397,
+              "notes": "Spread estimate: 3 bps. Zero commission (IBKR Lite/TD-class simulated)."
+            },
+            "net_cost": 10014.3279,
+            "net_proceeds": null,
+            "disclaimer": "Simulated execution \u2014 no live orders were placed on any exchange. Fees modeled on US market structure: SEC Section 31 ($27.80/$1M of sale proceeds), FINRA Trading Activity Fee ($0.000166/share on sells, capped $9.30), Coinbase Advanced taker 0.40% for crypto. Spread cost estimated per ticker."
+          },
+          "thesis": "High-conviction build: clean uptrend (+9.6% vs SMA50), strong sentiment +0.40, 5 articles."
         }
       ],
       "inception_date": "2026-04-28",
-      "realized_pnl": 0.0,
-      "total_fees_paid": 0.9999,
-      "trades_count": 1
+      "realized_pnl": 15.3588,
+      "total_fees_paid": 5.2894,
+      "trades_count": 3
     },
     "THUNDERHEAD": {
       "agent": "THUNDERHEAD",
-      "balance": 0.7127,
+      "balance": 0.0308,
       "current_position": {
-        "ticker": "XTZ-USD",
-        "shares": 26071.573913,
-        "entry_price": 0.3817,
-        "entry_date": "2026-04-28",
-        "thesis": "Broke 20-day high ($0.38) on 2.0\u00d7 avg volume \u2014 storm has arrived.",
+        "ticker": "KO",
+        "shares": 126.805157,
+        "entry_price": 78.35,
+        "entry_date": "2026-04-29",
+        "thesis": "Broke 20-day high ($78.18) on 2.1\u00d7 avg volume \u2014 storm has arrived.",
         "execution": {
-          "order_id": "SIM-20260428-185407-XTZUSD-B",
+          "order_id": "SIM-20260429-073358-KO-B",
           "side": "BUY",
-          "ticker": "XTZ-USD",
-          "asset_class": "crypto",
-          "exchange": "NYSE Arca",
-          "venue": "all-electronic ETF/options exchange",
-          "broker": "Coinbase (simulated wallet)",
+          "ticker": "KO",
+          "asset_class": "equity",
+          "exchange": "NYSE",
+          "venue": "auction-based equity exchange",
+          "broker": "Interactive Brokers (simulated paper account)",
           "order_type": "MARKET",
           "time_in_force": "DAY",
-          "submitted_at_utc": "2026-04-28T18:54:07+00:00",
-          "filled_at_utc": "2026-04-28T18:54:09+00:00",
-          "settlement_date": "2026-04-28",
+          "submitted_at_utc": "2026-04-29T07:33:58+00:00",
+          "filled_at_utc": "2026-04-29T07:34:00+00:00",
+          "settlement_date": "2026-04-30",
           "account": {
-            "label": "CRYPTO-WALLET-SIM-001",
-            "type": "Crypto Wallet",
-            "broker": "Coinbase (simulated wallet)",
-            "funding_source": "Internal USDC balance (simulated deposit from cash sweep)",
-            "balance_before": 10000.0,
-            "balance_after": 0.7127
+            "label": "EQUITY-CASH-SIM-001",
+            "type": "Cash Account",
+            "broker": "Interactive Brokers (simulated paper account)",
+            "funding_source": "ACH funding from simulated bank account (routed via broker cash sweep)",
+            "balance_before": 9938.1952,
+            "balance_after": 0.0308
           },
           "fills": [
             {
-              "shares": 26071.573913,
-              "price": 0.3817,
-              "timestamp": "2026-04-28T18:54:09+00:00",
-              "venue": "NYSE Arca"
+              "shares": 126.805157,
+              "price": 78.35,
+              "timestamp": "2026-04-29T07:34:00+00:00",
+              "venue": "NYSE"
             }
           ],
-          "avg_fill_price": 0.3817,
-          "gross_notional": 9951.52,
+          "avg_fill_price": 78.35,
+          "gross_notional": 9935.1839,
           "fees": {
-            "commission": 39.80608,
+            "commission": 0.0,
             "sec_section_31": 0.0,
             "finra_taf": 0.0,
-            "spread_cost": 7.961216,
-            "total": 47.767296,
-            "notes": "Spread estimate: 8 bps. Crypto taker fee 0.40%."
+            "spread_cost": 2.980555,
+            "total": 2.980555,
+            "notes": "Spread estimate: 3 bps. Zero commission (IBKR Lite/TD-class simulated)."
           },
-          "net_cost": 9999.2873,
+          "net_cost": 9938.1644,
           "net_proceeds": null,
           "disclaimer": "Simulated execution \u2014 no live orders were placed on any exchange. Fees modeled on US market structure: SEC Section 31 ($27.80/$1M of sale proceeds), FINRA Trading Activity Fee ($0.000166/share on sells, capped $9.30), Coinbase Advanced taker 0.40% for crypto. Spread cost estimated per ticker."
         }
@@ -297,6 +521,10 @@
         {
           "date": "2026-04-28",
           "equity": 9952.2327
+        },
+        {
+          "date": "2026-04-29",
+          "equity": 9935.2147
         }
       ],
       "history": [
@@ -352,12 +580,120 @@
             "disclaimer": "Simulated execution \u2014 no live orders were placed on any exchange. Fees modeled on US market structure: SEC Section 31 ($27.80/$1M of sale proceeds), FINRA Trading Activity Fee ($0.000166/share on sells, capped $9.30), Coinbase Advanced taker 0.40% for crypto. Spread cost estimated per ticker."
           },
           "thesis": "Broke 20-day high ($0.38) on 2.0\u00d7 avg volume \u2014 storm has arrived."
+        },
+        {
+          "date": "2026-04-29",
+          "action": "SELL",
+          "ticker": "XTZ-USD",
+          "shares": 26071.573913,
+          "entry_price": 0.3817,
+          "exit_price": 0.383,
+          "proceeds": 9937.4825,
+          "pnl": -14.0373,
+          "pnl_pct": 0.34,
+          "balance_after": 9938.1952,
+          "execution": {
+            "order_id": "SIM-20260429-073358-XTZUSD-S",
+            "side": "SELL",
+            "ticker": "XTZ-USD",
+            "asset_class": "crypto",
+            "exchange": "NYSE Arca",
+            "venue": "all-electronic ETF/options exchange",
+            "broker": "Coinbase (simulated wallet)",
+            "order_type": "MARKET",
+            "time_in_force": "DAY",
+            "submitted_at_utc": "2026-04-29T07:33:58+00:00",
+            "filled_at_utc": "2026-04-29T07:34:00+00:00",
+            "settlement_date": "2026-04-29",
+            "account": {
+              "label": "CRYPTO-WALLET-SIM-001",
+              "type": "Crypto Wallet",
+              "broker": "Coinbase (simulated wallet)",
+              "funding_source": "Internal USDC balance (simulated deposit from cash sweep)",
+              "balance_before": 0.7127,
+              "balance_after": 9938.1952
+            },
+            "fills": [
+              {
+                "shares": 26071.573913,
+                "price": 0.383,
+                "timestamp": "2026-04-29T07:34:00+00:00",
+                "venue": "NYSE Arca"
+              }
+            ],
+            "avg_fill_price": 0.383,
+            "gross_notional": 9985.4125,
+            "fees": {
+              "commission": 39.94165,
+              "sec_section_31": 0.0,
+              "finra_taf": 0.0,
+              "spread_cost": 7.98833,
+              "total": 47.92998,
+              "notes": "Spread estimate: 8 bps. Crypto taker fee 0.40%."
+            },
+            "net_cost": null,
+            "net_proceeds": 9937.4825,
+            "disclaimer": "Simulated execution \u2014 no live orders were placed on any exchange. Fees modeled on US market structure: SEC Section 31 ($27.80/$1M of sale proceeds), FINRA Trading Activity Fee ($0.000166/share on sells, capped $9.30), Coinbase Advanced taker 0.40% for crypto. Spread cost estimated per ticker."
+          }
+        },
+        {
+          "date": "2026-04-29",
+          "action": "BUY",
+          "ticker": "KO",
+          "shares": 126.805157,
+          "entry_price": 78.35,
+          "cost": 9938.1644,
+          "balance_after": 0.0308,
+          "execution": {
+            "order_id": "SIM-20260429-073358-KO-B",
+            "side": "BUY",
+            "ticker": "KO",
+            "asset_class": "equity",
+            "exchange": "NYSE",
+            "venue": "auction-based equity exchange",
+            "broker": "Interactive Brokers (simulated paper account)",
+            "order_type": "MARKET",
+            "time_in_force": "DAY",
+            "submitted_at_utc": "2026-04-29T07:33:58+00:00",
+            "filled_at_utc": "2026-04-29T07:34:00+00:00",
+            "settlement_date": "2026-04-30",
+            "account": {
+              "label": "EQUITY-CASH-SIM-001",
+              "type": "Cash Account",
+              "broker": "Interactive Brokers (simulated paper account)",
+              "funding_source": "ACH funding from simulated bank account (routed via broker cash sweep)",
+              "balance_before": 9938.1952,
+              "balance_after": 0.0308
+            },
+            "fills": [
+              {
+                "shares": 126.805157,
+                "price": 78.35,
+                "timestamp": "2026-04-29T07:34:00+00:00",
+                "venue": "NYSE"
+              }
+            ],
+            "avg_fill_price": 78.35,
+            "gross_notional": 9935.1839,
+            "fees": {
+              "commission": 0.0,
+              "sec_section_31": 0.0,
+              "finra_taf": 0.0,
+              "spread_cost": 2.980555,
+              "total": 2.980555,
+              "notes": "Spread estimate: 3 bps. Zero commission (IBKR Lite/TD-class simulated)."
+            },
+            "net_cost": 9938.1644,
+            "net_proceeds": null,
+            "disclaimer": "Simulated execution \u2014 no live orders were placed on any exchange. Fees modeled on US market structure: SEC Section 31 ($27.80/$1M of sale proceeds), FINRA Trading Activity Fee ($0.000166/share on sells, capped $9.30), Coinbase Advanced taker 0.40% for crypto. Spread cost estimated per ticker."
+          },
+          "thesis": "Broke 20-day high ($78.18) on 2.1\u00d7 avg volume \u2014 storm has arrived."
         }
       ],
       "inception_date": "2026-04-28",
-      "realized_pnl": 0.0,
-      "total_fees_paid": 47.7673,
-      "trades_count": 1
+      "realized_pnl": -14.0373,
+      "total_fees_paid": 98.6778,
+      "trades_count": 3
     },
     "JADE": {
       "agent": "JADE",
@@ -416,6 +752,10 @@
         {
           "date": "2026-04-28",
           "equity": 9997.0007
+        },
+        {
+          "date": "2026-04-29",
+          "equity": 10041.7408
         }
       ],
       "history": [
@@ -471,6 +811,13 @@
             "disclaimer": "Simulated execution \u2014 no live orders were placed on any exchange. Fees modeled on US market structure: SEC Section 31 ($27.80/$1M of sale proceeds), FINRA Trading Activity Fee ($0.000166/share on sells, capped $9.30), Coinbase Advanced taker 0.40% for crypto. Spread cost estimated per ticker."
           },
           "thesis": "RSI 19 at major support (SMA-200 $519.23) \u2014 contrarian entry."
+        },
+        {
+          "date": "2026-04-29",
+          "action": "HOLD",
+          "ticker": "LMT",
+          "reason": "JADE still likes LMT as their top BUY. No rotation, no fees.",
+          "equity": 10041.7408
         }
       ],
       "inception_date": "2026-04-28",
@@ -480,53 +827,53 @@
     },
     "VEIL": {
       "agent": "VEIL",
-      "balance": 0.0309,
+      "balance": 0.0306,
       "current_position": {
-        "ticker": "MU",
-        "shares": 19.661832,
-        "entry_price": 508.4455,
-        "entry_date": "2026-04-28",
+        "ticker": "TSM",
+        "shares": 25.256256,
+        "entry_price": 392.34,
+        "entry_date": "2026-04-29",
         "thesis": "Price down -3.1% but sentiment +0.40 \u2014 crowd has seen the turn the tape hasn't confirmed.",
         "execution": {
-          "order_id": "SIM-20260428-185407-MU-B",
+          "order_id": "SIM-20260429-073358-TSM-B",
           "side": "BUY",
-          "ticker": "MU",
+          "ticker": "TSM",
           "asset_class": "equity",
           "exchange": "NASDAQ",
           "venue": "electronic equity exchange",
           "broker": "Interactive Brokers (simulated paper account)",
           "order_type": "MARKET",
           "time_in_force": "DAY",
-          "submitted_at_utc": "2026-04-28T18:54:07+00:00",
-          "filled_at_utc": "2026-04-28T18:54:09+00:00",
-          "settlement_date": "2026-04-29",
+          "submitted_at_utc": "2026-04-29T07:33:58+00:00",
+          "filled_at_utc": "2026-04-29T07:34:00+00:00",
+          "settlement_date": "2026-04-30",
           "account": {
             "label": "EQUITY-CASH-SIM-001",
             "type": "Cash Account",
             "broker": "Interactive Brokers (simulated paper account)",
             "funding_source": "ACH funding from simulated bank account (routed via broker cash sweep)",
-            "balance_before": 10000.0,
-            "balance_after": 0.0309
+            "balance_before": 9912.0428,
+            "balance_after": 0.0306
           },
           "fills": [
             {
-              "shares": 19.661832,
-              "price": 508.4455,
-              "timestamp": "2026-04-28T18:54:09+00:00",
+              "shares": 25.256256,
+              "price": 392.34,
+              "timestamp": "2026-04-29T07:34:00+00:00",
               "venue": "NASDAQ"
             }
           ],
-          "avg_fill_price": 508.4455,
-          "gross_notional": 9996.97,
+          "avg_fill_price": 392.34,
+          "gross_notional": 9909.0395,
           "fees": {
             "commission": 0.0,
             "sec_section_31": 0.0,
             "finra_taf": 0.0,
-            "spread_cost": 2.999091,
-            "total": 2.999091,
+            "spread_cost": 2.972712,
+            "total": 2.972712,
             "notes": "Spread estimate: 3 bps. Zero commission (IBKR Lite/TD-class simulated)."
           },
-          "net_cost": 9999.9691,
+          "net_cost": 9912.0122,
           "net_proceeds": null,
           "disclaimer": "Simulated execution \u2014 no live orders were placed on any exchange. Fees modeled on US market structure: SEC Section 31 ($27.80/$1M of sale proceeds), FINRA Trading Activity Fee ($0.000166/share on sells, capped $9.30), Coinbase Advanced taker 0.40% for crypto. Spread cost estimated per ticker."
         }
@@ -535,6 +882,10 @@
         {
           "date": "2026-04-28",
           "equity": 9997.0008
+        },
+        {
+          "date": "2026-04-29",
+          "equity": 9909.07
         }
       ],
       "history": [
@@ -590,12 +941,120 @@
             "disclaimer": "Simulated execution \u2014 no live orders were placed on any exchange. Fees modeled on US market structure: SEC Section 31 ($27.80/$1M of sale proceeds), FINRA Trading Activity Fee ($0.000166/share on sells, capped $9.30), Coinbase Advanced taker 0.40% for crypto. Spread cost estimated per ticker."
           },
           "thesis": "Price down -3.1% but sentiment +0.40 \u2014 crowd has seen the turn the tape hasn't confirmed."
+        },
+        {
+          "date": "2026-04-29",
+          "action": "SELL",
+          "ticker": "MU",
+          "shares": 19.661832,
+          "entry_price": 508.4455,
+          "exit_price": 504.29,
+          "proceeds": 9912.0119,
+          "pnl": -84.9581,
+          "pnl_pct": -0.82,
+          "balance_after": 9912.0428,
+          "execution": {
+            "order_id": "SIM-20260429-073358-MU-S",
+            "side": "SELL",
+            "ticker": "MU",
+            "asset_class": "equity",
+            "exchange": "NASDAQ",
+            "venue": "electronic equity exchange",
+            "broker": "Interactive Brokers (simulated paper account)",
+            "order_type": "MARKET",
+            "time_in_force": "DAY",
+            "submitted_at_utc": "2026-04-29T07:33:58+00:00",
+            "filled_at_utc": "2026-04-29T07:34:00+00:00",
+            "settlement_date": "2026-04-30",
+            "account": {
+              "label": "EQUITY-CASH-SIM-001",
+              "type": "Cash Account",
+              "broker": "Interactive Brokers (simulated paper account)",
+              "funding_source": "ACH funding from simulated bank account (routed via broker cash sweep)",
+              "balance_before": 0.0309,
+              "balance_after": 9912.0428
+            },
+            "fills": [
+              {
+                "shares": 19.661832,
+                "price": 504.29,
+                "timestamp": "2026-04-29T07:34:00+00:00",
+                "venue": "NASDAQ"
+              }
+            ],
+            "avg_fill_price": 504.29,
+            "gross_notional": 9915.2654,
+            "fees": {
+              "commission": 0.0,
+              "sec_section_31": 0.275644,
+              "finra_taf": 0.003264,
+              "spread_cost": 2.97458,
+              "total": 3.253488,
+              "notes": "Spread estimate: 3 bps. Zero commission (IBKR Lite/TD-class simulated)."
+            },
+            "net_cost": null,
+            "net_proceeds": 9912.0119,
+            "disclaimer": "Simulated execution \u2014 no live orders were placed on any exchange. Fees modeled on US market structure: SEC Section 31 ($27.80/$1M of sale proceeds), FINRA Trading Activity Fee ($0.000166/share on sells, capped $9.30), Coinbase Advanced taker 0.40% for crypto. Spread cost estimated per ticker."
+          }
+        },
+        {
+          "date": "2026-04-29",
+          "action": "BUY",
+          "ticker": "TSM",
+          "shares": 25.256256,
+          "entry_price": 392.34,
+          "cost": 9912.0122,
+          "balance_after": 0.0306,
+          "execution": {
+            "order_id": "SIM-20260429-073358-TSM-B",
+            "side": "BUY",
+            "ticker": "TSM",
+            "asset_class": "equity",
+            "exchange": "NASDAQ",
+            "venue": "electronic equity exchange",
+            "broker": "Interactive Brokers (simulated paper account)",
+            "order_type": "MARKET",
+            "time_in_force": "DAY",
+            "submitted_at_utc": "2026-04-29T07:33:58+00:00",
+            "filled_at_utc": "2026-04-29T07:34:00+00:00",
+            "settlement_date": "2026-04-30",
+            "account": {
+              "label": "EQUITY-CASH-SIM-001",
+              "type": "Cash Account",
+              "broker": "Interactive Brokers (simulated paper account)",
+              "funding_source": "ACH funding from simulated bank account (routed via broker cash sweep)",
+              "balance_before": 9912.0428,
+              "balance_after": 0.0306
+            },
+            "fills": [
+              {
+                "shares": 25.256256,
+                "price": 392.34,
+                "timestamp": "2026-04-29T07:34:00+00:00",
+                "venue": "NASDAQ"
+              }
+            ],
+            "avg_fill_price": 392.34,
+            "gross_notional": 9909.0395,
+            "fees": {
+              "commission": 0.0,
+              "sec_section_31": 0.0,
+              "finra_taf": 0.0,
+              "spread_cost": 2.972712,
+              "total": 2.972712,
+              "notes": "Spread estimate: 3 bps. Zero commission (IBKR Lite/TD-class simulated)."
+            },
+            "net_cost": 9912.0122,
+            "net_proceeds": null,
+            "disclaimer": "Simulated execution \u2014 no live orders were placed on any exchange. Fees modeled on US market structure: SEC Section 31 ($27.80/$1M of sale proceeds), FINRA Trading Activity Fee ($0.000166/share on sells, capped $9.30), Coinbase Advanced taker 0.40% for crypto. Spread cost estimated per ticker."
+          },
+          "thesis": "Price down -3.1% but sentiment +0.40 \u2014 crowd has seen the turn the tape hasn't confirmed."
         }
       ],
       "inception_date": "2026-04-28",
-      "realized_pnl": 0.0,
-      "total_fees_paid": 2.9991,
-      "trades_count": 1
+      "realized_pnl": -84.9581,
+      "total_fees_paid": 9.2253,
+      "trades_count": 3
     },
     "KESTREL": {
       "agent": "KESTREL",
@@ -654,6 +1113,10 @@
         {
           "date": "2026-04-28",
           "equity": 9997.0009
+        },
+        {
+          "date": "2026-04-29",
+          "equity": 9997.0009
         }
       ],
       "history": [
@@ -709,6 +1172,13 @@
             "disclaimer": "Simulated execution \u2014 no live orders were placed on any exchange. Fees modeled on US market structure: SEC Section 31 ($27.80/$1M of sale proceeds), FINRA Trading Activity Fee ($0.000166/share on sells, capped $9.30), Coinbase Advanced taker 0.40% for crypto. Spread cost estimated per ticker."
           },
           "thesis": "Coiled bands (width 0.036) + trend up + price 1.4 ATR above mid \u2014 precision long."
+        },
+        {
+          "date": "2026-04-29",
+          "action": "HOLD",
+          "ticker": "FXB",
+          "reason": "KESTREL still likes FXB as their top BUY. No rotation, no fees.",
+          "equity": 9997.0009
         }
       ],
       "inception_date": "2026-04-28",
@@ -718,53 +1188,53 @@
     },
     "OBSIDIAN": {
       "agent": "OBSIDIAN",
-      "balance": 0.0309,
+      "balance": 0.031,
       "current_position": {
-        "ticker": "MPC",
-        "shares": 43.097817,
-        "entry_price": 231.96,
-        "entry_date": "2026-04-28",
-        "thesis": "Commodity uptrend, RSI 56 not stretched \u2014 momentum continuation.",
+        "ticker": "XOP",
+        "shares": 58.361916,
+        "entry_price": 171.65,
+        "entry_date": "2026-04-29",
+        "thesis": "Commodity uptrend, RSI 54 not stretched \u2014 momentum continuation.",
         "execution": {
-          "order_id": "SIM-20260428-185407-MPC-B",
+          "order_id": "SIM-20260429-073358-XOP-B",
           "side": "BUY",
-          "ticker": "MPC",
+          "ticker": "XOP",
           "asset_class": "equity",
           "exchange": "NYSE Arca",
           "venue": "all-electronic ETF/options exchange",
           "broker": "Interactive Brokers (simulated paper account)",
           "order_type": "MARKET",
           "time_in_force": "DAY",
-          "submitted_at_utc": "2026-04-28T18:54:07+00:00",
-          "filled_at_utc": "2026-04-28T18:54:09+00:00",
-          "settlement_date": "2026-04-29",
+          "submitted_at_utc": "2026-04-29T07:33:58+00:00",
+          "filled_at_utc": "2026-04-29T07:34:00+00:00",
+          "settlement_date": "2026-04-30",
           "account": {
             "label": "EQUITY-CASH-SIM-001",
             "type": "Cash Account",
             "broker": "Interactive Brokers (simulated paper account)",
             "funding_source": "ACH funding from simulated bank account (routed via broker cash sweep)",
-            "balance_before": 10000.0,
-            "balance_after": 0.0309
+            "balance_before": 10020.8589,
+            "balance_after": 0.031
           },
           "fills": [
             {
-              "shares": 43.097817,
-              "price": 231.96,
-              "timestamp": "2026-04-28T18:54:09+00:00",
+              "shares": 58.361916,
+              "price": 171.65,
+              "timestamp": "2026-04-29T07:34:00+00:00",
               "venue": "NYSE Arca"
             }
           ],
-          "avg_fill_price": 231.96,
-          "gross_notional": 9996.97,
+          "avg_fill_price": 171.65,
+          "gross_notional": 10017.8225,
           "fees": {
             "commission": 0.0,
             "sec_section_31": 0.0,
             "finra_taf": 0.0,
-            "spread_cost": 2.999091,
-            "total": 2.999091,
+            "spread_cost": 3.005347,
+            "total": 3.005347,
             "notes": "Spread estimate: 3 bps. Zero commission (IBKR Lite/TD-class simulated)."
           },
-          "net_cost": 9999.9691,
+          "net_cost": 10020.8279,
           "net_proceeds": null,
           "disclaimer": "Simulated execution \u2014 no live orders were placed on any exchange. Fees modeled on US market structure: SEC Section 31 ($27.80/$1M of sale proceeds), FINRA Trading Activity Fee ($0.000166/share on sells, capped $9.30), Coinbase Advanced taker 0.40% for crypto. Spread cost estimated per ticker."
         }
@@ -773,6 +1243,10 @@
         {
           "date": "2026-04-28",
           "equity": 9997.0008
+        },
+        {
+          "date": "2026-04-29",
+          "equity": 10017.8535
         }
       ],
       "history": [
@@ -828,62 +1302,170 @@
             "disclaimer": "Simulated execution \u2014 no live orders were placed on any exchange. Fees modeled on US market structure: SEC Section 31 ($27.80/$1M of sale proceeds), FINRA Trading Activity Fee ($0.000166/share on sells, capped $9.30), Coinbase Advanced taker 0.40% for crypto. Spread cost estimated per ticker."
           },
           "thesis": "Commodity uptrend, RSI 56 not stretched \u2014 momentum continuation."
+        },
+        {
+          "date": "2026-04-29",
+          "action": "SELL",
+          "ticker": "MPC",
+          "shares": 43.097817,
+          "entry_price": 231.96,
+          "exit_price": 232.59,
+          "proceeds": 10020.828,
+          "pnl": 23.8584,
+          "pnl_pct": 0.27,
+          "balance_after": 10020.8589,
+          "execution": {
+            "order_id": "SIM-20260429-073358-MPC-S",
+            "side": "SELL",
+            "ticker": "MPC",
+            "asset_class": "equity",
+            "exchange": "NYSE Arca",
+            "venue": "all-electronic ETF/options exchange",
+            "broker": "Interactive Brokers (simulated paper account)",
+            "order_type": "MARKET",
+            "time_in_force": "DAY",
+            "submitted_at_utc": "2026-04-29T07:33:58+00:00",
+            "filled_at_utc": "2026-04-29T07:34:00+00:00",
+            "settlement_date": "2026-04-30",
+            "account": {
+              "label": "EQUITY-CASH-SIM-001",
+              "type": "Cash Account",
+              "broker": "Interactive Brokers (simulated paper account)",
+              "funding_source": "ACH funding from simulated bank account (routed via broker cash sweep)",
+              "balance_before": 0.0309,
+              "balance_after": 10020.8589
+            },
+            "fills": [
+              {
+                "shares": 43.097817,
+                "price": 232.59,
+                "timestamp": "2026-04-29T07:34:00+00:00",
+                "venue": "NYSE Arca"
+              }
+            ],
+            "avg_fill_price": 232.59,
+            "gross_notional": 10024.1211,
+            "fees": {
+              "commission": 0.0,
+              "sec_section_31": 0.278671,
+              "finra_taf": 0.007154,
+              "spread_cost": 3.007236,
+              "total": 3.293061,
+              "notes": "Spread estimate: 3 bps. Zero commission (IBKR Lite/TD-class simulated)."
+            },
+            "net_cost": null,
+            "net_proceeds": 10020.828,
+            "disclaimer": "Simulated execution \u2014 no live orders were placed on any exchange. Fees modeled on US market structure: SEC Section 31 ($27.80/$1M of sale proceeds), FINRA Trading Activity Fee ($0.000166/share on sells, capped $9.30), Coinbase Advanced taker 0.40% for crypto. Spread cost estimated per ticker."
+          }
+        },
+        {
+          "date": "2026-04-29",
+          "action": "BUY",
+          "ticker": "XOP",
+          "shares": 58.361916,
+          "entry_price": 171.65,
+          "cost": 10020.8279,
+          "balance_after": 0.031,
+          "execution": {
+            "order_id": "SIM-20260429-073358-XOP-B",
+            "side": "BUY",
+            "ticker": "XOP",
+            "asset_class": "equity",
+            "exchange": "NYSE Arca",
+            "venue": "all-electronic ETF/options exchange",
+            "broker": "Interactive Brokers (simulated paper account)",
+            "order_type": "MARKET",
+            "time_in_force": "DAY",
+            "submitted_at_utc": "2026-04-29T07:33:58+00:00",
+            "filled_at_utc": "2026-04-29T07:34:00+00:00",
+            "settlement_date": "2026-04-30",
+            "account": {
+              "label": "EQUITY-CASH-SIM-001",
+              "type": "Cash Account",
+              "broker": "Interactive Brokers (simulated paper account)",
+              "funding_source": "ACH funding from simulated bank account (routed via broker cash sweep)",
+              "balance_before": 10020.8589,
+              "balance_after": 0.031
+            },
+            "fills": [
+              {
+                "shares": 58.361916,
+                "price": 171.65,
+                "timestamp": "2026-04-29T07:34:00+00:00",
+                "venue": "NYSE Arca"
+              }
+            ],
+            "avg_fill_price": 171.65,
+            "gross_notional": 10017.8225,
+            "fees": {
+              "commission": 0.0,
+              "sec_section_31": 0.0,
+              "finra_taf": 0.0,
+              "spread_cost": 3.005347,
+              "total": 3.005347,
+              "notes": "Spread estimate: 3 bps. Zero commission (IBKR Lite/TD-class simulated)."
+            },
+            "net_cost": 10020.8279,
+            "net_proceeds": null,
+            "disclaimer": "Simulated execution \u2014 no live orders were placed on any exchange. Fees modeled on US market structure: SEC Section 31 ($27.80/$1M of sale proceeds), FINRA Trading Activity Fee ($0.000166/share on sells, capped $9.30), Coinbase Advanced taker 0.40% for crypto. Spread cost estimated per ticker."
+          },
+          "thesis": "Commodity uptrend, RSI 54 not stretched \u2014 momentum continuation."
         }
       ],
       "inception_date": "2026-04-28",
-      "realized_pnl": 0.0,
-      "total_fees_paid": 2.9991,
-      "trades_count": 1
+      "realized_pnl": 23.8584,
+      "total_fees_paid": 9.2975,
+      "trades_count": 3
     },
     "ZENITH": {
       "agent": "ZENITH",
-      "balance": 0.0309,
+      "balance": 0.0306,
       "current_position": {
-        "ticker": "MU",
-        "shares": 19.661832,
-        "entry_price": 508.4455,
-        "entry_date": "2026-04-28",
-        "thesis": "Perfect stack with 58.9% total separation, +23.6% 50d momentum \u2014 cosmic trend intact.",
+        "ticker": "TSM",
+        "shares": 25.256256,
+        "entry_price": 392.34,
+        "entry_date": "2026-04-29",
+        "thesis": "Perfect stack with 21.5% total separation, +7.4% 50d momentum \u2014 cosmic trend intact.",
         "execution": {
-          "order_id": "SIM-20260428-185407-MU-B",
+          "order_id": "SIM-20260429-073358-TSM-B",
           "side": "BUY",
-          "ticker": "MU",
+          "ticker": "TSM",
           "asset_class": "equity",
           "exchange": "NASDAQ",
           "venue": "electronic equity exchange",
           "broker": "Interactive Brokers (simulated paper account)",
           "order_type": "MARKET",
           "time_in_force": "DAY",
-          "submitted_at_utc": "2026-04-28T18:54:07+00:00",
-          "filled_at_utc": "2026-04-28T18:54:09+00:00",
-          "settlement_date": "2026-04-29",
+          "submitted_at_utc": "2026-04-29T07:33:58+00:00",
+          "filled_at_utc": "2026-04-29T07:34:00+00:00",
+          "settlement_date": "2026-04-30",
           "account": {
             "label": "EQUITY-CASH-SIM-001",
             "type": "Cash Account",
             "broker": "Interactive Brokers (simulated paper account)",
             "funding_source": "ACH funding from simulated bank account (routed via broker cash sweep)",
-            "balance_before": 10000.0,
-            "balance_after": 0.0309
+            "balance_before": 9912.0428,
+            "balance_after": 0.0306
           },
           "fills": [
             {
-              "shares": 19.661832,
-              "price": 508.4455,
-              "timestamp": "2026-04-28T18:54:09+00:00",
+              "shares": 25.256256,
+              "price": 392.34,
+              "timestamp": "2026-04-29T07:34:00+00:00",
               "venue": "NASDAQ"
             }
           ],
-          "avg_fill_price": 508.4455,
-          "gross_notional": 9996.97,
+          "avg_fill_price": 392.34,
+          "gross_notional": 9909.0395,
           "fees": {
             "commission": 0.0,
             "sec_section_31": 0.0,
             "finra_taf": 0.0,
-            "spread_cost": 2.999091,
-            "total": 2.999091,
+            "spread_cost": 2.972712,
+            "total": 2.972712,
             "notes": "Spread estimate: 3 bps. Zero commission (IBKR Lite/TD-class simulated)."
           },
-          "net_cost": 9999.9691,
+          "net_cost": 9912.0122,
           "net_proceeds": null,
           "disclaimer": "Simulated execution \u2014 no live orders were placed on any exchange. Fees modeled on US market structure: SEC Section 31 ($27.80/$1M of sale proceeds), FINRA Trading Activity Fee ($0.000166/share on sells, capped $9.30), Coinbase Advanced taker 0.40% for crypto. Spread cost estimated per ticker."
         }
@@ -892,6 +1474,10 @@
         {
           "date": "2026-04-28",
           "equity": 9997.0008
+        },
+        {
+          "date": "2026-04-29",
+          "equity": 9909.07
         }
       ],
       "history": [
@@ -947,12 +1533,120 @@
             "disclaimer": "Simulated execution \u2014 no live orders were placed on any exchange. Fees modeled on US market structure: SEC Section 31 ($27.80/$1M of sale proceeds), FINRA Trading Activity Fee ($0.000166/share on sells, capped $9.30), Coinbase Advanced taker 0.40% for crypto. Spread cost estimated per ticker."
           },
           "thesis": "Perfect stack with 58.9% total separation, +23.6% 50d momentum \u2014 cosmic trend intact."
+        },
+        {
+          "date": "2026-04-29",
+          "action": "SELL",
+          "ticker": "MU",
+          "shares": 19.661832,
+          "entry_price": 508.4455,
+          "exit_price": 504.29,
+          "proceeds": 9912.0119,
+          "pnl": -84.9581,
+          "pnl_pct": -0.82,
+          "balance_after": 9912.0428,
+          "execution": {
+            "order_id": "SIM-20260429-073358-MU-S",
+            "side": "SELL",
+            "ticker": "MU",
+            "asset_class": "equity",
+            "exchange": "NASDAQ",
+            "venue": "electronic equity exchange",
+            "broker": "Interactive Brokers (simulated paper account)",
+            "order_type": "MARKET",
+            "time_in_force": "DAY",
+            "submitted_at_utc": "2026-04-29T07:33:58+00:00",
+            "filled_at_utc": "2026-04-29T07:34:00+00:00",
+            "settlement_date": "2026-04-30",
+            "account": {
+              "label": "EQUITY-CASH-SIM-001",
+              "type": "Cash Account",
+              "broker": "Interactive Brokers (simulated paper account)",
+              "funding_source": "ACH funding from simulated bank account (routed via broker cash sweep)",
+              "balance_before": 0.0309,
+              "balance_after": 9912.0428
+            },
+            "fills": [
+              {
+                "shares": 19.661832,
+                "price": 504.29,
+                "timestamp": "2026-04-29T07:34:00+00:00",
+                "venue": "NASDAQ"
+              }
+            ],
+            "avg_fill_price": 504.29,
+            "gross_notional": 9915.2654,
+            "fees": {
+              "commission": 0.0,
+              "sec_section_31": 0.275644,
+              "finra_taf": 0.003264,
+              "spread_cost": 2.97458,
+              "total": 3.253488,
+              "notes": "Spread estimate: 3 bps. Zero commission (IBKR Lite/TD-class simulated)."
+            },
+            "net_cost": null,
+            "net_proceeds": 9912.0119,
+            "disclaimer": "Simulated execution \u2014 no live orders were placed on any exchange. Fees modeled on US market structure: SEC Section 31 ($27.80/$1M of sale proceeds), FINRA Trading Activity Fee ($0.000166/share on sells, capped $9.30), Coinbase Advanced taker 0.40% for crypto. Spread cost estimated per ticker."
+          }
+        },
+        {
+          "date": "2026-04-29",
+          "action": "BUY",
+          "ticker": "TSM",
+          "shares": 25.256256,
+          "entry_price": 392.34,
+          "cost": 9912.0122,
+          "balance_after": 0.0306,
+          "execution": {
+            "order_id": "SIM-20260429-073358-TSM-B",
+            "side": "BUY",
+            "ticker": "TSM",
+            "asset_class": "equity",
+            "exchange": "NASDAQ",
+            "venue": "electronic equity exchange",
+            "broker": "Interactive Brokers (simulated paper account)",
+            "order_type": "MARKET",
+            "time_in_force": "DAY",
+            "submitted_at_utc": "2026-04-29T07:33:58+00:00",
+            "filled_at_utc": "2026-04-29T07:34:00+00:00",
+            "settlement_date": "2026-04-30",
+            "account": {
+              "label": "EQUITY-CASH-SIM-001",
+              "type": "Cash Account",
+              "broker": "Interactive Brokers (simulated paper account)",
+              "funding_source": "ACH funding from simulated bank account (routed via broker cash sweep)",
+              "balance_before": 9912.0428,
+              "balance_after": 0.0306
+            },
+            "fills": [
+              {
+                "shares": 25.256256,
+                "price": 392.34,
+                "timestamp": "2026-04-29T07:34:00+00:00",
+                "venue": "NASDAQ"
+              }
+            ],
+            "avg_fill_price": 392.34,
+            "gross_notional": 9909.0395,
+            "fees": {
+              "commission": 0.0,
+              "sec_section_31": 0.0,
+              "finra_taf": 0.0,
+              "spread_cost": 2.972712,
+              "total": 2.972712,
+              "notes": "Spread estimate: 3 bps. Zero commission (IBKR Lite/TD-class simulated)."
+            },
+            "net_cost": 9912.0122,
+            "net_proceeds": null,
+            "disclaimer": "Simulated execution \u2014 no live orders were placed on any exchange. Fees modeled on US market structure: SEC Section 31 ($27.80/$1M of sale proceeds), FINRA Trading Activity Fee ($0.000166/share on sells, capped $9.30), Coinbase Advanced taker 0.40% for crypto. Spread cost estimated per ticker."
+          },
+          "thesis": "Perfect stack with 21.5% total separation, +7.4% 50d momentum \u2014 cosmic trend intact."
         }
       ],
       "inception_date": "2026-04-28",
-      "realized_pnl": 0.0,
-      "total_fees_paid": 2.9991,
-      "trades_count": 1
+      "realized_pnl": -84.9581,
+      "total_fees_paid": 9.2253,
+      "trades_count": 3
     },
     "WEAVER": {
       "agent": "WEAVER",
@@ -1011,6 +1705,10 @@
         {
           "date": "2026-04-28",
           "equity": 9997.001
+        },
+        {
+          "date": "2026-04-29",
+          "equity": 9914.7511
         }
       ],
       "history": [
@@ -1066,6 +1764,13 @@
             "disclaimer": "Simulated execution \u2014 no live orders were placed on any exchange. Fees modeled on US market structure: SEC Section 31 ($27.80/$1M of sale proceeds), FINRA Trading Activity Fee ($0.000166/share on sells, capped $9.30), Coinbase Advanced taker 0.40% for crypto. Spread cost estimated per ticker."
           },
           "thesis": "Pullback to SMA-20 ($296.32) in uptrend"
+        },
+        {
+          "date": "2026-04-29",
+          "action": "HOLD",
+          "ticker": "PSA",
+          "reason": "WEAVER still likes PSA as their top BUY. No rotation, no fees.",
+          "equity": 9914.7511
         }
       ],
       "inception_date": "2026-04-28",
@@ -1075,53 +1780,53 @@
     },
     "HEX": {
       "agent": "HEX",
-      "balance": 0.7127,
+      "balance": 0.0306,
       "current_position": {
-        "ticker": "USDT-USD",
-        "shares": 9955.203681,
-        "entry_price": 0.9996,
-        "entry_date": "2026-04-28",
-        "thesis": "Price -2.99\u03c3 below 20-day mean \u2014 reversion probable.",
+        "ticker": "SPOT",
+        "shares": 22.809628,
+        "entry_price": 434.2,
+        "entry_date": "2026-04-29",
+        "thesis": "Price -2.56\u03c3 below 20-day mean \u2014 reversion probable.",
         "execution": {
-          "order_id": "SIM-20260428-185407-USDTUSD-B",
+          "order_id": "SIM-20260429-073358-SPOT-B",
           "side": "BUY",
-          "ticker": "USDT-USD",
-          "asset_class": "crypto",
+          "ticker": "SPOT",
+          "asset_class": "equity",
           "exchange": "NYSE Arca",
           "venue": "all-electronic ETF/options exchange",
-          "broker": "Coinbase (simulated wallet)",
+          "broker": "Interactive Brokers (simulated paper account)",
           "order_type": "MARKET",
           "time_in_force": "DAY",
-          "submitted_at_utc": "2026-04-28T18:54:07+00:00",
-          "filled_at_utc": "2026-04-28T18:54:09+00:00",
-          "settlement_date": "2026-04-28",
+          "submitted_at_utc": "2026-04-29T07:33:58+00:00",
+          "filled_at_utc": "2026-04-29T07:34:00+00:00",
+          "settlement_date": "2026-04-30",
           "account": {
-            "label": "CRYPTO-WALLET-SIM-001",
-            "type": "Crypto Wallet",
-            "broker": "Coinbase (simulated wallet)",
-            "funding_source": "Internal USDC balance (simulated deposit from cash sweep)",
-            "balance_before": 10000.0,
-            "balance_after": 0.7127
+            "label": "EQUITY-CASH-SIM-001",
+            "type": "Cash Account",
+            "broker": "Interactive Brokers (simulated paper account)",
+            "funding_source": "ACH funding from simulated bank account (routed via broker cash sweep)",
+            "balance_before": 9906.9427,
+            "balance_after": 0.0306
           },
           "fills": [
             {
-              "shares": 9955.203681,
-              "price": 0.9996,
-              "timestamp": "2026-04-28T18:54:09+00:00",
+              "shares": 22.809628,
+              "price": 434.2,
+              "timestamp": "2026-04-29T07:34:00+00:00",
               "venue": "NYSE Arca"
             }
           ],
-          "avg_fill_price": 0.9996,
-          "gross_notional": 9951.52,
+          "avg_fill_price": 434.2,
+          "gross_notional": 9903.9409,
           "fees": {
-            "commission": 39.80608,
+            "commission": 0.0,
             "sec_section_31": 0.0,
             "finra_taf": 0.0,
-            "spread_cost": 7.961216,
-            "total": 47.767296,
-            "notes": "Spread estimate: 8 bps. Crypto taker fee 0.40%."
+            "spread_cost": 2.971182,
+            "total": 2.971182,
+            "notes": "Spread estimate: 3 bps. Zero commission (IBKR Lite/TD-class simulated)."
           },
-          "net_cost": 9999.2873,
+          "net_cost": 9906.9121,
           "net_proceeds": null,
           "disclaimer": "Simulated execution \u2014 no live orders were placed on any exchange. Fees modeled on US market structure: SEC Section 31 ($27.80/$1M of sale proceeds), FINRA Trading Activity Fee ($0.000166/share on sells, capped $9.30), Coinbase Advanced taker 0.40% for crypto. Spread cost estimated per ticker."
         }
@@ -1130,6 +1835,10 @@
         {
           "date": "2026-04-28",
           "equity": 9952.2327
+        },
+        {
+          "date": "2026-04-29",
+          "equity": 9903.9714
         }
       ],
       "history": [
@@ -1185,62 +1894,170 @@
             "disclaimer": "Simulated execution \u2014 no live orders were placed on any exchange. Fees modeled on US market structure: SEC Section 31 ($27.80/$1M of sale proceeds), FINRA Trading Activity Fee ($0.000166/share on sells, capped $9.30), Coinbase Advanced taker 0.40% for crypto. Spread cost estimated per ticker."
           },
           "thesis": "Price -2.99\u03c3 below 20-day mean \u2014 reversion probable."
+        },
+        {
+          "date": "2026-04-29",
+          "action": "SELL",
+          "ticker": "USDT-USD",
+          "shares": 9955.203681,
+          "entry_price": 0.9996,
+          "exit_price": 0.9999,
+          "proceeds": 9906.23,
+          "pnl": -44.9916,
+          "pnl_pct": 0.03,
+          "balance_after": 9906.9427,
+          "execution": {
+            "order_id": "SIM-20260429-073358-USDTUSD-S",
+            "side": "SELL",
+            "ticker": "USDT-USD",
+            "asset_class": "crypto",
+            "exchange": "NYSE Arca",
+            "venue": "all-electronic ETF/options exchange",
+            "broker": "Coinbase (simulated wallet)",
+            "order_type": "MARKET",
+            "time_in_force": "DAY",
+            "submitted_at_utc": "2026-04-29T07:33:58+00:00",
+            "filled_at_utc": "2026-04-29T07:34:00+00:00",
+            "settlement_date": "2026-04-29",
+            "account": {
+              "label": "CRYPTO-WALLET-SIM-001",
+              "type": "Crypto Wallet",
+              "broker": "Coinbase (simulated wallet)",
+              "funding_source": "Internal USDC balance (simulated deposit from cash sweep)",
+              "balance_before": 0.7127,
+              "balance_after": 9906.9427
+            },
+            "fills": [
+              {
+                "shares": 9955.203681,
+                "price": 0.9999,
+                "timestamp": "2026-04-29T07:34:00+00:00",
+                "venue": "NYSE Arca"
+              }
+            ],
+            "avg_fill_price": 0.9999,
+            "gross_notional": 9954.0092,
+            "fees": {
+              "commission": 39.816037,
+              "sec_section_31": 0.0,
+              "finra_taf": 0.0,
+              "spread_cost": 7.963207,
+              "total": 47.779244,
+              "notes": "Spread estimate: 8 bps. Crypto taker fee 0.40%."
+            },
+            "net_cost": null,
+            "net_proceeds": 9906.23,
+            "disclaimer": "Simulated execution \u2014 no live orders were placed on any exchange. Fees modeled on US market structure: SEC Section 31 ($27.80/$1M of sale proceeds), FINRA Trading Activity Fee ($0.000166/share on sells, capped $9.30), Coinbase Advanced taker 0.40% for crypto. Spread cost estimated per ticker."
+          }
+        },
+        {
+          "date": "2026-04-29",
+          "action": "BUY",
+          "ticker": "SPOT",
+          "shares": 22.809628,
+          "entry_price": 434.2,
+          "cost": 9906.9121,
+          "balance_after": 0.0306,
+          "execution": {
+            "order_id": "SIM-20260429-073358-SPOT-B",
+            "side": "BUY",
+            "ticker": "SPOT",
+            "asset_class": "equity",
+            "exchange": "NYSE Arca",
+            "venue": "all-electronic ETF/options exchange",
+            "broker": "Interactive Brokers (simulated paper account)",
+            "order_type": "MARKET",
+            "time_in_force": "DAY",
+            "submitted_at_utc": "2026-04-29T07:33:58+00:00",
+            "filled_at_utc": "2026-04-29T07:34:00+00:00",
+            "settlement_date": "2026-04-30",
+            "account": {
+              "label": "EQUITY-CASH-SIM-001",
+              "type": "Cash Account",
+              "broker": "Interactive Brokers (simulated paper account)",
+              "funding_source": "ACH funding from simulated bank account (routed via broker cash sweep)",
+              "balance_before": 9906.9427,
+              "balance_after": 0.0306
+            },
+            "fills": [
+              {
+                "shares": 22.809628,
+                "price": 434.2,
+                "timestamp": "2026-04-29T07:34:00+00:00",
+                "venue": "NYSE Arca"
+              }
+            ],
+            "avg_fill_price": 434.2,
+            "gross_notional": 9903.9409,
+            "fees": {
+              "commission": 0.0,
+              "sec_section_31": 0.0,
+              "finra_taf": 0.0,
+              "spread_cost": 2.971182,
+              "total": 2.971182,
+              "notes": "Spread estimate: 3 bps. Zero commission (IBKR Lite/TD-class simulated)."
+            },
+            "net_cost": 9906.9121,
+            "net_proceeds": null,
+            "disclaimer": "Simulated execution \u2014 no live orders were placed on any exchange. Fees modeled on US market structure: SEC Section 31 ($27.80/$1M of sale proceeds), FINRA Trading Activity Fee ($0.000166/share on sells, capped $9.30), Coinbase Advanced taker 0.40% for crypto. Spread cost estimated per ticker."
+          },
+          "thesis": "Price -2.56\u03c3 below 20-day mean \u2014 reversion probable."
         }
       ],
       "inception_date": "2026-04-28",
-      "realized_pnl": 0.0,
-      "total_fees_paid": 47.7673,
-      "trades_count": 1
+      "realized_pnl": -44.9916,
+      "total_fees_paid": 98.5177,
+      "trades_count": 3
     },
     "SYNTH": {
       "agent": "SYNTH",
-      "balance": 0.0101,
+      "balance": 0.0309,
       "current_position": {
-        "ticker": "AAPL",
-        "shares": 36.997655,
-        "entry_price": 270.2601,
-        "entry_date": "2026-04-28",
+        "ticker": "DELL",
+        "shares": 48.615184,
+        "entry_price": 205.93,
+        "entry_date": "2026-04-29",
         "thesis": "Risk-on regime supports cyclical exposure.",
         "execution": {
-          "order_id": "SIM-20260428-185407-AAPL-B",
+          "order_id": "SIM-20260429-073358-DELL-B",
           "side": "BUY",
-          "ticker": "AAPL",
+          "ticker": "DELL",
           "asset_class": "equity",
-          "exchange": "NASDAQ",
-          "venue": "electronic equity exchange",
+          "exchange": "NYSE Arca",
+          "venue": "all-electronic ETF/options exchange",
           "broker": "Interactive Brokers (simulated paper account)",
           "order_type": "MARKET",
           "time_in_force": "DAY",
-          "submitted_at_utc": "2026-04-28T18:54:07+00:00",
-          "filled_at_utc": "2026-04-28T18:54:09+00:00",
-          "settlement_date": "2026-04-29",
+          "submitted_at_utc": "2026-04-29T07:33:58+00:00",
+          "filled_at_utc": "2026-04-29T07:34:00+00:00",
+          "settlement_date": "2026-04-30",
           "account": {
             "label": "EQUITY-CASH-SIM-001",
             "type": "Cash Account",
             "broker": "Interactive Brokers (simulated paper account)",
             "funding_source": "ACH funding from simulated bank account (routed via broker cash sweep)",
-            "balance_before": 10000.0,
-            "balance_after": 0.0101
+            "balance_before": 10014.3588,
+            "balance_after": 0.0309
           },
           "fills": [
             {
-              "shares": 36.997655,
-              "price": 270.2601,
-              "timestamp": "2026-04-28T18:54:09+00:00",
-              "venue": "NASDAQ"
+              "shares": 48.615184,
+              "price": 205.93,
+              "timestamp": "2026-04-29T07:34:00+00:00",
+              "venue": "NYSE Arca"
             }
           ],
-          "avg_fill_price": 270.2601,
-          "gross_notional": 9998.99,
+          "avg_fill_price": 205.93,
+          "gross_notional": 10011.3245,
           "fees": {
             "commission": 0.0,
             "sec_section_31": 0.0,
             "finra_taf": 0.0,
-            "spread_cost": 0.999899,
-            "total": 0.999899,
-            "notes": "Spread estimate: 1 bps. Zero commission (IBKR Lite/TD-class simulated)."
+            "spread_cost": 3.003397,
+            "total": 3.003397,
+            "notes": "Spread estimate: 3 bps. Zero commission (IBKR Lite/TD-class simulated)."
           },
-          "net_cost": 9999.9899,
+          "net_cost": 10014.3279,
           "net_proceeds": null,
           "disclaimer": "Simulated execution \u2014 no live orders were placed on any exchange. Fees modeled on US market structure: SEC Section 31 ($27.80/$1M of sale proceeds), FINRA Trading Activity Fee ($0.000166/share on sells, capped $9.30), Coinbase Advanced taker 0.40% for crypto. Spread cost estimated per ticker."
         }
@@ -1249,6 +2066,10 @@
         {
           "date": "2026-04-28",
           "equity": 9999.0001
+        },
+        {
+          "date": "2026-04-29",
+          "equity": 10011.3554
         }
       ],
       "history": [
@@ -1304,62 +2125,170 @@
             "disclaimer": "Simulated execution \u2014 no live orders were placed on any exchange. Fees modeled on US market structure: SEC Section 31 ($27.80/$1M of sale proceeds), FINRA Trading Activity Fee ($0.000166/share on sells, capped $9.30), Coinbase Advanced taker 0.40% for crypto. Spread cost estimated per ticker."
           },
           "thesis": "Risk-on regime supports cyclical exposure."
+        },
+        {
+          "date": "2026-04-29",
+          "action": "SELL",
+          "ticker": "AAPL",
+          "shares": 36.997655,
+          "entry_price": 270.2601,
+          "exit_price": 270.71,
+          "proceeds": 10014.3487,
+          "pnl": 15.3588,
+          "pnl_pct": 0.17,
+          "balance_after": 10014.3588,
+          "execution": {
+            "order_id": "SIM-20260429-073358-AAPL-S",
+            "side": "SELL",
+            "ticker": "AAPL",
+            "asset_class": "equity",
+            "exchange": "NASDAQ",
+            "venue": "electronic equity exchange",
+            "broker": "Interactive Brokers (simulated paper account)",
+            "order_type": "MARKET",
+            "time_in_force": "DAY",
+            "submitted_at_utc": "2026-04-29T07:33:58+00:00",
+            "filled_at_utc": "2026-04-29T07:34:00+00:00",
+            "settlement_date": "2026-04-30",
+            "account": {
+              "label": "EQUITY-CASH-SIM-001",
+              "type": "Cash Account",
+              "broker": "Interactive Brokers (simulated paper account)",
+              "funding_source": "ACH funding from simulated bank account (routed via broker cash sweep)",
+              "balance_before": 0.0101,
+              "balance_after": 10014.3588
+            },
+            "fills": [
+              {
+                "shares": 36.997655,
+                "price": 270.71,
+                "timestamp": "2026-04-29T07:34:00+00:00",
+                "venue": "NASDAQ"
+              }
+            ],
+            "avg_fill_price": 270.71,
+            "gross_notional": 10015.6349,
+            "fees": {
+              "commission": 0.0,
+              "sec_section_31": 0.278435,
+              "finra_taf": 0.006142,
+              "spread_cost": 1.001563,
+              "total": 1.28614,
+              "notes": "Spread estimate: 1 bps. Zero commission (IBKR Lite/TD-class simulated)."
+            },
+            "net_cost": null,
+            "net_proceeds": 10014.3487,
+            "disclaimer": "Simulated execution \u2014 no live orders were placed on any exchange. Fees modeled on US market structure: SEC Section 31 ($27.80/$1M of sale proceeds), FINRA Trading Activity Fee ($0.000166/share on sells, capped $9.30), Coinbase Advanced taker 0.40% for crypto. Spread cost estimated per ticker."
+          }
+        },
+        {
+          "date": "2026-04-29",
+          "action": "BUY",
+          "ticker": "DELL",
+          "shares": 48.615184,
+          "entry_price": 205.93,
+          "cost": 10014.3279,
+          "balance_after": 0.0309,
+          "execution": {
+            "order_id": "SIM-20260429-073358-DELL-B",
+            "side": "BUY",
+            "ticker": "DELL",
+            "asset_class": "equity",
+            "exchange": "NYSE Arca",
+            "venue": "all-electronic ETF/options exchange",
+            "broker": "Interactive Brokers (simulated paper account)",
+            "order_type": "MARKET",
+            "time_in_force": "DAY",
+            "submitted_at_utc": "2026-04-29T07:33:58+00:00",
+            "filled_at_utc": "2026-04-29T07:34:00+00:00",
+            "settlement_date": "2026-04-30",
+            "account": {
+              "label": "EQUITY-CASH-SIM-001",
+              "type": "Cash Account",
+              "broker": "Interactive Brokers (simulated paper account)",
+              "funding_source": "ACH funding from simulated bank account (routed via broker cash sweep)",
+              "balance_before": 10014.3588,
+              "balance_after": 0.0309
+            },
+            "fills": [
+              {
+                "shares": 48.615184,
+                "price": 205.93,
+                "timestamp": "2026-04-29T07:34:00+00:00",
+                "venue": "NYSE Arca"
+              }
+            ],
+            "avg_fill_price": 205.93,
+            "gross_notional": 10011.3245,
+            "fees": {
+              "commission": 0.0,
+              "sec_section_31": 0.0,
+              "finra_taf": 0.0,
+              "spread_cost": 3.003397,
+              "total": 3.003397,
+              "notes": "Spread estimate: 3 bps. Zero commission (IBKR Lite/TD-class simulated)."
+            },
+            "net_cost": 10014.3279,
+            "net_proceeds": null,
+            "disclaimer": "Simulated execution \u2014 no live orders were placed on any exchange. Fees modeled on US market structure: SEC Section 31 ($27.80/$1M of sale proceeds), FINRA Trading Activity Fee ($0.000166/share on sells, capped $9.30), Coinbase Advanced taker 0.40% for crypto. Spread cost estimated per ticker."
+          },
+          "thesis": "Risk-on regime supports cyclical exposure."
         }
       ],
       "inception_date": "2026-04-28",
-      "realized_pnl": 0.0,
-      "total_fees_paid": 0.9999,
-      "trades_count": 1
+      "realized_pnl": 15.3588,
+      "total_fees_paid": 5.2894,
+      "trades_count": 3
     },
     "SPECK": {
       "agent": "SPECK",
-      "balance": 0.0309,
+      "balance": 0.7153,
       "current_position": {
-        "ticker": "GM",
-        "shares": 127.163649,
-        "entry_price": 78.615,
-        "entry_date": "2026-04-28",
-        "thesis": "Low coverage (5 articles) but sentiment +0.67 and price above SMA-50 \u2014 small edge before crowd arrives.",
+        "ticker": "INJ-USD",
+        "shares": 2787.505641,
+        "entry_price": 3.583,
+        "entry_date": "2026-04-29",
+        "thesis": "Low coverage (5 articles) but sentiment +0.80 and price above SMA-50 \u2014 small edge before crowd arrives.",
         "execution": {
-          "order_id": "SIM-20260428-185407-GM-B",
+          "order_id": "SIM-20260429-073358-INJUSD-B",
           "side": "BUY",
-          "ticker": "GM",
-          "asset_class": "equity",
+          "ticker": "INJ-USD",
+          "asset_class": "crypto",
           "exchange": "NYSE Arca",
           "venue": "all-electronic ETF/options exchange",
-          "broker": "Interactive Brokers (simulated paper account)",
+          "broker": "Coinbase (simulated wallet)",
           "order_type": "MARKET",
           "time_in_force": "DAY",
-          "submitted_at_utc": "2026-04-28T18:54:07+00:00",
-          "filled_at_utc": "2026-04-28T18:54:09+00:00",
+          "submitted_at_utc": "2026-04-29T07:33:58+00:00",
+          "filled_at_utc": "2026-04-29T07:34:00+00:00",
           "settlement_date": "2026-04-29",
           "account": {
-            "label": "EQUITY-CASH-SIM-001",
-            "type": "Cash Account",
-            "broker": "Interactive Brokers (simulated paper account)",
-            "funding_source": "ACH funding from simulated bank account (routed via broker cash sweep)",
-            "balance_before": 10000.0,
-            "balance_after": 0.0309
+            "label": "CRYPTO-WALLET-SIM-001",
+            "type": "Crypto Wallet",
+            "broker": "Coinbase (simulated wallet)",
+            "funding_source": "Internal USDC balance (simulated deposit from cash sweep)",
+            "balance_before": 10036.2885,
+            "balance_after": 0.7153
           },
           "fills": [
             {
-              "shares": 127.163649,
-              "price": 78.615,
-              "timestamp": "2026-04-28T18:54:09+00:00",
+              "shares": 2787.505641,
+              "price": 3.583,
+              "timestamp": "2026-04-29T07:34:00+00:00",
               "venue": "NYSE Arca"
             }
           ],
-          "avg_fill_price": 78.615,
-          "gross_notional": 9996.97,
+          "avg_fill_price": 3.583,
+          "gross_notional": 9987.6326,
           "fees": {
-            "commission": 0.0,
+            "commission": 39.95053,
             "sec_section_31": 0.0,
             "finra_taf": 0.0,
-            "spread_cost": 2.999091,
-            "total": 2.999091,
-            "notes": "Spread estimate: 3 bps. Zero commission (IBKR Lite/TD-class simulated)."
+            "spread_cost": 7.990106,
+            "total": 47.940636,
+            "notes": "Spread estimate: 8 bps. Crypto taker fee 0.40%."
           },
-          "net_cost": 9999.9691,
+          "net_cost": 10035.5732,
           "net_proceeds": null,
           "disclaimer": "Simulated execution \u2014 no live orders were placed on any exchange. Fees modeled on US market structure: SEC Section 31 ($27.80/$1M of sale proceeds), FINRA Trading Activity Fee ($0.000166/share on sells, capped $9.30), Coinbase Advanced taker 0.40% for crypto. Spread cost estimated per ticker."
         }
@@ -1368,6 +2297,10 @@
         {
           "date": "2026-04-28",
           "equity": 9997.0009
+        },
+        {
+          "date": "2026-04-29",
+          "equity": 9988.3479
         }
       ],
       "history": [
@@ -1423,62 +2356,170 @@
             "disclaimer": "Simulated execution \u2014 no live orders were placed on any exchange. Fees modeled on US market structure: SEC Section 31 ($27.80/$1M of sale proceeds), FINRA Trading Activity Fee ($0.000166/share on sells, capped $9.30), Coinbase Advanced taker 0.40% for crypto. Spread cost estimated per ticker."
           },
           "thesis": "Low coverage (5 articles) but sentiment +0.67 and price above SMA-50 \u2014 small edge before crowd arrives."
+        },
+        {
+          "date": "2026-04-29",
+          "action": "SELL",
+          "ticker": "GM",
+          "shares": 127.163649,
+          "entry_price": 78.615,
+          "exit_price": 78.95,
+          "proceeds": 10036.2576,
+          "pnl": 39.2873,
+          "pnl_pct": 0.43,
+          "balance_after": 10036.2885,
+          "execution": {
+            "order_id": "SIM-20260429-073358-GM-S",
+            "side": "SELL",
+            "ticker": "GM",
+            "asset_class": "equity",
+            "exchange": "NYSE Arca",
+            "venue": "all-electronic ETF/options exchange",
+            "broker": "Interactive Brokers (simulated paper account)",
+            "order_type": "MARKET",
+            "time_in_force": "DAY",
+            "submitted_at_utc": "2026-04-29T07:33:58+00:00",
+            "filled_at_utc": "2026-04-29T07:34:00+00:00",
+            "settlement_date": "2026-04-30",
+            "account": {
+              "label": "EQUITY-CASH-SIM-001",
+              "type": "Cash Account",
+              "broker": "Interactive Brokers (simulated paper account)",
+              "funding_source": "ACH funding from simulated bank account (routed via broker cash sweep)",
+              "balance_before": 0.0309,
+              "balance_after": 10036.2885
+            },
+            "fills": [
+              {
+                "shares": 127.163649,
+                "price": 78.95,
+                "timestamp": "2026-04-29T07:34:00+00:00",
+                "venue": "NYSE Arca"
+              }
+            ],
+            "avg_fill_price": 78.95,
+            "gross_notional": 10039.5697,
+            "fees": {
+              "commission": 0.0,
+              "sec_section_31": 0.2791,
+              "finra_taf": 0.021109,
+              "spread_cost": 3.011871,
+              "total": 3.31208,
+              "notes": "Spread estimate: 3 bps. Zero commission (IBKR Lite/TD-class simulated)."
+            },
+            "net_cost": null,
+            "net_proceeds": 10036.2576,
+            "disclaimer": "Simulated execution \u2014 no live orders were placed on any exchange. Fees modeled on US market structure: SEC Section 31 ($27.80/$1M of sale proceeds), FINRA Trading Activity Fee ($0.000166/share on sells, capped $9.30), Coinbase Advanced taker 0.40% for crypto. Spread cost estimated per ticker."
+          }
+        },
+        {
+          "date": "2026-04-29",
+          "action": "BUY",
+          "ticker": "INJ-USD",
+          "shares": 2787.505641,
+          "entry_price": 3.583,
+          "cost": 10035.5732,
+          "balance_after": 0.7153,
+          "execution": {
+            "order_id": "SIM-20260429-073358-INJUSD-B",
+            "side": "BUY",
+            "ticker": "INJ-USD",
+            "asset_class": "crypto",
+            "exchange": "NYSE Arca",
+            "venue": "all-electronic ETF/options exchange",
+            "broker": "Coinbase (simulated wallet)",
+            "order_type": "MARKET",
+            "time_in_force": "DAY",
+            "submitted_at_utc": "2026-04-29T07:33:58+00:00",
+            "filled_at_utc": "2026-04-29T07:34:00+00:00",
+            "settlement_date": "2026-04-29",
+            "account": {
+              "label": "CRYPTO-WALLET-SIM-001",
+              "type": "Crypto Wallet",
+              "broker": "Coinbase (simulated wallet)",
+              "funding_source": "Internal USDC balance (simulated deposit from cash sweep)",
+              "balance_before": 10036.2885,
+              "balance_after": 0.7153
+            },
+            "fills": [
+              {
+                "shares": 2787.505641,
+                "price": 3.583,
+                "timestamp": "2026-04-29T07:34:00+00:00",
+                "venue": "NYSE Arca"
+              }
+            ],
+            "avg_fill_price": 3.583,
+            "gross_notional": 9987.6326,
+            "fees": {
+              "commission": 39.95053,
+              "sec_section_31": 0.0,
+              "finra_taf": 0.0,
+              "spread_cost": 7.990106,
+              "total": 47.940636,
+              "notes": "Spread estimate: 8 bps. Crypto taker fee 0.40%."
+            },
+            "net_cost": 10035.5732,
+            "net_proceeds": null,
+            "disclaimer": "Simulated execution \u2014 no live orders were placed on any exchange. Fees modeled on US market structure: SEC Section 31 ($27.80/$1M of sale proceeds), FINRA Trading Activity Fee ($0.000166/share on sells, capped $9.30), Coinbase Advanced taker 0.40% for crypto. Spread cost estimated per ticker."
+          },
+          "thesis": "Low coverage (5 articles) but sentiment +0.80 and price above SMA-50 \u2014 small edge before crowd arrives."
         }
       ],
       "inception_date": "2026-04-28",
-      "realized_pnl": 0.0,
-      "total_fees_paid": 2.9991,
-      "trades_count": 1
+      "realized_pnl": 39.2873,
+      "total_fees_paid": 54.2518,
+      "trades_count": 3
     },
     "VESPA": {
       "agent": "VESPA",
-      "balance": 0.0101,
+      "balance": 0.0309,
       "current_position": {
-        "ticker": "META",
-        "shares": 14.893967,
-        "entry_price": 671.345,
-        "entry_date": "2026-04-28",
-        "thesis": "Earnings in 1d with positive sentiment +0.60 \u2014 lean long.",
+        "ticker": "ORLY",
+        "shares": 109.147283,
+        "entry_price": 91.57,
+        "entry_date": "2026-04-29",
+        "thesis": "Earnings in 0d with positive sentiment +0.80 \u2014 lean long.",
         "execution": {
-          "order_id": "SIM-20260428-185407-META-B",
+          "order_id": "SIM-20260429-073358-ORLY-B",
           "side": "BUY",
-          "ticker": "META",
+          "ticker": "ORLY",
           "asset_class": "equity",
-          "exchange": "NASDAQ",
-          "venue": "electronic equity exchange",
+          "exchange": "NYSE Arca",
+          "venue": "all-electronic ETF/options exchange",
           "broker": "Interactive Brokers (simulated paper account)",
           "order_type": "MARKET",
           "time_in_force": "DAY",
-          "submitted_at_utc": "2026-04-28T18:54:07+00:00",
-          "filled_at_utc": "2026-04-28T18:54:09+00:00",
-          "settlement_date": "2026-04-29",
+          "submitted_at_utc": "2026-04-29T07:33:58+00:00",
+          "filled_at_utc": "2026-04-29T07:34:00+00:00",
+          "settlement_date": "2026-04-30",
           "account": {
             "label": "EQUITY-CASH-SIM-001",
             "type": "Cash Account",
             "broker": "Interactive Brokers (simulated paper account)",
             "funding_source": "ACH funding from simulated bank account (routed via broker cash sweep)",
-            "balance_before": 10000.0,
-            "balance_after": 0.0101
+            "balance_before": 9997.646,
+            "balance_after": 0.0309
           },
           "fills": [
             {
-              "shares": 14.893967,
-              "price": 671.345,
-              "timestamp": "2026-04-28T18:54:09+00:00",
-              "venue": "NASDAQ"
+              "shares": 109.147283,
+              "price": 91.57,
+              "timestamp": "2026-04-29T07:34:00+00:00",
+              "venue": "NYSE Arca"
             }
           ],
-          "avg_fill_price": 671.345,
-          "gross_notional": 9998.99,
+          "avg_fill_price": 91.57,
+          "gross_notional": 9994.6167,
           "fees": {
             "commission": 0.0,
             "sec_section_31": 0.0,
             "finra_taf": 0.0,
-            "spread_cost": 0.999899,
-            "total": 0.999899,
-            "notes": "Spread estimate: 1 bps. Zero commission (IBKR Lite/TD-class simulated)."
+            "spread_cost": 2.998385,
+            "total": 2.998385,
+            "notes": "Spread estimate: 3 bps. Zero commission (IBKR Lite/TD-class simulated)."
           },
-          "net_cost": 9999.9899,
+          "net_cost": 9997.6151,
           "net_proceeds": null,
           "disclaimer": "Simulated execution \u2014 no live orders were placed on any exchange. Fees modeled on US market structure: SEC Section 31 ($27.80/$1M of sale proceeds), FINRA Trading Activity Fee ($0.000166/share on sells, capped $9.30), Coinbase Advanced taker 0.40% for crypto. Spread cost estimated per ticker."
         }
@@ -1487,6 +2528,10 @@
         {
           "date": "2026-04-28",
           "equity": 9998.9999
+        },
+        {
+          "date": "2026-04-29",
+          "equity": 9994.6476
         }
       ],
       "history": [
@@ -1542,62 +2587,170 @@
             "disclaimer": "Simulated execution \u2014 no live orders were placed on any exchange. Fees modeled on US market structure: SEC Section 31 ($27.80/$1M of sale proceeds), FINRA Trading Activity Fee ($0.000166/share on sells, capped $9.30), Coinbase Advanced taker 0.40% for crypto. Spread cost estimated per ticker."
           },
           "thesis": "Earnings in 1d with positive sentiment +0.60 \u2014 lean long."
+        },
+        {
+          "date": "2026-04-29",
+          "action": "SELL",
+          "ticker": "META",
+          "shares": 14.893967,
+          "entry_price": 671.345,
+          "exit_price": 671.34,
+          "proceeds": 9997.6359,
+          "pnl": -1.3544,
+          "pnl_pct": -0.0,
+          "balance_after": 9997.646,
+          "execution": {
+            "order_id": "SIM-20260429-073358-META-S",
+            "side": "SELL",
+            "ticker": "META",
+            "asset_class": "equity",
+            "exchange": "NASDAQ",
+            "venue": "electronic equity exchange",
+            "broker": "Interactive Brokers (simulated paper account)",
+            "order_type": "MARKET",
+            "time_in_force": "DAY",
+            "submitted_at_utc": "2026-04-29T07:33:58+00:00",
+            "filled_at_utc": "2026-04-29T07:34:00+00:00",
+            "settlement_date": "2026-04-30",
+            "account": {
+              "label": "EQUITY-CASH-SIM-001",
+              "type": "Cash Account",
+              "broker": "Interactive Brokers (simulated paper account)",
+              "funding_source": "ACH funding from simulated bank account (routed via broker cash sweep)",
+              "balance_before": 0.0101,
+              "balance_after": 9997.646
+            },
+            "fills": [
+              {
+                "shares": 14.893967,
+                "price": 671.34,
+                "timestamp": "2026-04-29T07:34:00+00:00",
+                "venue": "NASDAQ"
+              }
+            ],
+            "avg_fill_price": 671.34,
+            "gross_notional": 9998.9162,
+            "fees": {
+              "commission": 0.0,
+              "sec_section_31": 0.27797,
+              "finra_taf": 0.002472,
+              "spread_cost": 0.999892,
+              "total": 1.280334,
+              "notes": "Spread estimate: 1 bps. Zero commission (IBKR Lite/TD-class simulated)."
+            },
+            "net_cost": null,
+            "net_proceeds": 9997.6359,
+            "disclaimer": "Simulated execution \u2014 no live orders were placed on any exchange. Fees modeled on US market structure: SEC Section 31 ($27.80/$1M of sale proceeds), FINRA Trading Activity Fee ($0.000166/share on sells, capped $9.30), Coinbase Advanced taker 0.40% for crypto. Spread cost estimated per ticker."
+          }
+        },
+        {
+          "date": "2026-04-29",
+          "action": "BUY",
+          "ticker": "ORLY",
+          "shares": 109.147283,
+          "entry_price": 91.57,
+          "cost": 9997.6151,
+          "balance_after": 0.0309,
+          "execution": {
+            "order_id": "SIM-20260429-073358-ORLY-B",
+            "side": "BUY",
+            "ticker": "ORLY",
+            "asset_class": "equity",
+            "exchange": "NYSE Arca",
+            "venue": "all-electronic ETF/options exchange",
+            "broker": "Interactive Brokers (simulated paper account)",
+            "order_type": "MARKET",
+            "time_in_force": "DAY",
+            "submitted_at_utc": "2026-04-29T07:33:58+00:00",
+            "filled_at_utc": "2026-04-29T07:34:00+00:00",
+            "settlement_date": "2026-04-30",
+            "account": {
+              "label": "EQUITY-CASH-SIM-001",
+              "type": "Cash Account",
+              "broker": "Interactive Brokers (simulated paper account)",
+              "funding_source": "ACH funding from simulated bank account (routed via broker cash sweep)",
+              "balance_before": 9997.646,
+              "balance_after": 0.0309
+            },
+            "fills": [
+              {
+                "shares": 109.147283,
+                "price": 91.57,
+                "timestamp": "2026-04-29T07:34:00+00:00",
+                "venue": "NYSE Arca"
+              }
+            ],
+            "avg_fill_price": 91.57,
+            "gross_notional": 9994.6167,
+            "fees": {
+              "commission": 0.0,
+              "sec_section_31": 0.0,
+              "finra_taf": 0.0,
+              "spread_cost": 2.998385,
+              "total": 2.998385,
+              "notes": "Spread estimate: 3 bps. Zero commission (IBKR Lite/TD-class simulated)."
+            },
+            "net_cost": 9997.6151,
+            "net_proceeds": null,
+            "disclaimer": "Simulated execution \u2014 no live orders were placed on any exchange. Fees modeled on US market structure: SEC Section 31 ($27.80/$1M of sale proceeds), FINRA Trading Activity Fee ($0.000166/share on sells, capped $9.30), Coinbase Advanced taker 0.40% for crypto. Spread cost estimated per ticker."
+          },
+          "thesis": "Earnings in 0d with positive sentiment +0.80 \u2014 lean long."
         }
       ],
       "inception_date": "2026-04-28",
-      "realized_pnl": 0.0,
-      "total_fees_paid": 0.9999,
-      "trades_count": 1
+      "realized_pnl": -1.3544,
+      "total_fees_paid": 5.2786,
+      "trades_count": 3
     },
     "MAGUS": {
       "agent": "MAGUS",
       "balance": 0.0101,
       "current_position": {
-        "ticker": "SPY",
-        "shares": 14.057148,
-        "entry_price": 711.31,
-        "entry_date": "2026-04-28",
+        "ticker": "IWM",
+        "shares": 36.515828,
+        "entry_price": 273.91,
+        "entry_date": "2026-04-29",
         "thesis": "Turn-of-month effect \u2014 modest bullish bias.",
         "execution": {
-          "order_id": "SIM-20260428-185407-SPY-B",
+          "order_id": "SIM-20260429-073358-IWM-B",
           "side": "BUY",
-          "ticker": "SPY",
+          "ticker": "IWM",
           "asset_class": "etf",
           "exchange": "NYSE Arca",
           "venue": "all-electronic ETF/options exchange",
           "broker": "Interactive Brokers (simulated paper account)",
           "order_type": "MARKET",
           "time_in_force": "DAY",
-          "submitted_at_utc": "2026-04-28T18:54:07+00:00",
-          "filled_at_utc": "2026-04-28T18:54:09+00:00",
-          "settlement_date": "2026-04-29",
+          "submitted_at_utc": "2026-04-29T07:33:58+00:00",
+          "filled_at_utc": "2026-04-29T07:34:00+00:00",
+          "settlement_date": "2026-04-30",
           "account": {
             "label": "EQUITY-CASH-SIM-001",
             "type": "Cash Account",
             "broker": "Interactive Brokers (simulated paper account)",
             "funding_source": "ACH funding from simulated bank account (routed via broker cash sweep)",
-            "balance_before": 10000.0,
+            "balance_before": 10003.0609,
             "balance_after": 0.0101
           },
           "fills": [
             {
-              "shares": 14.057148,
-              "price": 711.31,
-              "timestamp": "2026-04-28T18:54:09+00:00",
+              "shares": 36.515828,
+              "price": 273.91,
+              "timestamp": "2026-04-29T07:34:00+00:00",
               "venue": "NYSE Arca"
             }
           ],
-          "avg_fill_price": 711.31,
-          "gross_notional": 9998.99,
+          "avg_fill_price": 273.91,
+          "gross_notional": 10002.0506,
           "fees": {
             "commission": 0.0,
             "sec_section_31": 0.0,
             "finra_taf": 0.0,
-            "spread_cost": 0.999899,
-            "total": 0.999899,
+            "spread_cost": 1.000205,
+            "total": 1.000205,
             "notes": "Spread estimate: 1 bps. Zero commission (IBKR Lite/TD-class simulated)."
           },
-          "net_cost": 9999.9899,
+          "net_cost": 10003.0508,
           "net_proceeds": null,
           "disclaimer": "Simulated execution \u2014 no live orders were placed on any exchange. Fees modeled on US market structure: SEC Section 31 ($27.80/$1M of sale proceeds), FINRA Trading Activity Fee ($0.000166/share on sells, capped $9.30), Coinbase Advanced taker 0.40% for crypto. Spread cost estimated per ticker."
         }
@@ -1606,6 +2759,10 @@
         {
           "date": "2026-04-28",
           "equity": 9999.0
+        },
+        {
+          "date": "2026-04-29",
+          "equity": 10002.0607
         }
       ],
       "history": [
@@ -1661,62 +2818,170 @@
             "disclaimer": "Simulated execution \u2014 no live orders were placed on any exchange. Fees modeled on US market structure: SEC Section 31 ($27.80/$1M of sale proceeds), FINRA Trading Activity Fee ($0.000166/share on sells, capped $9.30), Coinbase Advanced taker 0.40% for crypto. Spread cost estimated per ticker."
           },
           "thesis": "Turn-of-month effect \u2014 modest bullish bias."
+        },
+        {
+          "date": "2026-04-29",
+          "action": "SELL",
+          "ticker": "SPY",
+          "shares": 14.057148,
+          "entry_price": 711.31,
+          "exit_price": 711.69,
+          "proceeds": 10003.0508,
+          "pnl": 4.0609,
+          "pnl_pct": 0.05,
+          "balance_after": 10003.0609,
+          "execution": {
+            "order_id": "SIM-20260429-073358-SPY-S",
+            "side": "SELL",
+            "ticker": "SPY",
+            "asset_class": "etf",
+            "exchange": "NYSE Arca",
+            "venue": "all-electronic ETF/options exchange",
+            "broker": "Interactive Brokers (simulated paper account)",
+            "order_type": "MARKET",
+            "time_in_force": "DAY",
+            "submitted_at_utc": "2026-04-29T07:33:58+00:00",
+            "filled_at_utc": "2026-04-29T07:34:00+00:00",
+            "settlement_date": "2026-04-30",
+            "account": {
+              "label": "EQUITY-CASH-SIM-001",
+              "type": "Cash Account",
+              "broker": "Interactive Brokers (simulated paper account)",
+              "funding_source": "ACH funding from simulated bank account (routed via broker cash sweep)",
+              "balance_before": 0.0101,
+              "balance_after": 10003.0609
+            },
+            "fills": [
+              {
+                "shares": 14.057148,
+                "price": 711.69,
+                "timestamp": "2026-04-29T07:34:00+00:00",
+                "venue": "NYSE Arca"
+              }
+            ],
+            "avg_fill_price": 711.69,
+            "gross_notional": 10004.3317,
+            "fees": {
+              "commission": 0.0,
+              "sec_section_31": 0.27812,
+              "finra_taf": 0.002333,
+              "spread_cost": 1.000433,
+              "total": 1.280887,
+              "notes": "Spread estimate: 1 bps. Zero commission (IBKR Lite/TD-class simulated)."
+            },
+            "net_cost": null,
+            "net_proceeds": 10003.0508,
+            "disclaimer": "Simulated execution \u2014 no live orders were placed on any exchange. Fees modeled on US market structure: SEC Section 31 ($27.80/$1M of sale proceeds), FINRA Trading Activity Fee ($0.000166/share on sells, capped $9.30), Coinbase Advanced taker 0.40% for crypto. Spread cost estimated per ticker."
+          }
+        },
+        {
+          "date": "2026-04-29",
+          "action": "BUY",
+          "ticker": "IWM",
+          "shares": 36.515828,
+          "entry_price": 273.91,
+          "cost": 10003.0508,
+          "balance_after": 0.0101,
+          "execution": {
+            "order_id": "SIM-20260429-073358-IWM-B",
+            "side": "BUY",
+            "ticker": "IWM",
+            "asset_class": "etf",
+            "exchange": "NYSE Arca",
+            "venue": "all-electronic ETF/options exchange",
+            "broker": "Interactive Brokers (simulated paper account)",
+            "order_type": "MARKET",
+            "time_in_force": "DAY",
+            "submitted_at_utc": "2026-04-29T07:33:58+00:00",
+            "filled_at_utc": "2026-04-29T07:34:00+00:00",
+            "settlement_date": "2026-04-30",
+            "account": {
+              "label": "EQUITY-CASH-SIM-001",
+              "type": "Cash Account",
+              "broker": "Interactive Brokers (simulated paper account)",
+              "funding_source": "ACH funding from simulated bank account (routed via broker cash sweep)",
+              "balance_before": 10003.0609,
+              "balance_after": 0.0101
+            },
+            "fills": [
+              {
+                "shares": 36.515828,
+                "price": 273.91,
+                "timestamp": "2026-04-29T07:34:00+00:00",
+                "venue": "NYSE Arca"
+              }
+            ],
+            "avg_fill_price": 273.91,
+            "gross_notional": 10002.0506,
+            "fees": {
+              "commission": 0.0,
+              "sec_section_31": 0.0,
+              "finra_taf": 0.0,
+              "spread_cost": 1.000205,
+              "total": 1.000205,
+              "notes": "Spread estimate: 1 bps. Zero commission (IBKR Lite/TD-class simulated)."
+            },
+            "net_cost": 10003.0508,
+            "net_proceeds": null,
+            "disclaimer": "Simulated execution \u2014 no live orders were placed on any exchange. Fees modeled on US market structure: SEC Section 31 ($27.80/$1M of sale proceeds), FINRA Trading Activity Fee ($0.000166/share on sells, capped $9.30), Coinbase Advanced taker 0.40% for crypto. Spread cost estimated per ticker."
+          },
+          "thesis": "Turn-of-month effect \u2014 modest bullish bias."
         }
       ],
       "inception_date": "2026-04-28",
-      "realized_pnl": 0.0,
-      "total_fees_paid": 0.9999,
-      "trades_count": 1
+      "realized_pnl": 4.0609,
+      "total_fees_paid": 3.281,
+      "trades_count": 3
     },
     "TALON": {
       "agent": "TALON",
       "balance": 0.0101,
       "current_position": {
-        "ticker": "SPY",
-        "shares": 14.057148,
-        "entry_price": 711.31,
-        "entry_date": "2026-04-28",
-        "thesis": "Index structure intact: above both SMAs, 20d momentum +12.6%, VIX 18.0 calm \u2014 risk-on.",
+        "ticker": "IWM",
+        "shares": 36.515828,
+        "entry_price": 273.91,
+        "entry_date": "2026-04-29",
+        "thesis": "Index structure intact: above both SMAs, 20d momentum +14.3%, VIX 18.0 calm \u2014 risk-on.",
         "execution": {
-          "order_id": "SIM-20260428-185407-SPY-B",
+          "order_id": "SIM-20260429-073358-IWM-B",
           "side": "BUY",
-          "ticker": "SPY",
+          "ticker": "IWM",
           "asset_class": "etf",
           "exchange": "NYSE Arca",
           "venue": "all-electronic ETF/options exchange",
           "broker": "Interactive Brokers (simulated paper account)",
           "order_type": "MARKET",
           "time_in_force": "DAY",
-          "submitted_at_utc": "2026-04-28T18:54:07+00:00",
-          "filled_at_utc": "2026-04-28T18:54:09+00:00",
-          "settlement_date": "2026-04-29",
+          "submitted_at_utc": "2026-04-29T07:33:58+00:00",
+          "filled_at_utc": "2026-04-29T07:34:00+00:00",
+          "settlement_date": "2026-04-30",
           "account": {
             "label": "EQUITY-CASH-SIM-001",
             "type": "Cash Account",
             "broker": "Interactive Brokers (simulated paper account)",
             "funding_source": "ACH funding from simulated bank account (routed via broker cash sweep)",
-            "balance_before": 10000.0,
+            "balance_before": 10003.0609,
             "balance_after": 0.0101
           },
           "fills": [
             {
-              "shares": 14.057148,
-              "price": 711.31,
-              "timestamp": "2026-04-28T18:54:09+00:00",
+              "shares": 36.515828,
+              "price": 273.91,
+              "timestamp": "2026-04-29T07:34:00+00:00",
               "venue": "NYSE Arca"
             }
           ],
-          "avg_fill_price": 711.31,
-          "gross_notional": 9998.99,
+          "avg_fill_price": 273.91,
+          "gross_notional": 10002.0506,
           "fees": {
             "commission": 0.0,
             "sec_section_31": 0.0,
             "finra_taf": 0.0,
-            "spread_cost": 0.999899,
-            "total": 0.999899,
+            "spread_cost": 1.000205,
+            "total": 1.000205,
             "notes": "Spread estimate: 1 bps. Zero commission (IBKR Lite/TD-class simulated)."
           },
-          "net_cost": 9999.9899,
+          "net_cost": 10003.0508,
           "net_proceeds": null,
           "disclaimer": "Simulated execution \u2014 no live orders were placed on any exchange. Fees modeled on US market structure: SEC Section 31 ($27.80/$1M of sale proceeds), FINRA Trading Activity Fee ($0.000166/share on sells, capped $9.30), Coinbase Advanced taker 0.40% for crypto. Spread cost estimated per ticker."
         }
@@ -1725,6 +2990,10 @@
         {
           "date": "2026-04-28",
           "equity": 9999.0
+        },
+        {
+          "date": "2026-04-29",
+          "equity": 10002.0607
         }
       ],
       "history": [
@@ -1780,62 +3049,170 @@
             "disclaimer": "Simulated execution \u2014 no live orders were placed on any exchange. Fees modeled on US market structure: SEC Section 31 ($27.80/$1M of sale proceeds), FINRA Trading Activity Fee ($0.000166/share on sells, capped $9.30), Coinbase Advanced taker 0.40% for crypto. Spread cost estimated per ticker."
           },
           "thesis": "Index structure intact: above both SMAs, 20d momentum +12.6%, VIX 18.0 calm \u2014 risk-on."
+        },
+        {
+          "date": "2026-04-29",
+          "action": "SELL",
+          "ticker": "SPY",
+          "shares": 14.057148,
+          "entry_price": 711.31,
+          "exit_price": 711.69,
+          "proceeds": 10003.0508,
+          "pnl": 4.0609,
+          "pnl_pct": 0.05,
+          "balance_after": 10003.0609,
+          "execution": {
+            "order_id": "SIM-20260429-073358-SPY-S",
+            "side": "SELL",
+            "ticker": "SPY",
+            "asset_class": "etf",
+            "exchange": "NYSE Arca",
+            "venue": "all-electronic ETF/options exchange",
+            "broker": "Interactive Brokers (simulated paper account)",
+            "order_type": "MARKET",
+            "time_in_force": "DAY",
+            "submitted_at_utc": "2026-04-29T07:33:58+00:00",
+            "filled_at_utc": "2026-04-29T07:34:00+00:00",
+            "settlement_date": "2026-04-30",
+            "account": {
+              "label": "EQUITY-CASH-SIM-001",
+              "type": "Cash Account",
+              "broker": "Interactive Brokers (simulated paper account)",
+              "funding_source": "ACH funding from simulated bank account (routed via broker cash sweep)",
+              "balance_before": 0.0101,
+              "balance_after": 10003.0609
+            },
+            "fills": [
+              {
+                "shares": 14.057148,
+                "price": 711.69,
+                "timestamp": "2026-04-29T07:34:00+00:00",
+                "venue": "NYSE Arca"
+              }
+            ],
+            "avg_fill_price": 711.69,
+            "gross_notional": 10004.3317,
+            "fees": {
+              "commission": 0.0,
+              "sec_section_31": 0.27812,
+              "finra_taf": 0.002333,
+              "spread_cost": 1.000433,
+              "total": 1.280887,
+              "notes": "Spread estimate: 1 bps. Zero commission (IBKR Lite/TD-class simulated)."
+            },
+            "net_cost": null,
+            "net_proceeds": 10003.0508,
+            "disclaimer": "Simulated execution \u2014 no live orders were placed on any exchange. Fees modeled on US market structure: SEC Section 31 ($27.80/$1M of sale proceeds), FINRA Trading Activity Fee ($0.000166/share on sells, capped $9.30), Coinbase Advanced taker 0.40% for crypto. Spread cost estimated per ticker."
+          }
+        },
+        {
+          "date": "2026-04-29",
+          "action": "BUY",
+          "ticker": "IWM",
+          "shares": 36.515828,
+          "entry_price": 273.91,
+          "cost": 10003.0508,
+          "balance_after": 0.0101,
+          "execution": {
+            "order_id": "SIM-20260429-073358-IWM-B",
+            "side": "BUY",
+            "ticker": "IWM",
+            "asset_class": "etf",
+            "exchange": "NYSE Arca",
+            "venue": "all-electronic ETF/options exchange",
+            "broker": "Interactive Brokers (simulated paper account)",
+            "order_type": "MARKET",
+            "time_in_force": "DAY",
+            "submitted_at_utc": "2026-04-29T07:33:58+00:00",
+            "filled_at_utc": "2026-04-29T07:34:00+00:00",
+            "settlement_date": "2026-04-30",
+            "account": {
+              "label": "EQUITY-CASH-SIM-001",
+              "type": "Cash Account",
+              "broker": "Interactive Brokers (simulated paper account)",
+              "funding_source": "ACH funding from simulated bank account (routed via broker cash sweep)",
+              "balance_before": 10003.0609,
+              "balance_after": 0.0101
+            },
+            "fills": [
+              {
+                "shares": 36.515828,
+                "price": 273.91,
+                "timestamp": "2026-04-29T07:34:00+00:00",
+                "venue": "NYSE Arca"
+              }
+            ],
+            "avg_fill_price": 273.91,
+            "gross_notional": 10002.0506,
+            "fees": {
+              "commission": 0.0,
+              "sec_section_31": 0.0,
+              "finra_taf": 0.0,
+              "spread_cost": 1.000205,
+              "total": 1.000205,
+              "notes": "Spread estimate: 1 bps. Zero commission (IBKR Lite/TD-class simulated)."
+            },
+            "net_cost": 10003.0508,
+            "net_proceeds": null,
+            "disclaimer": "Simulated execution \u2014 no live orders were placed on any exchange. Fees modeled on US market structure: SEC Section 31 ($27.80/$1M of sale proceeds), FINRA Trading Activity Fee ($0.000166/share on sells, capped $9.30), Coinbase Advanced taker 0.40% for crypto. Spread cost estimated per ticker."
+          },
+          "thesis": "Index structure intact: above both SMAs, 20d momentum +14.3%, VIX 18.0 calm \u2014 risk-on."
         }
       ],
       "inception_date": "2026-04-28",
-      "realized_pnl": 0.0,
-      "total_fees_paid": 0.9999,
-      "trades_count": 1
+      "realized_pnl": 4.0609,
+      "total_fees_paid": 3.281,
+      "trades_count": 3
     },
     "ATLAS": {
       "agent": "ATLAS",
       "balance": 0.0101,
       "current_position": {
-        "ticker": "SPY",
-        "shares": 14.057148,
-        "entry_price": 711.31,
-        "entry_date": "2026-04-28",
-        "thesis": "Constructive macro: stack aligned, 50d momentum +4.6%, VIX n/a.",
+        "ticker": "IWM",
+        "shares": 36.515828,
+        "entry_price": 273.91,
+        "entry_date": "2026-04-29",
+        "thesis": "Constructive macro: stack aligned, 50d momentum +4.3%, VIX n/a.",
         "execution": {
-          "order_id": "SIM-20260428-185407-SPY-B",
+          "order_id": "SIM-20260429-073358-IWM-B",
           "side": "BUY",
-          "ticker": "SPY",
+          "ticker": "IWM",
           "asset_class": "etf",
           "exchange": "NYSE Arca",
           "venue": "all-electronic ETF/options exchange",
           "broker": "Interactive Brokers (simulated paper account)",
           "order_type": "MARKET",
           "time_in_force": "DAY",
-          "submitted_at_utc": "2026-04-28T18:54:07+00:00",
-          "filled_at_utc": "2026-04-28T18:54:09+00:00",
-          "settlement_date": "2026-04-29",
+          "submitted_at_utc": "2026-04-29T07:33:58+00:00",
+          "filled_at_utc": "2026-04-29T07:34:00+00:00",
+          "settlement_date": "2026-04-30",
           "account": {
             "label": "EQUITY-CASH-SIM-001",
             "type": "Cash Account",
             "broker": "Interactive Brokers (simulated paper account)",
             "funding_source": "ACH funding from simulated bank account (routed via broker cash sweep)",
-            "balance_before": 10000.0,
+            "balance_before": 10003.0609,
             "balance_after": 0.0101
           },
           "fills": [
             {
-              "shares": 14.057148,
-              "price": 711.31,
-              "timestamp": "2026-04-28T18:54:09+00:00",
+              "shares": 36.515828,
+              "price": 273.91,
+              "timestamp": "2026-04-29T07:34:00+00:00",
               "venue": "NYSE Arca"
             }
           ],
-          "avg_fill_price": 711.31,
-          "gross_notional": 9998.99,
+          "avg_fill_price": 273.91,
+          "gross_notional": 10002.0506,
           "fees": {
             "commission": 0.0,
             "sec_section_31": 0.0,
             "finra_taf": 0.0,
-            "spread_cost": 0.999899,
-            "total": 0.999899,
+            "spread_cost": 1.000205,
+            "total": 1.000205,
             "notes": "Spread estimate: 1 bps. Zero commission (IBKR Lite/TD-class simulated)."
           },
-          "net_cost": 9999.9899,
+          "net_cost": 10003.0508,
           "net_proceeds": null,
           "disclaimer": "Simulated execution \u2014 no live orders were placed on any exchange. Fees modeled on US market structure: SEC Section 31 ($27.80/$1M of sale proceeds), FINRA Trading Activity Fee ($0.000166/share on sells, capped $9.30), Coinbase Advanced taker 0.40% for crypto. Spread cost estimated per ticker."
         }
@@ -1844,6 +3221,10 @@
         {
           "date": "2026-04-28",
           "equity": 9999.0
+        },
+        {
+          "date": "2026-04-29",
+          "equity": 10002.0607
         }
       ],
       "history": [
@@ -1899,12 +3280,120 @@
             "disclaimer": "Simulated execution \u2014 no live orders were placed on any exchange. Fees modeled on US market structure: SEC Section 31 ($27.80/$1M of sale proceeds), FINRA Trading Activity Fee ($0.000166/share on sells, capped $9.30), Coinbase Advanced taker 0.40% for crypto. Spread cost estimated per ticker."
           },
           "thesis": "Constructive macro: stack aligned, 50d momentum +4.6%, VIX n/a."
+        },
+        {
+          "date": "2026-04-29",
+          "action": "SELL",
+          "ticker": "SPY",
+          "shares": 14.057148,
+          "entry_price": 711.31,
+          "exit_price": 711.69,
+          "proceeds": 10003.0508,
+          "pnl": 4.0609,
+          "pnl_pct": 0.05,
+          "balance_after": 10003.0609,
+          "execution": {
+            "order_id": "SIM-20260429-073358-SPY-S",
+            "side": "SELL",
+            "ticker": "SPY",
+            "asset_class": "etf",
+            "exchange": "NYSE Arca",
+            "venue": "all-electronic ETF/options exchange",
+            "broker": "Interactive Brokers (simulated paper account)",
+            "order_type": "MARKET",
+            "time_in_force": "DAY",
+            "submitted_at_utc": "2026-04-29T07:33:58+00:00",
+            "filled_at_utc": "2026-04-29T07:34:00+00:00",
+            "settlement_date": "2026-04-30",
+            "account": {
+              "label": "EQUITY-CASH-SIM-001",
+              "type": "Cash Account",
+              "broker": "Interactive Brokers (simulated paper account)",
+              "funding_source": "ACH funding from simulated bank account (routed via broker cash sweep)",
+              "balance_before": 0.0101,
+              "balance_after": 10003.0609
+            },
+            "fills": [
+              {
+                "shares": 14.057148,
+                "price": 711.69,
+                "timestamp": "2026-04-29T07:34:00+00:00",
+                "venue": "NYSE Arca"
+              }
+            ],
+            "avg_fill_price": 711.69,
+            "gross_notional": 10004.3317,
+            "fees": {
+              "commission": 0.0,
+              "sec_section_31": 0.27812,
+              "finra_taf": 0.002333,
+              "spread_cost": 1.000433,
+              "total": 1.280887,
+              "notes": "Spread estimate: 1 bps. Zero commission (IBKR Lite/TD-class simulated)."
+            },
+            "net_cost": null,
+            "net_proceeds": 10003.0508,
+            "disclaimer": "Simulated execution \u2014 no live orders were placed on any exchange. Fees modeled on US market structure: SEC Section 31 ($27.80/$1M of sale proceeds), FINRA Trading Activity Fee ($0.000166/share on sells, capped $9.30), Coinbase Advanced taker 0.40% for crypto. Spread cost estimated per ticker."
+          }
+        },
+        {
+          "date": "2026-04-29",
+          "action": "BUY",
+          "ticker": "IWM",
+          "shares": 36.515828,
+          "entry_price": 273.91,
+          "cost": 10003.0508,
+          "balance_after": 0.0101,
+          "execution": {
+            "order_id": "SIM-20260429-073358-IWM-B",
+            "side": "BUY",
+            "ticker": "IWM",
+            "asset_class": "etf",
+            "exchange": "NYSE Arca",
+            "venue": "all-electronic ETF/options exchange",
+            "broker": "Interactive Brokers (simulated paper account)",
+            "order_type": "MARKET",
+            "time_in_force": "DAY",
+            "submitted_at_utc": "2026-04-29T07:33:58+00:00",
+            "filled_at_utc": "2026-04-29T07:34:00+00:00",
+            "settlement_date": "2026-04-30",
+            "account": {
+              "label": "EQUITY-CASH-SIM-001",
+              "type": "Cash Account",
+              "broker": "Interactive Brokers (simulated paper account)",
+              "funding_source": "ACH funding from simulated bank account (routed via broker cash sweep)",
+              "balance_before": 10003.0609,
+              "balance_after": 0.0101
+            },
+            "fills": [
+              {
+                "shares": 36.515828,
+                "price": 273.91,
+                "timestamp": "2026-04-29T07:34:00+00:00",
+                "venue": "NYSE Arca"
+              }
+            ],
+            "avg_fill_price": 273.91,
+            "gross_notional": 10002.0506,
+            "fees": {
+              "commission": 0.0,
+              "sec_section_31": 0.0,
+              "finra_taf": 0.0,
+              "spread_cost": 1.000205,
+              "total": 1.000205,
+              "notes": "Spread estimate: 1 bps. Zero commission (IBKR Lite/TD-class simulated)."
+            },
+            "net_cost": 10003.0508,
+            "net_proceeds": null,
+            "disclaimer": "Simulated execution \u2014 no live orders were placed on any exchange. Fees modeled on US market structure: SEC Section 31 ($27.80/$1M of sale proceeds), FINRA Trading Activity Fee ($0.000166/share on sells, capped $9.30), Coinbase Advanced taker 0.40% for crypto. Spread cost estimated per ticker."
+          },
+          "thesis": "Constructive macro: stack aligned, 50d momentum +4.3%, VIX n/a."
         }
       ],
       "inception_date": "2026-04-28",
-      "realized_pnl": 0.0,
-      "total_fees_paid": 0.9999,
-      "trades_count": 1
+      "realized_pnl": 4.0609,
+      "total_fees_paid": 3.281,
+      "trades_count": 3
     },
     "NIGHTSHADE": {
       "agent": "NIGHTSHADE",
@@ -1914,11 +3403,21 @@
         {
           "date": "2026-04-28",
           "equity": 10000.0
+        },
+        {
+          "date": "2026-04-29",
+          "equity": 10000.0
         }
       ],
       "history": [
         {
           "date": "2026-04-28",
+          "action": "CASH",
+          "reason": "NIGHTSHADE sees no BUY setups in their specialty today. Sitting in cash.",
+          "equity": 10000.0
+        },
+        {
+          "date": "2026-04-29",
           "action": "CASH",
           "reason": "NIGHTSHADE sees no BUY setups in their specialty today. Sitting in cash.",
           "equity": 10000.0
@@ -1937,11 +3436,21 @@
         {
           "date": "2026-04-28",
           "equity": 10000.0
+        },
+        {
+          "date": "2026-04-29",
+          "equity": 10000.0
         }
       ],
       "history": [
         {
           "date": "2026-04-28",
+          "action": "CASH",
+          "reason": "CICADA sees no BUY setups in their specialty today. Sitting in cash.",
+          "equity": 10000.0
+        },
+        {
+          "date": "2026-04-29",
           "action": "CASH",
           "reason": "CICADA sees no BUY setups in their specialty today. Sitting in cash.",
           "equity": 10000.0
@@ -1960,11 +3469,21 @@
         {
           "date": "2026-04-28",
           "equity": 10000.0
+        },
+        {
+          "date": "2026-04-29",
+          "equity": 10000.0
         }
       ],
       "history": [
         {
           "date": "2026-04-28",
+          "action": "CASH",
+          "reason": "SHEPHERD sees no BUY setups in their specialty today. Sitting in cash.",
+          "equity": 10000.0
+        },
+        {
+          "date": "2026-04-29",
           "action": "CASH",
           "reason": "SHEPHERD sees no BUY setups in their specialty today. Sitting in cash.",
           "equity": 10000.0
@@ -1983,11 +3502,21 @@
         {
           "date": "2026-04-28",
           "equity": 10000.0
+        },
+        {
+          "date": "2026-04-29",
+          "equity": 10000.0
         }
       ],
       "history": [
         {
           "date": "2026-04-28",
+          "action": "CASH",
+          "reason": "NOMAD sees no BUY setups in their specialty today. Sitting in cash.",
+          "equity": 10000.0
+        },
+        {
+          "date": "2026-04-29",
           "action": "CASH",
           "reason": "NOMAD sees no BUY setups in their specialty today. Sitting in cash.",
           "equity": 10000.0
@@ -2006,11 +3535,21 @@
         {
           "date": "2026-04-28",
           "equity": 10000.0
+        },
+        {
+          "date": "2026-04-29",
+          "equity": 10000.0
         }
       ],
       "history": [
         {
           "date": "2026-04-28",
+          "action": "CASH",
+          "reason": "BARNACLE sees no BUY setups in their specialty today. Sitting in cash.",
+          "equity": 10000.0
+        },
+        {
+          "date": "2026-04-29",
           "action": "CASH",
           "reason": "BARNACLE sees no BUY setups in their specialty today. Sitting in cash.",
           "equity": 10000.0
@@ -2029,11 +3568,21 @@
         {
           "date": "2026-04-28",
           "equity": 10000.0
+        },
+        {
+          "date": "2026-04-29",
+          "equity": 10000.0
         }
       ],
       "history": [
         {
           "date": "2026-04-28",
+          "action": "CASH",
+          "reason": "KESTREL+ sees no BUY setups in their specialty today. Sitting in cash.",
+          "equity": 10000.0
+        },
+        {
+          "date": "2026-04-29",
           "action": "CASH",
           "reason": "KESTREL+ sees no BUY setups in their specialty today. Sitting in cash.",
           "equity": 10000.0
@@ -2046,53 +3595,53 @@
     },
     "BARON": {
       "agent": "BARON",
-      "balance": 0.0309,
+      "balance": 0.031,
       "current_position": {
-        "ticker": "MPC",
-        "shares": 43.097817,
-        "entry_price": 231.96,
-        "entry_date": "2026-04-28",
-        "thesis": "Refiner setup. MPC catches a bid with constructive sentiment. Baron likes refining margin expansion.",
+        "ticker": "VLO",
+        "shares": 41.694021,
+        "entry_price": 240.27,
+        "entry_date": "2026-04-29",
+        "thesis": "Refiner setup. VLO catches a bid with constructive sentiment. Baron likes refining margin expansion.",
         "execution": {
-          "order_id": "SIM-20260428-185407-MPC-B",
+          "order_id": "SIM-20260429-073358-VLO-B",
           "side": "BUY",
-          "ticker": "MPC",
+          "ticker": "VLO",
           "asset_class": "equity",
           "exchange": "NYSE Arca",
           "venue": "all-electronic ETF/options exchange",
           "broker": "Interactive Brokers (simulated paper account)",
           "order_type": "MARKET",
           "time_in_force": "DAY",
-          "submitted_at_utc": "2026-04-28T18:54:07+00:00",
-          "filled_at_utc": "2026-04-28T18:54:09+00:00",
-          "settlement_date": "2026-04-29",
+          "submitted_at_utc": "2026-04-29T07:33:58+00:00",
+          "filled_at_utc": "2026-04-29T07:34:00+00:00",
+          "settlement_date": "2026-04-30",
           "account": {
             "label": "EQUITY-CASH-SIM-001",
             "type": "Cash Account",
             "broker": "Interactive Brokers (simulated paper account)",
             "funding_source": "ACH funding from simulated bank account (routed via broker cash sweep)",
-            "balance_before": 10000.0,
-            "balance_after": 0.0309
+            "balance_before": 10020.8589,
+            "balance_after": 0.031
           },
           "fills": [
             {
-              "shares": 43.097817,
-              "price": 231.96,
-              "timestamp": "2026-04-28T18:54:09+00:00",
+              "shares": 41.694021,
+              "price": 240.27,
+              "timestamp": "2026-04-29T07:34:00+00:00",
               "venue": "NYSE Arca"
             }
           ],
-          "avg_fill_price": 231.96,
-          "gross_notional": 9996.97,
+          "avg_fill_price": 240.27,
+          "gross_notional": 10017.8225,
           "fees": {
             "commission": 0.0,
             "sec_section_31": 0.0,
             "finra_taf": 0.0,
-            "spread_cost": 2.999091,
-            "total": 2.999091,
+            "spread_cost": 3.005347,
+            "total": 3.005347,
             "notes": "Spread estimate: 3 bps. Zero commission (IBKR Lite/TD-class simulated)."
           },
-          "net_cost": 9999.9691,
+          "net_cost": 10020.8279,
           "net_proceeds": null,
           "disclaimer": "Simulated execution \u2014 no live orders were placed on any exchange. Fees modeled on US market structure: SEC Section 31 ($27.80/$1M of sale proceeds), FINRA Trading Activity Fee ($0.000166/share on sells, capped $9.30), Coinbase Advanced taker 0.40% for crypto. Spread cost estimated per ticker."
         }
@@ -2101,6 +3650,10 @@
         {
           "date": "2026-04-28",
           "equity": 9997.0008
+        },
+        {
+          "date": "2026-04-29",
+          "equity": 10017.8536
         }
       ],
       "history": [
@@ -2156,62 +3709,170 @@
             "disclaimer": "Simulated execution \u2014 no live orders were placed on any exchange. Fees modeled on US market structure: SEC Section 31 ($27.80/$1M of sale proceeds), FINRA Trading Activity Fee ($0.000166/share on sells, capped $9.30), Coinbase Advanced taker 0.40% for crypto. Spread cost estimated per ticker."
           },
           "thesis": "Refiner setup. MPC catches a bid with constructive sentiment. Baron likes refining margin expansion."
+        },
+        {
+          "date": "2026-04-29",
+          "action": "SELL",
+          "ticker": "MPC",
+          "shares": 43.097817,
+          "entry_price": 231.96,
+          "exit_price": 232.59,
+          "proceeds": 10020.828,
+          "pnl": 23.8584,
+          "pnl_pct": 0.27,
+          "balance_after": 10020.8589,
+          "execution": {
+            "order_id": "SIM-20260429-073358-MPC-S",
+            "side": "SELL",
+            "ticker": "MPC",
+            "asset_class": "equity",
+            "exchange": "NYSE Arca",
+            "venue": "all-electronic ETF/options exchange",
+            "broker": "Interactive Brokers (simulated paper account)",
+            "order_type": "MARKET",
+            "time_in_force": "DAY",
+            "submitted_at_utc": "2026-04-29T07:33:58+00:00",
+            "filled_at_utc": "2026-04-29T07:34:00+00:00",
+            "settlement_date": "2026-04-30",
+            "account": {
+              "label": "EQUITY-CASH-SIM-001",
+              "type": "Cash Account",
+              "broker": "Interactive Brokers (simulated paper account)",
+              "funding_source": "ACH funding from simulated bank account (routed via broker cash sweep)",
+              "balance_before": 0.0309,
+              "balance_after": 10020.8589
+            },
+            "fills": [
+              {
+                "shares": 43.097817,
+                "price": 232.59,
+                "timestamp": "2026-04-29T07:34:00+00:00",
+                "venue": "NYSE Arca"
+              }
+            ],
+            "avg_fill_price": 232.59,
+            "gross_notional": 10024.1211,
+            "fees": {
+              "commission": 0.0,
+              "sec_section_31": 0.278671,
+              "finra_taf": 0.007154,
+              "spread_cost": 3.007236,
+              "total": 3.293061,
+              "notes": "Spread estimate: 3 bps. Zero commission (IBKR Lite/TD-class simulated)."
+            },
+            "net_cost": null,
+            "net_proceeds": 10020.828,
+            "disclaimer": "Simulated execution \u2014 no live orders were placed on any exchange. Fees modeled on US market structure: SEC Section 31 ($27.80/$1M of sale proceeds), FINRA Trading Activity Fee ($0.000166/share on sells, capped $9.30), Coinbase Advanced taker 0.40% for crypto. Spread cost estimated per ticker."
+          }
+        },
+        {
+          "date": "2026-04-29",
+          "action": "BUY",
+          "ticker": "VLO",
+          "shares": 41.694021,
+          "entry_price": 240.27,
+          "cost": 10020.8279,
+          "balance_after": 0.031,
+          "execution": {
+            "order_id": "SIM-20260429-073358-VLO-B",
+            "side": "BUY",
+            "ticker": "VLO",
+            "asset_class": "equity",
+            "exchange": "NYSE Arca",
+            "venue": "all-electronic ETF/options exchange",
+            "broker": "Interactive Brokers (simulated paper account)",
+            "order_type": "MARKET",
+            "time_in_force": "DAY",
+            "submitted_at_utc": "2026-04-29T07:33:58+00:00",
+            "filled_at_utc": "2026-04-29T07:34:00+00:00",
+            "settlement_date": "2026-04-30",
+            "account": {
+              "label": "EQUITY-CASH-SIM-001",
+              "type": "Cash Account",
+              "broker": "Interactive Brokers (simulated paper account)",
+              "funding_source": "ACH funding from simulated bank account (routed via broker cash sweep)",
+              "balance_before": 10020.8589,
+              "balance_after": 0.031
+            },
+            "fills": [
+              {
+                "shares": 41.694021,
+                "price": 240.27,
+                "timestamp": "2026-04-29T07:34:00+00:00",
+                "venue": "NYSE Arca"
+              }
+            ],
+            "avg_fill_price": 240.27,
+            "gross_notional": 10017.8225,
+            "fees": {
+              "commission": 0.0,
+              "sec_section_31": 0.0,
+              "finra_taf": 0.0,
+              "spread_cost": 3.005347,
+              "total": 3.005347,
+              "notes": "Spread estimate: 3 bps. Zero commission (IBKR Lite/TD-class simulated)."
+            },
+            "net_cost": 10020.8279,
+            "net_proceeds": null,
+            "disclaimer": "Simulated execution \u2014 no live orders were placed on any exchange. Fees modeled on US market structure: SEC Section 31 ($27.80/$1M of sale proceeds), FINRA Trading Activity Fee ($0.000166/share on sells, capped $9.30), Coinbase Advanced taker 0.40% for crypto. Spread cost estimated per ticker."
+          },
+          "thesis": "Refiner setup. VLO catches a bid with constructive sentiment. Baron likes refining margin expansion."
         }
       ],
       "inception_date": "2026-04-28",
-      "realized_pnl": 0.0,
-      "total_fees_paid": 2.9991,
-      "trades_count": 1
+      "realized_pnl": 23.8584,
+      "total_fees_paid": 9.2975,
+      "trades_count": 3
     },
     "STEADFAST": {
       "agent": "STEADFAST",
-      "balance": 0.0309,
+      "balance": 0.031,
       "current_position": {
-        "ticker": "IBM",
-        "shares": 43.052346,
-        "entry_price": 232.205,
-        "entry_date": "2026-04-28",
-        "thesis": "STEADFAST sees value in IBM. Quality compounds. This is what your grandfather would've bought. Hold for the dividend, not for the candle.",
+        "ticker": "WFC",
+        "shares": 123.025944,
+        "entry_price": 81.5,
+        "entry_date": "2026-04-29",
+        "thesis": "STEADFAST sees value in Wells Fargo. Quality compounds. This is what your grandfather would've bought. Hold for the dividend, not for the candle.",
         "execution": {
-          "order_id": "SIM-20260428-185407-IBM-B",
+          "order_id": "SIM-20260429-073358-WFC-B",
           "side": "BUY",
-          "ticker": "IBM",
+          "ticker": "WFC",
           "asset_class": "equity",
           "exchange": "NYSE Arca",
           "venue": "all-electronic ETF/options exchange",
           "broker": "Interactive Brokers (simulated paper account)",
           "order_type": "MARKET",
           "time_in_force": "DAY",
-          "submitted_at_utc": "2026-04-28T18:54:07+00:00",
-          "filled_at_utc": "2026-04-28T18:54:09+00:00",
-          "settlement_date": "2026-04-29",
+          "submitted_at_utc": "2026-04-29T07:33:58+00:00",
+          "filled_at_utc": "2026-04-29T07:34:00+00:00",
+          "settlement_date": "2026-04-30",
           "account": {
             "label": "EQUITY-CASH-SIM-001",
             "type": "Cash Account",
             "broker": "Interactive Brokers (simulated paper account)",
             "funding_source": "ACH funding from simulated bank account (routed via broker cash sweep)",
-            "balance_before": 10000.0,
-            "balance_after": 0.0309
+            "balance_before": 10029.6534,
+            "balance_after": 0.031
           },
           "fills": [
             {
-              "shares": 43.052346,
-              "price": 232.205,
-              "timestamp": "2026-04-28T18:54:09+00:00",
+              "shares": 123.025944,
+              "price": 81.5,
+              "timestamp": "2026-04-29T07:34:00+00:00",
               "venue": "NYSE Arca"
             }
           ],
-          "avg_fill_price": 232.205,
-          "gross_notional": 9996.97,
+          "avg_fill_price": 81.5,
+          "gross_notional": 10026.6144,
           "fees": {
             "commission": 0.0,
             "sec_section_31": 0.0,
             "finra_taf": 0.0,
-            "spread_cost": 2.999091,
-            "total": 2.999091,
+            "spread_cost": 3.007984,
+            "total": 3.007984,
             "notes": "Spread estimate: 3 bps. Zero commission (IBKR Lite/TD-class simulated)."
           },
-          "net_cost": 9999.9691,
+          "net_cost": 10029.6224,
           "net_proceeds": null,
           "disclaimer": "Simulated execution \u2014 no live orders were placed on any exchange. Fees modeled on US market structure: SEC Section 31 ($27.80/$1M of sale proceeds), FINRA Trading Activity Fee ($0.000166/share on sells, capped $9.30), Coinbase Advanced taker 0.40% for crypto. Spread cost estimated per ticker."
         }
@@ -2220,6 +3881,10 @@
         {
           "date": "2026-04-28",
           "equity": 9997.001
+        },
+        {
+          "date": "2026-04-29",
+          "equity": 10026.6454
         }
       ],
       "history": [
@@ -2275,12 +3940,120 @@
             "disclaimer": "Simulated execution \u2014 no live orders were placed on any exchange. Fees modeled on US market structure: SEC Section 31 ($27.80/$1M of sale proceeds), FINRA Trading Activity Fee ($0.000166/share on sells, capped $9.30), Coinbase Advanced taker 0.40% for crypto. Spread cost estimated per ticker."
           },
           "thesis": "STEADFAST sees value in IBM. Quality compounds. This is what your grandfather would've bought. Hold for the dividend, not for the candle."
+        },
+        {
+          "date": "2026-04-29",
+          "action": "SELL",
+          "ticker": "IBM",
+          "shares": 43.052346,
+          "entry_price": 232.205,
+          "exit_price": 233.04,
+          "proceeds": 10029.6225,
+          "pnl": 32.6525,
+          "pnl_pct": 0.36,
+          "balance_after": 10029.6534,
+          "execution": {
+            "order_id": "SIM-20260429-073358-IBM-S",
+            "side": "SELL",
+            "ticker": "IBM",
+            "asset_class": "equity",
+            "exchange": "NYSE Arca",
+            "venue": "all-electronic ETF/options exchange",
+            "broker": "Interactive Brokers (simulated paper account)",
+            "order_type": "MARKET",
+            "time_in_force": "DAY",
+            "submitted_at_utc": "2026-04-29T07:33:58+00:00",
+            "filled_at_utc": "2026-04-29T07:34:00+00:00",
+            "settlement_date": "2026-04-30",
+            "account": {
+              "label": "EQUITY-CASH-SIM-001",
+              "type": "Cash Account",
+              "broker": "Interactive Brokers (simulated paper account)",
+              "funding_source": "ACH funding from simulated bank account (routed via broker cash sweep)",
+              "balance_before": 0.0309,
+              "balance_after": 10029.6534
+            },
+            "fills": [
+              {
+                "shares": 43.052346,
+                "price": 233.04,
+                "timestamp": "2026-04-29T07:34:00+00:00",
+                "venue": "NYSE Arca"
+              }
+            ],
+            "avg_fill_price": 233.04,
+            "gross_notional": 10032.9184,
+            "fees": {
+              "commission": 0.0,
+              "sec_section_31": 0.278915,
+              "finra_taf": 0.007147,
+              "spread_cost": 3.009876,
+              "total": 3.295937,
+              "notes": "Spread estimate: 3 bps. Zero commission (IBKR Lite/TD-class simulated)."
+            },
+            "net_cost": null,
+            "net_proceeds": 10029.6225,
+            "disclaimer": "Simulated execution \u2014 no live orders were placed on any exchange. Fees modeled on US market structure: SEC Section 31 ($27.80/$1M of sale proceeds), FINRA Trading Activity Fee ($0.000166/share on sells, capped $9.30), Coinbase Advanced taker 0.40% for crypto. Spread cost estimated per ticker."
+          }
+        },
+        {
+          "date": "2026-04-29",
+          "action": "BUY",
+          "ticker": "WFC",
+          "shares": 123.025944,
+          "entry_price": 81.5,
+          "cost": 10029.6224,
+          "balance_after": 0.031,
+          "execution": {
+            "order_id": "SIM-20260429-073358-WFC-B",
+            "side": "BUY",
+            "ticker": "WFC",
+            "asset_class": "equity",
+            "exchange": "NYSE Arca",
+            "venue": "all-electronic ETF/options exchange",
+            "broker": "Interactive Brokers (simulated paper account)",
+            "order_type": "MARKET",
+            "time_in_force": "DAY",
+            "submitted_at_utc": "2026-04-29T07:33:58+00:00",
+            "filled_at_utc": "2026-04-29T07:34:00+00:00",
+            "settlement_date": "2026-04-30",
+            "account": {
+              "label": "EQUITY-CASH-SIM-001",
+              "type": "Cash Account",
+              "broker": "Interactive Brokers (simulated paper account)",
+              "funding_source": "ACH funding from simulated bank account (routed via broker cash sweep)",
+              "balance_before": 10029.6534,
+              "balance_after": 0.031
+            },
+            "fills": [
+              {
+                "shares": 123.025944,
+                "price": 81.5,
+                "timestamp": "2026-04-29T07:34:00+00:00",
+                "venue": "NYSE Arca"
+              }
+            ],
+            "avg_fill_price": 81.5,
+            "gross_notional": 10026.6144,
+            "fees": {
+              "commission": 0.0,
+              "sec_section_31": 0.0,
+              "finra_taf": 0.0,
+              "spread_cost": 3.007984,
+              "total": 3.007984,
+              "notes": "Spread estimate: 3 bps. Zero commission (IBKR Lite/TD-class simulated)."
+            },
+            "net_cost": 10029.6224,
+            "net_proceeds": null,
+            "disclaimer": "Simulated execution \u2014 no live orders were placed on any exchange. Fees modeled on US market structure: SEC Section 31 ($27.80/$1M of sale proceeds), FINRA Trading Activity Fee ($0.000166/share on sells, capped $9.30), Coinbase Advanced taker 0.40% for crypto. Spread cost estimated per ticker."
+          },
+          "thesis": "STEADFAST sees value in Wells Fargo. Quality compounds. This is what your grandfather would've bought. Hold for the dividend, not for the candle."
         }
       ],
       "inception_date": "2026-04-28",
-      "realized_pnl": 0.0,
-      "total_fees_paid": 2.9991,
-      "trades_count": 1
+      "realized_pnl": 32.6525,
+      "total_fees_paid": 9.303,
+      "trades_count": 3
     },
     "SPORTS_BRO": {
       "agent": "SPORTS_BRO",
@@ -2290,11 +4063,21 @@
         {
           "date": "2026-04-28",
           "equity": 10000.0
+        },
+        {
+          "date": "2026-04-29",
+          "equity": 10000.0
         }
       ],
       "history": [
         {
           "date": "2026-04-28",
+          "action": "CASH",
+          "reason": "SPORTS_BRO sees no BUY setups in their specialty today. Sitting in cash.",
+          "equity": 10000.0
+        },
+        {
+          "date": "2026-04-29",
           "action": "CASH",
           "reason": "SPORTS_BRO sees no BUY setups in their specialty today. Sitting in cash.",
           "equity": 10000.0
@@ -2317,92 +4100,76 @@
         "fees_paid": 2.9991
       },
       {
-        "agent": "SPECK",
-        "equity": 10039.6006,
-        "return_pct": 0.396,
-        "realized_pnl": 0.0,
-        "trades_count": 1,
-        "fees_paid": 2.9991
-      },
-      {
         "agent": "STEADFAST",
-        "equity": 10032.9493,
-        "return_pct": 0.329,
-        "realized_pnl": 0.0,
-        "trades_count": 1,
-        "fees_paid": 2.9991
-      },
-      {
-        "agent": "OBSIDIAN",
-        "equity": 10024.152,
-        "return_pct": 0.242,
-        "realized_pnl": 0.0,
-        "trades_count": 1,
-        "fees_paid": 2.9991
+        "equity": 10026.6454,
+        "return_pct": 0.266,
+        "realized_pnl": 32.6525,
+        "trades_count": 3,
+        "fees_paid": 9.303
       },
       {
         "agent": "BARON",
-        "equity": 10024.152,
-        "return_pct": 0.242,
-        "realized_pnl": 0.0,
-        "trades_count": 1,
-        "fees_paid": 2.9991
+        "equity": 10017.8536,
+        "return_pct": 0.179,
+        "realized_pnl": 23.8584,
+        "trades_count": 3,
+        "fees_paid": 9.2975
       },
       {
-        "agent": "THUNDERHEAD",
-        "equity": 10022.626,
-        "return_pct": 0.226,
-        "realized_pnl": 0.0,
-        "trades_count": 1,
-        "fees_paid": 47.7673
-      },
-      {
-        "agent": "AEGIS",
-        "equity": 10015.645,
-        "return_pct": 0.156,
-        "realized_pnl": 0.0,
-        "trades_count": 1,
-        "fees_paid": 0.9999
-      },
-      {
-        "agent": "FORGE",
-        "equity": 10015.645,
-        "return_pct": 0.156,
-        "realized_pnl": 0.0,
-        "trades_count": 1,
-        "fees_paid": 0.9999
+        "agent": "OBSIDIAN",
+        "equity": 10017.8535,
+        "return_pct": 0.179,
+        "realized_pnl": 23.8584,
+        "trades_count": 3,
+        "fees_paid": 9.2975
       },
       {
         "agent": "SYNTH",
-        "equity": 10015.645,
-        "return_pct": 0.156,
-        "realized_pnl": 0.0,
-        "trades_count": 1,
-        "fees_paid": 0.9999
+        "equity": 10011.3554,
+        "return_pct": 0.114,
+        "realized_pnl": 15.3588,
+        "trades_count": 3,
+        "fees_paid": 5.2894
+      },
+      {
+        "agent": "AEGIS",
+        "equity": 10011.3553,
+        "return_pct": 0.114,
+        "realized_pnl": 15.3588,
+        "trades_count": 3,
+        "fees_paid": 5.2894
+      },
+      {
+        "agent": "FORGE",
+        "equity": 10011.3553,
+        "return_pct": 0.114,
+        "realized_pnl": 15.3588,
+        "trades_count": 3,
+        "fees_paid": 5.2894
       },
       {
         "agent": "MAGUS",
-        "equity": 10004.3418,
-        "return_pct": 0.043,
-        "realized_pnl": 0.0,
-        "trades_count": 1,
-        "fees_paid": 0.9999
+        "equity": 10002.0607,
+        "return_pct": 0.021,
+        "realized_pnl": 4.0609,
+        "trades_count": 3,
+        "fees_paid": 3.281
       },
       {
         "agent": "TALON",
-        "equity": 10004.3418,
-        "return_pct": 0.043,
-        "realized_pnl": 0.0,
-        "trades_count": 1,
-        "fees_paid": 0.9999
+        "equity": 10002.0607,
+        "return_pct": 0.021,
+        "realized_pnl": 4.0609,
+        "trades_count": 3,
+        "fees_paid": 3.281
       },
       {
         "agent": "ATLAS",
-        "equity": 10004.3418,
-        "return_pct": 0.043,
-        "realized_pnl": 0.0,
-        "trades_count": 1,
-        "fees_paid": 0.9999
+        "equity": 10002.0607,
+        "return_pct": 0.021,
+        "realized_pnl": 4.0609,
+        "trades_count": 3,
+        "fees_paid": 3.281
       },
       {
         "agent": "NIGHTSHADE",
@@ -2461,14 +4228,6 @@
         "fees_paid": 0.0
       },
       {
-        "agent": "VESPA",
-        "equity": 9998.9263,
-        "return_pct": -0.011,
-        "realized_pnl": 0.0,
-        "trades_count": 1,
-        "fees_paid": 0.9999
-      },
-      {
         "agent": "KESTREL",
         "equity": 9997.0009,
         "return_pct": -0.03,
@@ -2477,28 +4236,28 @@
         "fees_paid": 2.9991
       },
       {
-        "agent": "HEX",
-        "equity": 9956.4136,
-        "return_pct": -0.436,
-        "realized_pnl": 0.0,
-        "trades_count": 1,
-        "fees_paid": 47.7673
+        "agent": "VESPA",
+        "equity": 9994.6476,
+        "return_pct": -0.054,
+        "realized_pnl": -1.3544,
+        "trades_count": 3,
+        "fees_paid": 5.2786
       },
       {
-        "agent": "VEIL",
-        "equity": 9915.2963,
-        "return_pct": -0.847,
-        "realized_pnl": 0.0,
-        "trades_count": 1,
-        "fees_paid": 2.9991
+        "agent": "SPECK",
+        "equity": 9988.3479,
+        "return_pct": -0.117,
+        "realized_pnl": 39.2873,
+        "trades_count": 3,
+        "fees_paid": 54.2518
       },
       {
-        "agent": "ZENITH",
-        "equity": 9915.2963,
-        "return_pct": -0.847,
-        "realized_pnl": 0.0,
-        "trades_count": 1,
-        "fees_paid": 2.9991
+        "agent": "THUNDERHEAD",
+        "equity": 9935.2147,
+        "return_pct": -0.648,
+        "realized_pnl": -14.0373,
+        "trades_count": 3,
+        "fees_paid": 98.6778
       },
       {
         "agent": "WEAVER",
@@ -2507,6 +4266,30 @@
         "realized_pnl": 0.0,
         "trades_count": 1,
         "fees_paid": 2.9991
+      },
+      {
+        "agent": "VEIL",
+        "equity": 9909.07,
+        "return_pct": -0.909,
+        "realized_pnl": -84.9581,
+        "trades_count": 3,
+        "fees_paid": 9.2253
+      },
+      {
+        "agent": "ZENITH",
+        "equity": 9909.07,
+        "return_pct": -0.909,
+        "realized_pnl": -84.9581,
+        "trades_count": 3,
+        "fees_paid": 9.2253
+      },
+      {
+        "agent": "HEX",
+        "equity": 9903.9714,
+        "return_pct": -0.96,
+        "realized_pnl": -44.9916,
+        "trades_count": 3,
+        "fees_paid": 98.5177
       }
     ],
     "best": {
@@ -2518,13 +4301,13 @@
       "fees_paid": 2.9991
     },
     "worst": {
-      "agent": "WEAVER",
-      "equity": 9914.7511,
-      "return_pct": -0.852,
-      "realized_pnl": 0.0,
-      "trades_count": 1,
-      "fees_paid": 2.9991
+      "agent": "HEX",
+      "equity": 9903.9714,
+      "return_pct": -0.96,
+      "realized_pnl": -44.9916,
+      "trades_count": 3,
+      "fees_paid": 98.5177
     },
-    "cohort_avg_return_pct": -0.023
+    "cohort_avg_return_pct": -0.121
   }
 }
