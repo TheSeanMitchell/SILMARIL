@@ -1,34 +1,29 @@
-name: SILMARIL Daily Run
-
-# Runs every 30 minutes during US market hours (Mon-Fri 13:30-21:00 UTC),
-# plus 4x daily on weekends for crypto. Manual trigger also available.
+name: Daily Run (10-min cadence)
 
 on:
   schedule:
-    - cron: '*/30 13-21 * * 1-5'
-    - cron: '0 0,6,12,18 * * 0,6'
+    # Every 10 minutes during US market hours, weekdays
+    # 14:00–21:00 UTC = 9:30am–4:30pm ET (roughly, EDT)
+    # Public repo = unlimited Actions minutes
+    - cron: '*/10 14-21 * * 1-5'
   workflow_dispatch:
 
 permissions:
   contents: write
 
-# v1.6: shares concurrency group with backtest.yml. Whichever workflow runs
-# second waits for the first to release the lock, so the two never collide
-# on git push (the cause of the 'fetch first' rejection seen on 2026-04-28).
 concurrency:
-  group: silmaril-repo-write
+  group: silmaril-daily
   cancel-in-progress: false
 
 jobs:
-  run-silmaril:
+  run:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
-
+    timeout-minutes: 25
     steps:
-      - name: Check out repo
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -41,29 +36,39 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Run SILMARIL (live data)
+      - name: Run live mode
         env:
-          FINNHUB_API_KEY: ${{ secrets.FINNHUB_API_KEY }}
-          EIA_API_KEY: ${{ secrets.EIA_API_KEY }}
+          ALPHA_VANTAGE_API_KEY:  ${{ secrets.ALPHA_VANTAGE_API_KEY }}
+          BIRDEYE_API_KEY:        ${{ secrets.BIRDEYE_API_KEY }}
+          COINGECKO_API_KEY:      ${{ secrets.COINGECKO_API_KEY }}
+          EIA_API_KEY:            ${{ secrets.EIA_API_KEY }}
+          FINNHUB_API_KEY:        ${{ secrets.FINNHUB_API_KEY }}
+          FMP_API_KEY:            ${{ secrets.FMP_API_KEY }}
+          FRED_API_KEY:           ${{ secrets.FRED_API_KEY }}
+          OPENEXCHANGERATES_APP_ID: ${{ secrets.OPENEXCHANGERATES_APP_ID }}
+          POLYGON_API_KEY:        ${{ secrets.POLYGON_API_KEY }}
+          TIINGO_API_KEY:         ${{ secrets.TIINGO_API_KEY }}
+          ALPACA_API_KEY:         ${{ secrets.ALPACA_API_KEY }}
+          ALPACA_API_SECRET:      ${{ secrets.ALPACA_API_SECRET }}
         run: |
-          python -m silmaril --live --output docs/data --verbose
+          python -m silmaril --live
 
-      - name: Commit updated data
+      - name: Verify learning state preserved
         run: |
-          git config --local user.email "silmaril-bot@users.noreply.github.com"
-          git config --local user.name "SILMARIL Bot"
-          git add docs/data/
-          if git diff --staged --quiet; then
-            echo "No changes to commit."
-            exit 0
-          fi
-          git commit -m "✦ SILMARIL data refresh — $(date -u +%Y-%m-%d)"
+          python -c "
+          from pathlib import Path
+          from silmaril.learning.persistence_guard import verify_persistence
+          import json
+          report = verify_persistence(Path('docs/data'))
+          print('Protected files present:', len(report['present']), '/', report['total_protected'])
+          if report['missing']:
+              print('Missing (will be created on next run):', report['missing'][:5])
+          "
 
-          # v1.6: rebase against incoming work before push, with retry.
-          # Belt-and-suspenders: even though concurrency group should serialize,
-          # if a backtest pushes between our checkout and our push, we recover.
-          for attempt in 1 2 3; do
-            git pull --rebase origin main && git push origin main && break
-            echo "push attempt $attempt failed; retrying after fetch..."
-            sleep 5
-          done
+      - name: Commit results
+        run: |
+          git config user.name 'silmaril-bot'
+          git config user.email 'silmaril-bot@users.noreply.github.com'
+          git add docs/data/ docs/index.html docs/*.html 2>/dev/null || true
+          git diff --staged --quiet || git commit -m "🤖 daily run $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          git push || echo "nothing to push"

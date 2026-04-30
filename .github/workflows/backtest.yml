@@ -1,45 +1,29 @@
-name: SILMARIL Backtest
+name: Backtest (preserves learning)
 
 on:
   workflow_dispatch:
     inputs:
-      start:
-        description: 'Backtest start date (YYYY-MM-DD)'
-        required: true
-        default: '2022-01-01'
-      end:
-        description: 'Backtest end date (YYYY-MM-DD)'
-        required: true
-        default: '2026-01-01'
-      universe:
-        description: 'Universe: demo (24 tickers, ~3 min) or full (~360 tickers, ~30-40 min)'
-        required: true
-        default: 'demo'
-      walk_forward:
-        description: 'Run walk-forward stability analysis (yes/no)'
-        required: true
-        default: 'yes'
+      lookback_days:
+        description: 'Days to backtest'
+        required: false
+        default: '730'
+      mode:
+        description: 'walk_forward (recommended) or single_pass'
+        required: false
+        default: 'walk_forward'
 
 permissions:
   contents: write
 
-# v1.6: serialize all repo-writing workflows so daily runs and backtests
-# can't collide on git push. Both this and daily.yml share the same group;
-# whichever runs second waits for the first to finish.
-concurrency:
-  group: silmaril-repo-write
-  cancel-in-progress: false
-
 jobs:
   backtest:
     runs-on: ubuntu-latest
-    timeout-minutes: 90
-
+    timeout-minutes: 60
     steps:
-      - name: Check out repo
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
         with:
-          fetch-depth: 0       # full history so rebase works cleanly
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -51,45 +35,40 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-          pip install yfinance pyarrow
+
+      - name: Snapshot learning state before backtest
+        run: |
+          python -c "
+          from pathlib import Path
+          from silmaril.learning.persistence_guard import backup_learning_state
+          archive = backup_learning_state(Path('docs/data'), Path('docs/data/_backups'), label='pre_backtest')
+          print('Snapshot:', archive)
+          "
 
       - name: Run backtest
+        env:
+          ALPHA_VANTAGE_API_KEY:  ${{ secrets.ALPHA_VANTAGE_API_KEY }}
+          FINNHUB_API_KEY:        ${{ secrets.FINNHUB_API_KEY }}
+          FMP_API_KEY:            ${{ secrets.FMP_API_KEY }}
+          POLYGON_API_KEY:        ${{ secrets.POLYGON_API_KEY }}
+          TIINGO_API_KEY:         ${{ secrets.TIINGO_API_KEY }}
         run: |
-          mkdir -p docs/data
-          WF=""
-          if [ "${{ github.event.inputs.walk_forward }}" = "yes" ]; then
-            WF="--walk-forward"
-          fi
-          UNIVERSE=$(echo "${{ github.event.inputs.universe }}" | tr '[:upper:]' '[:lower:]')
-          python -m silmaril.backtest \
-            --start "${{ github.event.inputs.start }}" \
-            --end "${{ github.event.inputs.end }}" \
-            --universe "$UNIVERSE" \
-            $WF \
-            --out-dir docs/data
+          python -m silmaril.backtest --days ${{ github.event.inputs.lookback_days }} --mode ${{ github.event.inputs.mode }}
 
-      - name: Commit backtest output
+      - name: Verify learning state intact
         run: |
-          git config --local user.email "silmaril-bot@users.noreply.github.com"
-          git config --local user.name "SILMARIL Bot"
+          python -c "
+          from pathlib import Path
+          from silmaril.learning.persistence_guard import verify_persistence, PROTECTED_LEARNING_FILES
+          report = verify_persistence(Path('docs/data'))
+          assert len(report['present']) > 0, 'CRITICAL: Backtest wiped learning state'
+          print('OK: learning state intact (' + str(len(report['present'])) + ' protected files)')
+          "
 
-          # v1.6: only commit small files. The predictions file can hit
-          # 150MB+ on full-universe runs, exceeding GitHub's 100MB limit.
-          # The dashboard only needs the report and walk_forward.
-          rm -f docs/data/backtest_predictions.json || true
-          git add docs/data/backtest_report.json docs/data/backtest_walk_forward.json
-
-          if git diff --staged --quiet; then
-            echo "No backtest output to commit (run failed?)."
-            exit 1
-          fi
-
-          git commit -m "✦ SILMARIL backtest run — $(date -u +%Y-%m-%d)"
-
-          # v1.6: rebase against any incoming work before pushing.
-          # Prevents 'fetch first' rejections when daily run lands while we're computing.
-          for attempt in 1 2 3; do
-            git pull --rebase origin main && git push origin main && break
-            echo "push attempt $attempt failed; retrying after fetch..."
-            sleep 5
-          done
+      - name: Commit results
+        run: |
+          git config user.name 'silmaril-bot'
+          git config user.email 'silmaril-bot@users.noreply.github.com'
+          git add docs/data/
+          git diff --staged --quiet || git commit -m "📊 backtest $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          git push
