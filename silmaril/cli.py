@@ -1,5 +1,5 @@
 """
-silmaril.cli — The main runner.
+silmaril.cli — The main runner. Alpha 2.0 — Full Learning Mode.
 
 Two modes:
 
@@ -11,6 +11,20 @@ the live site at theseanmitchell.github.io/SILMARIL with real data.
 
 The --demo mode is for local development and the repository's initial
 commit, so the site renders meaningfully before the first scheduled run.
+
+ALPHA 2.0 ADDITIONS:
+  - Bayesian beliefs update each cycle (agent_beliefs.json — PROTECTED)
+  - Thompson-sampled conviction multipliers boost hot agents
+  - Evolution cards advance on every scored outcome (only grow)
+  - Counterfactual logging for every overruled dissent
+  - Operator reflections injected into agent contexts
+  - Drift detection auto-dampens cold agents
+  - Time-of-day performance buckets
+  - Position correlation matrix nightly snapshot
+  - Anomaly detection (volume spikes, price gaps)
+  - Alpaca paper trading bridge (paper-only, hardcoded)
+  - Two new agents: CONTRARIAN, SHORT_ALPHA
+  - Persistence guard: training NEVER resets across any workflow
 """
 
 from __future__ import annotations
@@ -61,6 +75,26 @@ from .agents.shepherd import shepherd
 from .agents.nomad import nomad
 from .agents.barnacle import barnacle
 from .agents.kestrel_plus import kestrel_plus
+
+# ── ALPHA 2.0 new agents ────────────────────────────────────────
+# These are imported defensively — if the modules don't exist yet
+# (e.g. mid-merge), we gracefully skip them rather than crash.
+try:
+    from .agents.contrarian import Contrarian as _ContrarianClass
+    contrarian = _ContrarianClass()
+    _HAS_CONTRARIAN = True
+except Exception as _e:
+    contrarian = None
+    _HAS_CONTRARIAN = False
+
+try:
+    from .agents.short_alpha import ShortAlpha as _ShortAlphaClass
+    short_alpha = _ShortAlphaClass()
+    _HAS_SHORT_ALPHA = True
+except Exception as _e:
+    short_alpha = None
+    _HAS_SHORT_ALPHA = False
+
 from .sports import fetch_markets, write_markets_json
 from .catalysts import write_catalysts_json
 from .charts import write_charts_json
@@ -91,6 +125,52 @@ from .analytics import technicals as ti
 from .analytics.sentiment import aggregate_ticker_sentiment
 from .analytics.regime import classify_regime, spy_trend_label
 
+# ── ALPHA 2.0 Full Learning Mode imports ────────────────────────
+# All defensively imported so if a module is missing mid-merge, the
+# old runner still works. Each capability is gated by its _HAS flag.
+try:
+    from .learning.persistence_guard import (
+        PROTECTED_LEARNING_FILES, emit_persistence_status, verify_persistence,
+    )
+    from .learning.bayesian_winrate import (
+        load_beliefs, save_beliefs, update_beliefs,
+    )
+    from .learning.thompson_arbiter import sample_conviction_multipliers
+    from .learning.dissent_digest import build_dissent_digest, attach_digest_to_contexts
+    from .learning.reflection import load_reflection, format_reflection_for_context
+    from .learning.evolution_cards import load_cards, save_cards, ensure_card
+    from .learning.counterfactual import log_counterfactual
+    from .learning.regime_bandit import RegimeBanditStore, context_key
+    from .learning.time_of_day import get_tod_bucket, record_tod_outcome
+    from .learning.drift_detector import (
+        detect_drift, update_drift_state, get_drift_dampeners,
+    )
+    from .learning.correlation_matrix import (
+        compute_position_correlations, append_to_history as append_corr_history,
+    )
+    from .learning.anomaly_detector import (
+        detect_volume_spike, detect_price_gap, record_anomalies,
+    )
+    from .learning.premortem import generate_premortem, archive_premortem
+    _HAS_LEARNING = True
+except Exception as _e:
+    _HAS_LEARNING = False
+    logging.getLogger("silmaril").warning(
+        "Alpha 2.0 learning modules not yet installed; running in compatibility mode. (%s)", _e
+    )
+
+try:
+    from .execution.alpaca_paper import execute_consensus_signals
+    _HAS_ALPACA = True
+except Exception as _e:
+    _HAS_ALPACA = False
+
+try:
+    from .agents._rename_map import display_label, all_new_codenames
+    _HAS_RENAME_MAP = True
+except Exception as _e:
+    _HAS_RENAME_MAP = False
+
 
 # ─────────────────────────────────────────────────────────────────
 # Full agent roster — the order here is the order shown in the UI
@@ -113,6 +193,11 @@ MAIN_VOTERS: List[Agent] = [
     # v2.0 additions:
     atlas, nightshade, cicada, shepherd, nomad, barnacle, kestrel_plus,
 ]
+# Alpha 2.0 additions to the voter panel
+if _HAS_CONTRARIAN and contrarian is not None:
+    MAIN_VOTERS.append(contrarian)
+if _HAS_SHORT_ALPHA and short_alpha is not None:
+    MAIN_VOTERS.append(short_alpha)
 
 SPECIALIST_AGENTS: List[Agent] = [
     baron, steadfast,            # $10K career operators
@@ -440,6 +525,327 @@ def build_demo_contexts() -> List[AssetContext]:
 
 
 # ─────────────────────────────────────────────────────────────────
+# ALPHA 2.0 — Pre-debate learning setup
+# Loads beliefs, builds dissent digest, injects reflection.
+# Returns a bundle that post-debate update consumes.
+# ─────────────────────────────────────────────────────────────────
+
+def _pre_debate_learning(out: Path, contexts: List[AssetContext]) -> dict:
+    """Returns a learning context bundle. Empty dict if learning unavailable."""
+    if not _HAS_LEARNING:
+        return {}
+
+    bundle = {
+        "out": out,
+        "beliefs": {},
+        "cards": {},
+        "rolling_winrates": {},
+        "drift_dampeners": {},
+        "tod_bucket": "UNKNOWN",
+        "digest": "",
+        "reflection": None,
+        "multipliers": {},
+    }
+
+    try:
+        bundle["beliefs"] = load_beliefs(out / "agent_beliefs.json")
+    except Exception as e:
+        log.warning("learning: load_beliefs failed: %s", e)
+
+    try:
+        bundle["cards"] = load_cards(out / "agent_evolution_cards.json")
+    except Exception as e:
+        log.warning("learning: load_cards failed: %s", e)
+
+    # Build dissent digest from history + scoring
+    try:
+        bundle["digest"] = build_dissent_digest(
+            scoring_path=out / "scoring.json",
+            history_path=out / "history.json",
+            counterfactuals_path=out / "counterfactuals.json",
+            lookback_days=7,
+        )
+    except Exception as e:
+        log.warning("learning: dissent digest failed: %s", e)
+
+    # Operator reflection
+    try:
+        bundle["reflection"] = load_reflection(out / "reflections.json")
+    except Exception as e:
+        log.warning("learning: load_reflection failed: %s", e)
+
+    # Inject into asset contexts
+    reflection_block = format_reflection_for_context(bundle["reflection"]) if bundle["reflection"] else ""
+    learning_block = f"{bundle['digest']}\n{reflection_block}".strip()
+    if learning_block:
+        try:
+            attach_digest_to_contexts(contexts, learning_block)
+            log.info("learning: injected %d chars of context into %d assets",
+                     len(learning_block), len(contexts))
+        except Exception as e:
+            log.warning("learning: attach_digest failed: %s", e)
+
+    # Compute rolling winrates from existing scoring.json
+    scoring_path = out / "scoring.json"
+    if scoring_path.exists():
+        try:
+            sd = json.loads(scoring_path.read_text())
+            for row in sd.get("leaderboard", []):
+                agent = row.get("agent")
+                wr = row.get("rolling_30d_win_rate")
+                if wr is None:
+                    wr = row.get("win_rate")
+                if agent and wr is not None:
+                    bundle["rolling_winrates"][agent] = float(wr)
+        except Exception as e:
+            log.warning("learning: rolling_winrates failed: %s", e)
+
+    # Drift dampeners
+    try:
+        bundle["drift_dampeners"] = get_drift_dampeners(out / "drift_state.json")
+    except Exception as e:
+        log.warning("learning: drift_dampeners failed: %s", e)
+
+    # Time-of-day bucket
+    try:
+        bundle["tod_bucket"] = get_tod_bucket()
+    except Exception:
+        pass
+
+    # Thompson-sampled conviction multipliers per agent for current regime
+    try:
+        regime = contexts[0].market_regime if contexts else "NEUTRAL"
+        if bundle["beliefs"]:
+            mults = sample_conviction_multipliers(bundle["beliefs"], regime)
+            # Apply drift dampeners
+            for agent, dmp in bundle["drift_dampeners"].items():
+                if agent in mults and dmp < 1.0:
+                    mults[agent] *= dmp
+            bundle["multipliers"] = mults
+    except Exception as e:
+        log.warning("learning: thompson sampling failed: %s", e)
+
+    return bundle
+
+
+def _apply_conviction_multipliers(verdicts: list, multipliers: dict) -> list:
+    """Scale each verdict's conviction by its agent's Thompson multiplier.
+    Caps conviction at [0, 1] after scaling. Mutates in place."""
+    if not multipliers:
+        return verdicts
+    for v in verdicts:
+        agent = v.get("agent") if isinstance(v, dict) else getattr(v, "agent", None)
+        if not agent:
+            continue
+        mult = multipliers.get(agent, 1.0)
+        if isinstance(v, dict):
+            cur = float(v.get("conviction", 0) or 0)
+            v["conviction"] = max(0.0, min(1.0, cur * mult))
+            v.setdefault("learning_multiplier", round(mult, 3))
+        else:
+            cur = float(getattr(v, "conviction", 0) or 0)
+            try:
+                v.conviction = max(0.0, min(1.0, cur * mult))
+            except Exception:
+                pass
+    return verdicts
+
+
+def _scan_anomalies(out: Path, contexts: List[AssetContext]) -> List[dict]:
+    """Scan all contexts for anomalies, persist with TTL."""
+    if not _HAS_LEARNING:
+        return []
+    state_path = out / "anomaly_state.json"
+    fresh = []
+    for ctx in contexts:
+        anomalies = []
+        try:
+            cur_v = getattr(ctx, "volume", None) or 0
+            avg_v = getattr(ctx, "avg_volume_30d", None) or 0
+            if cur_v and avg_v:
+                # Construct a synthetic 30-day history near the avg for z-score
+                hist = [avg_v] * 30
+                vs = detect_volume_spike(int(cur_v), hist, threshold_sigma=3.0)
+                if vs:
+                    anomalies.append(vs)
+        except Exception:
+            pass
+        try:
+            ph = getattr(ctx, "price_history", None) or []
+            if len(ph) >= 2 and ctx.price:
+                pg = detect_price_gap(open_price=ctx.price, prev_close=ph[-2])
+                if pg:
+                    anomalies.append(pg)
+        except Exception:
+            pass
+        if anomalies and ctx.ticker:
+            try:
+                f = record_anomalies(state_path, ctx.ticker, anomalies)
+                fresh.extend(f)
+            except Exception:
+                pass
+    if fresh:
+        log.info("learning: detected %d fresh anomalies", len(fresh))
+    return fresh
+
+
+# ─────────────────────────────────────────────────────────────────
+# ALPHA 2.0 — Post-debate learning update
+# Updates beliefs, evolution cards, drift state, counterfactuals.
+# ─────────────────────────────────────────────────────────────────
+
+def _post_debate_learning(
+    bundle: dict,
+    *,
+    debate_dicts: list,
+    portfolios: dict,
+    new_outcome_dicts: list,
+    contexts: List[AssetContext],
+    today_iso: str,
+) -> None:
+    """Update all learning state after consensus + outcome scoring."""
+    if not _HAS_LEARNING or not bundle:
+        return
+
+    out: Path = bundle.get("out")
+    if not out:
+        return
+
+    # 1) Update Bayesian beliefs from newly scored outcomes
+    if new_outcome_dicts:
+        try:
+            outcomes_for_beliefs = [
+                {
+                    "agent": o.get("agent"),
+                    "regime": o.get("regime") or o.get("market_regime") or "UNKNOWN",
+                    "won": bool(o.get("correct", o.get("was_correct", o.get("won", False)))),
+                }
+                for o in new_outcome_dicts
+                if o.get("agent")
+            ]
+            beliefs = update_beliefs(bundle["beliefs"], outcomes_for_beliefs)
+            save_beliefs(out / "agent_beliefs.json", beliefs)
+            log.info("learning: updated beliefs on %d outcomes", len(outcomes_for_beliefs))
+        except Exception as e:
+            log.warning("learning: belief update failed: %s", e)
+
+    # 2) Advance evolution cards (only grow)
+    if new_outcome_dicts:
+        try:
+            cards = bundle.get("cards", {})
+            for o in new_outcome_dicts:
+                agent = o.get("agent")
+                if not agent:
+                    continue
+                card = ensure_card(cards, agent)
+                card.record_call(
+                    won=bool(o.get("correct", o.get("was_correct", o.get("won", False)))),
+                    conviction=float(o.get("conviction", 0.5) or 0.5),
+                    regime=o.get("regime") or "UNKNOWN",
+                    was_dissent=bool(o.get("was_dissent", False)),
+                )
+            save_cards(out / "agent_evolution_cards.json", cards)
+            log.info("learning: advanced %d evolution cards", len(cards))
+        except Exception as e:
+            log.warning("learning: evolution cards update failed: %s", e)
+
+    # 3) Counterfactual logging — for each debate, log dissent vs consensus
+    try:
+        for d in debate_dicts:
+            ndr = d.get("next_day_return")
+            if ndr is None:
+                continue
+            consensus_signal = (d.get("consensus") or {}).get("signal", "HOLD")
+            for v in d.get("verdicts", []):
+                v_signal = v.get("signal")
+                if v_signal in (consensus_signal, "ABSTAIN"):
+                    continue
+                try:
+                    log_counterfactual(
+                        out / "counterfactuals.json",
+                        date_str=today_iso,
+                        ticker=d.get("ticker", ""),
+                        consensus_signal=consensus_signal,
+                        dissenting_agent=v.get("agent", ""),
+                        dissent_signal=v_signal,
+                        next_day_return=float(ndr),
+                    )
+                except Exception:
+                    pass
+    except Exception as e:
+        log.warning("learning: counterfactual logging failed: %s", e)
+
+    # 4) Drift detection — scan evolution cards vs rolling winrates
+    try:
+        drift_by_agent = {}
+        for agent, card in bundle.get("cards", {}).items():
+            rolling = bundle["rolling_winrates"].get(agent, None)
+            if rolling is None:
+                continue
+            n_calls = getattr(card, "lifetime_calls", 0) or 0
+            if n_calls < 30:
+                continue
+            lt = getattr(card, "lifetime_win_rate", 0.5)
+            d = detect_drift(
+                rolling_30d_winrate=float(rolling),
+                lifetime_winrate=float(lt),
+                n_recent_calls=min(n_calls, 100),
+            )
+            if d.get("drifting"):
+                drift_by_agent[agent] = d
+        update_drift_state(out / "drift_state.json", drift_by_agent)
+        if drift_by_agent:
+            log.info("learning: drift detected for %s", list(drift_by_agent.keys()))
+    except Exception as e:
+        log.warning("learning: drift detection failed: %s", e)
+
+    # 5) Time-of-day bucket update
+    if new_outcome_dicts:
+        try:
+            bucket = bundle.get("tod_bucket") or "UNKNOWN"
+            for o in new_outcome_dicts:
+                agent = o.get("agent")
+                if not agent:
+                    continue
+                record_tod_outcome(
+                    out / "time_of_day_performance.json",
+                    agent,
+                    bucket,
+                    bool(o.get("correct", o.get("won", False))),
+                )
+        except Exception as e:
+            log.warning("learning: TOD update failed: %s", e)
+
+    # 6) Correlation matrix snapshot
+    try:
+        portfolio_snap = {}
+        for name, p in (portfolios or {}).items():
+            cp = getattr(p, "current_position", None)
+            if cp:
+                portfolio_snap[name] = {"current_position": cp}
+        # Build price_history map from contexts
+        price_history = {}
+        for ctx in contexts:
+            ph = getattr(ctx, "price_history", None)
+            if ph:
+                price_history[ctx.ticker] = list(ph)[-90:]
+        if portfolio_snap and price_history:
+            snap = compute_position_correlations(portfolio_snap, price_history)
+            append_corr_history(out / "correlation_history.json", snap)
+            alerts = snap.get("concentration_alerts", [])
+            if alerts:
+                log.info("learning: %d concentration alerts", len(alerts))
+    except Exception as e:
+        log.warning("learning: correlation snapshot failed: %s", e)
+
+    # 7) Persistence health check
+    try:
+        emit_persistence_status(out, out / "persistence_status.json")
+    except Exception as e:
+        log.warning("learning: persistence_status failed: %s", e)
+
+
+# ─────────────────────────────────────────────────────────────────
 # Orchestration
 # ─────────────────────────────────────────────────────────────────
 
@@ -467,13 +873,33 @@ def run(mode: str = "demo", output_dir: str = "docs/data") -> None:
     if mode == "demo":
         _backfill_demo_headlines(contexts)
 
+    # ── ALPHA 2.0: Pre-debate learning setup ────────────────────
+    # Loads agent_beliefs.json, builds dissent digest, injects operator
+    # reflection into every asset context, computes Thompson-sampled
+    # conviction multipliers, and applies drift dampeners.
+    learning_bundle = _pre_debate_learning(out, contexts)
+
+    # Anomaly scan (volume spikes, price gaps) — flagged for next debate
+    _scan_anomalies(out, contexts)
+
     # ── Run the debate ──────────────────────────────────────────
-    # Only the main 15 vote in the debate. Specialists act on consensus
+    # Only the main voters vote in the debate. Specialists act on consensus
     # but their narrow universes would distort the cross-asset signal if
     # they could vote.
     arbiter = Arbiter(agents=MAIN_VOTERS, aegis_veto_enabled=True)
     debates = arbiter.resolve(contexts)
     debate_dicts = [d.to_dict() for d in debates]
+
+    # ── ALPHA 2.0: Apply Thompson-sampled conviction multipliers ─
+    # Each agent's voted conviction gets scaled by how confident the
+    # Bayesian posterior is in that agent's win rate in this regime.
+    # Confident hot agents get amplified voice; cold agents get muted.
+    if learning_bundle.get("multipliers"):
+        for d in debate_dicts:
+            verdicts = d.get("verdicts", [])
+            _apply_conviction_multipliers(verdicts, learning_bundle["multipliers"])
+            # Recompute consensus signal/score from scaled verdicts
+            _recompute_consensus_in_place(d)
 
     # ── Specialist votes (operator-only, never affects consensus) ─
     # Baron and Steadfast run $10K career portfolios; they need their
@@ -522,6 +948,39 @@ def run(mode: str = "demo", output_dir: str = "docs/data") -> None:
             }
             d["tags"] = tag_context(ctx_flat)
 
+    # ── ALPHA 2.0: Pre-mortem on high-conviction calls ──────────
+    # For consensus calls with conviction >= 0.55, generate explicit
+    # kill-criteria and bear-case statements written into the rationale.
+    if _HAS_LEARNING:
+        try:
+            for d in debate_dicts:
+                cons = d.get("consensus") or {}
+                conv = float(cons.get("avg_conviction", 0) or 0)
+                sig = cons.get("signal", "HOLD")
+                if conv < 0.55 or sig in ("HOLD", "ABSTAIN"):
+                    continue
+                c = ctx_lookup.get(d["ticker"])
+                if not c:
+                    continue
+                ctx_summary = {
+                    "price": c.price,
+                    "sma_20": getattr(c, "sma_20", None),
+                    "sma_50": getattr(c, "sma_50", None),
+                }
+                pm = generate_premortem(
+                    signal=sig, conviction=conv, ticker=d["ticker"],
+                    rationale=d.get("dissent_summary", ""), ctx_summary=ctx_summary,
+                )
+                if pm:
+                    d["premortem"] = pm
+                    archive_premortem(
+                        out / "premortem_archive.json",
+                        agent="CONSENSUS", ticker=d["ticker"],
+                        signal=sig, conviction=conv, premortem=pm,
+                    )
+        except Exception as e:
+            log.warning("learning: premortem generation failed: %s", e)
+
     debate_dicts.sort(
         key=lambda d: (d["consensus"]["score"], d["consensus"]["avg_conviction"]),
         reverse=True,
@@ -552,7 +1011,7 @@ def run(mode: str = "demo", output_dir: str = "docs/data") -> None:
     prices = {ctx.ticker: ctx.price for ctx in contexts}
 
     # ── Once-per-day gate ─────────────────────────────────────────
-    # The cron fires every 30 min during market hours. We want trade
+    # The cron fires every 10 min during market hours. We want trade
     # decisions to happen ONCE per UTC day per agent, not on every
     # cron run. Multi-trade agents (CryptoBro/JRR/Sports/Baron) have
     # their own daily caps and reset counters at midnight UTC.
@@ -626,11 +1085,11 @@ def run(mode: str = "demo", output_dir: str = "docs/data") -> None:
     write_charts_json(out / "charts.json", debate_dicts, ctx_lookup)
 
     # ── Per-agent $10K career portfolios ─────────────────────────
-    # Includes the 15 main voters PLUS Baron and Steadfast (specialists
+    # Includes the main voters PLUS Baron and Steadfast (specialists
     # who run $10K career books). $1 compounders are excluded.
     portfolios_path = out / "agent_portfolios.json"
     portfolios = load_portfolios(portfolios_path)
-    DOLLAR_COMPOUNDERS = {"SCROOGE", "MIDAS", "CRYPTOBRO", "JRR_TOKEN"}
+    DOLLAR_COMPOUNDERS = {"SCROOGE", "MIDAS", "CRYPTOBRO", "JRR_TOKEN", "SPORTS_BRO"}
     main_agents = [a.codename for a in AGENTS if a.codename not in DOLLAR_COMPOUNDERS]
 
     # Load any pre-existing risk state to know which agents enter today frozen
@@ -664,6 +1123,7 @@ def run(mode: str = "demo", output_dir: str = "docs/data") -> None:
             if not already_acted_today:
                 p.history.append({
                     "date": today_iso,
+                    "timestamp": now.isoformat(),  # ALPHA 2.0: real time, not just date
                     "action": "FROZEN",
                     "reason": (prior_agent_risk.get(agent_name).frozen_reason
                                if prior_agent_risk.get(agent_name)
@@ -719,6 +1179,18 @@ def run(mode: str = "demo", output_dir: str = "docs/data") -> None:
         log.info("  Best agent: %s (win rate %.1f%%, EV %+.2f%%)",
                  b["agent"], (b["win_rate"] or 0) * 100, b["expected_value"] or 0)
 
+    # ── ALPHA 2.0: Post-debate learning update ──────────────────
+    # Update beliefs, evolution cards, drift state, counterfactuals,
+    # time-of-day buckets, correlation matrix, persistence health.
+    _post_debate_learning(
+        learning_bundle,
+        debate_dicts=debate_dicts,
+        portfolios=portfolios,
+        new_outcome_dicts=new_unique,
+        contexts=contexts,
+        today_iso=today_iso,
+    )
+
     # ── Phase E: hard risk engine ───────────────────────────────
     # Use the prior_* state we loaded above as the basis; evaluate;
     # save updated state to disk
@@ -739,15 +1211,15 @@ def run(mode: str = "demo", output_dir: str = "docs/data") -> None:
             mark = prices.get(p.current_position["ticker"])
         equity = p.total_equity(mark)
 
-        state = agent_risk.get(agent_name) or AgentRiskState(agent=agent_name)
-        state, log_msg = evaluate_agent_risk(
-            state,
+        risk_state = agent_risk.get(agent_name) or AgentRiskState(agent=agent_name)
+        risk_state, log_msg = evaluate_agent_risk(
+            risk_state,
             current_equity=equity,
             weight_multiplier=weight_lookup.get(agent_name),
             scored_calls=calls_lookup.get(agent_name, 0),
             today_iso=today_iso,
         )
-        agent_risk[agent_name] = state
+        agent_risk[agent_name] = risk_state
         if log_msg:
             log.info("  %s", log_msg)
 
@@ -773,6 +1245,51 @@ def run(mode: str = "demo", output_dir: str = "docs/data") -> None:
     plans_kept, plans_rejected = filter_plans_by_risk(plans)
     if plans_rejected:
         log.info("  %d plans rejected by risk engine", len(plans_rejected))
+
+    # ── ALPHA 2.0: Alpaca paper-trading bridge ──────────────────
+    # Every kept plan with consensus_conviction >= 0.60 becomes a real-shaped
+    # market order in your free Alpaca paper account. Hardcoded paper-only.
+    # No env var, secret, or argument can flip this to live trading.
+    # Skipped silently if alpaca-py not installed or secrets not set.
+    if _HAS_ALPACA:
+        try:
+            # Adapt plan dicts to what alpaca_paper expects
+            alpaca_plans = []
+            for p in plans_kept:
+                # The plan dict needs: ticker, consensus_signal,
+                # consensus_conviction, entry_price, asset_class
+                ticker = p.get("ticker", "")
+                # Find the matching debate for the consensus
+                d = next((x for x in debate_dicts if x["ticker"] == ticker), None)
+                if not d:
+                    continue
+                cons = d.get("consensus") or {}
+                alpaca_plans.append({
+                    "ticker": ticker,
+                    "consensus_signal": cons.get("signal", "HOLD"),
+                    "consensus_conviction": float(cons.get("avg_conviction", 0) or 0),
+                    "entry_price": p.get("entry") or p.get("entry_price"),
+                    "price": d.get("price"),
+                    "asset_class": p.get("asset_class") or d.get("asset_class") or "equity",
+                })
+            alpaca_state = execute_consensus_signals(
+                plans=alpaca_plans,
+                state_path=out / "alpaca_paper_state.json",
+                max_position_pct=0.05,
+                min_consensus_conviction=0.60,
+                max_total_positions=15,
+                enable_shorts=True,
+            )
+            if alpaca_state.get("enabled"):
+                eq = alpaca_state.get("account", {}).get("equity")
+                n_orders = len(alpaca_state.get("orders_placed", []))
+                log.info("  Alpaca paper: equity=$%s, orders=%d", eq, n_orders)
+                if alpaca_state.get("errors"):
+                    log.warning("  Alpaca errors: %s", alpaca_state["errors"][:3])
+            else:
+                log.info("  Alpaca paper bridge skipped: %s", alpaca_state.get("reason", ""))
+        except Exception as e:
+            log.warning("alpaca: bridge failed: %s", e)
 
     # ── Handoff Blocks ──────────────────────────────────────────
     per_asset_handoffs = {
@@ -860,21 +1377,35 @@ Reply in 3-5 bullets, no preamble.
     agent_roster = []
     for a in AGENTS:
         bio = get_bio(a.codename)
-        agent_roster.append({
+        roster_entry = {
             "codename": a.codename,
             "specialty": a.specialty,
             "temperament": a.temperament,
-            "inspiration": a.inspiration,
+            "inspiration": getattr(a, "inspiration", ""),
             "bio": bio,
-        })
+        }
+        # Include display label from rename map if available
+        if _HAS_RENAME_MAP:
+            try:
+                roster_entry["display_label"] = display_label(a.codename)
+            except Exception:
+                pass
+        agent_roster.append(roster_entry)
 
     # ── Main output ─────────────────────────────────────────────
     signals_output = {
         "meta": {
-            "version": "2.1.0",
+            "version": "2.0.0",
             "project": "SILMARIL",
             "run_type": mode,
             "generated_at": now.isoformat(),
+            "alpha_2_0_features": {
+                "learning_loop": _HAS_LEARNING,
+                "alpaca_paper": _HAS_ALPACA,
+                "rename_map": _HAS_RENAME_MAP,
+                "contrarian_agent": _HAS_CONTRARIAN,
+                "short_alpha_agent": _HAS_SHORT_ALPHA,
+            },
             "disclaimer": (
                 "SILMARIL is an educational simulation. All content is for informational "
                 "and entertainment purposes only. NOT financial advice. Always consult a "
@@ -948,13 +1479,61 @@ Reply in 3-5 bullets, no preamble.
              jrr_token_dict["balance"], jrr_token_dict["current_life"],
              jrr_token_dict["tiers"]["sub_100m"]["balance"],
              jrr_token_dict["tiers"]["over_100m"]["balance"])
-    log.info("  Top agent portfolio: %s @ $%.2f", leaderboard[0][0], leaderboard[0][1])
+    if leaderboard:
+        log.info("  Top agent portfolio: %s @ $%.2f", leaderboard[0][0], leaderboard[0][1])
     log.info("  Output: %s", out.resolve())
+
+    # ── ALPHA 2.0: Final persistence sanity check ───────────────
+    if _HAS_LEARNING:
+        try:
+            health = verify_persistence(out)
+            log.info("  Learning state: %d/%d protected files present",
+                     len(health["present"]), health["total_protected"])
+        except Exception:
+            pass
 
 
 # ─────────────────────────────────────────────────────────────────
 # Helpers
 # ─────────────────────────────────────────────────────────────────
+
+# ALPHA 2.0: Recompute consensus from scaled verdicts after applying
+# Thompson multipliers. We re-derive signal/score from the modified
+# convictions without changing the existing Arbiter class.
+_SIGNAL_SCORE = {
+    "STRONG_BUY":  +2.0, "BUY":         +1.0,
+    "HOLD":         0.0, "ABSTAIN":      0.0,
+    "SELL":        -1.0, "STRONG_SELL": -2.0,
+}
+
+
+def _recompute_consensus_in_place(debate: dict) -> None:
+    """After verdicts have had their conviction scaled, recompute the
+    consensus block to reflect the new weighting. Conservative — only
+    updates avg_conviction and consensus.score; preserves agreement_score
+    and signal threshold logic from the existing arbiter."""
+    verdicts = debate.get("verdicts", []) or []
+    if not verdicts:
+        return
+    total = 0.0
+    weight = 0.0
+    for v in verdicts:
+        sig = v.get("signal", "HOLD")
+        if sig == "ABSTAIN":
+            continue
+        s = _SIGNAL_SCORE.get(sig, 0.0)
+        c = float(v.get("conviction", 0) or 0)
+        total += s * c
+        weight += c
+    if weight == 0:
+        return
+    avg_score = total / weight
+    cons = debate.setdefault("consensus", {})
+    cons["score"] = round(avg_score, 4)
+    cons["avg_conviction"] = round(weight / max(1, len(verdicts)), 4)
+    # Keep the existing signal unless it crosses a major threshold
+    # (we don't want to flip signal direction here — that's the arbiter's job)
+
 
 def _load_or_init_scrooge(path: Path) -> ScroogeState:
     if not path.exists():
@@ -1075,11 +1654,18 @@ def _load_or_init_sports_bro(path: Path) -> SportsBroState:
 def _append_history(path: Path, debate_dicts, plans, now) -> None:
     """Append a compact per-run snapshot to history.json so agent track
     records accumulate across runs. Kept small (verdicts only — not full
-    debate transcripts) to avoid unbounded file growth."""
+    debate transcripts) to avoid unbounded file growth.
+
+    ALPHA 2.0: Adds `timestamp` (full ISO datetime) alongside the
+    date-only `date` field, so the dashboard can show real run times
+    instead of always displaying 17:00.
+    """
     today = now.date().isoformat()
+    timestamp_iso = now.isoformat()  # ALPHA 2.0: real time
     snapshot = {
         "date": today,
-        "generated_at": now.isoformat(),
+        "timestamp": timestamp_iso,  # ALPHA 2.0
+        "generated_at": timestamp_iso,
         "verdicts": [
             {
                 "ticker": d["ticker"],
