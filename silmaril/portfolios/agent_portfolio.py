@@ -217,18 +217,97 @@ def agent_portfolio_act(
     return portfolio
 
 
+# Field name aliases: keys that older/external writers use → dataclass field names.
+# Extend this map if further schema drift is discovered.
+_FIELD_ALIASES: Dict[str, str] = {
+    "balance": "cash",
+}
+
+# Fields in the on-disk format that are NOT part of AgentPortfolio and must be
+# dropped before constructing the dataclass.
+_KNOWN_FIELDS = set(AgentPortfolio.__dataclass_fields__.keys())
+
+
+def _coerce_agent_record(raw_record: Dict) -> Dict:
+    """
+    Normalise a single agent record from disk into kwargs for AgentPortfolio().
+
+    Handles:
+      - Field renames (e.g. ``balance`` → ``cash``).
+      - Unknown / extra fields are silently dropped.
+      - Provides safe defaults for fields that may be absent.
+    """
+    # Apply aliases first
+    record: Dict = {}
+    for k, v in raw_record.items():
+        canonical = _FIELD_ALIASES.get(k, k)
+        record[canonical] = v
+
+    # Keep only known fields
+    clean = {k: v for k, v in record.items() if k in _KNOWN_FIELDS}
+
+    # Ensure cash / current_equity are consistent when one is missing
+    if "cash" not in clean:
+        clean["cash"] = STARTING_EQUITY
+    if "current_equity" not in clean:
+        # Best-effort: use cash as current equity if not stored
+        clean["current_equity"] = clean["cash"]
+    if "starting_equity" not in clean:
+        clean["starting_equity"] = STARTING_EQUITY
+
+    return clean
+
+
 def load_portfolios(path: Path) -> Dict[str, AgentPortfolio]:
+    """
+    Load agent portfolios from *path*.
+
+    Tolerates two on-disk layouts:
+
+    **Flat** (written by ``save_portfolios``)::
+
+        { "AEGIS": { "agent": "AEGIS", "cash": 9800.0, ... }, ... }
+
+    **Wrapped** (written by legacy / external code)::
+
+        {
+          "generated_at": "...",
+          "starting_capital": 10000.0,
+          "portfolios": { "AEGIS": { "agent": "AEGIS", "balance": 9800.0, ... }, ... },
+          "summary": { ... }
+        }
+    """
     if not path.exists():
         return {}
     try:
         raw = json.loads(path.read_text())
     except Exception:
         return {}
-    out = {}
-    known = set(AgentPortfolio.__dataclass_fields__.keys())
-    for agent, data in raw.items():
-        clean = {k: v for k, v in data.items() if k in known}
-        out[agent] = AgentPortfolio(**clean)
+
+    if not isinstance(raw, dict):
+        return {}
+
+    # Detect wrapped format: presence of a "portfolios" key whose value is a dict
+    # of agent-name → record mappings.
+    agent_map = raw.get("portfolios")
+    if not isinstance(agent_map, dict):
+        # Assume flat format — every value should be an agent record dict.
+        # Skip any top-level keys whose values are not dicts (metadata scalars).
+        agent_map = {k: v for k, v in raw.items() if isinstance(v, dict)}
+
+    out: Dict[str, AgentPortfolio] = {}
+    for agent, record in agent_map.items():
+        if not isinstance(record, dict):
+            continue
+        try:
+            kwargs = _coerce_agent_record(record)
+            # Ensure the agent name is always set correctly
+            kwargs["agent"] = agent
+            out[agent] = AgentPortfolio(**kwargs)
+        except Exception:
+            # Skip malformed individual records rather than aborting the whole load
+            continue
+
     return out
 
 
