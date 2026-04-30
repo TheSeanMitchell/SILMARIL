@@ -20,9 +20,12 @@ State: docs/data/sports_bro.json (PROTECTED)
 from __future__ import annotations
 
 import json
+from dataclasses import dataclass, field
 from datetime import datetime, timezone, timedelta
 from pathlib import Path
 from typing import Dict, List, Optional
+
+from .base import Agent, AssetContext, Signal, Verdict
 
 
 # Per-sport prior win-rate for Sports Bro's edge (rough; updates Bayesian)
@@ -35,7 +38,60 @@ SPORT_PRIORS = {
 
 CLOSEST_HOURS = 72      # primary window
 FALLBACK_HOURS = 168    # 7 days
+DEATH_THRESHOLD = 0.50  # below $0.50 → reincarnation
+MAX_TRADES_PER_DAY = 8
+STARTING_CAPITAL = 10.00
 
+
+# ─────────────────────────────────────────────────────────────────
+# State dataclass — what cli.py expects
+# ─────────────────────────────────────────────────────────────────
+
+@dataclass
+class SportsBroState:
+    """Persistent state for Sports Bro across runs."""
+    balance: float = STARTING_CAPITAL
+    open_bets: List[Dict] = field(default_factory=list)
+    history: List[Dict] = field(default_factory=list)
+    lifetime_peak: float = STARTING_CAPITAL
+    current_life: int = 1
+    life_start_date: str = field(
+        default_factory=lambda: datetime.now(timezone.utc).date().isoformat()
+    )
+    deaths: List[Dict] = field(default_factory=list)
+    trades_today: int = 0
+    last_action_date: str = ""
+
+    def to_dict(self) -> Dict:
+        return {
+            "codename": "SPORTS_BRO",
+            "title": "The Prediction-Market Bettor",
+            "balance": round(self.balance, 4),
+            "open_bets": self.open_bets,
+            "history": self.history[-50:],
+            "lifetime_peak": round(self.lifetime_peak, 4),
+            "current_life": self.current_life,
+            "life_start_date": self.life_start_date,
+            "days_alive": self._days_alive(),
+            "deaths": self.deaths,
+            "trades_today": self.trades_today,
+            "max_trades_per_day": MAX_TRADES_PER_DAY,
+            "actions_this_life": len(self.history),
+            "current_position": self.open_bets[0] if self.open_bets else None,
+        }
+
+    def _days_alive(self) -> int:
+        try:
+            start = datetime.fromisoformat(self.life_start_date).date()
+            today = datetime.now(timezone.utc).date()
+            return max(0, (today - start).days)
+        except Exception:
+            return 0
+
+
+# ─────────────────────────────────────────────────────────────────
+# Market filtering helpers
+# ─────────────────────────────────────────────────────────────────
 
 def _hours_until(market: dict, now: datetime) -> Optional[float]:
     end = market.get("end_date") or market.get("end_time") or market.get("close_time")
@@ -92,7 +148,6 @@ def pick_best_bet(markets: List[dict]) -> Optional[dict]:
     for m in eligible:
         sport = (m.get("sport") or "default").lower()
         prior = SPORT_PRIORS.get(sport, SPORT_PRIORS["default"])
-        # Implied probability from price (assume decimal odds or % market)
         price = m.get("price") or m.get("yes_price") or m.get("odds")
         if not price:
             continue
@@ -100,76 +155,185 @@ def pick_best_bet(markets: List[dict]) -> Optional[dict]:
             price = float(price)
         except Exception:
             continue
-        # Treat price as probability if 0<p<1, else convert from decimal odds
         if 0 < price < 1:
             implied_p = price
         elif price > 1:
             implied_p = 1.0 / price
         else:
             continue
-        # Edge: prior - implied
         edge = prior - implied_p
         if edge <= 0:
             continue
         h = _hours_until(m, now) or 999
-        # Score: edge × recency-bonus (closer is better)
         recency_bonus = 1.0 + max(0, (CLOSEST_HOURS - h) / CLOSEST_HOURS)
         scored.append((m, edge * recency_bonus, h))
 
     if not scored:
         return None
-    # Take top-3 by score, then pick the closest among them
     scored.sort(key=lambda r: -r[1])
     top3 = scored[:3]
     top3.sort(key=lambda r: r[2])
     return top3[0][0]
 
 
-def compose_bet(state: dict, market: dict) -> dict:
+def compose_bet(state: SportsBroState, market: dict) -> dict:
     """Stake the entire current bankroll on this single bet."""
-    bankroll = float(state.get("bankroll", 1.0))
     return {
         "market_id": market.get("id") or market.get("market_id"),
         "sport": market.get("sport"),
         "label": market.get("label") or market.get("title"),
         "side": market.get("recommended_side") or "YES",
-        "stake": bankroll,
+        "stake": state.balance,
         "odds": market.get("price") or market.get("odds"),
         "ends": market.get("end_date") or market.get("end_time"),
         "placed_at": datetime.now(timezone.utc).isoformat(),
     }
 
 
-def load_state(state_path: Path) -> dict:
-    if not state_path.exists():
-        return {"bankroll": 1.0, "history": [], "active_bet": None, "lifetime_resets": 0}
-    try:
-        return json.loads(state_path.read_text())
-    except Exception:
-        return {"bankroll": 1.0, "history": [], "active_bet": None, "lifetime_resets": 0}
-
-
-def save_state(state_path: Path, state: dict) -> None:
-    state_path.parent.mkdir(parents=True, exist_ok=True)
-    state_path.write_text(json.dumps(state, indent=2, default=str))
-
-
-def settle_active_bet(state: dict, won: bool, payout_multiplier: float = 2.0) -> dict:
-    """Resolve the active bet. If won, multiply by payout. If lost, reset to $1."""
-    bet = state.get("active_bet")
-    if not bet:
+def settle_active_bet(state: SportsBroState, won: bool, payout_multiplier: float = 2.0) -> SportsBroState:
+    """Resolve the oldest open bet. If won, multiply by payout. If lost, reset to starting capital."""
+    if not state.open_bets:
         return state
+    bet = state.open_bets.pop(0)
+    today = datetime.now(timezone.utc).date().isoformat()
     if won:
-        new_bankroll = float(bet.get("stake", 1.0)) * payout_multiplier
+        new_bankroll = float(bet.get("stake", STARTING_CAPITAL)) * payout_multiplier
     else:
-        new_bankroll = 1.0
-        state["lifetime_resets"] = state.get("lifetime_resets", 0) + 1
-    state.setdefault("history", []).append({
+        new_bankroll = STARTING_CAPITAL
+        state.deaths.append({
+            "life": state.current_life,
+            "ended": today,
+            "peak": state.lifetime_peak,
+        })
+        state.current_life += 1
+        state.life_start_date = today
+    state.history.append({
         **bet,
         "won": won,
         "settled_at": datetime.now(timezone.utc).isoformat(),
         "new_bankroll": new_bankroll,
     })
-    state["bankroll"] = new_bankroll
-    state["active_bet"] = None
+    state.balance = new_bankroll
+    state.lifetime_peak = max(state.lifetime_peak, state.balance)
     return state
+
+
+# ─────────────────────────────────────────────────────────────────
+# Action function — called by cli.py each cycle
+# ─────────────────────────────────────────────────────────────────
+
+def sports_bro_act(state: SportsBroState, markets: List[dict]) -> SportsBroState:
+    """
+    Sports Bro places (or holds) one bet per cycle on the closest-resolving
+    eligible prediction market.
+    """
+    today = datetime.now(timezone.utc).date().isoformat()
+
+    # Reset daily counter on new day
+    if state.last_action_date != today:
+        state.trades_today = 0
+        state.last_action_date = today
+
+    # Death check
+    if state.balance < DEATH_THRESHOLD and not state.open_bets:
+        state.deaths.append({
+            "date": today,
+            "life": state.current_life,
+            "final_balance": round(state.balance, 4),
+            "peak_balance": round(state.lifetime_peak, 4),
+            "epitaph": (
+                f"Sports Bro went bust on Life #{state.current_life}. "
+                f"Peaked at ${state.lifetime_peak:.4f}."
+            ),
+        })
+        state.balance = STARTING_CAPITAL
+        state.current_life += 1
+        state.life_start_date = today
+        state.lifetime_peak = STARTING_CAPITAL
+        state.trades_today = 0
+        state.history.append({
+            "date": today,
+            "action": "REINCARNATION",
+            "life": state.current_life,
+        })
+
+    # Cap daily trades
+    if state.trades_today >= MAX_TRADES_PER_DAY:
+        state.history.append({
+            "date": today,
+            "action": "HOLD",
+            "reason": f"Daily trade cap ({MAX_TRADES_PER_DAY}) reached.",
+            "balance": round(state.balance, 4),
+        })
+        return state
+
+    # If already holding an open bet, don't stack another
+    if state.open_bets:
+        state.history.append({
+            "date": today,
+            "action": "HOLD",
+            "reason": "Open bet still pending resolution.",
+            "balance": round(state.balance, 4),
+        })
+        return state
+
+    # Find the best market
+    best = pick_best_bet(markets)
+    if not best:
+        state.history.append({
+            "date": today,
+            "action": "NO_BET",
+            "reason": "No eligible markets with positive edge found.",
+            "balance": round(state.balance, 4),
+        })
+        return state
+
+    bet = compose_bet(state, best)
+    state.open_bets.append(bet)
+    state.trades_today += 1
+    state.history.append({
+        "date": today,
+        "action": "BET",
+        "market": bet.get("label"),
+        "sport": bet.get("sport"),
+        "side": bet.get("side"),
+        "stake": round(state.balance, 4),
+        "odds": bet.get("odds"),
+        "ends": bet.get("ends"),
+        "life": state.current_life,
+    })
+    return state
+
+
+# ─────────────────────────────────────────────────────────────────
+# Agent class + singleton — required by cli.py imports
+# ─────────────────────────────────────────────────────────────────
+
+class SportsBro(Agent):
+    """Sports Bro as a voting agent (abstains on financial assets;
+    his action happens via sports_bro_act on prediction markets)."""
+
+    codename = "SPORTS_BRO"
+    specialty = "Prediction Markets"
+    temperament = (
+        "Half-Kelly on the closest-resolving bet. Never sportsbooks. "
+        "Polymarket + Kalshi only. Lives for the 72-hour window."
+    )
+    inspiration = "The Avengers prop-bet guy"
+    asset_classes = ("equity", "etf", "crypto")  # needed so applies_to works
+
+    def applies_to(self, ctx: AssetContext) -> bool:
+        # Sports Bro never votes in the stock/crypto debate
+        return False
+
+    def _judge(self, ctx: AssetContext) -> Verdict:
+        return Verdict(
+            agent=self.codename,
+            ticker=ctx.ticker,
+            signal=Signal.ABSTAIN,
+            conviction=0.0,
+            rationale="Sports Bro only bets on prediction markets, not financial assets.",
+        )
+
+
+sports_bro = SportsBro()
