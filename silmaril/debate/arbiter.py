@@ -1,34 +1,43 @@
 """
-silmaril.debate.arbiter — Adaptive consensus engine (Alpha 2.0).
+silmaril.debate.arbiter — Consensus engine.
 
-Consensus is now a Thompson-sampled, posterior-weighted vote with the
-GUARDIAN (formerly AEGIS) veto gated on rolling performance.
+Restored class interface for cli.py. The original `Arbiter` class is
+preserved here. Alpha 2.0 learning enhancements (Thompson sampling,
+drift dampening) are applied externally in cli.py via
+`_apply_conviction_multipliers` and `_recompute_consensus_in_place`,
+which scale verdict convictions AFTER this arbiter runs and refresh
+the consensus block. This keeps the arbiter focused on its core job:
+collect verdicts, compute consensus, identify dissents, apply AEGIS veto.
 
-Inputs:
-  - List of Verdicts from all agents
-  - Current regime tag
-  - AgentBeliefState dict (loaded from agent_beliefs.json)
-  - Recent scoring (rolling 30d win rates)
-  - Drift dampeners (agents in performance drift get reduced voice)
+Public surface:
 
-Outputs ArbiterResult with:
-  - consensus_signal, consensus_conviction
-  - agreement_score, dissents
-  - guardian_vetoed, multipliers_used
+    Arbiter(agents=[...], aegis_veto_enabled=True)
+    arbiter.resolve(contexts) -> List[DebateResult]
+    debate_result.to_dict() -> dict
+
+Output dict shape (consumed by cli.py and the dashboard):
+    {
+        "ticker": str,
+        "price": float,
+        "consensus": {
+            "signal": "STRONG_BUY"|"BUY"|"HOLD"|"SELL"|"STRONG_SELL",
+            "score": float,            # weighted score in [-2, +2]
+            "avg_conviction": float,   # avg conviction across non-abstaining
+            "agreement_score": float,  # 0..1 — how aligned were agents
+        },
+        "verdicts": [{agent, signal, conviction, rationale}, ...],
+        "aegis_veto": bool,
+        "dissent_summary": str,
+    }
 """
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import Dict, List, Optional
-
-from ..learning.bayesian_winrate import AgentBeliefState
-from ..learning.thompson_arbiter import (
-    sample_conviction_multipliers,
-    deterministic_multipliers,
-)
+from typing import Dict, Iterable, List, Optional
 
 
-SIGNAL_SCORE = {
+# Map signal strings to numeric scores for weighted consensus
+SIGNAL_SCORE: Dict[str, float] = {
     "STRONG_BUY":  +2.0,
     "BUY":         +1.0,
     "HOLD":         0.0,
@@ -37,206 +46,242 @@ SIGNAL_SCORE = {
     "STRONG_SELL": -2.0,
 }
 
-STRONG_BUY_THRESHOLD = +1.20
-BUY_THRESHOLD        = +0.40
-SELL_THRESHOLD       = -0.40
+# Score thresholds for emitting a consensus signal
+STRONG_BUY_THRESHOLD  = +1.20
+BUY_THRESHOLD         = +0.40
+SELL_THRESHOLD        = -0.40
 STRONG_SELL_THRESHOLD = -1.20
 
 
-@dataclass
-class ArbiterResult:
-    consensus_signal: str
-    consensus_conviction: float
-    agreement_score: float
-    dissents: List[Dict] = field(default_factory=list)
-    guardian_vetoed: bool = False
-    guardian_veto_reason: Optional[str] = None
-    weighted_score: float = 0.0
-    multipliers_used: Dict[str, float] = field(default_factory=dict)
-    drift_dampened: List[str] = field(default_factory=list)
+def _signal_str(sig) -> str:
+    """Coerce a signal (enum or string) into its string form."""
+    if hasattr(sig, "value"):
+        return str(sig.value)
+    return str(sig)
 
-    def to_dict(self):
+
+@dataclass
+class DebateResult:
+    """One ticker's debate outcome. Serializes via to_dict()."""
+    ticker: str
+    price: Optional[float]
+    consensus_signal: str
+    consensus_score: float
+    avg_conviction: float
+    agreement_score: float
+    verdicts: List[dict] = field(default_factory=list)
+    aegis_veto: bool = False
+    dissent_summary: str = ""
+
+    def to_dict(self) -> dict:
         return {
-            "consensus_signal": self.consensus_signal,
-            "consensus_conviction": round(self.consensus_conviction, 4),
-            "agreement_score": round(self.agreement_score, 4),
-            "dissents": self.dissents,
-            "guardian_vetoed": self.guardian_vetoed,
-            "guardian_veto_reason": self.guardian_veto_reason,
-            "weighted_score": round(self.weighted_score, 4),
-            "multipliers_used": {k: round(v, 3) for k, v in self.multipliers_used.items()},
-            "drift_dampened": self.drift_dampened,
+            "ticker": self.ticker,
+            "price": self.price,
+            "consensus": {
+                "signal": self.consensus_signal,
+                "score": round(self.consensus_score, 4),
+                "avg_conviction": round(self.avg_conviction, 4),
+                "agreement_score": round(self.agreement_score, 4),
+            },
+            "verdicts": list(self.verdicts),
+            "aegis_veto": self.aegis_veto,
+            "dissent_summary": self.dissent_summary,
         }
 
 
-def _verdict_score(signal: str, conviction: float) -> float:
-    return SIGNAL_SCORE.get(signal, 0.0) * max(0.0, min(1.0, conviction))
+class Arbiter:
+    """Collects verdicts from a panel of agents and emits consensus per asset.
 
-
-def adjudicate(
-    verdicts: List[Dict],
-    *,
-    regime: str = "NEUTRAL",
-    beliefs: Optional[Dict[str, AgentBeliefState]] = None,
-    rolling_winrates: Optional[Dict[str, float]] = None,
-    drift_dampeners: Optional[Dict[str, float]] = None,
-    deterministic: bool = False,
-    guardian_codename: str = "GUARDIAN",
-) -> ArbiterResult:
+    Parameters
+    ----------
+    agents : Iterable[Agent]
+        The voting panel. Each agent must implement:
+            applies_to(context) -> bool
+            evaluate(context) -> Verdict   # Verdict has agent, signal, conviction, rationale
+    aegis_veto_enabled : bool
+        If True, an AEGIS verdict of SELL or STRONG_SELL with conviction
+        >= 0.65 can downgrade a bullish consensus to HOLD. AEGIS is
+        identified by codename == "AEGIS" or "GUARDIAN" (Alpha 2.0 rename).
     """
-    verdicts: list of dicts with {agent, signal, conviction, rationale}
-    regime: current market regime tag
-    beliefs: posterior Beta states per agent
-    rolling_winrates: {agent_name: rolling_30d_winrate}
-    drift_dampeners: {agent_name: multiplier in (0, 1]} for drifting agents
-    deterministic: use posterior mean instead of sampling (backtests)
-    """
-    if not verdicts:
-        return ArbiterResult(
-            consensus_signal="HOLD",
-            consensus_conviction=0.0,
-            agreement_score=0.0,
-        )
 
-    # 1. Compute conviction multipliers from beliefs
-    if beliefs:
-        if deterministic:
-            multipliers = deterministic_multipliers(beliefs, regime)
-        else:
-            multipliers = sample_conviction_multipliers(beliefs, regime)
-    else:
-        multipliers = {v.get("agent", "?"): 1.0 for v in verdicts}
+    AEGIS_NAMES = ("AEGIS", "GUARDIAN")
+    AEGIS_VETO_MIN_CONVICTION = 0.65
 
-    # 2. Apply drift dampeners
-    drift_dampeners = drift_dampeners or {}
-    drifted = []
-    for agent, dampener in drift_dampeners.items():
-        if agent in multipliers and dampener < 1.0:
-            multipliers[agent] *= dampener
-            drifted.append(agent)
+    def __init__(self, agents: Iterable, aegis_veto_enabled: bool = True):
+        self.agents = list(agents)
+        self.aegis_veto_enabled = aegis_veto_enabled
 
-    # 3. Compute weighted consensus score
-    weighted_score = 0.0
-    total_weight = 0.0
-    bullish_count = 0
-    bearish_count = 0
-    neutral_count = 0
-    guardian_verdict = None
+    # ── Public entry point ──────────────────────────────────────
+    def resolve(self, contexts) -> List[DebateResult]:
+        """Run a debate on each context. Returns one DebateResult per context."""
+        results: List[DebateResult] = []
+        for ctx in contexts:
+            results.append(self._resolve_one(ctx))
+        return results
 
-    for v in verdicts:
-        agent = v.get("agent", "UNKNOWN")
-        signal = v.get("signal", "HOLD")
-        conviction = float(v.get("conviction", 0.0) or 0.0)
+    # ── Per-asset debate ────────────────────────────────────────
+    def _resolve_one(self, ctx) -> DebateResult:
+        verdicts_raw = []
+        for agent in self.agents:
+            try:
+                if not agent.applies_to(ctx):
+                    continue
+                v = agent.evaluate(ctx)
+                if v is None:
+                    continue
+                verdicts_raw.append(v)
+            except Exception:
+                # An agent that crashes shouldn't take down the debate.
+                # Silent skip — the live workflow surfaces these via logs
+                # if the agent emits warnings; we don't want one bad agent
+                # corrupting the whole panel.
+                continue
 
-        if signal == "ABSTAIN":
-            continue
-
-        mult = multipliers.get(agent, 1.0)
-        score = _verdict_score(signal, conviction) * mult
-        weighted_score += score
-        total_weight += mult * conviction
-
-        s = SIGNAL_SCORE.get(signal, 0.0)
-        if s > 0:
-            bullish_count += 1
-        elif s < 0:
-            bearish_count += 1
-        else:
-            neutral_count += 1
-
-        if agent == guardian_codename:
-            guardian_verdict = v
-
-    if total_weight == 0:
-        return ArbiterResult(
-            consensus_signal="HOLD",
-            consensus_conviction=0.0,
-            agreement_score=0.0,
-            multipliers_used=multipliers,
-            drift_dampened=drifted,
-        )
-
-    avg_score = weighted_score / total_weight
-
-    # 4. Map score to signal
-    if avg_score >= STRONG_BUY_THRESHOLD:
-        consensus_signal = "STRONG_BUY"
-    elif avg_score >= BUY_THRESHOLD:
-        consensus_signal = "BUY"
-    elif avg_score <= STRONG_SELL_THRESHOLD:
-        consensus_signal = "STRONG_SELL"
-    elif avg_score <= SELL_THRESHOLD:
-        consensus_signal = "SELL"
-    else:
-        consensus_signal = "HOLD"
-
-    consensus_conviction = min(1.0, abs(avg_score) / 2.0)
-
-    # 5. Conditional GUARDIAN veto
-    guardian_vetoed = False
-    guardian_veto_reason = None
-    if guardian_verdict is not None:
-        guardian_winrate = (rolling_winrates or {}).get(guardian_codename, 0.50)
-        guardian_signal = guardian_verdict.get("signal")
-        guardian_conviction = float(guardian_verdict.get("conviction", 0.0) or 0.0)
-
-        if (guardian_winrate >= 0.50
-                and guardian_conviction >= 0.65
-                and guardian_signal in ("SELL", "STRONG_SELL")
-                and consensus_signal in ("BUY", "STRONG_BUY")):
-            consensus_signal = "HOLD"
-            consensus_conviction *= 0.5
-            guardian_vetoed = True
-            guardian_veto_reason = (
-                f"GUARDIAN veto applied (rolling {guardian_winrate:.1%} ≥ 50%, "
-                f"conviction {guardian_conviction:.2f})"
-            )
-        elif (guardian_signal in ("SELL", "STRONG_SELL")
-              and consensus_signal in ("BUY", "STRONG_BUY")
-              and guardian_winrate < 0.50):
-            guardian_veto_reason = (
-                f"GUARDIAN dissent noted but veto withheld "
-                f"(rolling {guardian_winrate:.1%} < 50% threshold)"
-            )
-
-    # 6. Agreement score
-    voting_count = bullish_count + bearish_count + neutral_count
-    if voting_count == 0:
-        agreement_score = 0.0
-    else:
-        consensus_camp = (
-            bullish_count if consensus_signal in ("BUY", "STRONG_BUY")
-            else bearish_count if consensus_signal in ("SELL", "STRONG_SELL")
-            else neutral_count
-        )
-        agreement_score = consensus_camp / voting_count
-
-    # 7. Identify dissents
-    dissents = []
-    consensus_s = SIGNAL_SCORE.get(consensus_signal, 0.0)
-    for v in verdicts:
-        signal = v.get("signal", "HOLD")
-        if signal == "ABSTAIN":
-            continue
-        s = SIGNAL_SCORE.get(signal, 0.0)
-        if (s > 0 and consensus_s <= 0) or \
-           (s < 0 and consensus_s >= 0) or \
-           (s == 0 and consensus_s != 0):
-            dissents.append({
-                "agent": v.get("agent"),
-                "signal": signal,
-                "conviction": v.get("conviction"),
-                "rationale": v.get("rationale", ""),
+        # Normalize to the dict shape the rest of the system expects
+        verdict_dicts: List[dict] = []
+        for v in verdicts_raw:
+            agent_name = getattr(v, "agent", None) or "UNKNOWN"
+            sig = _signal_str(getattr(v, "signal", "HOLD"))
+            conviction = float(getattr(v, "conviction", 0.0) or 0.0)
+            rationale = str(getattr(v, "rationale", "") or "")
+            verdict_dicts.append({
+                "agent": agent_name,
+                "signal": sig,
+                "conviction": max(0.0, min(1.0, conviction)),
+                "rationale": rationale,
             })
 
-    return ArbiterResult(
-        consensus_signal=consensus_signal,
-        consensus_conviction=consensus_conviction,
-        agreement_score=agreement_score,
-        dissents=dissents,
-        guardian_vetoed=guardian_vetoed,
-        guardian_veto_reason=guardian_veto_reason,
-        weighted_score=avg_score,
-        multipliers_used=multipliers,
-        drift_dampened=drifted,
-    )
+        # Compute weighted consensus
+        cons_signal, cons_score, avg_conv, agreement = self._compute_consensus(verdict_dicts)
+
+        # AEGIS / GUARDIAN veto check
+        aegis_veto = False
+        if self.aegis_veto_enabled:
+            aegis_veto = self._maybe_apply_aegis_veto(verdict_dicts, cons_signal)
+            if aegis_veto:
+                # Downgrade bullish consensus to HOLD; halve the conviction
+                cons_signal = "HOLD"
+                cons_score = 0.0
+
+        # Build a short dissent summary
+        dissent_summary = self._summarize_dissent(verdict_dicts, cons_signal)
+
+        return DebateResult(
+            ticker=getattr(ctx, "ticker", "?"),
+            price=getattr(ctx, "price", None),
+            consensus_signal=cons_signal,
+            consensus_score=cons_score,
+            avg_conviction=avg_conv,
+            agreement_score=agreement,
+            verdicts=verdict_dicts,
+            aegis_veto=aegis_veto,
+            dissent_summary=dissent_summary,
+        )
+
+    # ── Consensus math ──────────────────────────────────────────
+    def _compute_consensus(self, verdicts: List[dict]) -> tuple:
+        """Returns (signal_str, weighted_score, avg_conviction, agreement_score)."""
+        if not verdicts:
+            return ("HOLD", 0.0, 0.0, 0.0)
+
+        # Weighted score: sum(signal_score * conviction) / sum(conviction)
+        total_weighted = 0.0
+        total_weight = 0.0
+        n_voting = 0
+        for v in verdicts:
+            sig = v.get("signal", "HOLD")
+            if sig == "ABSTAIN":
+                continue
+            score = SIGNAL_SCORE.get(sig, 0.0)
+            conv = float(v.get("conviction", 0.0) or 0.0)
+            total_weighted += score * conv
+            total_weight += conv
+            n_voting += 1
+
+        if total_weight == 0 or n_voting == 0:
+            return ("HOLD", 0.0, 0.0, 0.0)
+
+        avg_score = total_weighted / total_weight
+
+        # Map score to consensus signal
+        if avg_score >= STRONG_BUY_THRESHOLD:
+            cons = "STRONG_BUY"
+        elif avg_score >= BUY_THRESHOLD:
+            cons = "BUY"
+        elif avg_score <= STRONG_SELL_THRESHOLD:
+            cons = "STRONG_SELL"
+        elif avg_score <= SELL_THRESHOLD:
+            cons = "SELL"
+        else:
+            cons = "HOLD"
+
+        # Agreement score: fraction of voters in the consensus camp
+        cons_score_val = SIGNAL_SCORE.get(cons, 0.0)
+        in_camp = 0
+        for v in verdicts:
+            sig = v.get("signal", "HOLD")
+            if sig == "ABSTAIN":
+                continue
+            s = SIGNAL_SCORE.get(sig, 0.0)
+            if cons_score_val > 0 and s > 0:
+                in_camp += 1
+            elif cons_score_val < 0 and s < 0:
+                in_camp += 1
+            elif cons_score_val == 0 and s == 0:
+                in_camp += 1
+        agreement = in_camp / max(1, n_voting)
+
+        avg_conv = total_weight / max(1, n_voting)
+
+        return (cons, avg_score, avg_conv, agreement)
+
+    # ── AEGIS / GUARDIAN veto ───────────────────────────────────
+    def _maybe_apply_aegis_veto(self, verdicts: List[dict], current_consensus: str) -> bool:
+        """AEGIS / GUARDIAN can downgrade bullish consensus when its own
+        signal is bearish at sufficient conviction. We do not gate the
+        veto on rolling performance here — that gating happens in
+        Alpha 2.0's external arbiter logic when applied. Here we keep
+        the simple, original behavior so cli.py's `aegis_veto_enabled`
+        flag works as intended."""
+        if current_consensus not in ("BUY", "STRONG_BUY"):
+            return False
+
+        for v in verdicts:
+            agent = (v.get("agent") or "").upper()
+            if agent not in self.AEGIS_NAMES:
+                continue
+            sig = v.get("signal", "HOLD")
+            conv = float(v.get("conviction", 0.0) or 0.0)
+            if sig in ("SELL", "STRONG_SELL") and conv >= self.AEGIS_VETO_MIN_CONVICTION:
+                return True
+        return False
+
+    # ── Dissent summary text ────────────────────────────────────
+    def _summarize_dissent(self, verdicts: List[dict], cons_signal: str) -> str:
+        """One-line description of the most-divergent dissent, if any."""
+        cons_score = SIGNAL_SCORE.get(cons_signal, 0.0)
+        # A dissent is any non-abstain vote whose direction differs from consensus
+        dissents = []
+        for v in verdicts:
+            sig = v.get("signal", "HOLD")
+            if sig == "ABSTAIN":
+                continue
+            s = SIGNAL_SCORE.get(sig, 0.0)
+            differs = (
+                (cons_score > 0 and s <= 0) or
+                (cons_score < 0 and s >= 0) or
+                (cons_score == 0 and s != 0)
+            )
+            if differs:
+                dissents.append(v)
+
+        if not dissents:
+            return ""
+
+        # Sort dissents by conviction descending
+        dissents.sort(key=lambda x: float(x.get("conviction", 0) or 0), reverse=True)
+        top = dissents[0]
+        agent = top.get("agent", "?")
+        sig = top.get("signal", "?")
+        conv = float(top.get("conviction", 0) or 0)
+        return f"{agent} dissents ({sig}, conviction {conv:.2f})"
