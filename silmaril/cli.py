@@ -1284,6 +1284,13 @@ def run(mode: str = "demo", output_dir: str = "docs/data") -> None:
                 min_consensus_conviction=0.60,
                 max_total_positions=15,
                 enable_shorts=True,
+                # ALPHA 2.0 FIX: pass full debate signal map so exit logic
+                # can close any held position whose consensus flipped to SELL,
+                # even if that ticker didn't make the top-plan cut this run.
+                all_debate_signals={
+                    d["ticker"]: (d.get("consensus") or {}).get("signal", "HOLD")
+                    for d in debate_dicts
+                },
             )
             if alpaca_state.get("enabled"):
                 eq = alpaca_state.get("account", {}).get("equity")
