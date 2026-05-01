@@ -132,24 +132,35 @@ def evaluate_agent_risk(
     log_msg = ""
 
     # ── Corruption guard ─────────────────────────────────────────
-    # If current_equity is sub-$1 but last_equity was >= $1,000, this
-    # is an impossible move in a single 10-min cron run — it means the
-    # agent_portfolios.json was initialised with pennies (a known bug
-    # in early Alpha 2.0 where AgentPortfolio's default equity was
-    # written as ~$0.03 due to a unit mismatch).
-    # In this case we must NOT freeze — we skip all evaluation and reset
-    # the equity baseline so the next run starts clean.
-    # Philosophy: agents earn freeze status only from real live performance.
-    _CORRUPTION_FLOOR = 1.0    # below $1 on a $10K account = clearly wrong
-    _NORMAL_FLOOR    = 1_000.0 # if last reading was >= $1K, the jump is impossible
-    if (current_equity < _CORRUPTION_FLOOR
-            and agent_state.last_equity >= _NORMAL_FLOOR):
-        _prev = agent_state.last_equity
+    # Detects the "pennies equity" bug: agent_portfolios.json was
+    # initialised with ~$0.03 instead of $10,000. Identified by
+    # checking current_equity against peak_equity (NOT last_equity),
+    # because last_equity may already have been updated to $0.031 by
+    # a prior run that lacked this guard. peak_equity is only ever
+    # moved UP, so if it shows $10,000 and current shows $0.031,
+    # the drop is impossible in a 10-min cron window — it is
+    # data corruption, not a real loss.
+    #
+    # Also CLEARS any existing freeze caused by this corruption so
+    # agents don't stay frozen waiting for a +4% rebound that can
+    # never arrive on a $0.031 balance.
+    _CORRUPTION_FLOOR = 1.0      # below $1 on a $10K account = clearly wrong
+    _NORMAL_PEAK      = 1_000.0  # peak must have been >= $1K to flag corruption
+
+    if current_equity < _CORRUPTION_FLOOR and agent_state.peak_equity >= _NORMAL_PEAK:
+        _prev_peak = agent_state.peak_equity
         agent_state.last_equity = current_equity
+        cleared_freeze = False
+        if agent_state.frozen:
+            agent_state.frozen = False
+            agent_state.frozen_reason = ""
+            agent_state.frozen_since = ""
+            cleared_freeze = True
+        action = "cleared freeze + " if cleared_freeze else ""
         return agent_state, (
-            f"SKIP ({agent_state.agent}): equity ${current_equity:.4f} looks "
-            f"corrupted (last was ${_prev:.2f}). "
-            f"Resetting baseline; will evaluate normally next run."
+            f"CORRUPTION GUARD ({agent_state.agent}): equity ${current_equity:.4f} "
+            f"vs peak ${_prev_peak:.2f} — impossible drop, data corrupted. "
+            f"{action}baseline reset; will evaluate normally once portfolios corrected."
         )
 
     # Update peak/last equity
@@ -230,15 +241,13 @@ def evaluate_cohort_risk(
         return system_state, ""
 
     # ── Corruption guard ─────────────────────────────────────────
-    # If more than half the cohort shows a return below -90%, the input
-    # data is almost certainly corrupted (pennies-equity bug). In this
-    # case we skip the cohort evaluation entirely rather than tripping
-    # safe mode on bad data. Log clearly so operators can diagnose.
+    # If more than half the cohort shows >90% loss, input is corrupted
+    # (pennies-equity bug). Skip safe-mode trigger entirely.
     extreme_losses = sum(1 for r in portfolio_returns_pct if r < -90)
     if extreme_losses > len(portfolio_returns_pct) / 2:
         return system_state, (
             f"COHORT SKIP: {extreme_losses}/{len(portfolio_returns_pct)} agents "
-            f"show >90% loss — equity data looks corrupted. "
+            f"show >90% loss — equity data corrupted. "
             f"Safe-mode NOT triggered. Fix agent_portfolios.json and re-run."
         )
 
