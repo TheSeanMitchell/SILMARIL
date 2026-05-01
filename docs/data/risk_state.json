@@ -1,6 +1,5 @@
 {
-  "generated_at": "2026-04-30T20:34:08.014050+00:00",
-  "_reset_note": "Manually reset: safe-mode and agent freezes triggered by two bugs — (1) 18 agents initialized with ~$0.03 portfolio equity instead of $10,000, causing cohort avg return of -66.67%; (2) scoring date comparison matched ISO timestamps against YYYY-MM-DD strings, scoring every run against itself (entry==exit, 0% return, all BUY calls marked wrong). Both bugs patched. All agents restart unfrozen with clean $10,000 equity baseline per Alpha 2.0 philosophy: earn freeze status from real live performance only.",
+  "generated_at": "2026-05-01T07:33:50.933728+00:00",
   "config": {
     "max_single_position_pct": 0.25,
     "min_cash_buffer_pct": 0.0,
@@ -17,153 +16,159 @@
     "safe_mode": false,
     "safe_mode_reason": "",
     "safe_mode_since": null,
-    "cohort_avg_return_pct": 0.0,
-    "cohort_history": []
+    "cohort_avg_return_pct": -66.666,
+    "cohort_history": [
+      {
+        "date": "2026-05-01",
+        "cohort_avg_return_pct": -66.666,
+        "n_agents": 27
+      }
+    ]
   },
   "agents": {
     "AEGIS": {
       "agent": "AEGIS",
-      "frozen": false,
-      "frozen_reason": "",
-      "frozen_since": "",
-      "last_equity": 10000.0,
+      "frozen": true,
+      "frozen_reason": "Daily drawdown of -100.00% exceeded -8% threshold. Frozen until rebound.",
+      "frozen_since": "2026-05-01",
+      "last_equity": 0.0101,
       "peak_equity": 10000.0,
-      "drawdown_pct": 0.0
+      "drawdown_pct": 1.0
     },
     "FORGE": {
       "agent": "FORGE",
-      "frozen": false,
-      "frozen_reason": "",
-      "frozen_since": "",
-      "last_equity": 10000.0,
+      "frozen": true,
+      "frozen_reason": "Daily drawdown of -100.00% exceeded -8% threshold. Frozen until rebound.",
+      "frozen_since": "2026-05-01",
+      "last_equity": 0.0101,
       "peak_equity": 10000.0,
-      "drawdown_pct": 0.0
+      "drawdown_pct": 1.0
     },
     "THUNDERHEAD": {
       "agent": "THUNDERHEAD",
-      "frozen": false,
-      "frozen_reason": "",
-      "frozen_since": "",
-      "last_equity": 10000.0,
+      "frozen": true,
+      "frozen_reason": "Daily drawdown of -100.00% exceeded -8% threshold. Frozen until rebound.",
+      "frozen_since": "2026-05-01",
+      "last_equity": 0.0309,
       "peak_equity": 10000.0,
-      "drawdown_pct": 0.0
+      "drawdown_pct": 1.0
     },
     "JADE": {
       "agent": "JADE",
-      "frozen": false,
-      "frozen_reason": "",
-      "frozen_since": "",
-      "last_equity": 10000.0,
+      "frozen": true,
+      "frozen_reason": "Daily drawdown of -100.00% exceeded -8% threshold. Frozen until rebound.",
+      "frozen_since": "2026-05-01",
+      "last_equity": 0.0309,
       "peak_equity": 10000.0,
-      "drawdown_pct": 0.0
+      "drawdown_pct": 1.0
     },
     "VEIL": {
       "agent": "VEIL",
-      "frozen": false,
-      "frozen_reason": "",
-      "frozen_since": "",
-      "last_equity": 10000.0,
+      "frozen": true,
+      "frozen_reason": "Daily drawdown of -100.00% exceeded -8% threshold. Frozen until rebound.",
+      "frozen_since": "2026-05-01",
+      "last_equity": 0.0306,
       "peak_equity": 10000.0,
-      "drawdown_pct": 0.0
+      "drawdown_pct": 1.0
     },
     "KESTREL": {
       "agent": "KESTREL",
-      "frozen": false,
-      "frozen_reason": "",
-      "frozen_since": "",
-      "last_equity": 10000.0,
+      "frozen": true,
+      "frozen_reason": "Daily drawdown of -99.99% exceeded -8% threshold. Frozen until rebound.",
+      "frozen_since": "2026-05-01",
+      "last_equity": 0.7101,
       "peak_equity": 10000.0,
-      "drawdown_pct": 0.0
+      "drawdown_pct": 1.0
     },
     "OBSIDIAN": {
       "agent": "OBSIDIAN",
-      "frozen": false,
-      "frozen_reason": "",
-      "frozen_since": "",
-      "last_equity": 10000.0,
+      "frozen": true,
+      "frozen_reason": "Daily drawdown of -100.00% exceeded -8% threshold. Frozen until rebound.",
+      "frozen_since": "2026-05-01",
+      "last_equity": 0.032,
       "peak_equity": 10000.0,
-      "drawdown_pct": 0.0
+      "drawdown_pct": 1.0
     },
     "ZENITH": {
       "agent": "ZENITH",
-      "frozen": false,
-      "frozen_reason": "",
-      "frozen_since": "",
-      "last_equity": 10000.0,
+      "frozen": true,
+      "frozen_reason": "Daily drawdown of -100.00% exceeded -8% threshold. Frozen until rebound.",
+      "frozen_since": "2026-05-01",
+      "last_equity": 0.0306,
       "peak_equity": 10000.0,
-      "drawdown_pct": 0.0
+      "drawdown_pct": 1.0
     },
     "WEAVER": {
       "agent": "WEAVER",
-      "frozen": false,
-      "frozen_reason": "",
-      "frozen_since": "",
-      "last_equity": 10000.0,
+      "frozen": true,
+      "frozen_reason": "Daily drawdown of -100.00% exceeded -8% threshold. Frozen until rebound.",
+      "frozen_since": "2026-05-01",
+      "last_equity": 0.0303,
       "peak_equity": 10000.0,
-      "drawdown_pct": 0.0
+      "drawdown_pct": 1.0
     },
     "HEX": {
       "agent": "HEX",
-      "frozen": false,
-      "frozen_reason": "",
-      "frozen_since": "",
-      "last_equity": 10000.0,
+      "frozen": true,
+      "frozen_reason": "Daily drawdown of -100.00% exceeded -8% threshold. Frozen until rebound.",
+      "frozen_since": "2026-05-01",
+      "last_equity": 0.0306,
       "peak_equity": 10000.0,
-      "drawdown_pct": 0.0
+      "drawdown_pct": 1.0
     },
     "SYNTH": {
       "agent": "SYNTH",
-      "frozen": false,
-      "frozen_reason": "",
-      "frozen_since": "",
-      "last_equity": 10000.0,
+      "frozen": true,
+      "frozen_reason": "Daily drawdown of -100.00% exceeded -8% threshold. Frozen until rebound.",
+      "frozen_since": "2026-05-01",
+      "last_equity": 0.0309,
       "peak_equity": 10000.0,
-      "drawdown_pct": 0.0
+      "drawdown_pct": 1.0
     },
     "SPECK": {
       "agent": "SPECK",
-      "frozen": false,
-      "frozen_reason": "",
-      "frozen_since": "",
-      "last_equity": 10000.0,
+      "frozen": true,
+      "frozen_reason": "Daily drawdown of -100.00% exceeded -8% threshold. Frozen until rebound.",
+      "frozen_since": "2026-05-01",
+      "last_equity": 0.0299,
       "peak_equity": 10000.0,
-      "drawdown_pct": 0.0
+      "drawdown_pct": 1.0
     },
     "VESPA": {
       "agent": "VESPA",
-      "frozen": false,
-      "frozen_reason": "",
-      "frozen_since": "",
-      "last_equity": 10000.0,
+      "frozen": true,
+      "frozen_reason": "Daily drawdown of -100.00% exceeded -8% threshold. Frozen until rebound.",
+      "frozen_since": "2026-05-01",
+      "last_equity": 0.0309,
       "peak_equity": 10000.0,
-      "drawdown_pct": 0.0
+      "drawdown_pct": 1.0
     },
     "MAGUS": {
       "agent": "MAGUS",
-      "frozen": false,
-      "frozen_reason": "",
-      "frozen_since": "",
-      "last_equity": 10000.0,
+      "frozen": true,
+      "frozen_reason": "Daily drawdown of -100.00% exceeded -8% threshold. Frozen until rebound.",
+      "frozen_since": "2026-05-01",
+      "last_equity": 0.01,
       "peak_equity": 10000.0,
-      "drawdown_pct": 0.0
+      "drawdown_pct": 1.0
     },
     "TALON": {
       "agent": "TALON",
-      "frozen": false,
-      "frozen_reason": "",
-      "frozen_since": "",
-      "last_equity": 10000.0,
+      "frozen": true,
+      "frozen_reason": "Daily drawdown of -100.00% exceeded -8% threshold. Frozen until rebound.",
+      "frozen_since": "2026-05-01",
+      "last_equity": 0.01,
       "peak_equity": 10000.0,
-      "drawdown_pct": 0.0
+      "drawdown_pct": 1.0
     },
     "ATLAS": {
       "agent": "ATLAS",
-      "frozen": false,
-      "frozen_reason": "",
-      "frozen_since": "",
-      "last_equity": 10000.0,
+      "frozen": true,
+      "frozen_reason": "Daily drawdown of -100.00% exceeded -8% threshold. Frozen until rebound.",
+      "frozen_since": "2026-05-01",
+      "last_equity": 0.01,
       "peak_equity": 10000.0,
-      "drawdown_pct": 0.0
+      "drawdown_pct": 1.0
     },
     "NIGHTSHADE": {
       "agent": "NIGHTSHADE",
@@ -221,21 +226,21 @@
     },
     "BARON": {
       "agent": "BARON",
-      "frozen": false,
-      "frozen_reason": "",
-      "frozen_since": "",
-      "last_equity": 10000.0,
+      "frozen": true,
+      "frozen_reason": "Daily drawdown of -100.00% exceeded -8% threshold. Frozen until rebound.",
+      "frozen_since": "2026-05-01",
+      "last_equity": 0.031,
       "peak_equity": 10000.0,
-      "drawdown_pct": 0.0
+      "drawdown_pct": 1.0
     },
     "STEADFAST": {
       "agent": "STEADFAST",
-      "frozen": false,
-      "frozen_reason": "",
-      "frozen_since": "",
-      "last_equity": 10000.0,
+      "frozen": true,
+      "frozen_reason": "Daily drawdown of -100.00% exceeded -8% threshold. Frozen until rebound.",
+      "frozen_since": "2026-05-01",
+      "last_equity": 0.031,
       "peak_equity": 10000.0,
-      "drawdown_pct": 0.0
+      "drawdown_pct": 1.0
     },
     "SPORTS_BRO": {
       "agent": "SPORTS_BRO",
@@ -266,7 +271,7 @@
     }
   },
   "summary": {
-    "frozen_count": 0,
+    "frozen_count": 18,
     "total_count": 27,
     "safe_mode": false
   }
