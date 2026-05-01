@@ -3298,10 +3298,22 @@
   };
 
   function renderSpecialists() {
-    const portfolios = (STATE.agent_portfolios && STATE.agent_portfolios.portfolios) || {};
+    // ALPHA 2.0 FIX: BARON and STEADFAST specialist cards were disappearing
+    // entirely when agent_portfolios.json used the old flat-dict format (before
+    // the wrapped-format fix), because STATE.agent_portfolios.portfolios was
+    // undefined, making portfolios.BARON/.STEADFAST both falsy, triggering
+    // early return. Now we fall back to old flat format, then to roster,
+    // so the section always renders regardless of portfolio file state.
+    const portfoliosWrapped = (STATE.agent_portfolios && STATE.agent_portfolios.portfolios);
+    const portfoliosFlatFallback = portfoliosWrapped ? null : STATE.agent_portfolios;
+    const portfolios = portfoliosWrapped || portfoliosFlatFallback || {};
     const baron = portfolios.BARON;
     const steadfast = portfolios.STEADFAST;
-    if (!baron && !steadfast) return '';
+    // Only skip the section entirely if agents aren't in the roster either
+    const rosterEntries = (STATE.signals && STATE.signals.agent_roster) || [];
+    const baronInRoster = rosterEntries.find(a => a.codename === 'BARON');
+    const steadfastInRoster = rosterEntries.find(a => a.codename === 'STEADFAST');
+    if (!baron && !steadfast && !baronInRoster && !steadfastInRoster) return '';
 
     const debates = (STATE.signals && STATE.signals.debates) || [];
 
@@ -3316,7 +3328,29 @@
       .slice(0, 8);
 
     const buildCard = (p, label, sub, theme, universe, philosophy) => {
-      if (!p) return '';
+      // ALPHA 2.0 FIX: Previously returned '' when portfolio was null, which
+      // made the entire specialist card invisible. Now renders a loading
+      // placeholder so the agent is always visible in the Strategist tab,
+      // even before the first daily run populates the portfolio file.
+      if (!p) {
+        return `
+          <div class="card specialist-card ${theme}">
+            <div class="card-header">
+              <div>
+                <div class="card-title"><span class="diamond"></span>${esc(label)}</div>
+                <div class="card-subtitle">${esc(sub)}</div>
+              </div>
+            </div>
+            <div class="philosophy-line">${esc(philosophy)}</div>
+            <div class="balance">—</div>
+            <div class="balance-label">$10,000 career portfolio · awaiting first run</div>
+            <div class="empty-track" style="margin-top:14px">
+              Portfolio data not yet available. The next scheduled daily run will populate
+              this card with live position, equity, and trade history.
+            </div>
+          </div>
+        `;
+      }
       const pos = p.current_position;
       const mark = pos ? (_markPrice(pos.ticker) || pos.entry_price) : 0;
       const positionValue = pos ? pos.shares * mark : 0;
