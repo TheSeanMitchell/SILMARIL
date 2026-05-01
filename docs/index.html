@@ -3353,8 +3353,8 @@
       }
       const pos = p.current_position;
       const mark = pos ? (_markPrice(pos.ticker) || pos.entry_price) : 0;
-      const positionValue = pos ? pos.shares * mark : 0;
-      const equity = (p.balance || 0) + positionValue;
+      const positionValue = pos ? (pos.qty ?? pos.shares ?? 0) * mark : 0;
+      const equity = (p.cash ?? p.balance ?? 0) + positionValue;
       const ret = ((equity / 10000) - 1) * 100;
       const retCls = ret > 0.05 ? 'positive' : ret < -0.05 ? 'negative' : '';
       const lifetimeFees = (p.history || []).reduce((sum, h) => {
@@ -3376,8 +3376,8 @@
       let stateLabel = 'In Cash';
       let stateNote = '';
       if (pos) {
-        const daysHeld = pos.entry_date
-          ? Math.max(0, (new Date() - new Date(pos.entry_date)) / 86400000)
+        const daysHeld = (pos.opened_at || pos.entry_date)
+          ? Math.max(0, (new Date() - new Date(pos.opened_at || pos.entry_date)) / 86400000)
           : 0;
         stateLabel = `Holding ${pos.ticker}`;
         stateNote = `${daysHeld.toFixed(0)}d in position · target ${fmtMoney(pos.target || pos.entry_price * 1.10)}`;
@@ -3398,7 +3398,7 @@
           <div class="balance">${fmtMoney(equity, 2)}</div>
           <div class="balance-label">$10,000 career portfolio · ${ret >= 0 ? '+' : ''}${ret.toFixed(2)}% lifetime · ${stateLabel}</div>
           <div class="compounder-stats">
-            <div class="row"><span class="k">Cash</span><span class="v">${fmtMoney(p.balance || 0, 2)}</span></div>
+            <div class="row"><span class="k">Cash</span><span class="v">${fmtMoney(p.cash ?? p.balance ?? 0, 2)}</span></div>
             <div class="row"><span class="k">Position value</span><span class="v">${fmtMoney(positionValue, 2)}</span></div>
             <div class="row"><span class="k">Realized P&L</span><span class="v ${(p.realized_pnl || 0) >= 0 ? 'positive' : 'negative'}">${fmtMoney(p.realized_pnl || 0, 2)}</span></div>
             <div class="row"><span class="k">Trades</span><span class="v">${p.trades_count || (p.history || []).length}</span></div>
@@ -3408,7 +3408,7 @@
           ${pos ? `
             <div class="position-card">
               <div class="pos-ticker">${assetLogo(pos.ticker)}${esc(pos.ticker)}${assetTag(pos.ticker)}</div>
-              <div class="pos-line"><span class="lbl">Shares</span><span class="val">${fmt(pos.shares, 4)}</span></div>
+              <div class="pos-line"><span class="lbl">Shares</span><span class="val">${fmt(pos.qty ?? pos.shares ?? 0, 4)}</span></div>
               <div class="pos-line"><span class="lbl">Entry</span><span class="val">${fmtMoney(pos.entry_price, pos.entry_price < 1 ? 4 : 2)}</span></div>
               <div class="pos-line"><span class="lbl">Mark</span><span class="val">${fmtMoney(mark, mark < 1 ? 4 : 2)}</span></div>
               <div class="pos-line"><span class="lbl">P&L</span><span class="val ${mark >= pos.entry_price ? 'positive' : 'negative'}">${((mark / pos.entry_price - 1) * 100).toFixed(2)}%</span></div>
@@ -3475,14 +3475,14 @@
       const ticker = h.ticker || h.market || '—';
       let detail = '';
       if (action === 'BUY' || action === 'OPEN') {
-        detail = `${h.shares ? fmt(h.shares, 4) + ' sh' : ''} @ ${h.price ? fmtMoney(h.price, h.price < 1 ? 4 : 2) : (h.entry_price ? fmtMoney(h.entry_price, h.entry_price < 1 ? 4 : 2) : '—')}${h.fees != null ? ` · fees ${fmtMoney(h.fees, 4)}` : ''}`;
+        detail = `${(h.shares || h.qty) ? fmt(h.shares || h.qty, 4) + ' sh' : ''} @ ${h.price ? fmtMoney(h.price, h.price < 1 ? 4 : 2) : (h.entry_price ? fmtMoney(h.entry_price, h.entry_price < 1 ? 4 : 2) : '—')}${h.fees != null ? ` · fees ${fmtMoney(h.fees, 4)}` : ''}`;
       } else if (action === 'SELL' || action === 'CLOSE') {
         const pnl = h.pnl != null ? h.pnl : (h.pnl_pct);
         const pnlCls = (pnl || 0) >= 0 ? 'pos' : 'neg';
         const pnlText = h.pnl != null
           ? `<span class="${pnlCls}">${h.pnl >= 0 ? '+' : ''}${fmtMoney(h.pnl, 4)}${h.pnl_pct != null ? ` (${h.pnl_pct >= 0 ? '+' : ''}${h.pnl_pct.toFixed(2)}%)` : ''}</span>`
           : '';
-        detail = `${h.shares ? fmt(h.shares, 4) + ' sh @ ' + (h.price ? fmtMoney(h.price, h.price < 1 ? 4 : 2) : '—') : ''} · ${pnlText}`;
+        detail = `${(h.shares || h.qty) ? fmt(h.shares || h.qty, 4) + ' sh @ ' + (h.price ? fmtMoney(h.price, h.price < 1 ? 4 : 2) : '—') : ''} · ${pnlText}`;
       } else if (action === 'HODL' || action === 'HOLD') {
         // v1.6: surface HOLD actions so the user knows the strategist is alive
         // and got pinged on this run, even when no trade fired.
@@ -4282,7 +4282,7 @@
         portfolioBlock = `<div class="portfolio-strip"><div class="pos-line cash">$10 compounder · see card above</div></div>`;
       } else if (p) {
         const mark = p.current_position ? (_markPrice(p.current_position.ticker) || p.current_position.entry_price) : 0;
-        const equity = (p.balance || 0) + (p.current_position ? p.current_position.shares * mark : 0);
+        const equity = (p.cash ?? p.balance ?? 0) + (p.current_position ? (p.current_position.qty ?? p.current_position.shares ?? 0) * mark : 0);
         const ret = ((equity / 10000) - 1) * 100;
         const retCls = ret > 0.05 ? 'positive' : ret < -0.05 ? 'negative' : '';
         portfolioBlock = `
@@ -4343,7 +4343,7 @@
     const retSign = ret >= 0 ? '+' : '';
     const pos = p.current_position;
     const posLine = pos
-      ? `<div class="pos-line"><span class="ticker">${esc(pos.ticker)}</span> · ${fmt(pos.shares, 2)} sh @ ${fmtMoney(pos.entry_price, 2)}</div>`
+      ? `<div class="pos-line"><span class="ticker">${esc(pos.ticker)}</span> · ${fmt(pos.qty ?? pos.shares ?? 0, 2)} sh @ ${fmtMoney(pos.entry_price, 2)}</div>`
       : `<div class="pos-line cash">CASH</div>`;
     const sparkline = renderSparkline(p.equity_curve || []);
     return `
@@ -4436,8 +4436,8 @@
     }
 
     const startCap = (STATE.agent_portfolios && STATE.agent_portfolios.starting_capital) || 10000;
-    const equity = p.balance + (p.current_position
-      ? p.current_position.shares * (p.current_position.entry_price)  // mark to entry as fallback
+    const equity = (p.cash ?? p.balance ?? 0) + (p.current_position
+      ? (p.current_position.qty ?? p.current_position.shares ?? 0) * (p.current_position.entry_price)  // mark to entry as fallback
       : 0);
     const ret = ((equity / startCap) - 1) * 100;
     const retClass = ret > 0.01 ? 'positive' : ret < -0.01 ? 'negative' : '';
@@ -4458,9 +4458,9 @@
                   : (action === 'SELL') ? 'SELL'
                   : 'HOLD';
       const detail = action === 'BUY'
-        ? `${fmt(h.shares, 2)} sh @ ${fmtMoney(h.entry_price, 2)}`
+        ? `${fmt(h.qty ?? h.shares ?? 0, 2)} sh @ ${fmtMoney(h.entry_price, 2)}`
         : action === 'SELL'
-        ? `${fmt(h.shares, 2)} sh @ ${fmtMoney(h.exit_price, 2)} (${h.pnl_pct >= 0 ? '+' : ''}${fmt(h.pnl_pct, 2)}%)`
+        ? `${fmt(h.qty ?? h.shares ?? 0, 2)} sh @ ${fmtMoney(h.exit_price, 2)} (${h.pnl_pct >= 0 ? '+' : ''}${fmt(h.pnl_pct, 2)}%)`
         : action === 'HOLD'
         ? `HODL ${esc(h.ticker || '')}`
         : 'cash';
