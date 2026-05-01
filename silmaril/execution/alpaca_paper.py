@@ -57,6 +57,7 @@ def execute_consensus_signals(
     min_consensus_conviction: float = 0.60,
     max_total_positions: int = 15,
     enable_shorts: bool = True,
+    all_debate_signals: Optional[Dict[str, str]] = None,
 ) -> Dict:
     """
     Send today's top trade plans to Alpaca paper-trading.
@@ -67,6 +68,11 @@ def execute_consensus_signals(
     min_consensus_conviction: only trade above this conviction
     max_total_positions: hard cap on concurrent positions
     enable_shorts: if True, SELL/STRONG_SELL signals open short positions
+    all_debate_signals: {ticker: consensus_signal} for ALL debated tickers,
+        not just those that made the top-plan cut. Required for correct exit
+        logic — without this, positions whose tickers fall outside the top
+        N plans are NEVER closed even when consensus flips to SELL.
+        Pass debate_dicts from cli.py: {d['ticker']: d['consensus']['signal']}
     """
     state = {
         "last_run": datetime.now(timezone.utc).isoformat(),
@@ -198,9 +204,15 @@ def execute_consensus_signals(
                 state["errors"].append(f"{ticker} SHORT: {type(e).__name__}: {e}")
 
     # ---- Exits: close positions whose latest consensus is opposite ----
+    # ALPHA 2.0 FIX: Previously used only plan_signals (top N trade plans),
+    # so any held ticker that fell outside the top-plan cut had signal=None
+    # and was never closed — producing "buy only, never sell" behaviour.
+    # Now we prefer all_debate_signals (every debated ticker's consensus)
+    # and fall back to plan_signals only when the broader map isn't provided.
     plan_signals = {p.get("ticker"): p.get("consensus_signal") for p in plans}
+    exit_signals = all_debate_signals if all_debate_signals else plan_signals
     for pos in existing:
-        sig = plan_signals.get(pos.symbol)
+        sig = exit_signals.get(pos.symbol)
         side = str(pos.side).lower()
         # Long position with SELL signal -> close
         # Short position with BUY signal -> close
