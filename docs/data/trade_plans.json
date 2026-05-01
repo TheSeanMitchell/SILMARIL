@@ -3,7 +3,7 @@
     "version": "2.0.0",
     "project": "SILMARIL",
     "run_type": "live",
-    "generated_at": "2026-04-30T22:52:02.631415+00:00",
+    "generated_at": "2026-05-01T00:32:24.451836+00:00",
     "alpha_2_0_features": {
       "learning_loop": true,
       "alpaca_paper": true,
@@ -15,19 +15,19 @@
   },
   "plans": [
     {
-      "plan_id": "plan_20260430_2258_TRX-USD",
-      "ticker": "TRX-USD",
-      "name": "TRX-USD",
+      "plan_id": "plan_20260501_0039_AAPL",
+      "ticker": "AAPL",
+      "name": "AAPL",
       "direction": "LONG",
-      "entry": 0.33,
-      "stop": 0.32,
-      "target": 0.34,
-      "shares": 6127.0793,
+      "entry": 271.35,
+      "stop": 263.21,
+      "target": 283.56,
+      "shares": 7.3706,
       "position_value": 2000.0,
       "risk_amount": 60.0,
       "risk_pct_of_portfolio": 0.006,
       "reward_risk_ratio": 1.5,
-      "invalidation": "Close below $0.32 invalidates the thesis. Re-evaluate if consensus agreement drops below 50%.",
+      "invalidation": "Close below $263.21 invalidates the thesis. Re-evaluate if consensus agreement drops below 50%.",
       "backers": [
         {
           "agent": "AEGIS",
@@ -35,344 +35,92 @@
           "rationale": "Cautious constructive: clean uptrend with calm volatility, sentiment supportive."
         },
         {
-          "agent": "ZENITH",
-          "conviction": 0.6461189677157002,
-          "rationale": "Perfect stack with 9.6% total separation, +12.2% 50d momentum \u2014 cosmic trend intact."
+          "agent": "FORGE",
+          "conviction": 0.78,
+          "rationale": "High-conviction build: clean uptrend (+4.0% vs SMA50), strong sentiment +0.40, 5 articles."
         },
         {
-          "agent": "WEAVER",
+          "agent": "SYNTH",
           "conviction": 0.55,
-          "rationale": "Pullback to SMA-20 ($0.33) in uptrend"
-        },
-        {
-          "agent": "SPECK",
-          "conviction": 0.5800000000000001,
-          "rationale": "Low coverage (5 articles) but sentiment +0.20 and price above SMA-50 \u2014 small edge before crowd arrives."
+          "rationale": "Risk-on regime supports cyclical exposure."
         }
       ],
       "dissenters": [],
-      "consensus_signal": "BUY",
+      "consensus_signal": "STRONG_BUY",
       "portfolio_size": 10000.0,
-      "generated_at": "2026-04-30T22:58:45.564701+00:00",
+      "generated_at": "2026-05-01T00:39:31.905754+00:00",
       "status": "ACTIVE",
       "execution": {
-        "order_id": "SIM-20260430-225845-TRXUSD-B",
+        "order_id": "SIM-20260501-003931-AAPL-B",
         "side": "BUY",
-        "ticker": "TRX-USD",
+        "ticker": "AAPL",
         "asset_class": "equity",
-        "exchange": "NYSE Arca",
-        "venue": "all-electronic ETF/options exchange",
+        "exchange": "NASDAQ",
+        "venue": "electronic equity exchange",
         "broker": "Interactive Brokers (simulated paper account)",
         "order_type": "MARKET",
         "time_in_force": "DAY",
-        "submitted_at_utc": "2026-04-30T22:58:45+00:00",
-        "filled_at_utc": "2026-04-30T22:58:47+00:00",
-        "settlement_date": "2026-05-01",
+        "submitted_at_utc": "2026-05-01T00:39:31+00:00",
+        "filled_at_utc": "2026-05-01T00:39:33+00:00",
+        "settlement_date": "2026-05-04",
         "account": {
           "label": "EQUITY-CASH-SIM-001",
           "type": "Cash Account",
           "broker": "Interactive Brokers (simulated paper account)",
           "funding_source": "ACH funding from simulated bank account (routed via broker cash sweep)",
           "balance_before": 10000.0,
-          "balance_after": 7999.4
+          "balance_after": 7999.8
         },
         "fills": [
           {
-            "shares": 6127.079291,
-            "price": 0.3264,
-            "timestamp": "2026-04-30T22:58:47+00:00",
-            "venue": "NYSE Arca"
+            "shares": 7.370554,
+            "price": 271.35,
+            "timestamp": "2026-05-01T00:39:33+00:00",
+            "venue": "NASDAQ"
           }
         ],
-        "avg_fill_price": 0.3264,
+        "avg_fill_price": 271.35,
         "gross_notional": 2000.0,
         "fees": {
           "commission": 0.0,
           "sec_section_31": 0.0,
           "finra_taf": 0.0,
-          "spread_cost": 0.6,
-          "total": 0.6,
-          "notes": "Spread estimate: 3 bps. Zero commission (IBKR Lite/TD-class simulated)."
+          "spread_cost": 0.2,
+          "total": 0.2,
+          "notes": "Spread estimate: 1 bps. Zero commission (IBKR Lite/TD-class simulated)."
         },
-        "net_cost": 2000.6,
+        "net_cost": 2000.2,
         "net_proceeds": null,
         "disclaimer": "Simulated execution \u2014 no live orders were placed on any exchange. Fees modeled on US market structure: SEC Section 31 ($27.80/$1M of sale proceeds), FINRA Trading Activity Fee ($0.000166/share on sells, capped $9.30), Coinbase Advanced taker 0.40% for crypto. Spread cost estimated per ticker."
       },
       "brokers": [
         {
           "name": "Robinhood",
-          "url": "https://robinhood.com/crypto/TRX",
-          "fee_label": "~30 bps spread",
-          "key": "robinhood"
-        },
-        {
-          "name": "Fidelity",
-          "url": "https://www.fidelity.com/crypto/overview",
-          "fee_label": "~1% spread",
-          "key": "fidelity"
-        },
-        {
-          "name": "IBKR",
-          "url": "https://www.interactivebrokers.com/en/trading/cryptocurrency.php",
-          "fee_label": "~18 bps",
-          "key": "ibkr"
-        },
-        {
-          "name": "Webull",
-          "url": "https://www.webull.com/crypto",
-          "fee_label": "~100 bps spread",
-          "key": "webull"
-        },
-        {
-          "name": "Coinbase",
-          "url": "https://www.coinbase.com/price/trx",
-          "fee_label": "~40 bps taker",
-          "key": "coinbase"
-        },
-        {
-          "name": "Kraken",
-          "url": "https://www.kraken.com/prices/trx",
-          "fee_label": "~26 bps maker / 40 bps taker",
-          "key": "kraken"
-        },
-        {
-          "name": "Alpaca",
-          "url": "https://app.alpaca.markets/",
-          "fee_label": "0%",
-          "key": "alpaca"
-        }
-      ]
-    },
-    {
-      "plan_id": "plan_20260430_2258_TRV",
-      "ticker": "TRV",
-      "name": "TRV",
-      "direction": "LONG",
-      "entry": 305.14,
-      "stop": 295.99,
-      "target": 318.87,
-      "shares": 6.5544,
-      "position_value": 2000.0,
-      "risk_amount": 60.0,
-      "risk_pct_of_portfolio": 0.006,
-      "reward_risk_ratio": 1.5,
-      "invalidation": "Close below $295.99 invalidates the thesis. Re-evaluate if consensus agreement drops below 50%.",
-      "backers": [
-        {
-          "agent": "AEGIS",
-          "conviction": 0.55,
-          "rationale": "Cautious constructive: clean uptrend with calm volatility, sentiment supportive."
-        },
-        {
-          "agent": "WEAVER",
-          "conviction": 0.55,
-          "rationale": "Pullback to SMA-20 ($301.08) in uptrend"
-        },
-        {
-          "agent": "SPECK",
-          "conviction": 0.5800000000000001,
-          "rationale": "Low coverage (5 articles) but sentiment +0.20 and price above SMA-50 \u2014 small edge before crowd arrives."
-        }
-      ],
-      "dissenters": [],
-      "consensus_signal": "BUY",
-      "portfolio_size": 10000.0,
-      "generated_at": "2026-04-30T22:58:45.564775+00:00",
-      "status": "ACTIVE",
-      "execution": {
-        "order_id": "SIM-20260430-225845-TRV-B",
-        "side": "BUY",
-        "ticker": "TRV",
-        "asset_class": "equity",
-        "exchange": "NYSE Arca",
-        "venue": "all-electronic ETF/options exchange",
-        "broker": "Interactive Brokers (simulated paper account)",
-        "order_type": "MARKET",
-        "time_in_force": "DAY",
-        "submitted_at_utc": "2026-04-30T22:58:45+00:00",
-        "filled_at_utc": "2026-04-30T22:58:47+00:00",
-        "settlement_date": "2026-05-01",
-        "account": {
-          "label": "EQUITY-CASH-SIM-001",
-          "type": "Cash Account",
-          "broker": "Interactive Brokers (simulated paper account)",
-          "funding_source": "ACH funding from simulated bank account (routed via broker cash sweep)",
-          "balance_before": 10000.0,
-          "balance_after": 7999.4
-        },
-        "fills": [
-          {
-            "shares": 6.554368,
-            "price": 305.14,
-            "timestamp": "2026-04-30T22:58:47+00:00",
-            "venue": "NYSE Arca"
-          }
-        ],
-        "avg_fill_price": 305.14,
-        "gross_notional": 2000.0,
-        "fees": {
-          "commission": 0.0,
-          "sec_section_31": 0.0,
-          "finra_taf": 0.0,
-          "spread_cost": 0.6,
-          "total": 0.6,
-          "notes": "Spread estimate: 3 bps. Zero commission (IBKR Lite/TD-class simulated)."
-        },
-        "net_cost": 2000.6,
-        "net_proceeds": null,
-        "disclaimer": "Simulated execution \u2014 no live orders were placed on any exchange. Fees modeled on US market structure: SEC Section 31 ($27.80/$1M of sale proceeds), FINRA Trading Activity Fee ($0.000166/share on sells, capped $9.30), Coinbase Advanced taker 0.40% for crypto. Spread cost estimated per ticker."
-      },
-      "brokers": [
-        {
-          "name": "Robinhood",
-          "url": "https://robinhood.com/stocks/TRV",
+          "url": "https://robinhood.com/stocks/AAPL",
           "fee_label": "$0 commission",
           "key": "robinhood"
         },
         {
           "name": "Fidelity",
-          "url": "https://digital.fidelity.com/prgw/digital/research/quote/dashboard/summary?symbol=TRV",
+          "url": "https://digital.fidelity.com/prgw/digital/research/quote/dashboard/summary?symbol=AAPL",
           "fee_label": "$0 commission",
           "key": "fidelity"
         },
         {
           "name": "Schwab",
-          "url": "https://www.schwab.com/research/stocks/quotes?symbol=TRV",
+          "url": "https://www.schwab.com/research/stocks/quotes?symbol=AAPL",
           "fee_label": "$0 commission",
           "key": "schwab"
         },
         {
           "name": "IBKR",
-          "url": "https://www.interactivebrokers.com/portal/?action=ACCT_MGMT_MAIN&symbol=TRV",
+          "url": "https://www.interactivebrokers.com/portal/?action=ACCT_MGMT_MAIN&symbol=AAPL",
           "fee_label": "$0\u20130.005/sh",
           "key": "ibkr"
         },
         {
           "name": "Webull",
-          "url": "https://www.webull.com/quote/TRV",
-          "fee_label": "$0 commission",
-          "key": "webull"
-        },
-        {
-          "name": "Alpaca",
-          "url": "https://app.alpaca.markets/",
-          "fee_label": "$0 commission",
-          "key": "alpaca"
-        }
-      ]
-    },
-    {
-      "plan_id": "plan_20260430_2258_FXA",
-      "ticker": "FXA",
-      "name": "FXA",
-      "direction": "LONG",
-      "entry": 71.35,
-      "stop": 69.21,
-      "target": 74.56,
-      "shares": 28.0308,
-      "position_value": 2000.0,
-      "risk_amount": 60.0,
-      "risk_pct_of_portfolio": 0.006,
-      "reward_risk_ratio": 1.5,
-      "invalidation": "Close below $69.21 invalidates the thesis. Re-evaluate if consensus agreement drops below 50%.",
-      "backers": [
-        {
-          "agent": "AEGIS",
-          "conviction": 0.55,
-          "rationale": "Cautious constructive: clean uptrend with calm volatility, sentiment supportive."
-        },
-        {
-          "agent": "KESTREL",
-          "conviction": 0.72,
-          "rationale": "Coiled bands (width 0.048) + trend up + price 1.9 ATR above mid \u2014 precision long."
-        },
-        {
-          "agent": "WEAVER",
-          "conviction": 0.55,
-          "rationale": "Pullback to SMA-20 ($70.42) in uptrend"
-        },
-        {
-          "agent": "SPECK",
-          "conviction": 0.5800000000000001,
-          "rationale": "Low coverage (5 articles) but sentiment +0.20 and price above SMA-50 \u2014 small edge before crowd arrives."
-        }
-      ],
-      "dissenters": [],
-      "consensus_signal": "BUY",
-      "portfolio_size": 10000.0,
-      "generated_at": "2026-04-30T22:58:45.564836+00:00",
-      "status": "ACTIVE",
-      "execution": {
-        "order_id": "SIM-20260430-225845-FXA-B",
-        "side": "BUY",
-        "ticker": "FXA",
-        "asset_class": "equity",
-        "exchange": "NYSE Arca",
-        "venue": "all-electronic ETF/options exchange",
-        "broker": "Interactive Brokers (simulated paper account)",
-        "order_type": "MARKET",
-        "time_in_force": "DAY",
-        "submitted_at_utc": "2026-04-30T22:58:45+00:00",
-        "filled_at_utc": "2026-04-30T22:58:47+00:00",
-        "settlement_date": "2026-05-01",
-        "account": {
-          "label": "EQUITY-CASH-SIM-001",
-          "type": "Cash Account",
-          "broker": "Interactive Brokers (simulated paper account)",
-          "funding_source": "ACH funding from simulated bank account (routed via broker cash sweep)",
-          "balance_before": 10000.0,
-          "balance_after": 7999.4
-        },
-        "fills": [
-          {
-            "shares": 28.030835,
-            "price": 71.35,
-            "timestamp": "2026-04-30T22:58:47+00:00",
-            "venue": "NYSE Arca"
-          }
-        ],
-        "avg_fill_price": 71.35,
-        "gross_notional": 2000.0,
-        "fees": {
-          "commission": 0.0,
-          "sec_section_31": 0.0,
-          "finra_taf": 0.0,
-          "spread_cost": 0.6,
-          "total": 0.6,
-          "notes": "Spread estimate: 3 bps. Zero commission (IBKR Lite/TD-class simulated)."
-        },
-        "net_cost": 2000.6,
-        "net_proceeds": null,
-        "disclaimer": "Simulated execution \u2014 no live orders were placed on any exchange. Fees modeled on US market structure: SEC Section 31 ($27.80/$1M of sale proceeds), FINRA Trading Activity Fee ($0.000166/share on sells, capped $9.30), Coinbase Advanced taker 0.40% for crypto. Spread cost estimated per ticker."
-      },
-      "brokers": [
-        {
-          "name": "Robinhood",
-          "url": "https://robinhood.com/stocks/FXA",
-          "fee_label": "$0 commission",
-          "key": "robinhood"
-        },
-        {
-          "name": "Fidelity",
-          "url": "https://digital.fidelity.com/prgw/digital/research/quote/dashboard/summary?symbol=FXA",
-          "fee_label": "$0 commission",
-          "key": "fidelity"
-        },
-        {
-          "name": "Schwab",
-          "url": "https://www.schwab.com/research/stocks/quotes?symbol=FXA",
-          "fee_label": "$0 commission",
-          "key": "schwab"
-        },
-        {
-          "name": "IBKR",
-          "url": "https://www.interactivebrokers.com/portal/?action=ACCT_MGMT_MAIN&symbol=FXA",
-          "fee_label": "$0\u20130.005/sh",
-          "key": "ibkr"
-        },
-        {
-          "name": "Webull",
-          "url": "https://www.webull.com/quote/FXA",
+          "url": "https://www.webull.com/quote/AAPL",
           "fee_label": "$0 commission",
           "key": "webull"
         },
