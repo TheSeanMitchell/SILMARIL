@@ -131,6 +131,27 @@ def evaluate_agent_risk(
     cfg = {**DEFAULT_CONFIG, **(config or {})}
     log_msg = ""
 
+    # ── Corruption guard ─────────────────────────────────────────
+    # If current_equity is sub-$1 but last_equity was >= $1,000, this
+    # is an impossible move in a single 10-min cron run — it means the
+    # agent_portfolios.json was initialised with pennies (a known bug
+    # in early Alpha 2.0 where AgentPortfolio's default equity was
+    # written as ~$0.03 due to a unit mismatch).
+    # In this case we must NOT freeze — we skip all evaluation and reset
+    # the equity baseline so the next run starts clean.
+    # Philosophy: agents earn freeze status only from real live performance.
+    _CORRUPTION_FLOOR = 1.0    # below $1 on a $10K account = clearly wrong
+    _NORMAL_FLOOR    = 1_000.0 # if last reading was >= $1K, the jump is impossible
+    if (current_equity < _CORRUPTION_FLOOR
+            and agent_state.last_equity >= _NORMAL_FLOOR):
+        _prev = agent_state.last_equity
+        agent_state.last_equity = current_equity
+        return agent_state, (
+            f"SKIP ({agent_state.agent}): equity ${current_equity:.4f} looks "
+            f"corrupted (last was ${_prev:.2f}). "
+            f"Resetting baseline; will evaluate normally next run."
+        )
+
     # Update peak/last equity
     if current_equity > agent_state.peak_equity:
         agent_state.peak_equity = current_equity
@@ -207,6 +228,19 @@ def evaluate_cohort_risk(
 
     if not portfolio_returns_pct:
         return system_state, ""
+
+    # ── Corruption guard ─────────────────────────────────────────
+    # If more than half the cohort shows a return below -90%, the input
+    # data is almost certainly corrupted (pennies-equity bug). In this
+    # case we skip the cohort evaluation entirely rather than tripping
+    # safe mode on bad data. Log clearly so operators can diagnose.
+    extreme_losses = sum(1 for r in portfolio_returns_pct if r < -90)
+    if extreme_losses > len(portfolio_returns_pct) / 2:
+        return system_state, (
+            f"COHORT SKIP: {extreme_losses}/{len(portfolio_returns_pct)} agents "
+            f"show >90% loss — equity data looks corrupted. "
+            f"Safe-mode NOT triggered. Fix agent_portfolios.json and re-run."
+        )
 
     avg_ret = sum(portfolio_returns_pct) / len(portfolio_returns_pct)
     system_state.cohort_avg_return_pct = avg_ret
