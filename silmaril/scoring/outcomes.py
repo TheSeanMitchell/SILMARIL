@@ -20,16 +20,41 @@ This lets us answer:
 
 Runs at the start of every CLI cycle, before today's debate. Persisted
 to scoring.json so the Truth Dashboard can read it without recomputing.
+
+--- ALPHA 2.0 PATCH NOTES ---
+
+Bug fixed: prior-run date comparison was comparing a full ISO timestamp
+string (e.g. "2026-04-30T20:26:33+00:00") against a YYYY-MM-DD date string
+(e.g. "2026-04-30"). These never matched, so prior_run was always resolved
+to the most recent run in history — which was today's own run — and every
+ticker was scored against its own prices (entry == exit, 0% return,
+all directional calls marked wrong). This cascaded into:
+
+  - All agents trending toward 0% win rate
+  - Weight multipliers dropping below 0.85x kill threshold
+  - Mass agent freezes (THUNDERHEAD, VEIL, KESTREL, ZENITH, WEAVER, HEX, SYNTH)
+  - Cohort avg return corrupted → safe_mode triggered
+  - Evolution cards never populated (no valid scored outcomes)
+
+Fix: normalize date to YYYY-MM-DD via [:10] before comparison.
+Stale-price guard added: if entry == exit after a clean cross-day lookup,
+the outcome is logged as a warning and still recorded (real price may be
+genuinely flat) but flagged with stale_price_suspected=True for diagnostics.
 """
 
 from __future__ import annotations
 
+import logging
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 import json
 import math as _math
+
+log = logging.getLogger("silmaril.scoring")
+
+
 def _sanitize_json(obj):
     """Recursively convert NaN/Inf to None for valid JSON output."""
     if isinstance(obj, float):
@@ -62,6 +87,7 @@ class CallOutcome:
     correct: bool             # was the directional read right?
     reward: float             # signed reward used for EV: +return for right BUY, etc.
     tags: Dict[str, str]      # regime tags at decision time
+    stale_price_suspected: bool = False  # True when entry == exit across different dates
 
     def to_dict(self) -> Dict[str, Any]:
         return {
@@ -77,7 +103,25 @@ class CallOutcome:
             "correct": self.correct,
             "reward": round(self.reward, 4),
             "tags": self.tags,
+            "stale_price_suspected": self.stale_price_suspected,
         }
+
+
+def _normalize_date(raw: Any) -> str:
+    """
+    Normalize any date-like value to YYYY-MM-DD.
+
+    history.json may store dates as full ISO timestamps
+    (e.g. "2026-04-30T20:26:33.860063+00:00") or as plain date strings
+    ("2026-04-30"). Both cases are handled by taking the first 10 chars.
+    This was the root cause of the scoring bug: comparing ISO timestamps
+    to YYYY-MM-DD strings always returned True (never matched), so
+    prior_run was set to the most recent run (today's own run) and every
+    ticker was scored against its own prices.
+    """
+    if raw is None:
+        return ""
+    return str(raw)[:10]
 
 
 def score_prior_run(
@@ -89,31 +133,65 @@ def score_prior_run(
     Walk the prior run's verdicts and score each one against today's prices.
     Returns the new outcomes generated this run (excludes outcomes we
     already scored in earlier runs).
+
+    today_iso must be a plain YYYY-MM-DD string (e.g. "2026-04-30").
     """
     runs = history_data.get("runs", [])
     if not runs:
+        log.info("scoring: no runs in history — nothing to score")
         return []
 
-    # Find the most recent run that's NOT today (we only score runs whose
-    # predictions can be measured against newer prices)
+    # Find the most recent run that is NOT today (we only score runs whose
+    # predictions can be measured against newer prices).
+    #
+    # CRITICAL: normalize both sides to YYYY-MM-DD before comparing.
+    # history runs may store date as a full ISO timestamp string.
+    today_date = _normalize_date(today_iso)
     prior_run = None
     for r in reversed(runs):
-        if r.get("date") != today_iso:
+        run_date = _normalize_date(r.get("date"))
+        if run_date != today_date:
             prior_run = r
+            log.info(
+                "scoring: found prior run from %s to score against today (%s)",
+                run_date, today_date,
+            )
             break
+
     if not prior_run:
+        log.info(
+            "scoring: no prior run from a different calendar day found "
+            "(all %d runs are from %s) — nothing to score yet",
+            len(runs), today_date,
+        )
         return []
 
     outcomes: List[CallOutcome] = []
-    prior_date = prior_run.get("date", "")
+    prior_date = _normalize_date(prior_run.get("date", ""))
+    stale_price_count = 0
+    skipped_no_price = 0
 
     for v in prior_run.get("verdicts", []):
         ticker = v.get("ticker")
         entry_price = v.get("price")
         exit_price = today_prices.get(ticker)
+
         if entry_price is None or exit_price is None:
+            skipped_no_price += 1
             continue
-        return_pct = ((exit_price / entry_price) - 1) * 100 if entry_price else 0.0
+
+        if entry_price <= 0:
+            log.warning("scoring: %s has non-positive entry_price %s — skipping", ticker, entry_price)
+            continue
+
+        # Flag if prices look suspiciously identical across different days.
+        # This can happen with stale yfinance cache or crypto tickers that
+        # genuinely didn't move — we record but flag for inspection.
+        stale_suspected = (entry_price == exit_price)
+        if stale_suspected:
+            stale_price_count += 1
+
+        return_pct = ((exit_price / entry_price) - 1) * 100.0
 
         tags = v.get("tags") or {}
 
@@ -122,7 +200,9 @@ def score_prior_run(
             if sig in (None, "ABSTAIN"):
                 continue
             agent = vote.get("agent")
-            conv = vote.get("conviction", 0.0)
+            if not agent:
+                continue
+            conv = float(vote.get("conviction", 0.0))
 
             correct, reward = _score_call(sig, return_pct)
 
@@ -132,14 +212,38 @@ def score_prior_run(
                 signal=sig,
                 conviction=conv,
                 predicted_at=prior_date,
-                scored_at=today_iso,
+                scored_at=today_date,
                 entry_price=entry_price,
                 exit_price=exit_price,
                 return_pct=return_pct,
                 correct=correct,
                 reward=reward,
                 tags=tags,
+                stale_price_suspected=stale_suspected,
             ))
+
+    if stale_price_count:
+        log.warning(
+            "scoring: %d/%d tickers had entry_price == exit_price across "
+            "dates %s → %s. Suspected stale price cache. Check yfinance "
+            "or price_cache.json. These outcomes are recorded but flagged "
+            "stale_price_suspected=True.",
+            stale_price_count,
+            len(prior_run.get("verdicts", [])),
+            prior_date,
+            today_date,
+        )
+
+    if skipped_no_price:
+        log.debug(
+            "scoring: skipped %d verdicts with missing entry or exit price",
+            skipped_no_price,
+        )
+
+    log.info(
+        "scoring: produced %d call outcomes from prior run (%s) vs today (%s)",
+        len(outcomes), prior_date, today_date,
+    )
     return outcomes
 
 
@@ -216,13 +320,17 @@ def build_scoring_summary(
         best = max(rewards)
         avg_conv = sum(o["conviction"] for o in outcomes) / n
 
+        # Stale-price diagnostic
+        stale_count = sum(1 for o in outcomes if o.get("stale_price_suspected"))
+        stale_pct = stale_count / n if n else 0
+
         # Regime cuts
         by_regime = _split_by_regime(outcomes)
 
         # Weight multiplier — used by Phase E to up/downweight votes
         weight_mult, expl = _compute_weight_multiplier(n, wins / n, ev, worst)
 
-        rows.append({
+        row = {
             "agent": agent,
             "scored_calls": n,
             "wins": wins,
@@ -236,7 +344,11 @@ def build_scoring_summary(
             "by_regime": by_regime,
             "weight_multiplier": round(weight_mult, 3),
             "weight_explanation": expl,
-        })
+        }
+        if stale_count:
+            row["stale_price_calls"] = stale_count
+            row["stale_price_pct"] = round(stale_pct, 3)
+        rows.append(row)
 
     rows.sort(key=lambda r: (r["expected_value"] or -999, r["win_rate"] or -1), reverse=True)
 
