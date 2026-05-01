@@ -291,7 +291,12 @@ def build_live_contexts() -> List[AssetContext]:
             article_count=sent_count,
             source_count=len(sources),
             recent_headlines=[
-                {"title": a.title, "source": a.source, "url": a.url}
+                # ALPHA 2.0 FIX: include published_iso so the consolidated
+                # news feed can sort chronologically. Without this field,
+                # Date.parse('') → 0 for every article, the sort is a no-op,
+                # and headlines stay grouped by ticker instead of by time.
+                {"title": a.title, "source": a.source, "url": a.url,
+                 "published": a.published_iso or ""}
                 for a in articles[:5]
             ],
             earnings_date=earn_date,
@@ -1776,17 +1781,40 @@ _DEMO_HEADLINE_DEFAULT = [
 
 
 def _backfill_demo_headlines(contexts: List[AssetContext]) -> None:
-    """Mutate contexts so any ticker without headlines gets 2 plausible ones."""
+    """Mutate contexts so any ticker without headlines gets 2 plausible ones.
+
+    ALPHA 2.0 FIX: Adds synthetic published timestamps so the consolidated
+    news feed can sort by time even in demo mode. Without timestamps, every
+    article has published='' which Date.parse('')→0, defeating the sort and
+    keeping articles grouped by ticker instead of chronological order.
+    """
     import random
     rng = random.Random(42)  # deterministic across runs
+    # Spread demo articles across the last ~4 hours so the time-sort is
+    # visually interesting. 240 min range, 2 articles per ticker → each
+    # article is ~5min apart.
+    base_ts = datetime.now(timezone.utc)
+    slot = 0
     for ctx in contexts:
         if ctx.recent_headlines:
+            # Existing hand-written headlines: backfill published if missing
+            for i, h in enumerate(ctx.recent_headlines):
+                if not h.get("published"):
+                    from datetime import timedelta
+                    ts = base_ts - timedelta(minutes=slot * 5 + i * 2)
+                    h["published"] = ts.isoformat()
+            slot += 1
             continue
         pool = _DEMO_HEADLINE_POOLS.get(ctx.sector, _DEMO_HEADLINE_DEFAULT)
         picks = rng.sample(pool, k=min(2, len(pool)))
-        ctx.recent_headlines = [
-            {"title": t, "source": s, "url": ""} for (t, s) in picks
-        ]
+        from datetime import timedelta
+        articles = []
+        for i, (t, s) in enumerate(picks):
+            ts = base_ts - timedelta(minutes=slot * 5 + i * 3)
+            articles.append({"title": t, "source": s, "url": "",
+                             "published": ts.isoformat()})
+        ctx.recent_headlines = articles
+        slot += 1
 
 
 def _compute_summary(debates: List[dict]) -> dict:
