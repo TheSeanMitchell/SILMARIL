@@ -291,12 +291,7 @@ def build_live_contexts() -> List[AssetContext]:
             article_count=sent_count,
             source_count=len(sources),
             recent_headlines=[
-                # ALPHA 2.0 FIX: include published_iso so the consolidated
-                # news feed can sort chronologically. Without this field,
-                # Date.parse('') → 0 for every article, the sort is a no-op,
-                # and headlines stay grouped by ticker instead of by time.
-                {"title": a.title, "source": a.source, "url": a.url,
-                 "published": a.published_iso or ""}
+                {"title": a.title, "source": a.source, "url": a.url}
                 for a in articles[:5]
             ],
             earnings_date=earn_date,
@@ -1284,9 +1279,10 @@ def run(mode: str = "demo", output_dir: str = "docs/data") -> None:
                 min_consensus_conviction=0.60,
                 max_total_positions=15,
                 enable_shorts=True,
-                # ALPHA 2.0 FIX: pass full debate signal map so exit logic
-                # can close any held position whose consensus flipped to SELL,
-                # even if that ticker didn't make the top-plan cut this run.
+                # CRITICAL FIX: pass every debated ticker's consensus signal so the
+                # exit loop can close positions whose tickers fell outside the top-16
+                # plan cut. Without this, positions accumulate until the 15-position
+                # cap is hit and zero new orders can be placed — Alpaca goes silent.
                 all_debate_signals={
                     d["ticker"]: (d.get("consensus") or {}).get("signal", "HOLD")
                     for d in debate_dicts
@@ -1788,40 +1784,17 @@ _DEMO_HEADLINE_DEFAULT = [
 
 
 def _backfill_demo_headlines(contexts: List[AssetContext]) -> None:
-    """Mutate contexts so any ticker without headlines gets 2 plausible ones.
-
-    ALPHA 2.0 FIX: Adds synthetic published timestamps so the consolidated
-    news feed can sort by time even in demo mode. Without timestamps, every
-    article has published='' which Date.parse('')→0, defeating the sort and
-    keeping articles grouped by ticker instead of chronological order.
-    """
+    """Mutate contexts so any ticker without headlines gets 2 plausible ones."""
     import random
     rng = random.Random(42)  # deterministic across runs
-    # Spread demo articles across the last ~4 hours so the time-sort is
-    # visually interesting. 240 min range, 2 articles per ticker → each
-    # article is ~5min apart.
-    base_ts = datetime.now(timezone.utc)
-    slot = 0
     for ctx in contexts:
         if ctx.recent_headlines:
-            # Existing hand-written headlines: backfill published if missing
-            for i, h in enumerate(ctx.recent_headlines):
-                if not h.get("published"):
-                    from datetime import timedelta
-                    ts = base_ts - timedelta(minutes=slot * 5 + i * 2)
-                    h["published"] = ts.isoformat()
-            slot += 1
             continue
         pool = _DEMO_HEADLINE_POOLS.get(ctx.sector, _DEMO_HEADLINE_DEFAULT)
         picks = rng.sample(pool, k=min(2, len(pool)))
-        from datetime import timedelta
-        articles = []
-        for i, (t, s) in enumerate(picks):
-            ts = base_ts - timedelta(minutes=slot * 5 + i * 3)
-            articles.append({"title": t, "source": s, "url": "",
-                             "published": ts.isoformat()})
-        ctx.recent_headlines = articles
-        slot += 1
+        ctx.recent_headlines = [
+            {"title": t, "source": s, "url": ""} for (t, s) in picks
+        ]
 
 
 def _compute_summary(debates: List[dict]) -> dict:
