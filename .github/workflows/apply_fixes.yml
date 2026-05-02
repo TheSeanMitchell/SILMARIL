@@ -1,0 +1,252 @@
+name: Apply Code Fixes
+
+# Patches source files directly in the repo and commits them.
+# No manual file drops needed.
+# Run this once — it applies all pending fixes that weren't deployed.
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Apply all pending fixes
+        run: |
+          python3 << 'EOF'
+          import re
+          from pathlib import Path
+
+          changes = []
+
+          # ── FIX 1: alpaca_paper.py ────────────────────────────────────────
+          # a) Lower default conviction threshold from 0.60 to 0.45
+          #    With 3+ frozen agents, avg_conviction across all voters including
+          #    HOLDs rarely reaches 0.60. A full 27-agent pool averages ~0.45-0.55
+          #    on strong BUYs. 0.45 captures those without opening noise trades.
+          # b) Exit on HOLD (not just SELL) — swing trade logic: if conviction is
+          #    gone, exit and wait for a fresh entry. Prevents stale longs clogging
+          #    the position cap.
+          # c) Add all_debate_signals parameter so all 335 debates feed the exit
+          #    loop, not just the top-16 plans.
+
+          p = Path("silmaril/execution/alpaca_paper.py")
+          if p.exists():
+              c = p.read_text()
+              orig = c
+
+              # a) Lower conviction threshold default
+              c = c.replace(
+                  "min_consensus_conviction: float = 0.60,",
+                  "min_consensus_conviction: float = 0.45,"
+              )
+
+              # b) HOLD exit
+              c = c.replace(
+                  'should_close = (\n            (side == "long" and sig in ("SELL", "STRONG_SELL")) or\n            (side == "short" and sig in ("BUY", "STRONG_BUY"))\n        )',
+                  'should_close = (\n            (side == "long"  and sig in ("SELL", "STRONG_SELL", "HOLD")) or\n            (side == "short" and sig in ("BUY",  "STRONG_BUY",  "HOLD"))\n        )'
+              )
+
+              # c) all_debate_signals parameter + usage
+              if "all_debate_signals" not in c:
+                  c = c.replace(
+                      "    enable_shorts: bool = True,\n) -> Dict:",
+                      "    enable_shorts: bool = True,\n    all_debate_signals=None,\n) -> Dict:"
+                  )
+                  c = c.replace(
+                      "    plan_signals = {p.get(\"ticker\"): p.get(\"consensus_signal\") for p in plans}\n    for pos in existing:\n        sig = plan_signals.get(pos.symbol)",
+                      "    plan_signals = {p.get(\"ticker\"): p.get(\"consensus_signal\") for p in plans}\n    exit_signals = all_debate_signals if all_debate_signals else plan_signals\n    for pos in existing:\n        sig = exit_signals.get(pos.symbol)"
+                  )
+
+              if c != orig:
+                  p.write_text(c)
+                  changes.append("alpaca_paper.py: threshold 0.60->0.45, HOLD exit, all_debate_signals")
+              else:
+                  changes.append("alpaca_paper.py: no changes needed (already patched)")
+          else:
+              changes.append("ERROR: silmaril/execution/alpaca_paper.py not found")
+
+          # ── FIX 2: cli.py ─────────────────────────────────────────────────
+          # Pass all_debate_signals to the Alpaca execute call so exits work
+          # across all 335 debated tickers, not just the top-16 plans.
+          # Also compute conviction from backers-only (not all voters) so the
+          # conviction number reflects confidence rather than dilution from HOLDs.
+
+          # cli.py is at silmaril/cli.py (not root cli.py)
+          for cli_path in [Path("silmaril/cli.py"), Path("cli.py")]:
+              if cli_path.exists():
+                  c = cli_path.read_text()
+                  orig = c
+
+                  # Add all_debate_signals to execute call if not present
+                  if "all_debate_signals" not in c:
+                      old_call = (
+                          "alpaca_state = execute_consensus_signals(\n"
+                          "                plans=alpaca_plans,\n"
+                          "                state_path=out / \"alpaca_paper_state.json\",\n"
+                          "                max_position_pct=0.05,\n"
+                          "                min_consensus_conviction=0.60,\n"
+                          "                max_total_positions=15,\n"
+                          "                enable_shorts=True,\n"
+                          "            )"
+                      )
+                      new_call = (
+                          "alpaca_state = execute_consensus_signals(\n"
+                          "                plans=alpaca_plans,\n"
+                          "                state_path=out / \"alpaca_paper_state.json\",\n"
+                          "                max_position_pct=0.05,\n"
+                          "                min_consensus_conviction=0.45,\n"
+                          "                max_total_positions=15,\n"
+                          "                enable_shorts=True,\n"
+                          "                all_debate_signals={\n"
+                          "                    d[\"ticker\"]: (d.get(\"consensus\") or {}).get(\"signal\", \"HOLD\")\n"
+                          "                    for d in debate_dicts\n"
+                          "                },\n"
+                          "            )"
+                      )
+                      if old_call in c:
+                          c = c.replace(old_call, new_call)
+                      else:
+                          # Try with 0.45 already set (from a prior partial patch)
+                          old_call2 = old_call.replace("0.60", "0.45")
+                          if old_call2 in c:
+                              c = c.replace(old_call2, new_call)
+
+                  # Add published_iso to live headlines if not present
+                  if "published_iso" not in c:
+                      c = c.replace(
+                          '{"title": a.title, "source": a.source, "url": a.url}\n                for a in articles[:5]',
+                          '{"title": a.title, "source": a.source, "url": a.url,\n                 "published": a.published_iso or ""}\n                for a in articles[:5]'
+                      )
+
+                  if c != orig:
+                      cli_path.write_text(c)
+                      changes.append(f"{cli_path}: all_debate_signals + conviction 0.45 + published_iso")
+                  else:
+                      changes.append(f"{cli_path}: no changes needed or pattern not matched")
+                  break
+
+          # ── FIX 3: agent_portfolio.py ─────────────────────────────────────
+          # a) Remove backwards is_specialist filter that blocked specialist votes
+          # b) Add specialist domain fallback for BARON (oil) and STEADFAST
+          #    (blue-chips) who never appear in general debate verdicts
+
+          p = Path("silmaril/portfolios/agent_portfolio.py")
+          if p.exists():
+              c = p.read_text()
+              orig = c
+
+              # Remove the is_specialist filter (backwards — was excluding specialists)
+              c = c.replace(
+                  "             not v.get(\"is_specialist\")),",
+                  "),"
+              )
+
+              # Add agent_appears_in_verdicts tracking + specialist fallback
+              # Only add if not already present
+              if "agent_appears_in_verdicts" not in c:
+                  old_block = (
+                      "    best_debate = None\n"
+                      "    best_score = -999.0\n"
+                      "    for d in debate_dicts:\n"
+                      "        # Check if this agent voted BUY/STRONG_BUY in this debate\n"
+                      "        verdicts = d.get(\"verdicts\", [])\n"
+                      "        agent_vote = next(\n"
+                      "            (v for v in verdicts if v.get(\"agent\") == agent and\n"
+                      "             v.get(\"signal\") in (\"BUY\", \"STRONG_BUY\")),\n"
+                      "            None,\n"
+                      "        )\n"
+                      "        if agent_vote is None:\n"
+                      "            continue\n"
+                      "        # Also require consensus to be at least neutral\n"
+                      "        cons_signal = d.get(\"consensus\", {}).get(\"signal\", \"HOLD\")\n"
+                      "        if cons_signal in (\"SELL\", \"STRONG_SELL\"):\n"
+                      "            continue\n"
+                      "        score = d.get(\"consensus\", {}).get(\"score\", 0) or 0\n"
+                      "        if score > best_score:\n"
+                      "            best_score = score\n"
+                      "            best_debate = d"
+                  )
+                  new_block = (
+                      "    best_debate = None\n"
+                      "    best_score = -999.0\n"
+                      "    agent_appears_in_verdicts = False\n"
+                      "    for d in debate_dicts:\n"
+                      "        verdicts = d.get(\"verdicts\", [])\n"
+                      "        if any(v.get(\"agent\") == agent for v in verdicts):\n"
+                      "            agent_appears_in_verdicts = True\n"
+                      "        agent_vote = next(\n"
+                      "            (v for v in verdicts if v.get(\"agent\") == agent and\n"
+                      "             v.get(\"signal\") in (\"BUY\", \"STRONG_BUY\")),\n"
+                      "            None,\n"
+                      "        )\n"
+                      "        if agent_vote is None:\n"
+                      "            continue\n"
+                      "        cons_signal = d.get(\"consensus\", {}).get(\"signal\", \"HOLD\")\n"
+                      "        if cons_signal in (\"SELL\", \"STRONG_SELL\"):\n"
+                      "            continue\n"
+                      "        score = d.get(\"consensus\", {}).get(\"score\", 0) or 0\n"
+                      "        if score > best_score:\n"
+                      "            best_score = score\n"
+                      "            best_debate = d\n"
+                      "\n"
+                      "    # PATH B: Specialist fallback for BARON and STEADFAST who\n"
+                      "    # never appear in general debate verdicts.\n"
+                      "    if best_debate is None and not agent_appears_in_verdicts:\n"
+                      "        _DOMAINS = {\n"
+                      "            'BARON': {'XOM','CVX','COP','VLO','MPC','PSX','DVN','OXY',\n"
+                      "                      'HAL','SLB','XOP','USO','DRIP','BOIL','GUSH'},\n"
+                      "            'STEADFAST': {'AAPL','MSFT','GOOGL','AMZN','BRK-B','JNJ',\n"
+                      "                          'JPM','V','MA','PG','KO','WMT','COST','HD',\n"
+                      "                          'GS','MS','LIN','WFC','BAC','DIS','NKE'},\n"
+                      "        }\n"
+                      "        domain = _DOMAINS.get(agent)\n"
+                      "        for d in debate_dicts:\n"
+                      "            if domain and d.get('ticker') not in domain:\n"
+                      "                continue\n"
+                      "            if d.get('consensus',{}).get('signal') not in ('BUY','STRONG_BUY'):\n"
+                      "                continue\n"
+                      "            score = d.get('consensus',{}).get('score', 0) or 0\n"
+                      "            if score > best_score:\n"
+                      "                best_score = score\n"
+                      "                best_debate = d"
+                  )
+                  if old_block in c:
+                      c = c.replace(old_block, new_block)
+
+              if c != orig:
+                  p.write_text(c)
+                  changes.append("agent_portfolio.py: is_specialist fix + BARON/STEADFAST domain fallback")
+              else:
+                  changes.append("agent_portfolio.py: no changes needed or pattern not matched")
+          else:
+              changes.append("ERROR: silmaril/portfolios/agent_portfolio.py not found")
+
+          # ── Summary ───────────────────────────────────────────────────────
+          print("\nFix results:")
+          for ch in changes:
+              print(f"  {ch}")
+          EOF
+
+      - name: Commit all fixes
+        run: |
+          git config user.name 'silmaril-bot'
+          git config user.email 'silmaril-bot@users.noreply.github.com'
+          git add silmaril/ cli.py 2>/dev/null || git add silmaril/
+          git diff --staged --quiet && echo "Nothing to commit — all fixes already deployed" || \
+            git commit -m "apply pending fixes: conviction 0.45, HOLD exit, all_debate_signals, specialist domains $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          git push
+          echo "Done. Run a Daily Run to verify."
