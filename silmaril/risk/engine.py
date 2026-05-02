@@ -64,7 +64,10 @@ DEFAULT_CONFIG = {
     "daily_drawdown_unfreeze_pct": 0.04,      # need to rebound +4% to unfreeze
     # Track-record kill switch
     "kill_weight_threshold":   0.85,          # weight multiplier below 0.85 → freeze
-    "kill_min_calls":          15,            # but only after 15 scored calls
+    "kill_min_calls":          30,            # raised from 15 → 30: need a full month
+                                              # of clean live data before kill switch
+                                              # fires. Prevents early corrupted scoring
+                                              # outcomes from freezing agents on day 1.
     # Cohort kill switch (system-wide safe mode)
     "cohort_dd_threshold":     0.05,          # cohort avg return below -5% → SAFE MODE
     "cohort_dd_min_runs":      5,             # only after 5 days of data
@@ -132,21 +135,12 @@ def evaluate_agent_risk(
     log_msg = ""
 
     # ── Corruption guard ─────────────────────────────────────────
-    # Detects the "pennies equity" bug: agent_portfolios.json was
-    # initialised with ~$0.03 instead of $10,000. Identified by
-    # checking current_equity against peak_equity (NOT last_equity),
-    # because last_equity may already have been updated to $0.031 by
-    # a prior run that lacked this guard. peak_equity is only ever
-    # moved UP, so if it shows $10,000 and current shows $0.031,
-    # the drop is impossible in a 10-min cron window — it is
-    # data corruption, not a real loss.
-    #
-    # Also CLEARS any existing freeze caused by this corruption so
-    # agents don't stay frozen waiting for a +4% rebound that can
-    # never arrive on a $0.031 balance.
-    _CORRUPTION_FLOOR = 1.0      # below $1 on a $10K account = clearly wrong
-    _NORMAL_PEAK      = 1_000.0  # peak must have been >= $1K to flag corruption
-
+    # Catches the "pennies equity" bug: portfolio initialised at ~$0.03
+    # instead of $10,000. We check peak_equity (not last_equity) because
+    # last_equity may already have been updated to $0.031 by a prior run.
+    # Also CLEARS any existing freeze caused by this corruption.
+    _CORRUPTION_FLOOR = 1.0
+    _NORMAL_PEAK      = 1_000.0
     if current_equity < _CORRUPTION_FLOOR and agent_state.peak_equity >= _NORMAL_PEAK:
         _prev_peak = agent_state.peak_equity
         agent_state.last_equity = current_equity
@@ -241,14 +235,11 @@ def evaluate_cohort_risk(
         return system_state, ""
 
     # ── Corruption guard ─────────────────────────────────────────
-    # If more than half the cohort shows >90% loss, input is corrupted
-    # (pennies-equity bug). Skip safe-mode trigger entirely.
     extreme_losses = sum(1 for r in portfolio_returns_pct if r < -90)
     if extreme_losses > len(portfolio_returns_pct) / 2:
         return system_state, (
             f"COHORT SKIP: {extreme_losses}/{len(portfolio_returns_pct)} agents "
-            f"show >90% loss — equity data corrupted. "
-            f"Safe-mode NOT triggered. Fix agent_portfolios.json and re-run."
+            f"show >90% loss — equity data corrupted. Safe-mode NOT triggered."
         )
 
     avg_ret = sum(portfolio_returns_pct) / len(portfolio_returns_pct)
