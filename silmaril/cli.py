@@ -291,7 +291,8 @@ def build_live_contexts() -> List[AssetContext]:
             article_count=sent_count,
             source_count=len(sources),
             recent_headlines=[
-                {"title": a.title, "source": a.source, "url": a.url}
+                {"title": a.title, "source": a.source, "url": a.url,
+                 "published": a.published_iso or ""}
                 for a in articles[:5]
             ],
             earnings_date=earn_date,

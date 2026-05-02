@@ -169,7 +169,7 @@ def agent_portfolio_act(
         agent_vote = next(
             (v for v in verdicts if v.get("agent") == agent and
              v.get("signal") in ("BUY", "STRONG_BUY") and
-             not v.get("is_specialist")),
+),
             None,
         )
         if agent_vote is None:

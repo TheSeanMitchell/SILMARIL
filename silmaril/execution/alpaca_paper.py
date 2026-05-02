@@ -54,7 +54,7 @@ def execute_consensus_signals(
     plans: List[Dict],
     state_path: Path,
     max_position_pct: float = 0.05,
-    min_consensus_conviction: float = 0.60,
+    min_consensus_conviction: float = 0.45,
     max_total_positions: int = 15,
     enable_shorts: bool = True,
     all_debate_signals: Optional[Dict[str, str]] = None,
@@ -217,8 +217,8 @@ def execute_consensus_signals(
         # Long position with SELL signal -> close
         # Short position with BUY signal -> close
         should_close = (
-            (side == "long" and sig in ("SELL", "STRONG_SELL")) or
-            (side == "short" and sig in ("BUY", "STRONG_BUY"))
+            (side == "long"  and sig in ("SELL", "STRONG_SELL", "HOLD")) or
+            (side == "short" and sig in ("BUY",  "STRONG_BUY",  "HOLD"))
         )
         # Auto-close shorts after 3 days regardless (SHORT_ALPHA's rule)
         # The position object's avg_entry_time would tell us — Alpaca exposes this
