@@ -1,0 +1,135 @@
+name: Risk Unfreeze (preserve learning)
+
+# Manually triggered from Actions tab.
+# Resets risk_state.json and agent_portfolios.json to clean $10K baselines.
+# Clears all agent freezes and safe-mode. Does NOT touch any learning files
+# (agent_beliefs, evolution_cards, scoring, counterfactuals, etc.).
+#
+# Use this when: agents are incorrectly frozen due to corrupted equity data.
+# After running: trigger a fresh Daily Run to resume normal operation.
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirm:
+        description: 'Type UNFREEZE to confirm'
+        required: true
+        default: ''
+
+permissions:
+  contents: write
+
+jobs:
+  unfreeze:
+    runs-on: ubuntu-latest
+    if: github.event.inputs.confirm == 'UNFREEZE'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Write clean risk_state.json and agent_portfolios.json
+        run: |
+          python3 << 'EOF'
+          import json
+          from datetime import datetime, timezone
+          from pathlib import Path
+
+          out_dir = Path("docs/data")
+          out_dir.mkdir(parents=True, exist_ok=True)
+          now = datetime.now(timezone.utc).isoformat()
+
+          # All 27 agents — matches _rename_map.py + Alpha 2.0 additions
+          AGENTS = [
+              "AEGIS", "FORGE", "THUNDERHEAD", "JADE", "VEIL", "KESTREL",
+              "OBSIDIAN", "ZENITH", "WEAVER", "HEX", "SYNTH", "SPECK",
+              "VESPA", "MAGUS", "TALON", "ATLAS", "NIGHTSHADE", "CICADA",
+              "SHEPHERD", "NOMAD", "BARNACLE", "KESTREL+",
+              "BARON", "STEADFAST", "SPORTS_BRO", "CONTRARIAN", "SHORT_ALPHA",
+          ]
+
+          # ── risk_state.json ──────────────────────────────────────────────
+          risk = {
+              "generated_at": now,
+              "_reset_note": (
+                  "Reset by risk_unfreeze workflow. All freezes cleared. "
+                  "Peak equity set to $10,000 per agent. Learning data untouched."
+              ),
+              "config": {
+                  "max_single_position_pct": 0.25,
+                  "min_cash_buffer_pct": 0.0,
+                  "daily_drawdown_freeze_pct": 0.08,
+                  "daily_drawdown_unfreeze_pct": 0.04,
+                  "kill_weight_threshold": 0.85,
+                  "kill_min_calls": 15,
+                  "cohort_dd_threshold": 0.05,
+                  "cohort_dd_min_runs": 5,
+                  "min_reward_risk": 1.5,
+                  "max_risk_per_plan_pct": 0.02,
+              },
+              "system": {
+                  "safe_mode": False,
+                  "safe_mode_reason": "",
+                  "safe_mode_since": None,
+                  "cohort_avg_return_pct": 0.0,
+                  "cohort_history": [],
+              },
+              "agents": {
+                  a: {
+                      "agent": a,
+                      "frozen": False,
+                      "frozen_reason": "",
+                      "frozen_since": "",
+                      "last_equity": 10000.0,
+                      "peak_equity": 10000.0,
+                      "drawdown_pct": 0.0,
+                  }
+                  for a in AGENTS
+              },
+              "summary": {
+                  "frozen_count": 0,
+                  "total_count": len(AGENTS),
+                  "safe_mode": False,
+              },
+          }
+          (out_dir / "risk_state.json").write_text(
+              json.dumps(risk, indent=2, default=str)
+          )
+          print(f"risk_state.json written: {len(AGENTS)} agents, all unfrozen")
+
+          # ── agent_portfolios.json ────────────────────────────────────────
+          today = datetime.now(timezone.utc).date().isoformat()
+          portfolios = {
+              a: {
+                  "agent": a,
+                  "starting_equity": 10000.0,
+                  "current_equity": 10000.0,
+                  "cash": 10000.0,
+                  "current_position": None,
+                  "history": [],
+                  "equity_curve": [],
+                  "inception_date": today,
+              }
+              for a in AGENTS
+          }
+          (out_dir / "agent_portfolios.json").write_text(
+              json.dumps(portfolios, indent=2, default=str)
+          )
+          print(f"agent_portfolios.json written: {len(AGENTS)} agents at $10,000")
+          print("Learning files untouched.")
+          EOF
+
+      - name: Commit reset files
+        run: |
+          git config user.name 'silmaril-bot'
+          git config user.email 'silmaril-bot@users.noreply.github.com'
+          git add docs/data/risk_state.json docs/data/agent_portfolios.json
+          git diff --staged --quiet || git commit -m "🔓 risk unfreeze — all agents reset to \$10K, learning preserved $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          git push
+          echo "Done. Trigger a fresh Daily Run to resume normal operation."
