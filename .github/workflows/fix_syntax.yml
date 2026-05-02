@@ -1,0 +1,329 @@
+name: Fix Syntax Error (agent_portfolio.py)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Rewrite agent_portfolio.py with all fixes applied cleanly
+        run: |
+          python3 << 'PYEOF'
+          from pathlib import Path
+
+          # Read the current file so we preserve everything above and below
+          # the broken function. We'll replace only agent_portfolio_act().
+          p = Path("silmaril/portfolios/agent_portfolio.py")
+          content = p.read_text()
+
+          # Find the start of agent_portfolio_act and replace through its end.
+          # We identify the end by the next top-level def after it.
+          start_marker = "\ndef agent_portfolio_act("
+          end_marker = "\n\n# Field name aliases"
+
+          start_idx = content.find(start_marker)
+          end_idx = content.find(end_marker)
+
+          if start_idx == -1 or end_idx == -1:
+              print(f"Markers not found: start={start_idx}, end={end_idx}")
+              print("Writing full replacement instead.")
+              # Fall through to full rewrite below
+              start_idx = -1
+
+          CLEAN_FUNCTION = '''
+def agent_portfolio_act(
+    portfolio: AgentPortfolio,
+    debate_dicts: List[Dict],
+    prices: Dict[str, float],
+) -> AgentPortfolio:
+    """
+    Run one cycle of portfolio management for a single agent.
+
+    Logic:
+      1. If holding a position, check whether the latest consensus flipped
+         to SELL/STRONG_SELL/HOLD — if so, close it (swing trade logic:
+         no edge = exit, don\'t hold through indecision).
+      2. If flat (or just closed), find the best BUY-consensus debate for
+         this agent and open a 10% position.
+
+    PATH B: Specialists (BARON, STEADFAST) who never appear in general
+    debate verdicts fall back to their domain universe directly.
+    """
+    today = datetime.now(timezone.utc).date().isoformat()
+    agent = portfolio.agent
+
+    # ── Step 1: Evaluate existing position ──────────────────────────────
+    if portfolio.current_position:
+        held_ticker = portfolio.current_position["ticker"]
+        current_price = prices.get(held_ticker)
+
+        if current_price:
+            qty = portfolio.current_position.get("qty", 0) or 0
+            portfolio.current_equity = portfolio.cash + qty * current_price
+
+        held_debate = next(
+            (d for d in debate_dicts if d.get("ticker") == held_ticker), None
+        )
+        if held_debate:
+            cons_signal = held_debate.get("consensus", {}).get("signal", "HOLD")
+            # Exit on SELL or HOLD — swing trade: no edge means exit cleanly
+            if cons_signal in ("SELL", "STRONG_SELL", "HOLD") and current_price:
+                portfolio.close_position(current_price)
+                portfolio.history.append({
+                    "action": "HOLD",
+                    "date": today,
+                    "reason": f"Closed {held_ticker} — consensus {cons_signal}",
+                    "equity": round(portfolio.total_equity(), 2),
+                    "timestamp": datetime.now(timezone.utc).isoformat(),
+                })
+                return portfolio
+
+        portfolio.history.append({
+            "action": "HOLD",
+            "date": today,
+            "ticker": held_ticker,
+            "equity": round(portfolio.total_equity(current_price), 2),
+            "timestamp": datetime.now(timezone.utc).isoformat(),
+        })
+        return portfolio
+
+    # ── Step 2: Find best BUY for this agent ────────────────────────────
+    # PATH A: General agents — look for debates where this agent voted BUY
+    best_debate = None
+    best_score = -999.0
+    agent_appears_in_verdicts = False
+
+    for d in debate_dicts:
+        verdicts = d.get("verdicts", [])
+        if any(v.get("agent") == agent for v in verdicts):
+            agent_appears_in_verdicts = True
+        agent_vote = next(
+            (v for v in verdicts
+             if v.get("agent") == agent and v.get("signal") in ("BUY", "STRONG_BUY")),
+            None,
+        )
+        if agent_vote is None:
+            continue
+        cons_signal = d.get("consensus", {}).get("signal", "HOLD")
+        if cons_signal in ("SELL", "STRONG_SELL"):
+            continue
+        score = d.get("consensus", {}).get("score", 0) or 0
+        if score > best_score:
+            best_score = score
+            best_debate = d
+
+    # PATH B: Specialist fallback — BARON and STEADFAST never appear in
+    # general debate verdicts, so they search their domain universe directly.
+    if best_debate is None and not agent_appears_in_verdicts:
+        specialist_domains = {
+            "BARON": {
+                "XOM", "CVX", "COP", "VLO", "MPC", "PSX", "DVN", "OXY",
+                "HAL", "SLB", "XOP", "USO", "DRIP", "BOIL", "GUSH", "SCO",
+            },
+            "STEADFAST": {
+                "AAPL", "MSFT", "GOOGL", "AMZN", "BRK-B", "JNJ", "JPM",
+                "V", "MA", "PG", "KO", "WMT", "COST", "HD", "GS", "MS",
+                "LIN", "WFC", "BAC", "DIS", "NKE", "ADBE", "CRM",
+            },
+        }
+        domain = specialist_domains.get(agent)
+        for d in debate_dicts:
+            if domain and d.get("ticker") not in domain:
+                continue
+            if d.get("consensus", {}).get("signal") not in ("BUY", "STRONG_BUY"):
+                continue
+            score = d.get("consensus", {}).get("score", 0) or 0
+            if score > best_score:
+                best_score = score
+                best_debate = d
+
+    if best_debate is None:
+        portfolio.history.append({
+            "action": "HOLD",
+            "date": today,
+            "reason": "No qualifying BUY signal found for this agent",
+            "equity": round(portfolio.total_equity(), 2),
+            "timestamp": datetime.now(timezone.utc).isoformat(),
+        })
+        return portfolio
+
+    ticker = best_debate["ticker"]
+    entry_price = prices.get(ticker)
+    if not entry_price or entry_price <= 0:
+        portfolio.history.append({
+            "action": "HOLD",
+            "date": today,
+            "reason": f"No price available for {ticker}",
+            "equity": round(portfolio.total_equity(), 2),
+            "timestamp": datetime.now(timezone.utc).isoformat(),
+        })
+        return portfolio
+
+    position_value = min(portfolio.total_equity() * 0.10, portfolio.cash * 0.95)
+    if position_value < 1.0:
+        return portfolio
+
+    qty = position_value / entry_price
+    portfolio.open_position(ticker, qty, entry_price, "BUY")
+    portfolio.current_equity = portfolio.total_equity(entry_price)
+    return portfolio
+'''
+
+          if start_idx != -1:
+              new_content = content[:start_idx] + CLEAN_FUNCTION + content[end_idx:]
+          else:
+              # Fallback: replace entire file section from def onwards
+              # Find end of imports/docstring section
+              new_content = content
+              print("WARNING: Could not find markers, manual inspection needed")
+
+          # Verify syntax before writing
+          import ast
+          try:
+              ast.parse(new_content)
+              p.write_text(new_content)
+              print("agent_portfolio.py: syntax valid, file written")
+          except SyntaxError as e:
+              print(f"SYNTAX ERROR in generated code: {e}")
+              print("File NOT written — fix the workflow")
+              exit(1)
+          PYEOF
+
+      - name: Also fix alpaca_paper.py (HOLD exit + lower threshold)
+        run: |
+          python3 << 'PYEOF'
+          import ast
+          from pathlib import Path
+
+          p = Path("silmaril/execution/alpaca_paper.py")
+          c = p.read_text()
+          orig = c
+
+          # Lower threshold
+          c = c.replace(
+              "min_consensus_conviction: float = 0.60,",
+              "min_consensus_conviction: float = 0.45,"
+          )
+
+          # HOLD exit
+          old_close = (
+              '        should_close = (\n'
+              '            (side == "long" and sig in ("SELL", "STRONG_SELL")) or\n'
+              '            (side == "short" and sig in ("BUY", "STRONG_BUY"))\n'
+              '        )'
+          )
+          new_close = (
+              '        should_close = (\n'
+              '            (side == "long"  and sig in ("SELL", "STRONG_SELL", "HOLD")) or\n'
+              '            (side == "short" and sig in ("BUY",  "STRONG_BUY",  "HOLD"))\n'
+              '        )'
+          )
+          c = c.replace(old_close, new_close)
+
+          # all_debate_signals parameter
+          if "all_debate_signals" not in c:
+              c = c.replace(
+                  "    enable_shorts: bool = True,\n) -> Dict:",
+                  "    enable_shorts: bool = True,\n    all_debate_signals=None,\n) -> Dict:"
+              )
+              c = c.replace(
+                  '    plan_signals = {p.get("ticker"): p.get("consensus_signal") for p in plans}\n    for pos in existing:\n        sig = plan_signals.get(pos.symbol)',
+                  '    plan_signals = {p.get("ticker"): p.get("consensus_signal") for p in plans}\n    exit_signals = all_debate_signals if all_debate_signals else plan_signals\n    for pos in existing:\n        sig = exit_signals.get(pos.symbol)'
+              )
+
+          try:
+              ast.parse(c)
+              if c != orig:
+                  p.write_text(c)
+                  print("alpaca_paper.py: patched and syntax-verified")
+              else:
+                  print("alpaca_paper.py: already patched")
+          except SyntaxError as e:
+              print(f"SYNTAX ERROR: {e} — file not written")
+              exit(1)
+          PYEOF
+
+      - name: Also fix cli.py (all_debate_signals + conviction 0.45)
+        run: |
+          python3 << 'PYEOF'
+          import ast
+          from pathlib import Path
+
+          for cli_path in [Path("silmaril/cli.py"), Path("cli.py")]:
+              if not cli_path.exists():
+                  continue
+              c = cli_path.read_text()
+              orig = c
+
+              if "all_debate_signals" not in c:
+                  for old_conv in ["0.60", "0.45"]:
+                      old_call = (
+                          f"            alpaca_state = execute_consensus_signals(\n"
+                          f"                plans=alpaca_plans,\n"
+                          f"                state_path=out / \"alpaca_paper_state.json\",\n"
+                          f"                max_position_pct=0.05,\n"
+                          f"                min_consensus_conviction={old_conv},\n"
+                          f"                max_total_positions=15,\n"
+                          f"                enable_shorts=True,\n"
+                          f"            )"
+                      )
+                      if old_call in c:
+                          new_call = (
+                              f"            alpaca_state = execute_consensus_signals(\n"
+                              f"                plans=alpaca_plans,\n"
+                              f"                state_path=out / \"alpaca_paper_state.json\",\n"
+                              f"                max_position_pct=0.05,\n"
+                              f"                min_consensus_conviction=0.45,\n"
+                              f"                max_total_positions=15,\n"
+                              f"                enable_shorts=True,\n"
+                              f"                all_debate_signals={{\n"
+                              f"                    d[\"ticker\"]: (d.get(\"consensus\") or {{}}).get(\"signal\", \"HOLD\")\n"
+                              f"                    for d in debate_dicts\n"
+                              f"                }},\n"
+                              f"            )"
+                          )
+                          c = c.replace(old_call, new_call)
+                          print(f"{cli_path}: patched execute_consensus_signals call")
+                          break
+
+              if "published_iso" not in c:
+                  old_hl = '{"title": a.title, "source": a.source, "url": a.url}\n                for a in articles[:5]'
+                  new_hl = '{"title": a.title, "source": a.source, "url": a.url,\n                 "published": a.published_iso or ""}\n                for a in articles[:5]'
+                  c = c.replace(old_hl, new_hl)
+
+              try:
+                  ast.parse(c)
+                  if c != orig:
+                      cli_path.write_text(c)
+                      print(f"{cli_path}: written and syntax-verified")
+                  else:
+                      print(f"{cli_path}: no changes or pattern not found")
+              except SyntaxError as e:
+                  print(f"SYNTAX ERROR in {cli_path}: {e}")
+              break
+          PYEOF
+
+      - name: Commit fixes
+        run: |
+          git config user.name 'silmaril-bot'
+          git config user.email 'silmaril-bot@users.noreply.github.com'
+          git add silmaril/portfolios/agent_portfolio.py \
+                  silmaril/execution/alpaca_paper.py \
+                  silmaril/cli.py 2>/dev/null || true
+          git diff --staged --quiet && echo "Nothing to commit" || \
+            git commit -m "fix syntax error + apply all pending fixes $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          git push
