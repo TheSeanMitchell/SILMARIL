@@ -141,7 +141,8 @@ class JRRTokenState:
             merged.append({**h, "tier": "SUB_100M"})
         for h in self.over_tier.history:
             merged.append({**h, "tier": "OVER_100M"})
-        merged.sort(key=lambda h: h.get("date", ""), reverse=True)
+        # BUG 3: sort by timestamp when available, fall back to date
+        merged.sort(key=lambda h: h.get("timestamp") or h.get("date", ""), reverse=True)
         return merged
 
 
@@ -288,9 +289,14 @@ def _act_on_tier(
     tier_universe: Dict[str, str],
 ) -> None:
     """Run one tier's decision."""
+    # BUG 3 FIX: add timestamp to every history.append so the UI renders
+    # correct times instead of defaulting to midnight (17:00 Las Vegas time)
+    ts = datetime.now(timezone.utc).isoformat()
+
     if not picks:
         tier.history.append({
             "date": today,
+            "timestamp": ts,
             "action": "HODL",
             "reason": f"No qualifying tokens in {tier.name} today.",
             "balance": round(tier.balance, 6),
@@ -307,6 +313,7 @@ def _act_on_tier(
     if tier.current_position and tier.current_position["ticker"] == target_ticker:
         tier.history.append({
             "date": today,
+            "timestamp": ts,
             "action": "HODL",
             "ticker": target_ticker,
             "reason": f"Still JRR's top {tier.name} pick. HODL.",
@@ -326,6 +333,7 @@ def _act_on_tier(
         pnl_pct = ((old_current / old["entry_price"]) - 1) * 100 if old["entry_price"] else 0.0
         tier.history.append({
             "date": today,
+            "timestamp": ts,
             "action": "SELL",
             "ticker": old["ticker"],
             "shares": old["shares"],
@@ -366,6 +374,7 @@ def _act_on_tier(
     }
     tier.history.append({
         "date": today,
+        "timestamp": ts,
         "action": "BUY",
         "ticker": target_ticker,
         "shares": round(shares, 8),
