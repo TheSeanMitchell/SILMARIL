@@ -181,7 +181,7 @@ def compose_bet(state: SportsBroState, market: dict) -> dict:
     return {
         "market_id": market.get("id") or market.get("market_id"),
         "sport": market.get("sport"),
-        "label": market.get("label") or market.get("title"),
+        "label": market.get("label") or market.get("title") or market.get("market"),
         "side": market.get("recommended_side") or "YES",
         "stake": state.balance,
         "odds": market.get("price") or market.get("odds"),
@@ -228,6 +228,8 @@ def sports_bro_act(state: SportsBroState, markets: List[dict]) -> SportsBroState
     eligible prediction market.
     """
     today = datetime.now(timezone.utc).date().isoformat()
+    # BUG 3 FIX: capture real UTC timestamp once, use it in all history entries
+    ts = datetime.now(timezone.utc).isoformat()
 
     # Reset daily counter on new day
     if state.last_action_date != today:
@@ -253,6 +255,7 @@ def sports_bro_act(state: SportsBroState, markets: List[dict]) -> SportsBroState
         state.trades_today = 0
         state.history.append({
             "date": today,
+            "timestamp": ts,
             "action": "REINCARNATION",
             "life": state.current_life,
         })
@@ -261,6 +264,7 @@ def sports_bro_act(state: SportsBroState, markets: List[dict]) -> SportsBroState
     if state.trades_today >= MAX_TRADES_PER_DAY:
         state.history.append({
             "date": today,
+            "timestamp": ts,
             "action": "HOLD",
             "reason": f"Daily trade cap ({MAX_TRADES_PER_DAY}) reached.",
             "balance": round(state.balance, 4),
@@ -271,6 +275,7 @@ def sports_bro_act(state: SportsBroState, markets: List[dict]) -> SportsBroState
     if state.open_bets:
         state.history.append({
             "date": today,
+            "timestamp": ts,
             "action": "HOLD",
             "reason": "Open bet still pending resolution.",
             "balance": round(state.balance, 4),
@@ -282,6 +287,7 @@ def sports_bro_act(state: SportsBroState, markets: List[dict]) -> SportsBroState
     if not best:
         state.history.append({
             "date": today,
+            "timestamp": ts,
             "action": "NO_BET",
             "reason": "No eligible markets with positive edge found.",
             "balance": round(state.balance, 4),
@@ -293,6 +299,7 @@ def sports_bro_act(state: SportsBroState, markets: List[dict]) -> SportsBroState
     state.trades_today += 1
     state.history.append({
         "date": today,
+        "timestamp": ts,
         "action": "BET",
         "market": bet.get("label"),
         "sport": bet.get("sport"),
