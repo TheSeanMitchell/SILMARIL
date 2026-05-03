@@ -1277,7 +1277,7 @@ def run(mode: str = "demo", output_dir: str = "docs/data") -> None:
                 plans=alpaca_plans,
                 state_path=out / "alpaca_paper_state.json",
                 max_position_pct=0.05,
-                min_consensus_conviction=0.60,
+                min_consensus_conviction=0.45,
                 max_total_positions=15,
                 enable_shorts=True,
                 # CRITICAL FIX: pass every debated ticker's consensus signal so the
