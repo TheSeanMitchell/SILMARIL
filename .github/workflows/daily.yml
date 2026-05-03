@@ -2,10 +2,12 @@ name: Daily Run (10-min cadence)
 
 on:
   schedule:
-    # Every 10 minutes during US market hours, weekdays
-    # 14:00–21:00 UTC = 9:30am–4:30pm ET (roughly, EDT)
-    # Public repo = unlimited Actions minutes
-    - cron: '*/10 14-21 * * 1-5'
+    # Every 10 minutes during US market hours, ALL days including weekends
+    # Weekdays: 14:00–21:00 UTC = 9:30am–4:30pm ET (live market hours)
+    # Weekends: 16:00–20:00 UTC = narrower window, catches Sunday evening pre-market
+    # Crypto and prediction markets run 24/7 — agents still need to act on weekends.
+    - cron: '*/10 14-21 * * 1-5'   # weekdays: full market hours
+    - cron: '*/30 16-20 * * 0,6'   # weekends: every 30min, narrower window
   workflow_dispatch:
 
 permissions:
