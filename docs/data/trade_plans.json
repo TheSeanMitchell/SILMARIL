@@ -3,7 +3,7 @@
     "version": "2.0.0",
     "project": "SILMARIL",
     "run_type": "live",
-    "generated_at": "2026-05-03T06:40:37.496878+00:00",
+    "generated_at": "2026-05-03T18:08:49.975866+00:00",
     "alpha_2_0_features": {
       "learning_loop": true,
       "alpaca_paper": true,
@@ -15,193 +15,63 @@
   },
   "plans": [
     {
-      "plan_id": "plan_20260503_0647_AAPL",
-      "ticker": "AAPL",
-      "name": "AAPL",
+      "plan_id": "plan_20260503_1815_APD",
+      "ticker": "APD",
+      "name": "APD",
       "direction": "LONG",
-      "entry": 280.14,
-      "stop": 271.74,
-      "target": 292.75,
-      "shares": 7.1393,
+      "entry": 301.07,
+      "stop": 292.04,
+      "target": 314.62,
+      "shares": 6.643,
       "position_value": 2000.0,
       "risk_amount": 60.0,
       "risk_pct_of_portfolio": 0.006,
       "reward_risk_ratio": 1.5,
-      "invalidation": "Close below $271.74 invalidates the thesis. Re-evaluate if consensus agreement drops below 50%.",
+      "invalidation": "Close below $292.04 invalidates the thesis. Re-evaluate if consensus agreement drops below 50%.",
       "backers": [
         {
           "agent": "AEGIS",
-          "conviction": 0.30069177554332144,
+          "conviction": 0.7556613530096129,
           "rationale": "Cautious constructive: clean uptrend with calm volatility, sentiment supportive."
         },
         {
-          "agent": "FORGE",
-          "conviction": 0.9874266357464165,
-          "rationale": "High-conviction build: clean uptrend (+7.2% vs SMA50), strong sentiment +0.40, 5 articles."
-        },
-        {
-          "agent": "THUNDERHEAD",
-          "conviction": 0.7337536667840889,
-          "rationale": "Broke 20-day high ($273.43) on 1.8\u00d7 avg volume \u2014 storm has arrived."
-        },
-        {
-          "agent": "SYNTH",
-          "conviction": 0.8330618488185444,
-          "rationale": "Risk-on regime supports cyclical exposure."
-        },
-        {
-          "agent": "STEADFAST",
-          "conviction": 0.55,
-          "rationale": "Constructive backdrop on Apple. STEADFAST initiates or adds. Slow and steady wins the race."
-        }
-      ],
-      "dissenters": [
-        {
-          "agent": "HEX",
-          "signal": "SELL",
-          "conviction": 0.2812646440189465,
-          "rationale": "Price 2.06\u03c3 above 20-day mean \u2014 reversion probable."
-        }
-      ],
-      "consensus_signal": "BUY",
-      "portfolio_size": 10000.0,
-      "generated_at": "2026-05-03T06:47:10.794050+00:00",
-      "status": "ACTIVE",
-      "execution": {
-        "order_id": "SIM-20260503-064710-AAPL-B",
-        "side": "BUY",
-        "ticker": "AAPL",
-        "asset_class": "equity",
-        "exchange": "NASDAQ",
-        "venue": "electronic equity exchange",
-        "broker": "Interactive Brokers (simulated paper account)",
-        "order_type": "MARKET",
-        "time_in_force": "DAY",
-        "submitted_at_utc": "2026-05-03T06:47:10+00:00",
-        "filled_at_utc": "2026-05-03T06:47:12+00:00",
-        "settlement_date": "2026-05-04",
-        "account": {
-          "label": "EQUITY-CASH-SIM-001",
-          "type": "Cash Account",
-          "broker": "Interactive Brokers (simulated paper account)",
-          "funding_source": "ACH funding from simulated bank account (routed via broker cash sweep)",
-          "balance_before": 10000.0,
-          "balance_after": 7999.8
-        },
-        "fills": [
-          {
-            "shares": 7.139287,
-            "price": 280.14,
-            "timestamp": "2026-05-03T06:47:12+00:00",
-            "venue": "NASDAQ"
-          }
-        ],
-        "avg_fill_price": 280.14,
-        "gross_notional": 2000.0,
-        "fees": {
-          "commission": 0.0,
-          "sec_section_31": 0.0,
-          "finra_taf": 0.0,
-          "spread_cost": 0.2,
-          "total": 0.2,
-          "notes": "Spread estimate: 1 bps. Zero commission (IBKR Lite/TD-class simulated)."
-        },
-        "net_cost": 2000.2,
-        "net_proceeds": null,
-        "disclaimer": "Simulated execution \u2014 no live orders were placed on any exchange. Fees modeled on US market structure: SEC Section 31 ($27.80/$1M of sale proceeds), FINRA Trading Activity Fee ($0.000166/share on sells, capped $9.30), Coinbase Advanced taker 0.40% for crypto. Spread cost estimated per ticker."
-      },
-      "brokers": [
-        {
-          "name": "Robinhood",
-          "url": "https://robinhood.com/stocks/AAPL",
-          "fee_label": "$0 commission",
-          "key": "robinhood"
-        },
-        {
-          "name": "Fidelity",
-          "url": "https://digital.fidelity.com/prgw/digital/research/quote/dashboard/summary?symbol=AAPL",
-          "fee_label": "$0 commission",
-          "key": "fidelity"
-        },
-        {
-          "name": "Schwab",
-          "url": "https://www.schwab.com/research/stocks/quotes?symbol=AAPL",
-          "fee_label": "$0 commission",
-          "key": "schwab"
-        },
-        {
-          "name": "IBKR",
-          "url": "https://www.interactivebrokers.com/portal/?action=ACCT_MGMT_MAIN&symbol=AAPL",
-          "fee_label": "$0\u20130.005/sh",
-          "key": "ibkr"
-        },
-        {
-          "name": "Webull",
-          "url": "https://www.webull.com/quote/AAPL",
-          "fee_label": "$0 commission",
-          "key": "webull"
-        },
-        {
-          "name": "Alpaca",
-          "url": "https://app.alpaca.markets/",
-          "fee_label": "$0 commission",
-          "key": "alpaca"
-        }
-      ]
-    },
-    {
-      "plan_id": "plan_20260503_0647_AVGO",
-      "ticker": "AVGO",
-      "name": "AVGO",
-      "direction": "LONG",
-      "entry": 421.28,
-      "stop": 408.64,
-      "target": 440.24,
-      "shares": 4.7474,
-      "position_value": 2000.0,
-      "risk_amount": 60.0,
-      "risk_pct_of_portfolio": 0.006,
-      "reward_risk_ratio": 1.5,
-      "invalidation": "Close below $408.64 invalidates the thesis. Re-evaluate if consensus agreement drops below 50%.",
-      "backers": [
-        {
-          "agent": "AEGIS",
-          "conviction": 0.30069177554332144,
-          "rationale": "Cautious constructive: clean uptrend with calm volatility, sentiment supportive."
-        },
-        {
-          "agent": "FORGE",
-          "conviction": 0.7595589505741666,
-          "rationale": "Constructive: uptrend intact (+20.6% vs SMA50), sentiment +0.20."
+          "agent": "OBSIDIAN",
+          "conviction": 0.3989073431280521,
+          "rationale": "Commodity uptrend, RSI 60 not stretched \u2014 momentum continuation."
         },
         {
           "agent": "ZENITH",
-          "conviction": 1.0,
-          "rationale": "Perfect stack with 14.9% total separation, +26.4% 50d momentum \u2014 cosmic trend intact."
+          "conviction": 0.5344192827297948,
+          "rationale": "Perfect stack with 9.6% total separation, +7.9% 50d momentum \u2014 cosmic trend intact."
+        },
+        {
+          "agent": "WEAVER",
+          "conviction": 0.766385298342121,
+          "rationale": "Pullback to SMA-20 ($298.08) in uptrend"
         },
         {
           "agent": "SPECK",
-          "conviction": 0.32420713469841017,
+          "conviction": 0.7765885855969984,
           "rationale": "Low coverage (5 articles) but sentiment +0.20 and price above SMA-50 \u2014 small edge before crowd arrives."
         }
       ],
       "dissenters": [],
       "consensus_signal": "BUY",
       "portfolio_size": 10000.0,
-      "generated_at": "2026-05-03T06:47:10.794123+00:00",
+      "generated_at": "2026-05-03T18:15:50.413964+00:00",
       "status": "ACTIVE",
       "execution": {
-        "order_id": "SIM-20260503-064710-AVGO-B",
+        "order_id": "SIM-20260503-181550-APD-B",
         "side": "BUY",
-        "ticker": "AVGO",
+        "ticker": "APD",
         "asset_class": "equity",
-        "exchange": "NASDAQ",
-        "venue": "electronic equity exchange",
+        "exchange": "NYSE Arca",
+        "venue": "all-electronic ETF/options exchange",
         "broker": "Interactive Brokers (simulated paper account)",
         "order_type": "MARKET",
         "time_in_force": "DAY",
-        "submitted_at_utc": "2026-05-03T06:47:10+00:00",
-        "filled_at_utc": "2026-05-03T06:47:12+00:00",
+        "submitted_at_utc": "2026-05-03T18:15:50+00:00",
+        "filled_at_utc": "2026-05-03T18:15:52+00:00",
         "settlement_date": "2026-05-04",
         "account": {
           "label": "EQUITY-CASH-SIM-001",
@@ -213,13 +83,13 @@
         },
         "fills": [
           {
-            "shares": 4.747436,
-            "price": 421.28,
-            "timestamp": "2026-05-03T06:47:12+00:00",
-            "venue": "NASDAQ"
+            "shares": 6.642973,
+            "price": 301.07,
+            "timestamp": "2026-05-03T18:15:52+00:00",
+            "venue": "NYSE Arca"
           }
         ],
-        "avg_fill_price": 421.28,
+        "avg_fill_price": 301.07,
         "gross_notional": 2000.0,
         "fees": {
           "commission": 0.0,
@@ -236,31 +106,31 @@
       "brokers": [
         {
           "name": "Robinhood",
-          "url": "https://robinhood.com/stocks/AVGO",
+          "url": "https://robinhood.com/stocks/APD",
           "fee_label": "$0 commission",
           "key": "robinhood"
         },
         {
           "name": "Fidelity",
-          "url": "https://digital.fidelity.com/prgw/digital/research/quote/dashboard/summary?symbol=AVGO",
+          "url": "https://digital.fidelity.com/prgw/digital/research/quote/dashboard/summary?symbol=APD",
           "fee_label": "$0 commission",
           "key": "fidelity"
         },
         {
           "name": "Schwab",
-          "url": "https://www.schwab.com/research/stocks/quotes?symbol=AVGO",
+          "url": "https://www.schwab.com/research/stocks/quotes?symbol=APD",
           "fee_label": "$0 commission",
           "key": "schwab"
         },
         {
           "name": "IBKR",
-          "url": "https://www.interactivebrokers.com/portal/?action=ACCT_MGMT_MAIN&symbol=AVGO",
+          "url": "https://www.interactivebrokers.com/portal/?action=ACCT_MGMT_MAIN&symbol=APD",
           "fee_label": "$0\u20130.005/sh",
           "key": "ibkr"
         },
         {
           "name": "Webull",
-          "url": "https://www.webull.com/quote/AVGO",
+          "url": "https://www.webull.com/quote/APD",
           "fee_label": "$0 commission",
           "key": "webull"
         },
