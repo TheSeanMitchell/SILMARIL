@@ -167,11 +167,10 @@ def agent_portfolio_act(
         # Check if this agent voted BUY/STRONG_BUY in this debate
         verdicts = d.get("verdicts", [])
         agent_vote = next(
-            (v for v in verdicts if v.get("agent") == agent and
-             v.get("signal") in ("BUY", "STRONG_BUY") and
-),
-            None,
-        )
+    (v for v in verdicts if v.get("agent") == agent and
+     v.get("signal") in ("BUY", "STRONG_BUY")),
+    None,
+)
         if agent_vote is None:
             continue
         # Also require consensus to be at least neutral
