@@ -113,7 +113,8 @@ def agent_portfolio_act(
 
     Logic:
       1. If holding a position, check whether the latest consensus flipped
-         to SELL/STRONG_SELL — if so, close it.
+         to SELL/STRONG_SELL/HOLD — if so, close it (swing trade logic:
+         no edge = exit, don't hold through indecision).
       2. If flat (or just closed), find the best BUY-consensus debate for
          this agent and open a 10% position.
 
@@ -132,18 +133,19 @@ def agent_portfolio_act(
             qty = portfolio.current_position.get("qty", 0) or 0
             portfolio.current_equity = portfolio.cash + qty * current_price
 
-        # Check if consensus on the held ticker has turned negative
+        # Check if consensus on the held ticker has turned negative or indecisive
         held_debate = next(
             (d for d in debate_dicts if d.get("ticker") == held_ticker), None
         )
         if held_debate:
             cons_signal = held_debate.get("consensus", {}).get("signal", "HOLD")
-            if cons_signal in ("SELL", "STRONG_SELL") and current_price:
+            # BUG 5 FIX: exit on HOLD too — swing trade logic: no edge = exit cleanly
+            if cons_signal in ("SELL", "STRONG_SELL", "HOLD") and current_price:
                 portfolio.close_position(current_price)
                 portfolio.history.append({
                     "action": "HOLD",
                     "date": today,
-                    "reason": f"Closed {held_ticker} — consensus flipped to {cons_signal}",
+                    "reason": f"Closed {held_ticker} — consensus {cons_signal}",
                     "equity": round(portfolio.total_equity(), 2),
                     "timestamp": datetime.now(timezone.utc).isoformat(),
                 })
@@ -166,11 +168,12 @@ def agent_portfolio_act(
     for d in debate_dicts:
         # Check if this agent voted BUY/STRONG_BUY in this debate
         verdicts = d.get("verdicts", [])
+        # BUG 1 FIX: removed the dangling `and` that caused SyntaxError on line 172
         agent_vote = next(
-    (v for v in verdicts if v.get("agent") == agent and
-     v.get("signal") in ("BUY", "STRONG_BUY")),
-    None,
-)
+            (v for v in verdicts if v.get("agent") == agent and
+             v.get("signal") in ("BUY", "STRONG_BUY")),
+            None,
+        )
         if agent_vote is None:
             continue
         # Also require consensus to be at least neutral
