@@ -1,0 +1,1201 @@
+name: Apply Code Fixes V4 (Alpha 2.1 — savings + harvest)
+
+# Alpha 2.1 deployment:
+#   1. NEW MODULE: silmaril/portfolios/savings.py
+#   2. agent_portfolio.py — adds savings field, harvest-on-close
+#   3. alpaca_paper.py — adds trailing stop, profit-take, virtual savings,
+#      tickers_traded_this_cycle, recent_alpaca_tickers (24h dashboard)
+#   4. silmaril/catalysts/__init__.py — robust aggregator with synthetic
+#      fallbacks so page is never blank
+#   5. cli.py — passes profit_take_pct, trailing_stop_pct, principal_target
+#   6. docs/index.html — savings widget + gold border for Alpaca-active tickers
+#
+# Idempotent. Run, then trigger Daily Run.
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: { fetch-depth: 0, token: '${{ secrets.GITHUB_TOKEN }}' }
+
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.11' }
+
+      # ─────────────────────────────────────────────────────────────
+      # PART 1 — savings.py module
+      # ─────────────────────────────────────────────────────────────
+      - name: Write savings.py
+        run: |
+          mkdir -p silmaril/portfolios
+          cat > silmaril/portfolios/savings.py << 'PYEOF'
+          """silmaril.portfolios.savings — Profit-harvest accounting.
+
+          Every winning close above the principal target sweeps excess
+          to a savings ledger. Cash resets to the principal so the trader
+          starts each new round with the same capital. Losses come out
+          of trading capital — savings only grows.
+          """
+          from __future__ import annotations
+          from datetime import datetime, timezone
+          from typing import Any, Dict, Optional
+
+
+          def harvest_to_savings(portfolio: Any, principal_target: float) -> float:
+              """Sweep cash > principal_target into savings. Returns harvested amount."""
+              cash = getattr(portfolio, "cash", 0) or 0
+              if cash <= principal_target:
+                  return 0.0
+              harvested = cash - principal_target
+              if not hasattr(portfolio, "savings") or portfolio.savings is None:
+                  portfolio.savings = 0.0
+              portfolio.savings = float(portfolio.savings) + harvested
+              portfolio.cash = principal_target
+              # Log harvest in history if available
+              if hasattr(portfolio, "history") and isinstance(portfolio.history, list):
+                  now = datetime.now(timezone.utc)
+                  portfolio.history.append({
+                      "date": now.date().isoformat(),
+                      "timestamp": now.isoformat(),
+                      "action": "HARVEST",
+                      "amount": round(harvested, 4),
+                      "savings_total": round(portfolio.savings, 4),
+                      "principal_target": principal_target,
+                      "reason": f"Cash exceeded principal — pocketed ${harvested:.2f}",
+                  })
+              return harvested
+
+
+          def lifetime_value(portfolio: Any, mark_price: Optional[float] = None) -> Dict[str, float]:
+              """Total value: cash + savings + open MTM."""
+              cash = float(getattr(portfolio, "cash", 0) or 0)
+              savings = float(getattr(portfolio, "savings", 0) or 0)
+              open_value = 0.0
+              pos = getattr(portfolio, "current_position", None)
+              if pos:
+                  qty = pos.get("qty", 0) or 0
+                  price = mark_price if mark_price is not None else pos.get("entry_price", 0)
+                  open_value = qty * (price or 0)
+              return {
+                  "cash": round(cash, 4),
+                  "savings": round(savings, 4),
+                  "open_value": round(open_value, 4),
+                  "total": round(cash + savings + open_value, 4),
+              }
+          PYEOF
+          echo "OK: savings.py"
+
+      # ─────────────────────────────────────────────────────────────
+      # PART 2 — agent_portfolio.py with savings integration
+      # ─────────────────────────────────────────────────────────────
+      - name: Write agent_portfolio.py (v4 + savings)
+        run: |
+          cat > silmaril/portfolios/agent_portfolio.py << 'PYEOF'
+          """silmaril.portfolios.agent_portfolio — v4 Alpha 2.1: savings + trailing stop + specialist fallback."""
+          from __future__ import annotations
+          import json
+          from dataclasses import dataclass, field, asdict
+          from datetime import datetime, timezone, date
+          from pathlib import Path
+          from typing import Any, Dict, List, Optional
+
+          try:
+              from silmaril.portfolios.momentum_exit import (
+                  check_exit_conditions, update_peak_price,
+                  record_price_snapshot, get_agent_config)
+              _MOMENTUM_EXIT = True
+          except Exception:
+              _MOMENTUM_EXIT = False
+
+          try:
+              from silmaril.ingestion.price_format import safe_price
+          except Exception:
+              def safe_price(p, ticker="", min_price=1e-12):
+                  if p is None or p <= 0: return None
+                  return p
+
+          try:
+              from silmaril.portfolios.savings import harvest_to_savings, lifetime_value
+              _SAVINGS = True
+          except Exception:
+              _SAVINGS = False
+              def harvest_to_savings(p, t): return 0.0
+              def lifetime_value(p, m=None): return {"cash": p.cash, "savings": 0, "open_value": 0, "total": p.cash}
+
+          STARTING_EQUITY = 10000.0
+
+          SPECIALIST_DOMAINS: Dict[str, set] = {
+              "BARON": {"XOM","CVX","COP","VLO","MPC","PSX","DVN","OXY","HAL","SLB","EOG",
+                        "XLE","XOP","OIH","USO","BNO","UCO","SCO","DRIP","GUSH","UNG","BOIL","KOLD","AMLP"},
+              "STEADFAST": {"AAPL","MSFT","GOOGL","AMZN","BRK-B","JNJ","JPM","V","MA","PG",
+                            "KO","WMT","COST","HD","GS","MS","WFC","BAC","DIS","NKE","MCD",
+                            "CAT","MMM","IBM","VZ","T","CVX","XOM","PFE","MRK"},
+          }
+
+          def _hist_stamps(today_iso: Optional[str] = None) -> Dict[str, str]:
+              now = datetime.now(timezone.utc)
+              return {"date": today_iso or now.date().isoformat(),
+                      "timestamp": now.isoformat()}
+
+
+          @dataclass
+          class AgentPortfolio:
+              agent: str
+              starting_equity: float = STARTING_EQUITY
+              current_equity: float = STARTING_EQUITY
+              cash: float = STARTING_EQUITY
+              savings: float = 0.0  # NEW v4: profit-harvest ledger
+              current_position: Optional[Dict] = None
+              history: List[Dict] = field(default_factory=list)
+              equity_curve: List[Dict] = field(default_factory=list)
+              inception_date: str = field(
+                  default_factory=lambda: datetime.now(timezone.utc).date().isoformat())
+
+              @property
+              def total_return_pct(self) -> float:
+                  if self.starting_equity == 0: return 0.0
+                  total = self.cash + self.savings
+                  if self.current_position:
+                      qty = self.current_position.get("qty", 0) or 0
+                      total += qty * (self.current_position.get("entry_price", 0) or 0)
+                  return (total - self.starting_equity) / self.starting_equity
+
+              def total_equity(self, mark_price: Optional[float] = None) -> float:
+                  """Trading equity (cash + open position MTM). Does NOT include savings."""
+                  if self.current_position is None: return self.cash
+                  qty = self.current_position.get("qty", 0) or 0
+                  price = mark_price if mark_price is not None else self.current_position.get("entry_price", 0)
+                  return self.cash + qty * (price or 0)
+
+              def lifetime_total(self, mark_price: Optional[float] = None) -> float:
+                  """Total agent value: cash + savings + open position MTM."""
+                  return self.total_equity(mark_price) + self.savings
+
+              def open_position(self, ticker: str, qty: float, entry_price: float, signal: str) -> None:
+                  cost = qty * entry_price
+                  if cost > self.cash: return
+                  self.cash -= cost
+                  now = datetime.now(timezone.utc)
+                  self.current_position = {
+                      "ticker": ticker, "qty": qty, "entry_price": entry_price,
+                      "peak_price": entry_price,
+                      "entry_date": now.date().isoformat(),
+                      "signal": signal, "opened_at": now.isoformat(),
+                      "price_snapshots": [entry_price],
+                  }
+                  self.history.append({
+                      **_hist_stamps(), "action": "OPEN", "ticker": ticker,
+                      "qty": qty, "price": entry_price, "signal": signal,
+                  })
+
+              def close_position(self, exit_price: float, reason: str = "") -> Optional[float]:
+                  if not self.current_position: return None
+                  validated = safe_price(exit_price, self.current_position.get("ticker", ""))
+                  if validated is None:
+                      self.history.append({
+                          **_hist_stamps(), "action": "HOLD",
+                          "ticker": self.current_position.get("ticker", ""),
+                          "reason": f"Refused close at invalid price {exit_price}",
+                      })
+                      return None
+                  exit_price = validated
+                  qty = self.current_position["qty"]
+                  entry = self.current_position["entry_price"]
+                  signal = self.current_position.get("signal", "BUY")
+                  if signal in ("SELL", "STRONG_SELL"):
+                      pnl = (entry - exit_price) * qty
+                      proceeds = qty * entry + pnl
+                  else:
+                      pnl = (exit_price - entry) * qty
+                      proceeds = qty * exit_price
+                  self.cash += proceeds
+                  ticker = self.current_position["ticker"]
+                  pnl_pct = (pnl / (qty * entry) * 100) if (qty * entry) > 0 else 0.0
+                  self.history.append({
+                      **_hist_stamps(), "action": "CLOSE", "ticker": ticker,
+                      "qty": qty, "price": exit_price, "pnl": round(pnl, 4),
+                      "pnl_pct": round(pnl_pct, 2),
+                      "reason": reason or "Consensus flip",
+                  })
+                  self.current_position = None
+                  # ── HARVEST ────────────────────────────────────────────
+                  # If close was profitable AND total cash > principal,
+                  # sweep the excess to savings.
+                  harvested = harvest_to_savings(self, self.starting_equity)
+                  self.current_equity = self.cash
+                  return pnl
+
+              def snapshot_equity(self) -> None:
+                  now = datetime.now(timezone.utc)
+                  self.equity_curve.append({
+                      "date": now.date().isoformat(),
+                      "timestamp": now.isoformat(),
+                      "equity": self.current_equity,
+                      "cash": self.cash, "savings": self.savings,
+                      "lifetime_total": self.lifetime_total(),
+                      "in_position": self.current_position is not None,
+                  })
+                  self.equity_curve = self.equity_curve[-2000:]
+
+              def to_dict(self) -> Dict:
+                  d = asdict(self)
+                  # Surface key totals at top level for dashboard convenience
+                  d["lifetime_total"] = round(self.lifetime_total(), 4)
+                  d["principal_target"] = self.starting_equity
+                  return d
+
+
+          def _find_specialist_buy(agent: str, debate_dicts: List[Dict]) -> Optional[Dict]:
+              domain = SPECIALIST_DOMAINS.get(agent)
+              if not domain: return None
+              best = None; best_score = -999.0
+              for d in debate_dicts:
+                  if d.get("ticker") not in domain: continue
+                  cons = d.get("consensus") or {}
+                  if cons.get("signal") not in ("BUY", "STRONG_BUY"): continue
+                  score = float(cons.get("score") or 0)
+                  if score > best_score:
+                      best_score = score; best = d
+              return best
+
+
+          def agent_portfolio_act(portfolio: AgentPortfolio, debate_dicts: List[Dict],
+                                   prices: Dict[str, float]) -> AgentPortfolio:
+              today_iso = datetime.now(timezone.utc).date().isoformat()
+              agent = portfolio.agent
+
+              if portfolio.current_position:
+                  held_ticker = portfolio.current_position["ticker"]
+                  current_price = safe_price(prices.get(held_ticker), held_ticker)
+                  if current_price:
+                      qty = portfolio.current_position.get("qty", 0) or 0
+                      portfolio.current_equity = portfolio.cash + qty * current_price
+                      if _MOMENTUM_EXIT:
+                          portfolio.current_position = update_peak_price(portfolio.current_position, current_price)
+                          portfolio.current_position = record_price_snapshot(portfolio.current_position, current_price)
+                          cfg = get_agent_config(agent)
+                          should_exit, reason = check_exit_conditions(
+                              portfolio.current_position, current_price, today_iso,
+                              trailing_stop_pct=cfg["trailing_stop_pct"],
+                              max_hold_days=cfg["max_hold_days"],
+                              momentum_stall_threshold=cfg["momentum_stall_threshold"])
+                          if should_exit:
+                              portfolio.close_position(current_price, reason=reason)
+                              return portfolio
+                  held_debate = next((d for d in debate_dicts if d.get("ticker") == held_ticker), None)
+                  if held_debate:
+                      cons_signal = held_debate.get("consensus", {}).get("signal", "HOLD")
+                      if cons_signal in ("SELL", "STRONG_SELL", "HOLD") and current_price:
+                          portfolio.close_position(current_price,
+                              reason=f"Consensus on {held_ticker} flipped to {cons_signal}")
+                          return portfolio
+                  portfolio.history.append({
+                      **_hist_stamps(today_iso), "action": "HOLD",
+                      "ticker": held_ticker,
+                      "equity": round(portfolio.total_equity(current_price), 2),
+                      "savings": round(portfolio.savings, 2),
+                  })
+                  return portfolio
+
+              # Find best BUY
+              best_debate = None; best_score = -999.0
+              agent_appears = False
+              for d in debate_dicts:
+                  verdicts = d.get("verdicts", [])
+                  if any(v.get("agent") == agent for v in verdicts):
+                      agent_appears = True
+                  agent_vote = next((v for v in verdicts if v.get("agent") == agent and
+                                     v.get("signal") in ("BUY", "STRONG_BUY")), None)
+                  if agent_vote is None: continue
+                  cons_signal = d.get("consensus", {}).get("signal", "HOLD")
+                  if cons_signal in ("SELL", "STRONG_SELL"): continue
+                  score = d.get("consensus", {}).get("score", 0) or 0
+                  if score > best_score:
+                      best_score = score; best_debate = d
+
+              if best_debate is None and not agent_appears:
+                  best_debate = _find_specialist_buy(agent, debate_dicts)
+                  if best_debate:
+                      print(f"[portfolio:{agent}] specialist domain → {best_debate.get('ticker')}")
+
+              if best_debate is None:
+                  portfolio.history.append({
+                      **_hist_stamps(today_iso), "action": "HOLD",
+                      "reason": "No qualifying BUY signal",
+                      "equity": round(portfolio.total_equity(), 2),
+                      "savings": round(portfolio.savings, 2),
+                  })
+                  return portfolio
+
+              ticker = best_debate["ticker"]
+              entry_price = safe_price(prices.get(ticker), ticker)
+              if not entry_price:
+                  portfolio.history.append({
+                      **_hist_stamps(today_iso), "action": "HOLD",
+                      "reason": f"No valid price for {ticker}",
+                      "equity": round(portfolio.total_equity(), 2),
+                  })
+                  return portfolio
+
+              # Sizing: 10% of trading equity (savings is NOT deployed)
+              position_value = min(portfolio.total_equity() * 0.10, portfolio.cash * 0.95)
+              if position_value < 1.0: return portfolio
+              qty = position_value / entry_price
+              portfolio.open_position(ticker, qty, entry_price, "BUY")
+              portfolio.current_equity = portfolio.total_equity(entry_price)
+              return portfolio
+
+
+          # Persistence helpers
+          _FIELD_ALIASES: Dict[str, str] = {"balance": "cash"}
+          _KNOWN_FIELDS = set(AgentPortfolio.__dataclass_fields__.keys())
+
+          def _coerce_agent_record(raw_record: Dict) -> Dict:
+              record: Dict = {}
+              for k, v in raw_record.items():
+                  record[_FIELD_ALIASES.get(k, k)] = v
+              clean = {k: v for k, v in record.items() if k in _KNOWN_FIELDS}
+              if "cash" not in clean: clean["cash"] = STARTING_EQUITY
+              if "current_equity" not in clean: clean["current_equity"] = clean["cash"]
+              if "starting_equity" not in clean: clean["starting_equity"] = STARTING_EQUITY
+              if "savings" not in clean: clean["savings"] = 0.0
+              return clean
+
+          def load_portfolios(path: Path) -> Dict[str, AgentPortfolio]:
+              if not path.exists(): return {}
+              try: raw = json.loads(path.read_text())
+              except Exception: return {}
+              if not isinstance(raw, dict): return {}
+              agent_map = raw.get("portfolios")
+              if not isinstance(agent_map, dict):
+                  agent_map = {k: v for k, v in raw.items() if isinstance(v, dict)}
+              out: Dict[str, AgentPortfolio] = {}
+              for agent, record in agent_map.items():
+                  if not isinstance(record, dict): continue
+                  try:
+                      kwargs = _coerce_agent_record(record)
+                      kwargs["agent"] = agent
+                      out[agent] = AgentPortfolio(**kwargs)
+                  except Exception:
+                      continue
+              return out
+
+          def save_portfolios(path: Path, portfolios: Dict[str, AgentPortfolio],
+                              prices: Optional[Dict[str, float]] = None) -> None:
+              if prices:
+                  for p in portfolios.values():
+                      if p.current_position:
+                          mark = prices.get(p.current_position.get("ticker", ""))
+                          if mark:
+                              qty = p.current_position.get("qty", 0) or 0
+                              p.current_equity = p.cash + qty * mark
+              # Build summary at top level for dashboard
+              total_savings = sum(p.savings for p in portfolios.values())
+              total_lifetime = sum(p.lifetime_total() for p in portfolios.values())
+              out = {agent: p.to_dict() for agent, p in portfolios.items()}
+              out["_summary"] = {
+                  "total_savings_all_agents": round(total_savings, 4),
+                  "total_lifetime_value": round(total_lifetime, 4),
+                  "agent_count": len(portfolios),
+                  "generated_at": datetime.now(timezone.utc).isoformat(),
+              }
+              path.parent.mkdir(parents=True, exist_ok=True)
+              path.write_text(json.dumps(out, indent=2, default=str))
+
+          def ensure_all_agents_have_portfolios(portfolios: Dict[str, AgentPortfolio],
+                                                 all_agent_names: List[str]) -> Dict[str, AgentPortfolio]:
+              for name in all_agent_names:
+                  if name not in portfolios:
+                      portfolios[name] = AgentPortfolio(agent=name)
+              return portfolios
+          PYEOF
+          echo "OK: agent_portfolio.py"
+
+      # ─────────────────────────────────────────────────────────────
+      # PART 3 — alpaca_paper.py with profit-take + trailing stop + savings
+      # ─────────────────────────────────────────────────────────────
+      - name: Write alpaca_paper.py (v4 Alpha 2.1)
+        run: |
+          cat > silmaril/execution/alpaca_paper.py << 'PYEOF'
+          """silmaril.execution.alpaca_paper — v4 Alpha 2.1.
+
+          v4 changes:
+            * Profit-take: close at +5% from entry → harvest to savings
+            * Trailing stop: close at -4% from peak (independent of consensus)
+            * Virtual savings ledger — only grows on realized profits
+            * tickers_traded_this_cycle / recent_alpaca_tickers for dashboard
+            * principal_target tracking for harvest math
+          """
+          from __future__ import annotations
+          import json, os, time
+          from datetime import datetime, timezone, timedelta
+          from pathlib import Path
+          from typing import Any, Dict, List, Optional
+
+          _BASE_URL = "https://paper-api.alpaca.markets"  # PAPER ONLY
+          _ORDERS_ENDPOINT = f"{_BASE_URL}/v2/orders"
+          _POSITIONS_ENDPOINT = f"{_BASE_URL}/v2/positions"
+          _ACCOUNT_ENDPOINT = f"{_BASE_URL}/v2/account"
+          _MAX_RETRIES = 3
+          _RETRY_DELAY_S = 2.0
+          _SKIP_ASSET_CLASSES = {"crypto", "token"}
+
+          DEFAULT_PROFIT_TAKE_PCT = 0.05    # +5% triggers harvest
+          DEFAULT_TRAIL_STOP_PCT = 0.04     # -4% from peak triggers exit
+
+
+          def _get_headers():
+              key = os.environ.get("ALPACA_API_KEY", "").strip()
+              secret = os.environ.get("ALPACA_API_SECRET", "").strip()
+              if not key or not secret: return None
+              return {"APCA-API-KEY-ID": key, "APCA-API-SECRET-KEY": secret,
+                      "Content-Type": "application/json"}
+
+          def _api_get(url, headers):
+              try:
+                  import requests
+                  r = requests.get(url, headers=headers, timeout=15)
+                  r.raise_for_status()
+                  return r.json()
+              except Exception as e:
+                  print(f"[alpaca] GET failed: {e}")
+                  return None
+
+          def _api_post(url, headers, payload):
+              for attempt in range(_MAX_RETRIES):
+                  try:
+                      import requests
+                      r = requests.post(url, headers=headers, json=payload, timeout=15)
+                      if r.status_code in (200, 201): return r.json()
+                      print(f"[alpaca] POST {r.status_code}: {r.text[:200]}")
+                      return None
+                  except Exception as e:
+                      if attempt < _MAX_RETRIES - 1: time.sleep(_RETRY_DELAY_S)
+                      else:
+                          print(f"[alpaca] POST failed: {e}")
+                          return None
+
+          def _now_iso(): return datetime.now(timezone.utc).isoformat()
+
+          def _load_state(path):
+              if path.exists():
+                  try: return json.loads(path.read_text())
+                  except Exception: pass
+              return {
+                  "version": "2.1",
+                  "enabled": False,
+                  "account": {},
+                  "principal_target": 100000,
+                  "savings": 0.0,
+                  "lifetime_realized_wins": 0,
+                  "lifetime_realized_losses": 0,
+                  "position_meta": {},
+                  "tickers_traded_this_cycle": [],
+                  "recent_alpaca_tickers": [],
+                  "orders": [],
+                  "orders_placed": [],
+                  "errors": [],
+              }
+
+          def _save_state(state, path):
+              state["orders"] = state.get("orders", [])[-500:]
+              state["last_run"] = _now_iso()
+              try: path.write_text(json.dumps(state, indent=2, default=str))
+              except Exception as e: print(f"[alpaca] save failed: {e}")
+
+
+          def _prune_recent_tickers(state):
+              """Keep only Alpaca order tickers from the last 24h, for dashboard borders."""
+              cutoff = (datetime.now(timezone.utc) - timedelta(hours=24)).isoformat()
+              recent = []
+              for o in state.get("orders", []):
+                  if o.get("time", "") >= cutoff:
+                      sym = o.get("symbol")
+                      if sym and sym not in recent:
+                          recent.append(sym)
+              state["recent_alpaca_tickers"] = recent[:50]
+
+
+          def execute_consensus_signals(
+              plans: List[Dict[str, Any]],
+              state_path: Path,
+              max_position_pct: float = 0.08,
+              min_consensus_conviction: float = 0.40,
+              max_total_positions: int = 15,
+              enable_shorts: bool = True,
+              all_debate_signals: Optional[Dict[str, str]] = None,
+              profit_take_pct: float = DEFAULT_PROFIT_TAKE_PCT,
+              trailing_stop_pct: float = DEFAULT_TRAIL_STOP_PCT,
+              principal_target: Optional[float] = None,
+          ) -> Dict:
+              state = _load_state(state_path)
+              headers = _get_headers()
+              if not headers:
+                  state["enabled"] = False
+                  state["reason"] = "ALPACA_API_KEY/SECRET not set"
+                  state.setdefault("errors", []).append({"time": _now_iso(), "msg": state["reason"]})
+                  _save_state(state, state_path)
+                  return state
+
+              account = _api_get(_ACCOUNT_ENDPOINT, headers)
+              if not account:
+                  state["enabled"] = False
+                  state["reason"] = "Account fetch failed"
+                  _save_state(state, state_path)
+                  return state
+
+              equity = float(account.get("equity", 0))
+              cash_avail = float(account.get("cash", 0))
+              state["enabled"] = True
+              state["account"] = {"equity": round(equity, 2), "cash": round(cash_avail, 2)}
+
+              # First-time principal target: set to current equity if not set
+              if principal_target is not None:
+                  state["principal_target"] = principal_target
+              if not state.get("principal_target") or state["principal_target"] == 100000:
+                  if equity > 0:
+                      state["principal_target"] = round(equity, 2)
+              principal = float(state["principal_target"])
+
+              print(f"[alpaca] equity ${equity:,.2f} | principal ${principal:,.2f} | savings ${state.get('savings', 0):,.2f}")
+              if equity < 1.0:
+                  _save_state(state, state_path)
+                  return state
+
+              # Build signal maps
+              plan_signals, plan_conv, plan_class = {}, {}, {}
+              for p in plans:
+                  t = p.get("ticker", "")
+                  if not t: continue
+                  plan_signals[t] = p.get("consensus_signal", "HOLD")
+                  plan_conv[t] = float(p.get("consensus_conviction") or p.get("avg_conviction") or 0)
+                  plan_class[t] = p.get("asset_class", "equity")
+              exit_signals = dict(all_debate_signals or {})
+              exit_signals.update(plan_signals)
+
+              # Fetch open positions
+              existing = _api_get(_POSITIONS_ENDPOINT, headers) or []
+              if not isinstance(existing, list): existing = []
+              print(f"[alpaca] open positions: {len(existing)}")
+
+              # Initialize position_meta tracking for any new positions
+              position_meta = state.get("position_meta", {})
+              tickers_traded = []
+              orders_placed = []
+              closed = 0
+
+              for pos in existing:
+                  symbol = pos.get("symbol", "")
+                  try: qty = float(pos.get("qty", "0"))
+                  except Exception: qty = 0
+                  try: current_price = float(pos.get("current_price", 0))
+                  except Exception: current_price = 0
+                  try: entry_price = float(pos.get("avg_entry_price", 0))
+                  except Exception: entry_price = 0
+
+                  if not symbol or qty == 0: continue
+                  side = "long" if qty > 0 else "short"
+
+                  # Update position meta — track peak price ourselves
+                  meta = position_meta.get(symbol, {})
+                  prev_peak = meta.get("peak_price", entry_price or current_price)
+                  new_peak = max(prev_peak, current_price) if current_price else prev_peak
+                  position_meta[symbol] = {
+                      "entry_price": entry_price,
+                      "peak_price": new_peak,
+                      "first_seen": meta.get("first_seen", _now_iso()),
+                      "qty": abs(qty),
+                  }
+
+                  # Decide whether to close
+                  close_reason = None
+                  pnl_pct = 0.0
+                  if entry_price > 0 and current_price > 0:
+                      pnl_pct = (current_price / entry_price - 1.0) * 100
+                  peak_drop_pct = 0.0
+                  if new_peak > 0 and current_price > 0:
+                      peak_drop_pct = (current_price / new_peak - 1.0) * 100
+
+                  # ── 1. Profit-take ───────────────────────────────────
+                  if side == "long" and entry_price > 0 and current_price >= entry_price * (1.0 + profit_take_pct):
+                      close_reason = f"PROFIT TAKE: {symbol} +{pnl_pct:.2f}% from entry — harvest"
+                  elif side == "short" and entry_price > 0 and current_price <= entry_price * (1.0 - profit_take_pct):
+                      close_reason = f"PROFIT TAKE: {symbol} short -{abs(pnl_pct):.2f}% from entry — harvest"
+
+                  # ── 2. Trailing stop (only if no profit-take) ────────
+                  elif side == "long" and new_peak > 0 and current_price <= new_peak * (1.0 - trailing_stop_pct):
+                      close_reason = f"TRAILING STOP: {symbol} -{abs(peak_drop_pct):.2f}% from peak ${new_peak:.2f}"
+
+                  # ── 3. Consensus flip (existing logic) ───────────────
+                  else:
+                      sig = exit_signals.get(symbol, "HOLD")
+                      if (side == "long" and sig in ("SELL", "STRONG_SELL", "HOLD")) or \
+                         (side == "short" and sig in ("BUY", "STRONG_BUY", "HOLD")):
+                          close_reason = f"Consensus flipped to {sig}"
+
+                  if close_reason:
+                      print(f"[alpaca] CLOSE {side} {symbol}: {close_reason}")
+                      close_side = "sell" if side == "long" else "buy"
+                      r = _api_post(_ORDERS_ENDPOINT, headers, {
+                          "symbol": symbol, "qty": str(abs(qty)),
+                          "side": close_side, "type": "market", "time_in_force": "day"})
+                      if r:
+                          closed += 1
+                          tickers_traded.append(symbol)
+                          # Realized P&L
+                          if side == "long":
+                              realized = (current_price - entry_price) * abs(qty)
+                          else:
+                              realized = (entry_price - current_price) * abs(qty)
+                          # Harvest if profitable
+                          if realized > 0:
+                              state["savings"] = float(state.get("savings", 0)) + realized
+                              state["lifetime_realized_wins"] = state.get("lifetime_realized_wins", 0) + 1
+                              print(f"[alpaca]   → +${realized:.2f} harvested to savings (total ${state['savings']:.2f})")
+                          else:
+                              state["lifetime_realized_losses"] = state.get("lifetime_realized_losses", 0) + 1
+                              print(f"[alpaca]   → ${realized:.2f} loss")
+                          orders_placed.append({
+                              "action": "CLOSE", "symbol": symbol, "side": close_side,
+                              "qty": abs(qty), "trigger_reason": close_reason,
+                              "realized_pnl": round(realized, 2),
+                              "entry_price": entry_price, "exit_price": current_price,
+                              "order_id": r.get("id"), "time": _now_iso(),
+                          })
+                          # Drop from meta
+                          position_meta.pop(symbol, None)
+
+              if closed > 0:
+                  time.sleep(1.5)
+                  existing = _api_get(_POSITIONS_ENDPOINT, headers) or []
+                  if not isinstance(existing, list): existing = []
+
+              open_symbols = {p.get("symbol") for p in existing}
+              open_count = len(existing)
+              opened = 0
+
+              # Open new long positions
+              for p in plans:
+                  ticker = p.get("ticker", "")
+                  signal = p.get("consensus_signal", "HOLD")
+                  conviction = plan_conv.get(ticker, 0.0)
+                  asset_class = plan_class.get(ticker, "equity")
+                  if not ticker: continue
+                  if signal not in ("BUY", "STRONG_BUY"): continue
+                  if conviction < min_consensus_conviction: continue
+                  if ticker in open_symbols: continue
+                  if asset_class in _SKIP_ASSET_CLASSES: continue
+                  if open_count >= max_total_positions: break
+                  notional = round(equity * max_position_pct, 2)
+                  if notional < 1.0: continue
+                  print(f"[alpaca] OPEN {signal} {ticker} ${notional:.2f} (c={conviction:.2f})")
+                  r = _api_post(_ORDERS_ENDPOINT, headers, {
+                      "symbol": ticker, "notional": str(notional),
+                      "side": "buy", "type": "market", "time_in_force": "day"})
+                  if r:
+                      opened += 1; open_count += 1; open_symbols.add(ticker)
+                      tickers_traded.append(ticker)
+                      orders_placed.append({
+                          "action": "OPEN", "symbol": ticker, "side": "buy",
+                          "notional": notional, "conviction": conviction,
+                          "signal": signal, "order_id": r.get("id"), "time": _now_iso(),
+                      })
+
+              # Open shorts
+              if enable_shorts:
+                  for p in plans:
+                      ticker = p.get("ticker", "")
+                      signal = p.get("consensus_signal", "HOLD")
+                      conviction = plan_conv.get(ticker, 0.0)
+                      asset_class = plan_class.get(ticker, "equity")
+                      if signal not in ("SELL", "STRONG_SELL"): continue
+                      if conviction < min_consensus_conviction: continue
+                      if ticker in open_symbols: continue
+                      if asset_class in _SKIP_ASSET_CLASSES: continue
+                      if open_count >= max_total_positions: break
+                      notional = round(equity * max_position_pct, 2)
+                      if notional < 1.0: continue
+                      print(f"[alpaca] SHORT {ticker} ${notional:.2f}")
+                      r = _api_post(_ORDERS_ENDPOINT, headers, {
+                          "symbol": ticker, "notional": str(notional),
+                          "side": "sell", "type": "market", "time_in_force": "day"})
+                      if r:
+                          opened += 1; open_count += 1; open_symbols.add(ticker)
+                          tickers_traded.append(ticker)
+                          orders_placed.append({
+                              "action": "SHORT", "symbol": ticker, "side": "sell",
+                              "notional": notional, "conviction": conviction,
+                              "signal": signal, "order_id": r.get("id"), "time": _now_iso(),
+                          })
+
+              # Append orders to history
+              state["orders"] = state.get("orders", []) + orders_placed
+              state["orders_placed"] = orders_placed
+              state["position_meta"] = position_meta
+              state["tickers_traded_this_cycle"] = list(set(tickers_traded))
+              _prune_recent_tickers(state)
+
+              total_value = equity + state.get("savings", 0)
+              state["last_cycle_summary"] = {
+                  "time": _now_iso(), "closed": closed, "opened": opened,
+                  "open_after": open_count, "equity": equity,
+                  "savings": round(state.get("savings", 0), 2),
+                  "total_value": round(total_value, 2),
+                  "tickers_traded": list(set(tickers_traded)),
+              }
+              _save_state(state, state_path)
+              print(f"[alpaca] cycle: closed={closed} opened={opened} total={open_count} | "
+                    f"savings ${state.get('savings', 0):.2f} | total ${total_value:.2f}")
+              return state
+          PYEOF
+          echo "OK: alpaca_paper.py"
+
+      # ─────────────────────────────────────────────────────────────
+      # PART 4 — Robust catalysts/__init__.py with synthetic fallbacks
+      # ─────────────────────────────────────────────────────────────
+      - name: Write catalysts/__init__.py
+        run: |
+          cat > silmaril/catalysts/__init__.py << 'PYEOF'
+          """silmaril.catalysts — Robust catalyst aggregator.
+
+          Tries every available source. Logs failures verbosely. If everything
+          fails, falls back to synthetic catalysts (FOMC dates, OPEX dates,
+          end-of-month effects) so the dashboard is NEVER blank.
+          """
+          from __future__ import annotations
+          import json
+          from datetime import date, datetime, timezone, timedelta
+          from pathlib import Path
+          from typing import Any, Dict, List, Optional
+
+
+          # ─── Synthetic fallback (always works) ────────────────────────
+
+          # Approximate FOMC meeting dates — public schedule, manually maintained
+          FOMC_2026 = [
+              "2026-01-28", "2026-03-18", "2026-04-29", "2026-06-17",
+              "2026-07-29", "2026-09-16", "2026-11-04", "2026-12-16",
+          ]
+
+          def _next_opex(today: date) -> date:
+              """3rd Friday of the current or next month."""
+              y, m = today.year, today.month
+              for offset in (0, 1):
+                  yy = y + ((m + offset - 1) // 12)
+                  mm = ((m + offset - 1) % 12) + 1
+                  d = date(yy, mm, 1)
+                  while d.weekday() != 4:
+                      d += timedelta(days=1)
+                  d += timedelta(days=14)  # 3rd Friday
+                  if d >= today:
+                      return d
+              return today + timedelta(days=30)
+
+          def _synthetic_catalysts(start_d: date, end_d: date) -> List[Dict[str, Any]]:
+              out = []
+              # FOMC meetings
+              for d_str in FOMC_2026:
+                  try:
+                      d = date.fromisoformat(d_str)
+                      if start_d <= d <= end_d:
+                          out.append({
+                              "date": d_str, "type": "fomc",
+                              "ticker": "SPY", "title": "FOMC meeting — rate decision + statement",
+                              "magnitude": "very_high",
+                              "source_url": "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm",
+                              "watchlist_tags": ["rates", "macro"],
+                          })
+                  except Exception: pass
+              # Next OPEX
+              opex = _next_opex(start_d)
+              if start_d <= opex <= end_d:
+                  out.append({
+                      "date": opex.isoformat(), "type": "opex",
+                      "ticker": "SPY", "title": f"Monthly OPEX — options expiration ({opex.strftime('%b')})",
+                      "magnitude": "high",
+                      "source_url": "https://www.cboe.com/us/options/symboldir/equity_index_options/",
+                      "watchlist_tags": ["volatility", "gamma"],
+                  })
+              # End-of-month effect
+              cur = start_d
+              while cur <= end_d:
+                  # Last business day of month
+                  next_month = cur.replace(day=28) + timedelta(days=4)
+                  last_day = next_month - timedelta(days=next_month.day)
+                  while last_day.weekday() >= 5:
+                      last_day -= timedelta(days=1)
+                  if start_d <= last_day <= end_d:
+                      out.append({
+                          "date": last_day.isoformat(), "type": "month_end",
+                          "ticker": "SPY",
+                          "title": f"Month-end rebalance ({last_day.strftime('%b %d')})",
+                          "magnitude": "medium",
+                          "source_url": "",
+                          "watchlist_tags": ["seasonal", "rebalance"],
+                      })
+                  cur = (cur.replace(day=1) + timedelta(days=32)).replace(day=1)
+              return out
+
+
+          # ─── Main aggregator ────────────────────────────────────────────
+
+          def write_catalysts_json(path: Path, today_iso: Optional[str] = None) -> int:
+              """Aggregate every catalyst source, write to path, return count.
+              Always produces non-empty output (synthetic fallback)."""
+              today_d = date.fromisoformat(today_iso) if today_iso else date.today()
+              end_d = today_d + timedelta(days=30)
+              all_events: List[Dict[str, Any]] = []
+              status = {}
+
+              # 1. Earnings (Finnhub)
+              try:
+                  from .earnings_calendar import fetch_earnings_calendar
+                  ev = fetch_earnings_calendar(start_date=today_d, end_date=end_d)
+                  all_events.extend(ev)
+                  status["earnings"] = f"OK ({len(ev)})"
+              except Exception as e:
+                  status["earnings"] = f"FAIL: {type(e).__name__}: {e}"
+                  print(f"[catalysts] earnings failed: {e}")
+
+              # 2. OPEX dates
+              try:
+                  from .opex import get_opex_dates
+                  ev = get_opex_dates(today_d, end_d)
+                  all_events.extend(ev)
+                  status["opex"] = f"OK ({len(ev)})"
+              except Exception as e:
+                  status["opex"] = f"FAIL: {e}"
+
+              # 3. Macro releases
+              try:
+                  from .macro_releases import get_macro_release_dates
+                  ev = get_macro_release_dates(today_d, end_d)
+                  all_events.extend(ev)
+                  status["macro"] = f"OK ({len(ev)})"
+              except Exception as e:
+                  status["macro"] = f"FAIL: {e}"
+
+              # 4. Ex-dividend
+              try:
+                  from .ex_dividend import fetch_ex_dividend_calendar
+                  ev = fetch_ex_dividend_calendar(start_date=today_d, end_date=end_d)
+                  all_events.extend(ev)
+                  status["ex_div"] = f"OK ({len(ev)})"
+              except Exception as e:
+                  status["ex_div"] = f"FAIL: {e}"
+
+              # 5. Crypto unlocks
+              try:
+                  from .crypto_unlocks import get_crypto_unlocks
+                  ev = get_crypto_unlocks(today_d, end_d)
+                  all_events.extend(ev)
+                  status["crypto_unlocks"] = f"OK ({len(ev)})"
+              except Exception as e:
+                  status["crypto_unlocks"] = f"FAIL: {e}"
+
+              # 6. Index rebalance
+              try:
+                  from .index_rebalance import get_index_rebalance_dates
+                  ev = get_index_rebalance_dates(today_d, end_d)
+                  all_events.extend(ev)
+                  status["index_rebalance"] = f"OK ({len(ev)})"
+              except Exception as e:
+                  status["index_rebalance"] = f"FAIL: {e}"
+
+              # 7. ALWAYS add synthetic fallbacks (FOMC, OPEX, month-end)
+              # Even if other sources worked, these provide reliable anchors
+              try:
+                  syn = _synthetic_catalysts(today_d, end_d)
+                  # Avoid duplicates by date+type
+                  existing_keys = {(c.get("date"), c.get("type")) for c in all_events}
+                  added = 0
+                  for s in syn:
+                      if (s["date"], s["type"]) not in existing_keys:
+                          all_events.append(s)
+                          added += 1
+                  status["synthetic"] = f"OK (+{added})"
+              except Exception as e:
+                  status["synthetic"] = f"FAIL: {e}"
+
+              # Sort and dedupe
+              seen = set()
+              unique = []
+              for e in all_events:
+                  key = (e.get("date", ""), e.get("ticker", ""), e.get("type", ""), e.get("title", ""))
+                  if key not in seen:
+                      seen.add(key)
+                      unique.append(e)
+              unique.sort(key=lambda c: (c.get("date", ""), c.get("ticker", "")))
+
+              # Print diagnostic so we can see in CI logs what's actually failing
+              print(f"[catalysts] sources status:")
+              for src, st in status.items():
+                  print(f"  {src}: {st}")
+              print(f"[catalysts] total unique events: {len(unique)}")
+
+              # Write — list at top level for backward compat
+              path.parent.mkdir(parents=True, exist_ok=True)
+              path.write_text(json.dumps(unique, indent=2, default=str))
+
+              # Sidecar diagnostic file
+              diag_path = path.parent / "catalysts_diagnostic.json"
+              diag_path.write_text(json.dumps({
+                  "generated_at": datetime.now(timezone.utc).isoformat(),
+                  "count": len(unique),
+                  "sources_status": status,
+                  "window_start": today_d.isoformat(),
+                  "window_end": end_d.isoformat(),
+              }, indent=2, default=str))
+
+              return len(unique)
+
+
+          __all__ = ["write_catalysts_json"]
+          PYEOF
+          echo "OK: catalysts/__init__.py"
+
+      # ─────────────────────────────────────────────────────────────
+      # PART 5 — Patch cli.py to pass new alpaca params
+      # ─────────────────────────────────────────────────────────────
+      - name: Patch cli.py for v4 Alpaca params
+        run: |
+          python3 << 'PYEOF'
+          from pathlib import Path
+          import re
+
+          p = Path("silmaril/cli.py")
+          if not p.exists():
+              print("ERROR: cli.py not found"); exit(1)
+          c = p.read_text(); orig = c
+
+          # Inject profit_take_pct and trailing_stop_pct into the existing
+          # execute_consensus_signals call
+          if "profit_take_pct" not in c:
+              c = c.replace(
+                  "enable_shorts=True,",
+                  "enable_shorts=True,\n"
+                  "                profit_take_pct=0.05,    # v4: harvest at +5%\n"
+                  "                trailing_stop_pct=0.04,  # v4: stop at -4% from peak",
+                  1
+              )
+
+          if c != orig:
+              p.write_text(c)
+              print("OK: cli.py patched (profit_take + trail_stop params)")
+          else:
+              print("OK: cli.py already up-to-date")
+          PYEOF
+
+      # ─────────────────────────────────────────────────────────────
+      # PART 6 — Frontend: savings widget + gold border + alpaca panel
+      # ─────────────────────────────────────────────────────────────
+      - name: Patch index.html
+        run: |
+          python3 << 'PYEOF'
+          from pathlib import Path
+          p = Path("docs/index.html")
+          if not p.exists():
+              print("docs/index.html not found"); exit(0)
+          c = p.read_text()
+          if "function silmarilAlpha21Init" in c:
+              print("OK: v4 widgets already present"); exit(0)
+
+          widgets = """
+          <style>
+          /* Alpha 2.1 — auto-injected widgets */
+          .alpha21-savings-line {
+              display: inline-block; padding: 2px 8px; margin: 4px 4px 4px 0;
+              border-radius: 6px; font-size: 11px; font-weight: 600;
+              background: linear-gradient(90deg, #c9a449 0%, #f5d97a 100%);
+              color: #1a1a1a; box-shadow: 0 1px 3px rgba(201, 164, 73, 0.35);
+          }
+          .alpha21-savings-line::before { content: "💰 "; }
+          .alpha21-alpaca-active {
+              border: 2px solid gold !important;
+              box-shadow: 0 0 12px rgba(255, 215, 0, 0.55) !important;
+              position: relative;
+          }
+          .alpha21-alpaca-badge {
+              position: absolute; top: 6px; right: 6px;
+              background: gold; color: #1a1a1a; font-size: 10px;
+              font-weight: 700; padding: 2px 6px; border-radius: 8px;
+              z-index: 10; letter-spacing: 0.5px;
+          }
+          .alpha21-alpaca-badge::before { content: "→ "; }
+          .alpha21-alpaca-panel {
+              background: #1a1a1a; border: 1px solid gold;
+              border-radius: 8px; padding: 12px; margin: 16px 0;
+              font-family: 'JetBrains Mono', monospace;
+          }
+          .alpha21-alpaca-panel h3 {
+              color: gold; margin: 0 0 8px 0; font-size: 14px;
+              text-transform: uppercase; letter-spacing: 1px;
+          }
+          .alpha21-alpaca-panel .row {
+              display: flex; justify-content: space-between;
+              padding: 4px 0; border-bottom: 1px solid #333;
+              font-size: 12px; color: #ddd;
+          }
+          .alpha21-alpaca-panel .row:last-child { border-bottom: none; }
+          .alpha21-alpaca-panel .open  { color: #4caf50; }
+          .alpha21-alpaca-panel .close { color: #ff9800; }
+          .alpha21-alpaca-panel .pnl-pos { color: #4caf50; }
+          .alpha21-alpaca-panel .pnl-neg { color: #f44336; }
+          </style>
+
+          <script>
+          // Alpha 2.1 — auto-inject savings + gold borders + Alpaca panel
+          (function(){
+            window.silmarilAlpha21Init = async function() {
+              try {
+                // ── 1. Load Alpaca state ─────────────────────────────
+                let alpacaState = null;
+                try {
+                  const r = await fetch('data/alpaca_paper_state.json?_=' + Date.now());
+                  if (r.ok) alpacaState = await r.json();
+                } catch(e) { console.log('[alpha21] no alpaca state'); }
+
+                // ── 2. Load agent portfolios ─────────────────────────
+                let portfolios = null;
+                try {
+                  const r = await fetch('data/agent_portfolios.json?_=' + Date.now());
+                  if (r.ok) portfolios = await r.json();
+                } catch(e) { console.log('[alpha21] no portfolios'); }
+
+                // ── 3. Apply gold border to Alpaca-active tickers ────
+                const recentTickers = new Set((alpacaState && alpacaState.recent_alpaca_tickers) || []);
+                if (recentTickers.size > 0) {
+                  document.querySelectorAll('[data-ticker]').forEach(el => {
+                    const t = (el.getAttribute('data-ticker') || '').toUpperCase();
+                    if (recentTickers.has(t) && !el.querySelector('.alpha21-alpaca-badge')) {
+                      el.classList.add('alpha21-alpaca-active');
+                      const badge = document.createElement('span');
+                      badge.className = 'alpha21-alpaca-badge';
+                      badge.textContent = 'Alpaca';
+                      el.appendChild(badge);
+                    }
+                  });
+                  // Also scan trade plan / debate cards by ticker text (heuristic fallback)
+                  document.querySelectorAll('.trade-plan, .debate-card, .plan-card').forEach(el => {
+                    const txt = el.textContent || '';
+                    for (const t of recentTickers) {
+                      const re = new RegExp('\\\\b' + t + '\\\\b');
+                      if (re.test(txt) && !el.querySelector('.alpha21-alpaca-badge')) {
+                        el.classList.add('alpha21-alpaca-active');
+                        const badge = document.createElement('span');
+                        badge.className = 'alpha21-alpaca-badge';
+                        badge.textContent = 'Alpaca';
+                        el.appendChild(badge);
+                        break;
+                      }
+                    }
+                  });
+                }
+
+                // ── 4. Inject savings line into agent cards ──────────
+                if (portfolios) {
+                  for (const [agent, p] of Object.entries(portfolios)) {
+                    if (agent === '_summary') continue;
+                    if (typeof p !== 'object' || !p) continue;
+                    const savings = (p.savings || 0);
+                    const cash = (p.cash || 0);
+                    const lifetime = (p.lifetime_total || cash + savings);
+                    // Find any element with data-agent="AGENT"
+                    document.querySelectorAll('[data-agent="' + agent + '"]').forEach(el => {
+                      if (el.querySelector('.alpha21-savings-line')) return;
+                      const span = document.createElement('span');
+                      span.className = 'alpha21-savings-line';
+                      span.title = 'Lifetime: $' + lifetime.toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2});
+                      span.textContent = 'Savings: $' + savings.toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2});
+                      el.appendChild(span);
+                    });
+                  }
+                }
+
+                // ── 5. Render Alpaca activity panel ──────────────────
+                if (alpacaState && alpacaState.enabled) {
+                  let panel = document.getElementById('alpha21-alpaca-panel');
+                  if (!panel) {
+                    panel = document.createElement('div');
+                    panel.id = 'alpha21-alpaca-panel';
+                    panel.className = 'alpha21-alpaca-panel';
+                    // Insert at top of body or after a known anchor
+                    const anchor = document.querySelector('main') || document.body;
+                    anchor.insertBefore(panel, anchor.firstChild);
+                  }
+                  const acct = alpacaState.account || {};
+                  const summary = alpacaState.last_cycle_summary || {};
+                  const orders = (alpacaState.orders || []).slice(-10).reverse();
+                  let html = '<h3>Alpaca Paper Activity</h3>';
+                  html += '<div class="row"><span>Equity</span><span>$' +
+                          (acct.equity || 0).toLocaleString('en-US', {minimumFractionDigits:2}) + '</span></div>';
+                  html += '<div class="row"><span>Savings (harvested)</span><span style="color: gold;">$' +
+                          (alpacaState.savings || 0).toLocaleString('en-US', {minimumFractionDigits:2}) + '</span></div>';
+                  html += '<div class="row"><span>Total value</span><span>$' +
+                          (summary.total_value || acct.equity || 0).toLocaleString('en-US', {minimumFractionDigits:2}) + '</span></div>';
+                  html += '<div class="row"><span>Wins / Losses</span><span>' +
+                          (alpacaState.lifetime_realized_wins || 0) + ' / ' +
+                          (alpacaState.lifetime_realized_losses || 0) + '</span></div>';
+                  html += '<div class="row"><span>Last cycle</span><span>opened ' +
+                          (summary.opened || 0) + ', closed ' + (summary.closed || 0) + '</span></div>';
+                  html += '<div style="margin-top:10px; font-weight:600;">Recent orders</div>';
+                  if (orders.length === 0) {
+                    html += '<div class="row"><span>(no orders yet)</span><span></span></div>';
+                  } else {
+                    for (const o of orders) {
+                      const cls = o.action === 'OPEN' || o.action === 'SHORT' ? 'open' : 'close';
+                      const time = (o.time || '').substring(11, 16);
+                      const pnl = o.realized_pnl;
+                      let pnlStr = '';
+                      if (pnl !== undefined && pnl !== null) {
+                        const pcls = pnl >= 0 ? 'pnl-pos' : 'pnl-neg';
+                        pnlStr = ' <span class="' + pcls + '">' + (pnl >= 0 ? '+' : '') + '$' + pnl.toFixed(2) + '</span>';
+                      }
+                      html += '<div class="row"><span class="' + cls + '">' + time + ' ' +
+                              o.action + ' ' + (o.symbol || '') + '</span><span>' +
+                              (o.notional ? '$' + o.notional : (o.qty ? o.qty.toFixed(2) + ' sh' : '')) +
+                              pnlStr + '</span></div>';
+                    }
+                  }
+                  panel.innerHTML = html;
+                }
+              } catch(e) {
+                console.error('[alpha21] init failed:', e);
+              }
+            };
+            // Fire on DOM ready and again 2s later (in case page renders dynamically)
+            if (document.readyState === 'loading') {
+              document.addEventListener('DOMContentLoaded', () => silmarilAlpha21Init());
+            } else {
+              silmarilAlpha21Init();
+            }
+            setTimeout(() => silmarilAlpha21Init(), 2000);
+          })();
+          </script>
+          """
+          if "</body>" in c:
+              c = c.replace("</body>", widgets + "\n</body>")
+          else:
+              c = c + "\n" + widgets
+          p.write_text(c)
+          print("OK: index.html v4 widgets injected")
+          PYEOF
+
+      # ─────────────────────────────────────────────────────────────
+      # PART 7 — Commit
+      # ─────────────────────────────────────────────────────────────
+      - name: Commit Alpha 2.1 fixes
+        run: |
+          git config user.name 'silmaril-bot'
+          git config user.email 'silmaril-bot@users.noreply.github.com'
+          git add silmaril/ docs/ 2>/dev/null || true
+          git diff --staged --quiet && echo "Nothing to commit (already deployed)" || \
+            git commit -m "Alpha 2.1: savings + Alpaca harvest/trail-stop + catalyst aggregator + gold borders $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          git push
+          echo "DONE — trigger 'Wipe for Alpha 2.1' next, then Daily Run."
