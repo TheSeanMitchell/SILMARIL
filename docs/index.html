@@ -5156,6 +5156,156 @@
 
   document.addEventListener('keydown', e => { if (e.key === 'Escape') closeDrawer(); });
 </script>
-
+<style>
+  .silmaril-health-panel {
+    margin: 24px 0;
+    padding: 16px 18px;
+    background: rgba(0, 0, 0, 0.35);
+    border: 1px solid var(--gold-glow, #c9a449);
+    border-radius: 6px;
+    font-family: var(--mono, 'JetBrains Mono', monospace);
+    font-size: 12px;
+  }
+  .silmaril-health-panel h3 {
+    margin: 0 0 12px 0;
+    font-family: var(--display, sans-serif);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--gold, #c9a449);
+  }
+  .silmaril-health-panel .verdict-HEALTHY { color: #4caf50; }
+  .silmaril-health-panel .verdict-DEGRADED { color: #ff9800; }
+  .silmaril-health-panel .verdict-BROKEN { color: #f44336; }
+  .silmaril-health-panel .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    margin-bottom: 12px;
+  }
+  .silmaril-health-panel .stat-label {
+    color: var(--muted, #888);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+  .silmaril-health-panel .stat-value {
+    color: var(--text, #ddd);
+    font-size: 14px;
+    margin-top: 2px;
+  }
+  .silmaril-health-panel .issues {
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid rgba(255,255,255,0.08);
+  }
+  .silmaril-health-panel .issue-item {
+    color: #ff9800;
+    font-size: 11px;
+    padding: 3px 0;
+  }
+  .silmaril-health-panel .silent-agents {
+    color: #888;
+    font-size: 10px;
+    margin-top: 6px;
+  }
+  .silmaril-health-panel .savings-pos {
+    color: #c9a449;
+    font-weight: 600;
+  }
+</style>
+ 
+<div id="silmaril-health-panel" class="silmaril-health-panel" style="display: none;">
+  <h3>Run Health <span id="health-verdict"></span></h3>
+  <div class="grid" id="health-grid"></div>
+  <div id="health-issues"></div>
+</div>
+ 
+<script>
+(function(){
+  async function loadHealth() {
+    try {
+      const r = await fetch('data/run_health.json?_=' + Date.now());
+      if (!r.ok) return;
+      const h = await r.json();
+      const panel = document.getElementById('silmaril-health-panel');
+      if (!panel) return;
+      panel.style.display = '';
+ 
+      const verdict = document.getElementById('health-verdict');
+      verdict.className = 'verdict-' + (h.verdict || 'BROKEN');
+      verdict.textContent = '· ' + (h.verdict || 'BROKEN');
+ 
+      const fmtMoney = (n) => n == null ? 'N/A' : '$' + Number(n).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+ 
+      const grid = document.getElementById('health-grid');
+      const al = h.alpaca || {};
+      const lc = al.last_cycle || {};
+      const sig = h.signals || {};
+      const cat = h.catalysts || {};
+      const ag = h.agents || {};
+ 
+      grid.innerHTML = `
+        <div>
+          <div class="stat-label">Alpaca Account</div>
+          <div class="stat-value">${al.account_id || (al.enabled ? '✓ connected' : '✗ disconnected')}</div>
+        </div>
+        <div>
+          <div class="stat-label">Equity</div>
+          <div class="stat-value">${fmtMoney(al.equity)}</div>
+        </div>
+        <div>
+          <div class="stat-label">Savings (harvested)</div>
+          <div class="stat-value savings-pos">${fmtMoney(al.savings)}</div>
+        </div>
+        <div>
+          <div class="stat-label">Last Cycle</div>
+          <div class="stat-value">opened ${lc.opened || 0} / closed ${lc.closed || 0} (${lc.open_after || 0} open)</div>
+        </div>
+        <div>
+          <div class="stat-label">Wins / Losses</div>
+          <div class="stat-value">${al.lifetime_wins || 0} / ${al.lifetime_losses || 0}</div>
+        </div>
+        <div>
+          <div class="stat-label">Debates</div>
+          <div class="stat-value">${sig.total_debates || 0} (${sig.eligible_for_alpaca || 0} eligible)</div>
+        </div>
+        <div>
+          <div class="stat-label">Catalysts</div>
+          <div class="stat-value">${cat.filtered_count || 0} relevant / ${cat.raw_count || 0} raw</div>
+        </div>
+        <div>
+          <div class="stat-label">Silent Agents</div>
+          <div class="stat-value">${ag.silent || 0} of ${ag.total || 0}</div>
+        </div>
+      `;
+ 
+      const issuesDiv = document.getElementById('health-issues');
+      if (h.issues && h.issues.length > 0) {
+        const items = h.issues.map(i => `<div class="issue-item">⚠ ${String(i).replace(/[<>]/g,'')}</div>`).join('');
+        issuesDiv.innerHTML = `<div class="issues">${items}</div>`;
+      } else {
+        issuesDiv.innerHTML = '';
+      }
+ 
+      // Show silent agents inline if any
+      if (ag.by_agent) {
+        const silent = ag.by_agent.filter(a => a.status === 'SILENT').map(a => a.agent);
+        if (silent.length > 0) {
+          issuesDiv.innerHTML += `<div class="silent-agents">Silent: ${silent.join(', ')}</div>`;
+        }
+      }
+    } catch(e) {
+      console.log('[run_health] not available yet:', e.message);
+    }
+  }
+ 
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', loadHealth);
+  } else {
+    loadHealth();
+  }
+})();
+</script>
 </body>
 </html>
