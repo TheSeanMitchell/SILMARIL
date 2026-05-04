@@ -1,29 +1,33 @@
-"""silmaril.portfolios.agent_portfolio — v3: trailing stop + specialist fallback + date/timestamp pair."""
+"""silmaril.portfolios.agent_portfolio — v4 Alpha 2.1: savings + trailing stop + specialist fallback."""
 from __future__ import annotations
 import json
 from dataclasses import dataclass, field, asdict
 from datetime import datetime, timezone, date
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional
 
 try:
     from silmaril.portfolios.momentum_exit import (
         check_exit_conditions, update_peak_price,
-        record_price_snapshot, get_agent_config,
-    )
-    _MOMENTUM_EXIT_AVAILABLE = True
+        record_price_snapshot, get_agent_config)
+    _MOMENTUM_EXIT = True
 except Exception:
-    _MOMENTUM_EXIT_AVAILABLE = False
+    _MOMENTUM_EXIT = False
 
 try:
-    from silmaril.ingestion.price_format import safe_price, round_price
-    _PRICE_FORMAT_AVAILABLE = True
+    from silmaril.ingestion.price_format import safe_price
 except Exception:
-    _PRICE_FORMAT_AVAILABLE = False
     def safe_price(p, ticker="", min_price=1e-12):
         if p is None or p <= 0: return None
         return p
-    def round_price(p, ticker=""): return round(p or 0, 6)
+
+try:
+    from silmaril.portfolios.savings import harvest_to_savings, lifetime_value
+    _SAVINGS = True
+except Exception:
+    _SAVINGS = False
+    def harvest_to_savings(p, t): return 0.0
+    def lifetime_value(p, m=None): return {"cash": p.cash, "savings": 0, "open_value": 0, "total": p.cash}
 
 STARTING_EQUITY = 10000.0
 
@@ -47,6 +51,7 @@ class AgentPortfolio:
     starting_equity: float = STARTING_EQUITY
     current_equity: float = STARTING_EQUITY
     cash: float = STARTING_EQUITY
+    savings: float = 0.0  # NEW v4: profit-harvest ledger
     current_position: Optional[Dict] = None
     history: List[Dict] = field(default_factory=list)
     equity_curve: List[Dict] = field(default_factory=list)
@@ -56,13 +61,22 @@ class AgentPortfolio:
     @property
     def total_return_pct(self) -> float:
         if self.starting_equity == 0: return 0.0
-        return (self.current_equity - self.starting_equity) / self.starting_equity
+        total = self.cash + self.savings
+        if self.current_position:
+            qty = self.current_position.get("qty", 0) or 0
+            total += qty * (self.current_position.get("entry_price", 0) or 0)
+        return (total - self.starting_equity) / self.starting_equity
 
     def total_equity(self, mark_price: Optional[float] = None) -> float:
+        """Trading equity (cash + open position MTM). Does NOT include savings."""
         if self.current_position is None: return self.cash
         qty = self.current_position.get("qty", 0) or 0
         price = mark_price if mark_price is not None else self.current_position.get("entry_price", 0)
         return self.cash + qty * (price or 0)
+
+    def lifetime_total(self, mark_price: Optional[float] = None) -> float:
+        """Total agent value: cash + savings + open position MTM."""
+        return self.total_equity(mark_price) + self.savings
 
     def open_position(self, ticker: str, qty: float, entry_price: float, signal: str) -> None:
         cost = qty * entry_price
@@ -73,8 +87,7 @@ class AgentPortfolio:
             "ticker": ticker, "qty": qty, "entry_price": entry_price,
             "peak_price": entry_price,
             "entry_date": now.date().isoformat(),
-            "signal": signal,
-            "opened_at": now.isoformat(),
+            "signal": signal, "opened_at": now.isoformat(),
             "price_snapshots": [entry_price],
         }
         self.history.append({
@@ -103,14 +116,20 @@ class AgentPortfolio:
             pnl = (exit_price - entry) * qty
             proceeds = qty * exit_price
         self.cash += proceeds
-        self.current_equity = self.cash
         ticker = self.current_position["ticker"]
+        pnl_pct = (pnl / (qty * entry) * 100) if (qty * entry) > 0 else 0.0
         self.history.append({
             **_hist_stamps(), "action": "CLOSE", "ticker": ticker,
-            "qty": qty, "price": exit_price, "pnl": pnl,
+            "qty": qty, "price": exit_price, "pnl": round(pnl, 4),
+            "pnl_pct": round(pnl_pct, 2),
             "reason": reason or "Consensus flip",
         })
         self.current_position = None
+        # ── HARVEST ────────────────────────────────────────────
+        # If close was profitable AND total cash > principal,
+        # sweep the excess to savings.
+        harvested = harvest_to_savings(self, self.starting_equity)
+        self.current_equity = self.cash
         return pnl
 
     def snapshot_equity(self) -> None:
@@ -118,12 +137,19 @@ class AgentPortfolio:
         self.equity_curve.append({
             "date": now.date().isoformat(),
             "timestamp": now.isoformat(),
-            "equity": self.current_equity, "cash": self.cash,
+            "equity": self.current_equity,
+            "cash": self.cash, "savings": self.savings,
+            "lifetime_total": self.lifetime_total(),
             "in_position": self.current_position is not None,
         })
         self.equity_curve = self.equity_curve[-2000:]
 
-    def to_dict(self) -> Dict: return asdict(self)
+    def to_dict(self) -> Dict:
+        d = asdict(self)
+        # Surface key totals at top level for dashboard convenience
+        d["lifetime_total"] = round(self.lifetime_total(), 4)
+        d["principal_target"] = self.starting_equity
+        return d
 
 
 def _find_specialist_buy(agent: str, debate_dicts: List[Dict]) -> Optional[Dict]:
@@ -151,17 +177,17 @@ def agent_portfolio_act(portfolio: AgentPortfolio, debate_dicts: List[Dict],
         if current_price:
             qty = portfolio.current_position.get("qty", 0) or 0
             portfolio.current_equity = portfolio.cash + qty * current_price
-            if _MOMENTUM_EXIT_AVAILABLE:
+            if _MOMENTUM_EXIT:
                 portfolio.current_position = update_peak_price(portfolio.current_position, current_price)
                 portfolio.current_position = record_price_snapshot(portfolio.current_position, current_price)
                 cfg = get_agent_config(agent)
-                should_exit, exit_reason = check_exit_conditions(
+                should_exit, reason = check_exit_conditions(
                     portfolio.current_position, current_price, today_iso,
                     trailing_stop_pct=cfg["trailing_stop_pct"],
                     max_hold_days=cfg["max_hold_days"],
                     momentum_stall_threshold=cfg["momentum_stall_threshold"])
                 if should_exit:
-                    portfolio.close_position(current_price, reason=exit_reason)
+                    portfolio.close_position(current_price, reason=reason)
                     return portfolio
         held_debate = next((d for d in debate_dicts if d.get("ticker") == held_ticker), None)
         if held_debate:
@@ -169,25 +195,22 @@ def agent_portfolio_act(portfolio: AgentPortfolio, debate_dicts: List[Dict],
             if cons_signal in ("SELL", "STRONG_SELL", "HOLD") and current_price:
                 portfolio.close_position(current_price,
                     reason=f"Consensus on {held_ticker} flipped to {cons_signal}")
-                portfolio.history.append({
-                    **_hist_stamps(today_iso), "action": "HOLD",
-                    "reason": f"Closed {held_ticker} — consensus {cons_signal}",
-                    "equity": round(portfolio.total_equity(), 2),
-                })
                 return portfolio
         portfolio.history.append({
             **_hist_stamps(today_iso), "action": "HOLD",
             "ticker": held_ticker,
             "equity": round(portfolio.total_equity(current_price), 2),
+            "savings": round(portfolio.savings, 2),
         })
         return portfolio
 
+    # Find best BUY
     best_debate = None; best_score = -999.0
-    agent_appears_in_verdicts = False
+    agent_appears = False
     for d in debate_dicts:
         verdicts = d.get("verdicts", [])
         if any(v.get("agent") == agent for v in verdicts):
-            agent_appears_in_verdicts = True
+            agent_appears = True
         agent_vote = next((v for v in verdicts if v.get("agent") == agent and
                            v.get("signal") in ("BUY", "STRONG_BUY")), None)
         if agent_vote is None: continue
@@ -197,7 +220,7 @@ def agent_portfolio_act(portfolio: AgentPortfolio, debate_dicts: List[Dict],
         if score > best_score:
             best_score = score; best_debate = d
 
-    if best_debate is None and not agent_appears_in_verdicts:
+    if best_debate is None and not agent_appears:
         best_debate = _find_specialist_buy(agent, debate_dicts)
         if best_debate:
             print(f"[portfolio:{agent}] specialist domain → {best_debate.get('ticker')}")
@@ -205,8 +228,9 @@ def agent_portfolio_act(portfolio: AgentPortfolio, debate_dicts: List[Dict],
     if best_debate is None:
         portfolio.history.append({
             **_hist_stamps(today_iso), "action": "HOLD",
-            "reason": "No qualifying BUY signal found for this agent",
+            "reason": "No qualifying BUY signal",
             "equity": round(portfolio.total_equity(), 2),
+            "savings": round(portfolio.savings, 2),
         })
         return portfolio
 
@@ -215,11 +239,12 @@ def agent_portfolio_act(portfolio: AgentPortfolio, debate_dicts: List[Dict],
     if not entry_price:
         portfolio.history.append({
             **_hist_stamps(today_iso), "action": "HOLD",
-            "reason": f"No valid price available for {ticker}",
+            "reason": f"No valid price for {ticker}",
             "equity": round(portfolio.total_equity(), 2),
         })
         return portfolio
 
+    # Sizing: 10% of trading equity (savings is NOT deployed)
     position_value = min(portfolio.total_equity() * 0.10, portfolio.cash * 0.95)
     if position_value < 1.0: return portfolio
     qty = position_value / entry_price
@@ -228,9 +253,9 @@ def agent_portfolio_act(portfolio: AgentPortfolio, debate_dicts: List[Dict],
     return portfolio
 
 
+# Persistence helpers
 _FIELD_ALIASES: Dict[str, str] = {"balance": "cash"}
 _KNOWN_FIELDS = set(AgentPortfolio.__dataclass_fields__.keys())
-
 
 def _coerce_agent_record(raw_record: Dict) -> Dict:
     record: Dict = {}
@@ -240,8 +265,8 @@ def _coerce_agent_record(raw_record: Dict) -> Dict:
     if "cash" not in clean: clean["cash"] = STARTING_EQUITY
     if "current_equity" not in clean: clean["current_equity"] = clean["cash"]
     if "starting_equity" not in clean: clean["starting_equity"] = STARTING_EQUITY
+    if "savings" not in clean: clean["savings"] = 0.0
     return clean
-
 
 def load_portfolios(path: Path) -> Dict[str, AgentPortfolio]:
     if not path.exists(): return {}
@@ -262,7 +287,6 @@ def load_portfolios(path: Path) -> Dict[str, AgentPortfolio]:
             continue
     return out
 
-
 def save_portfolios(path: Path, portfolios: Dict[str, AgentPortfolio],
                     prices: Optional[Dict[str, float]] = None) -> None:
     if prices:
@@ -272,10 +296,18 @@ def save_portfolios(path: Path, portfolios: Dict[str, AgentPortfolio],
                 if mark:
                     qty = p.current_position.get("qty", 0) or 0
                     p.current_equity = p.cash + qty * mark
-    out = {agent: asdict(p) for agent, p in portfolios.items()}
+    # Build summary at top level for dashboard
+    total_savings = sum(p.savings for p in portfolios.values())
+    total_lifetime = sum(p.lifetime_total() for p in portfolios.values())
+    out = {agent: p.to_dict() for agent, p in portfolios.items()}
+    out["_summary"] = {
+        "total_savings_all_agents": round(total_savings, 4),
+        "total_lifetime_value": round(total_lifetime, 4),
+        "agent_count": len(portfolios),
+        "generated_at": datetime.now(timezone.utc).isoformat(),
+    }
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(out, indent=2, default=str))
-
 
 def ensure_all_agents_have_portfolios(portfolios: Dict[str, AgentPortfolio],
                                        all_agent_names: List[str]) -> Dict[str, AgentPortfolio]:

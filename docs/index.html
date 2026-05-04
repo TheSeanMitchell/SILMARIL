@@ -5201,5 +5201,178 @@ window.timestampSL = function(entry) {
 };
 </script>
 
+
+<style>
+/* Alpha 2.1 — auto-injected widgets */
+.alpha21-savings-line {
+    display: inline-block; padding: 2px 8px; margin: 4px 4px 4px 0;
+    border-radius: 6px; font-size: 11px; font-weight: 600;
+    background: linear-gradient(90deg, #c9a449 0%, #f5d97a 100%);
+    color: #1a1a1a; box-shadow: 0 1px 3px rgba(201, 164, 73, 0.35);
+}
+.alpha21-savings-line::before { content: "💰 "; }
+.alpha21-alpaca-active {
+    border: 2px solid gold !important;
+    box-shadow: 0 0 12px rgba(255, 215, 0, 0.55) !important;
+    position: relative;
+}
+.alpha21-alpaca-badge {
+    position: absolute; top: 6px; right: 6px;
+    background: gold; color: #1a1a1a; font-size: 10px;
+    font-weight: 700; padding: 2px 6px; border-radius: 8px;
+    z-index: 10; letter-spacing: 0.5px;
+}
+.alpha21-alpaca-badge::before { content: "→ "; }
+.alpha21-alpaca-panel {
+    background: #1a1a1a; border: 1px solid gold;
+    border-radius: 8px; padding: 12px; margin: 16px 0;
+    font-family: 'JetBrains Mono', monospace;
+}
+.alpha21-alpaca-panel h3 {
+    color: gold; margin: 0 0 8px 0; font-size: 14px;
+    text-transform: uppercase; letter-spacing: 1px;
+}
+.alpha21-alpaca-panel .row {
+    display: flex; justify-content: space-between;
+    padding: 4px 0; border-bottom: 1px solid #333;
+    font-size: 12px; color: #ddd;
+}
+.alpha21-alpaca-panel .row:last-child { border-bottom: none; }
+.alpha21-alpaca-panel .open  { color: #4caf50; }
+.alpha21-alpaca-panel .close { color: #ff9800; }
+.alpha21-alpaca-panel .pnl-pos { color: #4caf50; }
+.alpha21-alpaca-panel .pnl-neg { color: #f44336; }
+</style>
+
+<script>
+// Alpha 2.1 — auto-inject savings + gold borders + Alpaca panel
+(function(){
+  window.silmarilAlpha21Init = async function() {
+    try {
+      // ── 1. Load Alpaca state ─────────────────────────────
+      let alpacaState = null;
+      try {
+        const r = await fetch('data/alpaca_paper_state.json?_=' + Date.now());
+        if (r.ok) alpacaState = await r.json();
+      } catch(e) { console.log('[alpha21] no alpaca state'); }
+
+      // ── 2. Load agent portfolios ─────────────────────────
+      let portfolios = null;
+      try {
+        const r = await fetch('data/agent_portfolios.json?_=' + Date.now());
+        if (r.ok) portfolios = await r.json();
+      } catch(e) { console.log('[alpha21] no portfolios'); }
+
+      // ── 3. Apply gold border to Alpaca-active tickers ────
+      const recentTickers = new Set((alpacaState && alpacaState.recent_alpaca_tickers) || []);
+      if (recentTickers.size > 0) {
+        document.querySelectorAll('[data-ticker]').forEach(el => {
+          const t = (el.getAttribute('data-ticker') || '').toUpperCase();
+          if (recentTickers.has(t) && !el.querySelector('.alpha21-alpaca-badge')) {
+            el.classList.add('alpha21-alpaca-active');
+            const badge = document.createElement('span');
+            badge.className = 'alpha21-alpaca-badge';
+            badge.textContent = 'Alpaca';
+            el.appendChild(badge);
+          }
+        });
+        // Also scan trade plan / debate cards by ticker text (heuristic fallback)
+        document.querySelectorAll('.trade-plan, .debate-card, .plan-card').forEach(el => {
+          const txt = el.textContent || '';
+          for (const t of recentTickers) {
+            const re = new RegExp('\\b' + t + '\\b');
+            if (re.test(txt) && !el.querySelector('.alpha21-alpaca-badge')) {
+              el.classList.add('alpha21-alpaca-active');
+              const badge = document.createElement('span');
+              badge.className = 'alpha21-alpaca-badge';
+              badge.textContent = 'Alpaca';
+              el.appendChild(badge);
+              break;
+            }
+          }
+        });
+      }
+
+      // ── 4. Inject savings line into agent cards ──────────
+      if (portfolios) {
+        for (const [agent, p] of Object.entries(portfolios)) {
+          if (agent === '_summary') continue;
+          if (typeof p !== 'object' || !p) continue;
+          const savings = (p.savings || 0);
+          const cash = (p.cash || 0);
+          const lifetime = (p.lifetime_total || cash + savings);
+          // Find any element with data-agent="AGENT"
+          document.querySelectorAll('[data-agent="' + agent + '"]').forEach(el => {
+            if (el.querySelector('.alpha21-savings-line')) return;
+            const span = document.createElement('span');
+            span.className = 'alpha21-savings-line';
+            span.title = 'Lifetime: $' + lifetime.toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2});
+            span.textContent = 'Savings: $' + savings.toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2});
+            el.appendChild(span);
+          });
+        }
+      }
+
+      // ── 5. Render Alpaca activity panel ──────────────────
+      if (alpacaState && alpacaState.enabled) {
+        let panel = document.getElementById('alpha21-alpaca-panel');
+        if (!panel) {
+          panel = document.createElement('div');
+          panel.id = 'alpha21-alpaca-panel';
+          panel.className = 'alpha21-alpaca-panel';
+          // Insert at top of body or after a known anchor
+          const anchor = document.querySelector('main') || document.body;
+          anchor.insertBefore(panel, anchor.firstChild);
+        }
+        const acct = alpacaState.account || {};
+        const summary = alpacaState.last_cycle_summary || {};
+        const orders = (alpacaState.orders || []).slice(-10).reverse();
+        let html = '<h3>Alpaca Paper Activity</h3>';
+        html += '<div class="row"><span>Equity</span><span>$' +
+                (acct.equity || 0).toLocaleString('en-US', {minimumFractionDigits:2}) + '</span></div>';
+        html += '<div class="row"><span>Savings (harvested)</span><span style="color: gold;">$' +
+                (alpacaState.savings || 0).toLocaleString('en-US', {minimumFractionDigits:2}) + '</span></div>';
+        html += '<div class="row"><span>Total value</span><span>$' +
+                (summary.total_value || acct.equity || 0).toLocaleString('en-US', {minimumFractionDigits:2}) + '</span></div>';
+        html += '<div class="row"><span>Wins / Losses</span><span>' +
+                (alpacaState.lifetime_realized_wins || 0) + ' / ' +
+                (alpacaState.lifetime_realized_losses || 0) + '</span></div>';
+        html += '<div class="row"><span>Last cycle</span><span>opened ' +
+                (summary.opened || 0) + ', closed ' + (summary.closed || 0) + '</span></div>';
+        html += '<div style="margin-top:10px; font-weight:600;">Recent orders</div>';
+        if (orders.length === 0) {
+          html += '<div class="row"><span>(no orders yet)</span><span></span></div>';
+        } else {
+          for (const o of orders) {
+            const cls = o.action === 'OPEN' || o.action === 'SHORT' ? 'open' : 'close';
+            const time = (o.time || '').substring(11, 16);
+            const pnl = o.realized_pnl;
+            let pnlStr = '';
+            if (pnl !== undefined && pnl !== null) {
+              const pcls = pnl >= 0 ? 'pnl-pos' : 'pnl-neg';
+              pnlStr = ' <span class="' + pcls + '">' + (pnl >= 0 ? '+' : '') + '$' + pnl.toFixed(2) + '</span>';
+            }
+            html += '<div class="row"><span class="' + cls + '">' + time + ' ' +
+                    o.action + ' ' + (o.symbol || '') + '</span><span>' +
+                    (o.notional ? '$' + o.notional : (o.qty ? o.qty.toFixed(2) + ' sh' : '')) +
+                    pnlStr + '</span></div>';
+          }
+        }
+        panel.innerHTML = html;
+      }
+    } catch(e) {
+      console.error('[alpha21] init failed:', e);
+    }
+  };
+  // Fire on DOM ready and again 2s later (in case page renders dynamically)
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => silmarilAlpha21Init());
+  } else {
+    silmarilAlpha21Init();
+  }
+  setTimeout(() => silmarilAlpha21Init(), 2000);
+})();
+</script>
+
 </body>
 </html>

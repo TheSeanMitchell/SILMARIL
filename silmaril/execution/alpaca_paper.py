@@ -1,17 +1,29 @@
-"""silmaril.execution.alpaca_paper — v2 with HOLD-exit + all_debate_signals."""
+"""silmaril.execution.alpaca_paper — v4 Alpha 2.1.
+
+v4 changes:
+  * Profit-take: close at +5% from entry → harvest to savings
+  * Trailing stop: close at -4% from peak (independent of consensus)
+  * Virtual savings ledger — only grows on realized profits
+  * tickers_traded_this_cycle / recent_alpaca_tickers for dashboard
+  * principal_target tracking for harvest math
+"""
 from __future__ import annotations
 import json, os, time
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
-_BASE_URL = "https://paper-api.alpaca.markets"  # PAPER ONLY — hardcoded
+_BASE_URL = "https://paper-api.alpaca.markets"  # PAPER ONLY
 _ORDERS_ENDPOINT = f"{_BASE_URL}/v2/orders"
 _POSITIONS_ENDPOINT = f"{_BASE_URL}/v2/positions"
 _ACCOUNT_ENDPOINT = f"{_BASE_URL}/v2/account"
 _MAX_RETRIES = 3
 _RETRY_DELAY_S = 2.0
 _SKIP_ASSET_CLASSES = {"crypto", "token"}
+
+DEFAULT_PROFIT_TAKE_PCT = 0.05    # +5% triggers harvest
+DEFAULT_TRAIL_STOP_PCT = 0.04     # -4% from peak triggers exit
+
 
 def _get_headers():
     key = os.environ.get("ALPACA_API_KEY", "").strip()
@@ -50,14 +62,40 @@ def _load_state(path):
     if path.exists():
         try: return json.loads(path.read_text())
         except Exception: pass
-    return {"orders": [], "orders_placed": [], "last_run": None,
-            "account": {}, "errors": [], "enabled": False}
+    return {
+        "version": "2.1",
+        "enabled": False,
+        "account": {},
+        "principal_target": 100000,
+        "savings": 0.0,
+        "lifetime_realized_wins": 0,
+        "lifetime_realized_losses": 0,
+        "position_meta": {},
+        "tickers_traded_this_cycle": [],
+        "recent_alpaca_tickers": [],
+        "orders": [],
+        "orders_placed": [],
+        "errors": [],
+    }
 
 def _save_state(state, path):
     state["orders"] = state.get("orders", [])[-500:]
     state["last_run"] = _now_iso()
     try: path.write_text(json.dumps(state, indent=2, default=str))
     except Exception as e: print(f"[alpaca] save failed: {e}")
+
+
+def _prune_recent_tickers(state):
+    """Keep only Alpaca order tickers from the last 24h, for dashboard borders."""
+    cutoff = (datetime.now(timezone.utc) - timedelta(hours=24)).isoformat()
+    recent = []
+    for o in state.get("orders", []):
+        if o.get("time", "") >= cutoff:
+            sym = o.get("symbol")
+            if sym and sym not in recent:
+                recent.append(sym)
+    state["recent_alpaca_tickers"] = recent[:50]
+
 
 def execute_consensus_signals(
     plans: List[Dict[str, Any]],
@@ -67,6 +105,9 @@ def execute_consensus_signals(
     max_total_positions: int = 15,
     enable_shorts: bool = True,
     all_debate_signals: Optional[Dict[str, str]] = None,
+    profit_take_pct: float = DEFAULT_PROFIT_TAKE_PCT,
+    trailing_stop_pct: float = DEFAULT_TRAIL_STOP_PCT,
+    principal_target: Optional[float] = None,
 ) -> Dict:
     state = _load_state(state_path)
     headers = _get_headers()
@@ -76,20 +117,33 @@ def execute_consensus_signals(
         state.setdefault("errors", []).append({"time": _now_iso(), "msg": state["reason"]})
         _save_state(state, state_path)
         return state
+
     account = _api_get(_ACCOUNT_ENDPOINT, headers)
     if not account:
         state["enabled"] = False
         state["reason"] = "Account fetch failed"
         _save_state(state, state_path)
         return state
+
     equity = float(account.get("equity", 0))
+    cash_avail = float(account.get("cash", 0))
     state["enabled"] = True
-    state["account"] = {"equity": round(equity, 2),
-                        "cash": round(float(account.get("cash", 0)), 2)}
-    print(f"[alpaca] equity ${equity:,.2f}")
+    state["account"] = {"equity": round(equity, 2), "cash": round(cash_avail, 2)}
+
+    # First-time principal target: set to current equity if not set
+    if principal_target is not None:
+        state["principal_target"] = principal_target
+    if not state.get("principal_target") or state["principal_target"] == 100000:
+        if equity > 0:
+            state["principal_target"] = round(equity, 2)
+    principal = float(state["principal_target"])
+
+    print(f"[alpaca] equity ${equity:,.2f} | principal ${principal:,.2f} | savings ${state.get('savings', 0):,.2f}")
     if equity < 1.0:
         _save_state(state, state_path)
         return state
+
+    # Build signal maps
     plan_signals, plan_conv, plan_class = {}, {}, {}
     for p in plans:
         t = p.get("ticker", "")
@@ -99,38 +153,109 @@ def execute_consensus_signals(
         plan_class[t] = p.get("asset_class", "equity")
     exit_signals = dict(all_debate_signals or {})
     exit_signals.update(plan_signals)
+
+    # Fetch open positions
     existing = _api_get(_POSITIONS_ENDPOINT, headers) or []
     if not isinstance(existing, list): existing = []
     print(f"[alpaca] open positions: {len(existing)}")
+
+    # Initialize position_meta tracking for any new positions
+    position_meta = state.get("position_meta", {})
+    tickers_traded = []
     orders_placed = []
     closed = 0
+
     for pos in existing:
         symbol = pos.get("symbol", "")
         try: qty = float(pos.get("qty", "0"))
         except Exception: qty = 0
+        try: current_price = float(pos.get("current_price", 0))
+        except Exception: current_price = 0
+        try: entry_price = float(pos.get("avg_entry_price", 0))
+        except Exception: entry_price = 0
+
         if not symbol or qty == 0: continue
         side = "long" if qty > 0 else "short"
-        sig = exit_signals.get(symbol, "HOLD")
-        should_close = ((side == "long" and sig in ("SELL","STRONG_SELL","HOLD")) or
-                        (side == "short" and sig in ("BUY","STRONG_BUY","HOLD")))
-        if should_close:
-            print(f"[alpaca] CLOSE {side} {symbol} ({sig})")
+
+        # Update position meta — track peak price ourselves
+        meta = position_meta.get(symbol, {})
+        prev_peak = meta.get("peak_price", entry_price or current_price)
+        new_peak = max(prev_peak, current_price) if current_price else prev_peak
+        position_meta[symbol] = {
+            "entry_price": entry_price,
+            "peak_price": new_peak,
+            "first_seen": meta.get("first_seen", _now_iso()),
+            "qty": abs(qty),
+        }
+
+        # Decide whether to close
+        close_reason = None
+        pnl_pct = 0.0
+        if entry_price > 0 and current_price > 0:
+            pnl_pct = (current_price / entry_price - 1.0) * 100
+        peak_drop_pct = 0.0
+        if new_peak > 0 and current_price > 0:
+            peak_drop_pct = (current_price / new_peak - 1.0) * 100
+
+        # ── 1. Profit-take ───────────────────────────────────
+        if side == "long" and entry_price > 0 and current_price >= entry_price * (1.0 + profit_take_pct):
+            close_reason = f"PROFIT TAKE: {symbol} +{pnl_pct:.2f}% from entry — harvest"
+        elif side == "short" and entry_price > 0 and current_price <= entry_price * (1.0 - profit_take_pct):
+            close_reason = f"PROFIT TAKE: {symbol} short -{abs(pnl_pct):.2f}% from entry — harvest"
+
+        # ── 2. Trailing stop (only if no profit-take) ────────
+        elif side == "long" and new_peak > 0 and current_price <= new_peak * (1.0 - trailing_stop_pct):
+            close_reason = f"TRAILING STOP: {symbol} -{abs(peak_drop_pct):.2f}% from peak ${new_peak:.2f}"
+
+        # ── 3. Consensus flip (existing logic) ───────────────
+        else:
+            sig = exit_signals.get(symbol, "HOLD")
+            if (side == "long" and sig in ("SELL", "STRONG_SELL", "HOLD")) or \
+               (side == "short" and sig in ("BUY", "STRONG_BUY", "HOLD")):
+                close_reason = f"Consensus flipped to {sig}"
+
+        if close_reason:
+            print(f"[alpaca] CLOSE {side} {symbol}: {close_reason}")
             close_side = "sell" if side == "long" else "buy"
             r = _api_post(_ORDERS_ENDPOINT, headers, {
                 "symbol": symbol, "qty": str(abs(qty)),
                 "side": close_side, "type": "market", "time_in_force": "day"})
             if r:
                 closed += 1
-                orders_placed.append({"action": "CLOSE", "symbol": symbol,
-                                      "side": close_side, "qty": abs(qty),
-                                      "trigger_signal": sig, "order_id": r.get("id")})
+                tickers_traded.append(symbol)
+                # Realized P&L
+                if side == "long":
+                    realized = (current_price - entry_price) * abs(qty)
+                else:
+                    realized = (entry_price - current_price) * abs(qty)
+                # Harvest if profitable
+                if realized > 0:
+                    state["savings"] = float(state.get("savings", 0)) + realized
+                    state["lifetime_realized_wins"] = state.get("lifetime_realized_wins", 0) + 1
+                    print(f"[alpaca]   → +${realized:.2f} harvested to savings (total ${state['savings']:.2f})")
+                else:
+                    state["lifetime_realized_losses"] = state.get("lifetime_realized_losses", 0) + 1
+                    print(f"[alpaca]   → ${realized:.2f} loss")
+                orders_placed.append({
+                    "action": "CLOSE", "symbol": symbol, "side": close_side,
+                    "qty": abs(qty), "trigger_reason": close_reason,
+                    "realized_pnl": round(realized, 2),
+                    "entry_price": entry_price, "exit_price": current_price,
+                    "order_id": r.get("id"), "time": _now_iso(),
+                })
+                # Drop from meta
+                position_meta.pop(symbol, None)
+
     if closed > 0:
         time.sleep(1.5)
         existing = _api_get(_POSITIONS_ENDPOINT, headers) or []
         if not isinstance(existing, list): existing = []
+
     open_symbols = {p.get("symbol") for p in existing}
     open_count = len(existing)
     opened = 0
+
+    # Open new long positions
     for p in plans:
         ticker = p.get("ticker", "")
         signal = p.get("consensus_signal", "HOLD")
@@ -150,9 +275,14 @@ def execute_consensus_signals(
             "side": "buy", "type": "market", "time_in_force": "day"})
         if r:
             opened += 1; open_count += 1; open_symbols.add(ticker)
-            orders_placed.append({"action": "OPEN", "symbol": ticker, "side": "buy",
-                                  "notional": notional, "conviction": conviction,
-                                  "signal": signal, "order_id": r.get("id")})
+            tickers_traded.append(ticker)
+            orders_placed.append({
+                "action": "OPEN", "symbol": ticker, "side": "buy",
+                "notional": notional, "conviction": conviction,
+                "signal": signal, "order_id": r.get("id"), "time": _now_iso(),
+            })
+
+    # Open shorts
     if enable_shorts:
         for p in plans:
             ticker = p.get("ticker", "")
@@ -172,15 +302,29 @@ def execute_consensus_signals(
                 "side": "sell", "type": "market", "time_in_force": "day"})
             if r:
                 opened += 1; open_count += 1; open_symbols.add(ticker)
-                orders_placed.append({"action": "SHORT", "symbol": ticker, "side": "sell",
-                                      "notional": notional, "conviction": conviction,
-                                      "signal": signal, "order_id": r.get("id")})
+                tickers_traded.append(ticker)
+                orders_placed.append({
+                    "action": "SHORT", "symbol": ticker, "side": "sell",
+                    "notional": notional, "conviction": conviction,
+                    "signal": signal, "order_id": r.get("id"), "time": _now_iso(),
+                })
+
+    # Append orders to history
+    state["orders"] = state.get("orders", []) + orders_placed
     state["orders_placed"] = orders_placed
-    state["orders"] = state.get("orders", []) + [
-        {**o, "time": _now_iso()} for o in orders_placed]
-    state["last_cycle_summary"] = {"time": _now_iso(), "closed": closed,
-                                    "opened": opened, "open_after": open_count,
-                                    "equity": equity}
+    state["position_meta"] = position_meta
+    state["tickers_traded_this_cycle"] = list(set(tickers_traded))
+    _prune_recent_tickers(state)
+
+    total_value = equity + state.get("savings", 0)
+    state["last_cycle_summary"] = {
+        "time": _now_iso(), "closed": closed, "opened": opened,
+        "open_after": open_count, "equity": equity,
+        "savings": round(state.get("savings", 0), 2),
+        "total_value": round(total_value, 2),
+        "tickers_traded": list(set(tickers_traded)),
+    }
     _save_state(state, state_path)
-    print(f"[alpaca] cycle: closed={closed} opened={opened} total={open_count}")
+    print(f"[alpaca] cycle: closed={closed} opened={opened} total={open_count} | "
+          f"savings ${state.get('savings', 0):.2f} | total ${total_value:.2f}")
     return state
