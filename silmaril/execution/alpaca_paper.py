@@ -1,285 +1,186 @@
-"""
-silmaril.execution.alpaca_paper — Free paper-trading bridge to Alpaca.
-
-Alpaca's paper trading API is FREE (no real money, no fees). Every
-consensus BUY/SELL signal becomes a real-shaped order in your paper
-account, executed against simulated fills.
-
-HARD GUARANTEE: This module is paper-only. Base URL is hardcoded.
-There is no parameter, env-var, or secret that can flip this to live.
-Live trading requires a separate, deliberately-named module that does
-not currently exist in this codebase.
-
-Setup:
-  1. Create free account at https://alpaca.markets
-  2. Generate paper-trading API keys
-  3. Set GitHub secrets:
-       ALPACA_API_KEY
-       ALPACA_API_SECRET
-  4. The daily.yml workflow calls this automatically after consensus phase
-  5. State written to docs/data/alpaca_paper_state.json (PROTECTED)
-"""
+"""silmaril.execution.alpaca_paper — v2 with HOLD-exit + all_debate_signals."""
 from __future__ import annotations
-
-import json
-import os
+import json, os, time
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Dict, List, Optional
+from typing import Any, Dict, List, Optional
 
-from silmaril.ingestion.market_hours import is_market_open
+_BASE_URL = "https://paper-api.alpaca.markets"  # PAPER ONLY — hardcoded
+_ORDERS_ENDPOINT = f"{_BASE_URL}/v2/orders"
+_POSITIONS_ENDPOINT = f"{_BASE_URL}/v2/positions"
+_ACCOUNT_ENDPOINT = f"{_BASE_URL}/v2/account"
+_MAX_RETRIES = 3
+_RETRY_DELAY_S = 2.0
+_SKIP_ASSET_CLASSES = {"crypto", "token"}
 
-try:
-    from alpaca.trading.client import TradingClient
-    from alpaca.trading.requests import MarketOrderRequest
-    from alpaca.trading.enums import OrderSide, TimeInForce
-    _HAS_ALPACA = True
-except ImportError:
-    _HAS_ALPACA = False
+def _get_headers():
+    key = os.environ.get("ALPACA_API_KEY", "").strip()
+    secret = os.environ.get("ALPACA_API_SECRET", "").strip()
+    if not key or not secret: return None
+    return {"APCA-API-KEY-ID": key, "APCA-API-SECRET-KEY": secret,
+            "Content-Type": "application/json"}
 
-
-# HARDCODED — paper only. There is no override.
-PAPER_BASE_URL = "https://paper-api.alpaca.markets"
-
-
-def _client() -> Optional["TradingClient"]:
-    if not _HAS_ALPACA:
+def _api_get(url, headers):
+    try:
+        import requests
+        r = requests.get(url, headers=headers, timeout=15)
+        r.raise_for_status()
+        return r.json()
+    except Exception as e:
+        print(f"[alpaca] GET failed: {e}")
         return None
-    api_key = os.environ.get("ALPACA_API_KEY")
-    api_secret = os.environ.get("ALPACA_API_SECRET")
-    if not api_key or not api_secret:
-        return None
-    return TradingClient(api_key, api_secret, paper=True)
 
+def _api_post(url, headers, payload):
+    for attempt in range(_MAX_RETRIES):
+        try:
+            import requests
+            r = requests.post(url, headers=headers, json=payload, timeout=15)
+            if r.status_code in (200, 201): return r.json()
+            print(f"[alpaca] POST {r.status_code}: {r.text[:200]}")
+            return None
+        except Exception as e:
+            if attempt < _MAX_RETRIES - 1: time.sleep(_RETRY_DELAY_S)
+            else:
+                print(f"[alpaca] POST failed: {e}")
+                return None
+
+def _now_iso(): return datetime.now(timezone.utc).isoformat()
+
+def _load_state(path):
+    if path.exists():
+        try: return json.loads(path.read_text())
+        except Exception: pass
+    return {"orders": [], "orders_placed": [], "last_run": None,
+            "account": {}, "errors": [], "enabled": False}
+
+def _save_state(state, path):
+    state["orders"] = state.get("orders", [])[-500:]
+    state["last_run"] = _now_iso()
+    try: path.write_text(json.dumps(state, indent=2, default=str))
+    except Exception as e: print(f"[alpaca] save failed: {e}")
 
 def execute_consensus_signals(
-    plans: List[Dict],
+    plans: List[Dict[str, Any]],
     state_path: Path,
-    max_position_pct: float = 0.05,
-    min_consensus_conviction: float = 0.45,
+    max_position_pct: float = 0.08,
+    min_consensus_conviction: float = 0.40,
     max_total_positions: int = 15,
     enable_shorts: bool = True,
     all_debate_signals: Optional[Dict[str, str]] = None,
 ) -> Dict:
-    """
-    Send today's top trade plans to Alpaca paper-trading.
-
-    plans: list of trade plan dicts (BUY-side ranked by conviction)
-    state_path: docs/data/alpaca_paper_state.json
-    max_position_pct: cap any single position at this % of equity
-    min_consensus_conviction: only trade above this conviction
-    max_total_positions: hard cap on concurrent positions
-    enable_shorts: if True, SELL/STRONG_SELL signals open short positions
-    all_debate_signals: {ticker: consensus_signal} for ALL debated tickers,
-        not just those that made the top-plan cut. Required for correct exit
-        logic — without this, positions whose tickers fall outside the top
-        N plans are NEVER closed even when consensus flips to SELL.
-        Pass debate_dicts from cli.py: {d['ticker']: d['consensus']['signal']}
-    """
-    state = {
-        "last_run": datetime.now(timezone.utc).isoformat(),
-        "enabled": False,
-        "reason": "",
-        "account": {},
-        "orders_placed": [],
-        "positions": [],
-        "errors": [],
-        "shorts_enabled": enable_shorts,
-    }
-
-    client = _client()
-    if client is None:
-        state["reason"] = (
-            "alpaca-py not installed or ALPACA_API_KEY/SECRET not set. "
-            "Skipping paper-trade execution."
-        )
-        _write(state_path, state)
+    state = _load_state(state_path)
+    headers = _get_headers()
+    if not headers:
+        state["enabled"] = False
+        state["reason"] = "ALPACA_API_KEY/SECRET not set"
+        state.setdefault("errors", []).append({"time": _now_iso(), "msg": state["reason"]})
+        _save_state(state, state_path)
         return state
-
+    account = _api_get(_ACCOUNT_ENDPOINT, headers)
+    if not account:
+        state["enabled"] = False
+        state["reason"] = "Account fetch failed"
+        _save_state(state, state_path)
+        return state
+    equity = float(account.get("equity", 0))
     state["enabled"] = True
-
-    try:
-        account = client.get_account()
-        equity = float(account.equity)
-        state["account"] = {
-            "equity": equity,
-            "cash": float(account.cash),
-            "status": str(account.status),
-            "pattern_day_trader": bool(account.pattern_day_trader),
-            "shorting_enabled": bool(account.shorting_enabled),
-        }
-    except Exception as e:
-        state["errors"].append(f"account fetch: {type(e).__name__}: {e}")
-        _write(state_path, state)
+    state["account"] = {"equity": round(equity, 2),
+                        "cash": round(float(account.get("cash", 0)), 2)}
+    print(f"[alpaca] equity ${equity:,.2f}")
+    if equity < 1.0:
+        _save_state(state, state_path)
         return state
-
-    try:
-        existing = client.get_all_positions()
-        state["positions"] = [
-            {
-                "symbol": p.symbol,
-                "qty": float(p.qty),
-                "side": str(p.side),
-                "market_value": float(p.market_value),
-                "unrealized_pl": float(p.unrealized_pl),
-                "unrealized_plpc": float(p.unrealized_plpc),
-            }
-            for p in existing
-        ]
-    except Exception as e:
-        state["errors"].append(f"positions fetch: {type(e).__name__}: {e}")
-        existing = []
-
-    held_long = {p.symbol for p in existing if str(p.side).lower() == "long"}
-    held_short = {p.symbol for p in existing if str(p.side).lower() == "short"}
-    n_positions = len(existing)
-    available_slots = max(0, max_total_positions - n_positions)
-
-    # ---- Market hours gate for equity orders ----
-    # Crypto plans (asset_class == "crypto") bypass this gate — they trade 24/7.
-    # Equity/ETF orders are only submitted when NYSE is open (Mon-Fri 9:30-4pm ET).
-    # This prevents stale weekend signals from filling at Monday's open at wrong prices.
-    equity_market_open = is_market_open("NYSE")
-    if not equity_market_open:
-        state["reason"] = (
-            "NYSE closed — equity/ETF orders skipped. "
-            "Crypto plans still processed. Run again during market hours for equity entries."
-        )
-        # Still process crypto exits and entries even when NYSE is closed
-        plans = [p for p in plans if p.get("asset_class") == "crypto"]
-
-    # ---- LONG entries ----
-    long_actionable = [
-        p for p in plans
-        if (p.get("consensus_conviction") or 0) >= min_consensus_conviction
-        and p.get("consensus_signal") in ("BUY", "STRONG_BUY")
-        and p.get("ticker") not in held_long
-        and p.get("asset_class", "equity") in ("equity", "etf")
-    ]
-    long_actionable.sort(key=lambda p: p.get("consensus_conviction", 0), reverse=True)
-
-    for plan in long_actionable[:available_slots]:
-        ticker = plan.get("ticker")
-        try:
-            position_dollars = equity * max_position_pct
-            entry = float(plan.get("entry_price", 0)) or float(plan.get("price", 0))
-            if entry <= 0:
-                state["errors"].append(f"{ticker}: no entry price")
-                continue
-            qty = max(1, int(position_dollars / entry))
-            order = MarketOrderRequest(
-                symbol=ticker, qty=qty,
-                side=OrderSide.BUY,
-                time_in_force=TimeInForce.DAY,
-            )
-            placed = client.submit_order(order)
-            state["orders_placed"].append({
-                "ticker": ticker, "qty": qty, "side": "BUY",
-                "alpaca_order_id": str(placed.id),
-                "consensus_conviction": plan.get("consensus_conviction"),
-                "submitted_at": datetime.now(timezone.utc).isoformat(),
-            })
-            available_slots -= 1
-        except Exception as e:
-            state["errors"].append(f"{ticker} BUY: {type(e).__name__}: {e}")
-
-    # ---- SHORT entries (only if enabled and account supports) ----
-    if enable_shorts and state["account"].get("shorting_enabled"):
-        short_actionable = [
-            p for p in plans
-            if (p.get("consensus_conviction") or 0) >= min_consensus_conviction
-            and p.get("consensus_signal") in ("SELL", "STRONG_SELL")
-            and p.get("ticker") not in held_short
-            and p.get("ticker") not in held_long
-            and p.get("asset_class", "equity") in ("equity", "etf")
-        ]
-        short_actionable.sort(key=lambda p: p.get("consensus_conviction", 0), reverse=True)
-
-        for plan in short_actionable[:max(0, available_slots)]:
-            ticker = plan.get("ticker")
-            try:
-                position_dollars = equity * (max_position_pct * 0.6)  # smaller for shorts
-                entry = float(plan.get("entry_price", 0)) or float(plan.get("price", 0))
-                if entry <= 0:
-                    continue
-                qty = max(1, int(position_dollars / entry))
-                order = MarketOrderRequest(
-                    symbol=ticker, qty=qty,
-                    side=OrderSide.SELL,
-                    time_in_force=TimeInForce.DAY,
-                )
-                placed = client.submit_order(order)
-                state["orders_placed"].append({
-                    "ticker": ticker, "qty": qty, "side": "SHORT",
-                    "alpaca_order_id": str(placed.id),
-                    "consensus_conviction": plan.get("consensus_conviction"),
-                    "submitted_at": datetime.now(timezone.utc).isoformat(),
-                })
-            except Exception as e:
-                state["errors"].append(f"{ticker} SHORT: {type(e).__name__}: {e}")
-
-    # ---- Exits: close positions whose latest consensus is opposite ----
-    # ALPHA 2.0 FIX: Previously used only plan_signals (top N trade plans),
-    # so any held ticker that fell outside the top-plan cut had signal=None
-    # and was never closed — producing "buy only, never sell" behaviour.
-    # Now we prefer all_debate_signals (every debated ticker's consensus)
-    # and fall back to plan_signals only when the broader map isn't provided.
-    plan_signals = {p.get("ticker"): p.get("consensus_signal") for p in plans}
-    exit_signals = all_debate_signals if all_debate_signals else plan_signals
+    plan_signals, plan_conv, plan_class = {}, {}, {}
+    for p in plans:
+        t = p.get("ticker", "")
+        if not t: continue
+        plan_signals[t] = p.get("consensus_signal", "HOLD")
+        plan_conv[t] = float(p.get("consensus_conviction") or p.get("avg_conviction") or 0)
+        plan_class[t] = p.get("asset_class", "equity")
+    exit_signals = dict(all_debate_signals or {})
+    exit_signals.update(plan_signals)
+    existing = _api_get(_POSITIONS_ENDPOINT, headers) or []
+    if not isinstance(existing, list): existing = []
+    print(f"[alpaca] open positions: {len(existing)}")
+    orders_placed = []
+    closed = 0
     for pos in existing:
-        sig = exit_signals.get(pos.symbol)
-        side = str(pos.side).lower()
-        # Long position with SELL signal -> close
-        # Short position with BUY signal -> close
-        should_close = (
-            (side == "long"  and sig in ("SELL", "STRONG_SELL", "HOLD")) or
-            (side == "short" and sig in ("BUY",  "STRONG_BUY",  "HOLD"))
-        )
-        # Auto-close shorts after 3 days regardless (SHORT_ALPHA's rule)
-        # The position object's avg_entry_time would tell us — Alpaca exposes this
-        # For simplicity we rely on signal flip here
-
+        symbol = pos.get("symbol", "")
+        try: qty = float(pos.get("qty", "0"))
+        except Exception: qty = 0
+        if not symbol or qty == 0: continue
+        side = "long" if qty > 0 else "short"
+        sig = exit_signals.get(symbol, "HOLD")
+        should_close = ((side == "long" and sig in ("SELL","STRONG_SELL","HOLD")) or
+                        (side == "short" and sig in ("BUY","STRONG_BUY","HOLD")))
         if should_close:
-            try:
-                client.close_position(pos.symbol)
-                state["orders_placed"].append({
-                    "ticker": pos.symbol,
-                    "qty": float(pos.qty),
-                    "side": "CLOSE",
-                    "alpaca_order_id": "close_position",
-                    "submitted_at": datetime.now(timezone.utc).isoformat(),
-                })
-            except Exception as e:
-                state["errors"].append(f"{pos.symbol} CLOSE: {type(e).__name__}: {e}")
-
-    _write(state_path, state)
-    _append_equity_curve(state_path.parent / "alpaca_equity_curve.json", state)
+            print(f"[alpaca] CLOSE {side} {symbol} ({sig})")
+            close_side = "sell" if side == "long" else "buy"
+            r = _api_post(_ORDERS_ENDPOINT, headers, {
+                "symbol": symbol, "qty": str(abs(qty)),
+                "side": close_side, "type": "market", "time_in_force": "day"})
+            if r:
+                closed += 1
+                orders_placed.append({"action": "CLOSE", "symbol": symbol,
+                                      "side": close_side, "qty": abs(qty),
+                                      "trigger_signal": sig, "order_id": r.get("id")})
+    if closed > 0:
+        time.sleep(1.5)
+        existing = _api_get(_POSITIONS_ENDPOINT, headers) or []
+        if not isinstance(existing, list): existing = []
+    open_symbols = {p.get("symbol") for p in existing}
+    open_count = len(existing)
+    opened = 0
+    for p in plans:
+        ticker = p.get("ticker", "")
+        signal = p.get("consensus_signal", "HOLD")
+        conviction = plan_conv.get(ticker, 0.0)
+        asset_class = plan_class.get(ticker, "equity")
+        if not ticker: continue
+        if signal not in ("BUY", "STRONG_BUY"): continue
+        if conviction < min_consensus_conviction: continue
+        if ticker in open_symbols: continue
+        if asset_class in _SKIP_ASSET_CLASSES: continue
+        if open_count >= max_total_positions: break
+        notional = round(equity * max_position_pct, 2)
+        if notional < 1.0: continue
+        print(f"[alpaca] OPEN {signal} {ticker} ${notional:.2f} (c={conviction:.2f})")
+        r = _api_post(_ORDERS_ENDPOINT, headers, {
+            "symbol": ticker, "notional": str(notional),
+            "side": "buy", "type": "market", "time_in_force": "day"})
+        if r:
+            opened += 1; open_count += 1; open_symbols.add(ticker)
+            orders_placed.append({"action": "OPEN", "symbol": ticker, "side": "buy",
+                                  "notional": notional, "conviction": conviction,
+                                  "signal": signal, "order_id": r.get("id")})
+    if enable_shorts:
+        for p in plans:
+            ticker = p.get("ticker", "")
+            signal = p.get("consensus_signal", "HOLD")
+            conviction = plan_conv.get(ticker, 0.0)
+            asset_class = plan_class.get(ticker, "equity")
+            if signal not in ("SELL", "STRONG_SELL"): continue
+            if conviction < min_consensus_conviction: continue
+            if ticker in open_symbols: continue
+            if asset_class in _SKIP_ASSET_CLASSES: continue
+            if open_count >= max_total_positions: break
+            notional = round(equity * max_position_pct, 2)
+            if notional < 1.0: continue
+            print(f"[alpaca] SHORT {ticker} ${notional:.2f}")
+            r = _api_post(_ORDERS_ENDPOINT, headers, {
+                "symbol": ticker, "notional": str(notional),
+                "side": "sell", "type": "market", "time_in_force": "day"})
+            if r:
+                opened += 1; open_count += 1; open_symbols.add(ticker)
+                orders_placed.append({"action": "SHORT", "symbol": ticker, "side": "sell",
+                                      "notional": notional, "conviction": conviction,
+                                      "signal": signal, "order_id": r.get("id")})
+    state["orders_placed"] = orders_placed
+    state["orders"] = state.get("orders", []) + [
+        {**o, "time": _now_iso()} for o in orders_placed]
+    state["last_cycle_summary"] = {"time": _now_iso(), "closed": closed,
+                                    "opened": opened, "open_after": open_count,
+                                    "equity": equity}
+    _save_state(state, state_path)
+    print(f"[alpaca] cycle: closed={closed} opened={opened} total={open_count}")
     return state
-
-
-def _write(path: Path, data: dict) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(data, indent=2, default=str))
-
-
-def _append_equity_curve(curve_path: Path, state: dict) -> None:
-    """Persistent equity curve — only grows."""
-    curve = {"snapshots": []}
-    if curve_path.exists():
-        try:
-            curve = json.loads(curve_path.read_text())
-        except Exception:
-            pass
-    snap = {
-        "timestamp": state.get("last_run"),
-        "equity": state.get("account", {}).get("equity"),
-        "cash": state.get("account", {}).get("cash"),
-        "n_positions": len(state.get("positions", [])),
-        "orders_today": len(state.get("orders_placed", [])),
-    }
-    curve.setdefault("snapshots", []).append(snap)
-    curve["snapshots"] = curve["snapshots"][-5000:]
-    curve_path.parent.mkdir(parents=True, exist_ok=True)
-    curve_path.write_text(json.dumps(curve, indent=2, default=str))
-
-

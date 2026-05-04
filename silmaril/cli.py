@@ -64,7 +64,7 @@ from .agents.jrr_token import (
 )
 from .agents.bios import get_bio
 from .agents.sports_bro import (
-    sports_bro, sports_bro_act, SportsBroState,
+    sports_bro, sports_bro_act, SportsBroState, settle_expired_bets,
 )
 
 # ── v2.0 agents ─────────────────────────────────────────────────
@@ -1075,6 +1075,7 @@ def run(mode: str = "demo", output_dir: str = "docs/data") -> None:
     sports_state_path = out / "sports_bro.json"
     sb_state = _load_or_init_sports_bro(sports_state_path)
     sports_markets = fetch_markets(mode=mode)
+    sb_state = settle_expired_bets(sb_state)  # v3: auto-resolve expired bets
     sb_state = sports_bro_act(sb_state, sports_markets)
     sports_bro_dict = sb_state.to_dict()
     write_markets_json(out / "sports_markets.json", sports_markets)
@@ -1276,8 +1277,8 @@ def run(mode: str = "demo", output_dir: str = "docs/data") -> None:
             alpaca_state = execute_consensus_signals(
                 plans=alpaca_plans,
                 state_path=out / "alpaca_paper_state.json",
-                max_position_pct=0.05,
-                min_consensus_conviction=0.45,
+                max_position_pct=0.08,
+                min_consensus_conviction=0.40,
                 max_total_positions=15,
                 enable_shorts=True,
                 # CRITICAL FIX: pass every debated ticker's consensus signal so the
