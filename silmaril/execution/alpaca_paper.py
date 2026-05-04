@@ -27,6 +27,8 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Dict, List, Optional
 
+from silmaril.ingestion.market_hours import is_market_open
+
 try:
     from alpaca.trading.client import TradingClient
     from alpaca.trading.requests import MarketOrderRequest
@@ -132,6 +134,19 @@ def execute_consensus_signals(
     held_short = {p.symbol for p in existing if str(p.side).lower() == "short"}
     n_positions = len(existing)
     available_slots = max(0, max_total_positions - n_positions)
+
+    # ---- Market hours gate for equity orders ----
+    # Crypto plans (asset_class == "crypto") bypass this gate — they trade 24/7.
+    # Equity/ETF orders are only submitted when NYSE is open (Mon-Fri 9:30-4pm ET).
+    # This prevents stale weekend signals from filling at Monday's open at wrong prices.
+    equity_market_open = is_market_open("NYSE")
+    if not equity_market_open:
+        state["reason"] = (
+            "NYSE closed — equity/ETF orders skipped. "
+            "Crypto plans still processed. Run again during market hours for equity entries."
+        )
+        # Still process crypto exits and entries even when NYSE is closed
+        plans = [p for p in plans if p.get("asset_class") == "crypto"]
 
     # ---- LONG entries ----
     long_actionable = [
@@ -266,3 +281,5 @@ def _append_equity_curve(curve_path: Path, state: dict) -> None:
     curve["snapshots"] = curve["snapshots"][-5000:]
     curve_path.parent.mkdir(parents=True, exist_ok=True)
     curve_path.write_text(json.dumps(curve, indent=2, default=str))
+
+
