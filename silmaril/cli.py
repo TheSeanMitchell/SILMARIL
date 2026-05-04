@@ -1526,6 +1526,7 @@ def _recompute_consensus_in_place(debate: dict) -> None:
         return
     total = 0.0
     weight = 0.0
+    n_directional = 0  # count only non-ABSTAIN, non-HOLD voters
     for v in verdicts:
         sig = v.get("signal", "HOLD")
         if sig == "ABSTAIN":
@@ -1534,12 +1535,16 @@ def _recompute_consensus_in_place(debate: dict) -> None:
         c = float(v.get("conviction", 0) or 0)
         total += s * c
         weight += c
+        if sig not in ("HOLD", "ABSTAIN"):
+            n_directional += 1
     if weight == 0:
         return
     avg_score = total / weight
     cons = debate.setdefault("consensus", {})
     cons["score"] = round(avg_score, 4)
-    cons["avg_conviction"] = round(weight / max(1, len(verdicts)), 4)
+    # FIX: divide by directional voters only — not all verdicts (which includes
+    # every ABSTAIN agent and dilutes conviction from ~0.79 down to ~0.07).
+    cons["avg_conviction"] = round(weight / max(1, n_directional), 4)
     # Keep the existing signal unless it crosses a major threshold
     # (we don't want to flip signal direction here — that's the arbiter's job)
 
@@ -1855,3 +1860,1822 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
+
+================================================
+FILE: silmaril/agents/__init__.py
+================================================
+"""silmaril.agents package."""
+
+
+
+================================================
+FILE: silmaril/agents/_rename_map.py
+================================================
+"""
+silmaril.agents._rename_map — Single source of truth for agent names.
+
+Old codename -> new professional codename + display label + one-liner.
+Specialist agents (Baron, Steadfast, Scrooge, Midas, Cryptobro, JRR_Token,
+Sports_Bro) keep their identities.
+
+Frontend reads from this map for display labels.
+"""
+
+AGENT_RENAME_MAP = {
+    # Old -> (new codename, display label, one-line strategy)
+    "AEGIS":       ("GUARDIAN",         "Guardian",          "Capital preservation; defensive veto"),
+    "FORGE":       ("TECH_MOMENTUM",    "Tech Momentum",     "Tech-sector leadership and breakouts"),
+    "THUNDERHEAD": ("CRYPTO_MOMENTUM",  "Crypto Momentum",   "Crypto volatility breakouts"),
+    "JADE":        ("BIOTECH",          "Biotech",           "Healthcare and FDA-catalyst plays"),
+    "VEIL":        ("SENTIMENT",        "Sentiment",         "Sentiment divergence from price"),
+    "KESTREL":     ("OVERSOLD",         "Oversold",          "Naive RSI mean reversion"),
+    "KESTREL+":    ("REVERTER",         "Reverter",          "Hurst-confirmed mean reversion"),
+    "KESTREL_PLUS":("REVERTER",         "Reverter",          "Hurst-confirmed mean reversion"),
+    "OBSIDIAN":    ("COMMODITY",        "Commodity",         "Energy, metals, hard assets"),
+    "ZENITH":      ("TREND_FOLLOWER",   "Trend Follower",    "Long-duration momentum"),
+    "WEAVER":      ("CORRELATOR",       "Correlator",        "Cross-asset relationships"),
+    "HEX":         ("BEAR_WATCH",       "Bear Watch",        "Volatility-regime defensive"),
+    "SYNTH":       ("DECORRELATE",      "Decorrelate",       "Correlation-break detection"),
+    "SPECK":       ("SMALL_CAP",        "Small Cap",         "Small-cap sentiment + flows"),
+    "VESPA":       ("PRE_EARNINGS",     "Pre-Earnings",      "Pre-earnings positioning"),
+    "MAGUS":       ("MACROSCOPE",       "Macroscope",        "Macro and seasonality"),
+    "TALON":       ("BREADTH",          "Breadth",           "Index breadth and structure"),
+    "CICADA":      ("POST_EARNINGS",    "Post-Earnings",     "Post-earnings drift"),
+    "NIGHTSHADE":  ("INSIDER",          "Insider",           "Form 4 insider transactions"),
+    "BARNACLE":    ("WHALE_FOLLOW",     "Whale Follow",      "13F whale filings"),
+    "NOMAD":       ("ADR_ARB",          "ADR Arbitrage",     "Cross-border ADR mispricing"),
+    "ATLAS":       ("REGIME_TAGGER",    "Regime Tagger",     "Emits regime tag (no per-asset votes)"),
+
+    # Specialists — IDENTITY PRESERVED
+    "BARON":       ("BARON",            "Baron",             "Oil specialist"),
+    "STEADFAST":   ("STEADFAST",        "Steadfast",         "Crown-jewels long-only"),
+    "SCROOGE":     ("SCROOGE",          "Scrooge",           "$1 compounder — equities"),
+    "MIDAS":       ("MIDAS",            "Midas",             "$1 compounder — gold/FX"),
+    "CRYPTOBRO":   ("CRYPTOBRO",        "Crypto Bro",        "$1 compounder — top-100 crypto"),
+    "JRR_TOKEN":   ("JRR_TOKEN",        "JRR Token",         "$1 compounder — memecoins"),
+    "SPORTS_BRO":  ("SPORTS_BRO",       "Sports Bro",        "Prediction markets compounder"),
+
+    # NEW agents in Alpha 2.0
+    "CONTRARIAN":  ("CONTRARIAN",       "Contrarian",        "Crowded-trade fade detector"),
+    "SHORT_ALPHA": ("SHORT_ALPHA",      "Short Alpha",       "Daily-move short specialist (catalysts)"),
+}
+
+
+def display_label(codename: str) -> str:
+    if codename in AGENT_RENAME_MAP:
+        return AGENT_RENAME_MAP[codename][1]
+    for old, (new, label, _) in AGENT_RENAME_MAP.items():
+        if new == codename:
+            return label
+    return codename
+
+
+def new_codename(old_codename: str) -> str:
+    if old_codename in AGENT_RENAME_MAP:
+        return AGENT_RENAME_MAP[old_codename][0]
+    return old_codename
+
+
+def strategy_one_liner(codename: str) -> str:
+    if codename in AGENT_RENAME_MAP:
+        return AGENT_RENAME_MAP[codename][2]
+    for old, (new, _, strat) in AGENT_RENAME_MAP.items():
+        if new == codename:
+            return strat
+    return ""
+
+
+def all_new_codenames() -> list:
+    """De-duplicated list of all current codenames (post-rename)."""
+    seen = []
+    for _, (new, _, _) in AGENT_RENAME_MAP.items():
+        if new not in seen:
+            seen.append(new)
+    return seen
+
+
+
+================================================
+FILE: silmaril/agents/aegis.py
+================================================
+[Binary file]
+
+
+================================================
+FILE: silmaril/agents/atlas.py
+================================================
+"""
+silmaril.agents.atlas — The Macro Strategist.
+
+ATLAS is the regime caller. It only votes on broad-market ETFs and
+sector ETFs — never individual stocks. When VIX is high, it leans
+defensive. When VIX is calm and trend is up, it leans constructive on
+broad equity.
+
+v2.0 changes — backtest revealed ATLAS was 50.4% win rate. The old
+"BUY any clean uptrend" logic was firing on every healthy stack, which
+includes a lot of mean-reverting tops. Fixed by:
+  - Requiring 50d momentum confirmation, not just stack alignment
+  - Tightening VIX thresholds (panic at 28, calm at 15)
+  - Adding STRONG_BUY when all conditions align
+"""
+from __future__ import annotations
+
+from .base import Agent, AssetContext, Signal, Verdict
+
+
+ATLAS_UNIVERSE = {
+    "SPY", "QQQ", "IWM", "DIA", "VTI", "EFA", "EEM",
+    "TLT", "IEF", "SHY", "HYG", "LQD",
+    "GLD", "SLV", "USO", "DBC",
+    "XLF", "XLK", "XLV", "XLY", "XLP", "XLE", "XLI", "XLU", "XLB", "XLRE",
+}
+
+DEFENSIVE_TICKERS = {"TLT", "IEF", "GLD", "SHY", "XLU", "XLP"}
+EQUITY_BROAD = {"SPY", "QQQ", "IWM", "DIA", "VTI"}
+
+
+class Atlas(Agent):
+    codename = "ATLAS"
+    specialty = "Macro Regime Caller"
+    temperament = (
+        "Patient, top-down. Reads the whole sky, never one star. Stays "
+        "silent on individual stocks; only opines on broad indexes and "
+        "sectors."
+    )
+    inspiration = "Atlas — bears the weight of the entire market"
+    asset_classes = ("etf",)
+
+    PANIC_VIX = 28.0
+    CALM_VIX = 15.0
+    MIN_MOMENTUM = 0.03  # 3% over 50 days
+
+    def applies_to(self, ctx: AssetContext) -> bool:
+        return ctx.ticker in ATLAS_UNIVERSE
+
+    def _judge(self, ctx: AssetContext) -> Verdict:
+        vix = ctx.vix
+        ph = ctx.price_history or []
+
+        mom_50d = None
+        if len(ph) >= 51 and ph[-51] > 0:
+            mom_50d = (ctx.price / ph[-51]) - 1.0
+
+        # ── Panic regime: defensives buy / equity sell ──
+        if vix is not None and vix >= self.PANIC_VIX:
+            if ctx.ticker in DEFENSIVE_TICKERS:
+                return Verdict(
+                    agent=self.codename, ticker=ctx.ticker,
+                    signal=Signal.BUY, conviction=0.62,
+                    rationale=f"VIX {vix:.0f} → flight to defensives",
+                    factors={"vix": vix},
+                )
+            if ctx.ticker in EQUITY_BROAD:
+                return Verdict(
+                    agent=self.codename, ticker=ctx.ticker,
+                    signal=Signal.SELL, conviction=0.55,
+                    rationale=f"VIX {vix:.0f} → reduce broad equity",
+                    factors={"vix": vix},
+                )
+
+        # ── Calm regime + clean uptrend with momentum confirmation ──
+        if (
+            vix is not None and vix < self.CALM_VIX
+            and ctx.ticker in EQUITY_BROAD
+            and ctx.price and ctx.sma_50 and ctx.sma_200
+            and ctx.price > ctx.sma_50 > ctx.sma_200
+            and mom_50d is not None and mom_50d >= self.MIN_MOMENTUM
+        ):
+            return Verdict(
+                agent=self.codename, ticker=ctx.ticker,
+                signal=Signal.STRONG_BUY, conviction=0.60,
+                rationale=(
+                    f"VIX {vix:.1f} calm, clean uptrend, 50d momentum "
+                    f"{mom_50d*100:+.1f}% — high-conviction macro long."
+                ),
+                factors={"vix": vix, "momentum_50d": round(mom_50d, 4)},
+            )
+
+        # ── Healthy uptrend without VIX-calm bonus ──
+        if (
+            ctx.ticker in EQUITY_BROAD
+            and ctx.price and ctx.sma_50 and ctx.sma_200
+            and ctx.price > ctx.sma_50 > ctx.sma_200
+            and mom_50d is not None and mom_50d >= self.MIN_MOMENTUM
+            and (vix is None or vix < 20)
+        ):
+            return Verdict(
+                agent=self.codename, ticker=ctx.ticker,
+                signal=Signal.BUY, conviction=0.50,
+                rationale=(
+                    f"Constructive macro: stack aligned, 50d momentum "
+                    f"{mom_50d*100:+.1f}%, VIX {vix or 'n/a'}."
+                ),
+                factors={"momentum_50d": round(mom_50d, 4)},
+            )
+
+        # ── Fresh trend break ──
+        if (
+            ctx.ticker in EQUITY_BROAD
+            and ctx.price and ctx.sma_50 and ctx.sma_200
+            and ctx.price < ctx.sma_50 < ctx.sma_200
+            and mom_50d is not None and mom_50d <= -0.05
+        ):
+            return Verdict(
+                agent=self.codename, ticker=ctx.ticker,
+                signal=Signal.SELL, conviction=0.50,
+                rationale=f"Stack broken, 50d momentum {mom_50d*100:+.1f}% — defensive macro.",
+                factors={"momentum_50d": round(mom_50d, 4)},
+            )
+
+        return Verdict(
+            agent=self.codename, ticker=ctx.ticker,
+            signal=Signal.ABSTAIN, conviction=0.0,
+            rationale="macro indicators uncommitted",
+        )
+
+
+atlas = Atlas()
+
+
+
+================================================
+FILE: silmaril/agents/barnacle.py
+================================================
+"""
+silmaril.agents.barnacle — The 13F Whale Follower.
+
+BARNACLE rides the whales. When 2+ institutional 13F filers initiate
+the same position in the same quarter, that's a thesis cluster. Same
+in reverse for exits.
+
+Optional upstream field:
+  - whale_data: dict with keys
+      whales_buying:    list[str] of fund names accumulating
+      whales_selling:   list[str] of fund names reducing
+      whales_initiating: list[str] of fund names with brand-new positions
+      whales_exiting:   list[str] of fund names fully closing
+
+If whale_data isn't wired in, BARNACLE abstains.
+"""
+from __future__ import annotations
+
+from .base import Agent, AssetContext, Signal, Verdict
+
+
+class Barnacle(Agent):
+    codename = "BARNACLE"
+    specialty = "13F Whale Cluster Follower"
+    temperament = (
+        "Doesn't lead, doesn't drown. Attaches to ships that have "
+        "already proven they sail. Looks for clusters — one whale is "
+        "noise, three are a thesis."
+    )
+    inspiration = "The barnacle — small, patient, rides the largest movers"
+    asset_classes = ("equity",)
+
+    def _judge(self, ctx: AssetContext) -> Verdict:
+        wd = getattr(ctx, "whale_data", None)
+        if not wd:
+            return Verdict(
+                agent=self.codename,
+                ticker=ctx.ticker,
+                signal=Signal.ABSTAIN,
+                conviction=0.0,
+                rationale="no 13F whale data wired in",
+                factors={"data_missing": True},
+            )
+
+        initiating = wd.get("whales_initiating", []) or []
+        buying = wd.get("whales_buying", []) or []
+        selling = wd.get("whales_selling", []) or []
+        exiting = wd.get("whales_exiting", []) or []
+
+        factors = {
+            "n_initiating": len(initiating),
+            "n_buying": len(buying),
+            "n_selling": len(selling),
+            "n_exiting": len(exiting),
+        }
+
+        # Strong cluster initiation
+        if len(initiating) >= 2:
+            sample = ", ".join(initiating[:3])
+            return Verdict(
+                agent=self.codename,
+                ticker=ctx.ticker,
+                signal=Signal.STRONG_BUY,
+                conviction=min(0.85, 0.55 + 0.10 * len(initiating)),
+                rationale=f"{len(initiating)} whales initiating ({sample})",
+                factors=factors,
+            )
+
+        # General accumulation
+        if len(buying) + len(initiating) >= 3:
+            return Verdict(
+                agent=self.codename,
+                ticker=ctx.ticker,
+                signal=Signal.BUY,
+                conviction=0.60,
+                rationale=f"{len(buying) + len(initiating)} whales accumulating",
+                factors=factors,
+            )
+
+        # Cluster exit
+        if len(exiting) >= 2:
+            sample = ", ".join(exiting[:3])
+            return Verdict(
+                agent=self.codename,
+                ticker=ctx.ticker,
+                signal=Signal.SELL,
+                conviction=0.60,
+                rationale=f"{len(exiting)} whales exiting ({sample})",
+                factors=factors,
+            )
+
+        # General distribution
+        if len(selling) + len(exiting) >= 3:
+            return Verdict(
+                agent=self.codename,
+                ticker=ctx.ticker,
+                signal=Signal.SELL,
+                conviction=0.50,
+                rationale=f"{len(selling) + len(exiting)} whales reducing",
+                factors=factors,
+            )
+
+        return Verdict(
+            agent=self.codename,
+            ticker=ctx.ticker,
+            signal=Signal.HOLD,
+            conviction=0.0,
+            rationale="no decisive whale cluster",
+            factors=factors,
+        )
+
+
+barnacle = Barnacle()
+
+
+
+================================================
+FILE: silmaril/agents/baron.py
+================================================
+"""
+silmaril.agents.baron — The Baron, oil-energy specialist.
+
+Plays the oil complex like a real oil baron would:
+  - Long crude via USO/BNO/UCO when fundamentals + sentiment align
+  - Short crude via SCO/DRIP when macro deteriorates
+  - Refinery plays (VLO/PSX/MPC) when crack spreads widen
+  - Integrated majors (XOM/CVX) for dividend + duration
+  - E&P pure-plays (OXY/EOG/PXD) for upside leverage
+  - Services (SLB/HAL/BKR) for capex cycle
+  - Natural gas (UNG/BOIL/KOLD) for asymmetric weather plays
+
+Watches:
+  - WTI vs Brent spread (geopolitical signal)
+  - Front-month vs back-month (contango / backwardation)
+  - EIA crude inventory (Wed 10:30 AM ET) — overrides other signals on report day
+  - OPEC announcements (sentiment keyword detection)
+  - Crack spreads (refining margins) — drives refiner positioning
+
+The Baron is patient. He'll sit in cash for weeks waiting for asymmetric
+opportunity. When he moves, he moves with conviction, both long and short.
+"""
+
+from __future__ import annotations
+
+from dataclasses import dataclass, field
+from datetime import datetime, timezone
+from typing import Dict, List, Optional
+
+from .base import Agent, AssetContext, Signal, Verdict
+from ..execution.detail import build_execution
+
+
+BARON_UNIVERSE: Dict[str, str] = {
+    # Crude oil long
+    "USO":   "United States Oil Fund (WTI)",
+    "BNO":   "United States Brent Oil Fund",
+    "UCO":   "ProShares Ultra Bloomberg Crude (2× long)",
+    # Crude oil short / inverse
+    "SCO":   "ProShares UltraShort Bloomberg Crude (2× short)",
+    "DRIP": "Direxion Daily S&P Oil & Gas E&P Bear (3× short)",
+    # Natural gas
+    "UNG":   "United States Natural Gas Fund",
+    "BOIL":  "ProShares Ultra Bloomberg Natural Gas (2× long)",
+    "KOLD":  "ProShares UltraShort Bloomberg Natural Gas (2× short)",
+    # Sector ETFs
+    "XLE":   "Energy Select Sector SPDR",
+    "XOP":   "SPDR S&P Oil & Gas Exploration & Production",
+    "OIH":   "VanEck Oil Services ETF",
+    "GUSH":  "Direxion Daily S&P Oil & Gas E&P Bull (2× long)",
+    # Integrated majors
+    "XOM":   "Exxon Mobil",
+    "CVX":   "Chevron",
+    "COP":   "ConocoPhillips",
+    "SHEL":  "Shell",
+    "BP":    "BP",
+    # E&P pure plays
+    "OXY":   "Occidental Petroleum",
+    "EOG":   "EOG Resources",
+    "PXD":   "Pioneer Natural Resources",
+    "DVN":   "Devon Energy",
+    "FANG":  "Diamondback Energy",
+    # Services
+    "SLB":   "Schlumberger",
+    "HAL":   "Halliburton",
+    "BKR":   "Baker Hughes",
+    # Refiners
+    "VLO":   "Valero Energy",
+    "PSX":   "Phillips 66",
+    "MPC":   "Marathon Petroleum",
+}
+
+# Tickers where SHORT inverse signal makes sense (BUY of the inverse = bearish view)
+SHORT_INSTRUMENTS = {"SCO", "DRIP", "KOLD"}
+LONG_LEVERAGED = {"UCO", "GUSH", "BOIL"}
+
+
+class Baron(Agent):
+    codename = "BARON"
+    specialty = "Oil & energy complex"
+    temperament = "Patient. Asymmetric. Plays both directions."
+    inspiration = "John D. Rockefeller crossed with a Texas wildcatter"
+    asset_classes = ("equity", "etf")
+
+    def applies_to(self, ctx: AssetContext) -> bool:
+        if not super().applies_to(ctx):
+            return False
+        return ctx.ticker.upper() in BARON_UNIVERSE
+
+    def _judge(self, ctx: AssetContext) -> Verdict:
+        ticker = ctx.ticker.upper()
+        chg = ctx.change_pct or 0.0
+        sent = ctx.sentiment_score or 0.0
+        articles = ctx.article_count or 0
+
+        # Check sentiment keywords from headlines if available
+        opec_signal = self._detect_opec_signal(ctx)
+        eia_signal = self._detect_eia_signal(ctx)
+
+        # ── Inverse instruments ─ a BUY here means "I'm bearish on oil" ─
+        if ticker in SHORT_INSTRUMENTS:
+            # Buy inverse only on clear macro deterioration
+            if sent < -0.3 and chg > 1.5 and articles >= 3:
+                return Verdict(
+                    agent=self.codename, ticker=ticker,
+                    signal=Signal.BUY, conviction=0.6,
+                    rationale=(f"Bearish oil thesis. Negative sentiment ({sent:+.2f}) "
+                               f"with {ticker} catching bid. Baron hedges via inverse."),
+                )
+            return Verdict(
+                agent=self.codename, ticker=ticker,
+                signal=Signal.HOLD, conviction=0.3,
+                rationale="Inverse oil instruments only justified on confirmed macro break.",
+            )
+
+        # ── Leveraged longs: only on STRONG conviction ─
+        if ticker in LONG_LEVERAGED:
+            if sent > 0.3 and chg > 2.0 and (opec_signal == "bullish" or eia_signal == "bullish"):
+                return Verdict(
+                    agent=self.codename, ticker=ticker,
+                    signal=Signal.STRONG_BUY, conviction=0.75,
+                    rationale=(f"2× leveraged long. {ticker} momentum {chg:+.1f}% "
+                               f"with {opec_signal or eia_signal} catalyst. Baron presses."),
+                )
+            return Verdict(
+                agent=self.codename, ticker=ticker,
+                signal=Signal.HOLD, conviction=0.4,
+                rationale="Leveraged products require near-perfect setup. Baron waits.",
+            )
+
+        # ── Refiners — driven by crack spreads (proxied by sentiment + price action) ─
+        if ticker in {"VLO", "PSX", "MPC"}:
+            if sent > 0.15 and chg > 0.5:
+                return Verdict(
+                    agent=self.codename, ticker=ticker,
+                    signal=Signal.BUY, conviction=0.65,
+                    rationale=(f"Refiner setup. {ticker} catches a bid with constructive "
+                               f"sentiment. Baron likes refining margin expansion."),
+                )
+            if sent < -0.2 and chg < -1.0:
+                return Verdict(
+                    agent=self.codename, ticker=ticker,
+                    signal=Signal.SELL, conviction=0.55,
+                    rationale=(f"{ticker} breaking down on negative sentiment. "
+                               f"Crack spreads likely compressing."),
+                )
+            return Verdict(
+                agent=self.codename, ticker=ticker,
+                signal=Signal.HOLD, conviction=0.35,
+                rationale="Refiner in equilibrium. Baron prefers patience.",
+            )
+
+        # ── Integrated majors: dividend + duration. Baron loves them on dips. ─
+        if ticker in {"XOM", "CVX", "COP", "SHEL", "BP"}:
+            if chg < -1.5 and sent > -0.1:
+                return Verdict(
+                    agent=self.codename, ticker=ticker,
+                    signal=Signal.BUY, conviction=0.7,
+                    rationale=(f"{ticker} on a dip ({chg:+.1f}%) without sentiment "
+                               f"breakdown. Baron buys the integrated major's dividend."),
+                )
+            if chg > 3.0:
+                return Verdict(
+                    agent=self.codename, ticker=ticker,
+                    signal=Signal.HOLD, conviction=0.4,
+                    rationale="Integrated major running hot. Baron doesn't chase quality at premiums.",
+                )
+            if sent > 0.2:
+                return Verdict(
+                    agent=self.codename, ticker=ticker,
+                    signal=Signal.BUY, conviction=0.55,
+                    rationale=f"Constructive sentiment on {ticker}. Baron accumulates the dividend.",
+                )
+            return Verdict(
+                agent=self.codename, ticker=ticker,
+                signal=Signal.HOLD, conviction=0.4,
+                rationale="Integrated major. Baron holds for the dividend.",
+            )
+
+        # ── E&P pure plays: high beta to crude. ─
+        if ticker in {"OXY", "EOG", "PXD", "DVN", "FANG"}:
+            if eia_signal == "bullish" or (sent > 0.25 and chg > 1.0):
+                return Verdict(
+                    agent=self.codename, ticker=ticker,
+                    signal=Signal.BUY, conviction=0.65,
+                    rationale=(f"E&P with crude tailwind. {ticker} {chg:+.1f}% "
+                               f"with bullish backdrop. Baron takes the leverage."),
+                )
+            if sent < -0.3:
+                return Verdict(
+                    agent=self.codename, ticker=ticker,
+                    signal=Signal.SELL, conviction=0.55,
+                    rationale=f"E&P {ticker} on negative sentiment. Baron de-risks the leveraged play.",
+                )
+            return Verdict(
+                agent=self.codename, ticker=ticker,
+                signal=Signal.HOLD, conviction=0.35,
+                rationale=f"{ticker} awaits a clear macro impulse.",
+            )
+
+        # ── Services: capex-cycle plays ─
+        if ticker in {"SLB", "HAL", "BKR"}:
+            if sent > 0.2 and chg > 0.5:
+                return Verdict(
+                    agent=self.codename, ticker=ticker,
+                    signal=Signal.BUY, conviction=0.6,
+                    rationale=(f"Oil services on a positive capex signal. {ticker} "
+                               f"benefits from upstream activity."),
+                )
+            return Verdict(
+                agent=self.codename, ticker=ticker,
+                signal=Signal.HOLD, conviction=0.4,
+                rationale="Services trade on the capex cycle — no clear signal today.",
+            )
+
+        # ── USO / BNO / UNG / sector ETFs ─
+        if ticker in {"USO", "BNO", "UNG", "XLE", "XOP", "OIH"}:
+            if eia_signal == "bullish" and sent > 0.1:
+                return Verdict(
+                    agent=self.codename, ticker=ticker,
+                    signal=Signal.STRONG_BUY, conviction=0.7,
+                    rationale=(f"EIA inventory tailwind + constructive sentiment. "
+                               f"Baron presses {ticker}."),
+                )
+            if eia_signal == "bearish":
+                return Verdict(
+                    agent=self.codename, ticker=ticker,
+                    signal=Signal.SELL, conviction=0.6,
+                    rationale=f"EIA inventory build is bearish for {ticker}. Baron exits.",
+                )
+            if chg > 2.0 and sent > 0.2:
+                return Verdict(
+                    agent=self.codename, ticker=ticker,
+                    signal=Signal.BUY, conviction=0.6,
+                    rationale=f"{ticker} momentum with sentiment confirmation.",
+                )
+            if chg < -2.0 and sent < -0.1:
+                return Verdict(
+                    agent=self.codename, ticker=ticker,
+                    signal=Signal.SELL, conviction=0.5,
+                    rationale=f"{ticker} breaking down with bearish flow.",
+                )
+            return Verdict(
+                agent=self.codename, ticker=ticker,
+                signal=Signal.HOLD, conviction=0.4,
+                rationale=f"{ticker} in chop. Baron waits for asymmetric setup.",
+            )
+
+        return Verdict(
+            agent=self.codename, ticker=ticker,
+            signal=Signal.HOLD, conviction=0.3,
+            rationale="No clear oil-baron thesis on this name today.",
+        )
+
+    @staticmethod
+    def _detect_opec_signal(ctx: AssetContext) -> Optional[str]:
+        """Scan headlines for OPEC+ signals."""
+        headlines = getattr(ctx, "recent_headlines", []) or []
+        text = " ".join(h.get("title", "").lower() for h in headlines if isinstance(h, dict))
+        if not text:
+            return None
+        if any(w in text for w in ["opec cut", "production cut", "supply cut", "extend cuts"]):
+            return "bullish"
+        if any(w in text for w in ["opec increase", "production increase", "supply boost", "raise output"]):
+            return "bearish"
+        return None
+
+    @staticmethod
+    def _detect_eia_signal(ctx: AssetContext) -> Optional[str]:
+        """Scan headlines for EIA inventory signals."""
+        headlines = getattr(ctx, "recent_headlines", []) or []
+        text = " ".join(h.get("title", "").lower() for h in headlines if isinstance(h, dict))
+        if not text:
+            return None
+        if any(w in text for w in ["draw", "drawdown", "stockpile decline", "inventory drop"]):
+            return "bullish"
+        if any(w in text for w in ["build", "inventory rise", "stockpile surge", "supply glut"]):
+            return "bearish"
+        return None
+
+
+baron = Baron()
+
+
+
+================================================
+FILE: silmaril/agents/base.py
+================================================
+[Binary file]
+
+
+================================================
+FILE: silmaril/agents/bios.py
+================================================
+"""
+silmaril.agents.bios — Rich biographical profiles for every agent.
+
+These bios are the long-form explanation of each agent's:
+  • Trading style and strategy
+  • Temperament and personality
+  • Universe of what they'll evaluate
+  • Strengths and failure modes
+  • How to read their votes
+
+Surfaced in the agent roster drawer on the dashboard. Keeping them in
+one file rather than on each agent class makes them easy to edit and
+keeps the agent files focused on logic.
+"""
+
+from __future__ import annotations
+
+from typing import Dict
+
+
+BIOS: Dict[str, Dict[str, str]] = {
+
+    "AEGIS": {
+        "title": "The Capital Shield",
+        "strategy": (
+            "Defensive overlay. AEGIS evaluates regime, volatility, and "
+            "drawdown risk rather than chasing specific setups. Its votes "
+            "are almost always HOLD or SELL. Its purpose is not to find "
+            "opportunity — it's to preserve capital during dangerous regimes."
+        ),
+        "style": (
+            "Cautious, methodical, conservative. Reads VIX, trend breaks, "
+            "and correlation clusters. Rarely excited, never panicked."
+        ),
+        "personality": (
+            "The voice that pulls you back from the cliff. Unpopular when "
+            "markets trend up, essential when they break."
+        ),
+        "universe": "Every asset. Always votes.",
+        "strength": "Keeping the book alive through bear markets and vol spikes.",
+        "failure_mode": (
+            "Misses early stages of powerful rallies by staying defensive. "
+            "Accept that; the insurance is worth the premium."
+        ),
+        "power": "VETO — can downgrade any bullish consensus when its defensive conviction is high.",
+    },
+
+    "FORGE": {
+        "title": "The Builder of Trends",
+        "strategy": (
+            "Momentum-following tech specialist. FORGE looks for clean "
+            "uptrends in tech and growth names — price above SMA-20 above "
+            "SMA-50, constructive RSI, supportive sentiment. Buys strength."
+        ),
+        "style": "Aggressive but systematic. Favors names with durable trend structure.",
+        "personality": "Optimistic, builder-archetype — sees a working system and wants to own it.",
+        "universe": "Equities and tech-heavy ETFs (XLK, SMH, IGV, QQQ, ARKK).",
+        "strength": "Catches and rides powerful secular moves in tech.",
+        "failure_mode": "Late to exit when trends break. Pairs well with AEGIS's caution.",
+    },
+
+    "THUNDERHEAD": {
+        "title": "The Storm",
+        "strategy": (
+            "Volatility-expansion breakout specialist. Requires price to "
+            "break its 20-day range on 1.4×+ average volume. Otherwise "
+            "abstains completely — no breakout, no opinion."
+        ),
+        "style": "Binary. Either absent or maximally committed. No half-measures.",
+        "personality": "Loud, confident, occasionally spectacularly wrong.",
+        "universe": "Equities, ETFs, crypto — anywhere volatility expansion happens.",
+        "strength": "Catches the first 20% of powerful breakouts.",
+        "failure_mode": "Fake-outs on low-conviction breaks; stops get run.",
+    },
+
+    "JADE": {
+        "title": "The Rage-Buyer",
+        "strategy": (
+            "Deep oversold reversion. Waits for RSI under 30 at major "
+            "support (near SMA-200) combined with negative sentiment — "
+            "capitulation conditions. Only takes long trades, never shorts."
+        ),
+        "style": "Contrarian, silent most days, decisive in panic.",
+        "personality": (
+            "Hulk-archetype. Rare outbursts, but when he moves, he moves "
+            "with everything he has."
+        ),
+        "universe": "Equities and broad ETFs.",
+        "strength": "Catches capitulation bottoms other agents refuse to touch.",
+        "failure_mode": "Occasionally buys a falling knife — but with 1.5 ATR stops.",
+    },
+
+    "VEIL": {
+        "title": "The Hidden Watcher",
+        "strategy": (
+            "Sentiment–price divergence. Looks for situations where price "
+            "and news sentiment disagree — a crowd turning negative on a "
+            "stock that keeps rising (sell signal) or warming on a stock "
+            "that keeps falling (buy signal)."
+        ),
+        "style": "Subtle, patient, data-driven. Needs ≥4 articles for a valid read.",
+        "personality": (
+            "Reads the room. Trades on what the crowd feels but the tape "
+            "has not yet priced."
+        ),
+        "universe": "Equities and sector ETFs with meaningful news flow.",
+        "strength": "Catches turns before they show up on charts.",
+        "failure_mode": "Blind on low-news tickers. Thin sentiment samples are noise.",
+    },
+
+    "KESTREL": {
+        "title": "The Patient Hunter",
+        "strategy": (
+            "Coiled Bollinger bands plus directional trigger. Abstains most "
+            "days. When the bands compress (width < 6%) AND the trend is "
+            "clean, takes tight-stop entries with 3:1 reward-to-risk."
+        ),
+        "style": "Precision over volume. Takes maybe one setup a week per ticker.",
+        "personality": "Patient, quiet, lethal when opportunity aligns.",
+        "universe": "Equities and liquid ETFs.",
+        "strength": "Best reward-to-risk of any agent by design.",
+        "failure_mode": "Misses moves that never compress — pure breakouts.",
+    },
+
+    "OBSIDIAN": {
+        "title": "The Resource King",
+        "strategy": (
+            "Commodities and resource-equity specialist. Evaluates only "
+            "energy, materials, precious metals, and commodity ETFs. "
+            "Bias toward uptrending hard assets with constructive sentiment."
+        ),
+        "style": "Patient hoarder. Plays inflation, scarcity, sovereign flows.",
+        "personality": "Ancient wealth. Believes in things you can hold.",
+        "universe": "XLE, XLB, GLD, SLV, USO, UNG, DBC, CPER, XOM, CVX, FCX, NEM, GOLD.",
+        "strength": "Only agent with meaningful opinions on hard assets.",
+        "failure_mode": "Silent during long risk-on regimes when commodities underperform.",
+    },
+
+    "ZENITH": {
+        "title": "The Long Rider",
+        "strategy": (
+            "Multi-timeframe trend follower. Requires perfect SMA stack "
+            "(price > 20 > 50 > 200) and rides positions with wide 3-ATR "
+            "stops. Won't exit on minor pullbacks."
+        ),
+        "style": "High altitude, long horizon. Ignores daily noise.",
+        "personality": "Cosmic patience. Thinks in months, not days.",
+        "universe": "Equities, ETFs, crypto.",
+        "strength": "Captures the full body of secular moves.",
+        "failure_mode": "Gives back significant open profits during corrections.",
+    },
+
+    "WEAVER": {
+        "title": "The Micro Scalper",
+        "strategy": (
+            "Short-horizon RSI reversals and SMA-20 pullbacks in uptrends. "
+            "Tight 1.5 ATR stops, 2.5 ATR targets. Takes many small wins."
+        ),
+        "style": "Fast, nimble, high activity.",
+        "personality": "Hyperactive. Would rather be wrong quickly than right slowly.",
+        "universe": "Equities and liquid ETFs.",
+        "strength": "Produces regular, bounded-risk opportunities in any regime.",
+        "failure_mode": "Whipsaws in choppy, directionless markets.",
+    },
+
+    "HEX": {
+        "title": "The Probabilist",
+        "strategy": (
+            "Statistical mean-reversion. Trades prices more than 2 standard "
+            "deviations from their 20-day mean, expecting reversion. Size "
+            "scales with how extreme the deviation is."
+        ),
+        "style": "Cold-blooded, mathematical. No narrative — just numbers.",
+        "personality": "Reads probability like a second language.",
+        "universe": "Equities, ETFs, crypto.",
+        "strength": "Profitable in consolidations and range-bound markets.",
+        "failure_mode": "Fights the tape during strong trends — loses to ZENITH/FORGE there.",
+    },
+
+    "SYNTH": {
+        "title": "The Synthesist",
+        "strategy": (
+            "Cross-market regime and rotation. Watches bonds, dollar, gold, "
+            "equities together. Favors defensives in risk-off regimes, "
+            "cyclicals in risk-on."
+        ),
+        "style": "Macro lens. Evaluates the whole chessboard, not one square.",
+        "personality": "Synthetic perception across systems. Sees the pattern others miss.",
+        "universe": "Sector ETFs and indices primarily.",
+        "strength": "Adds strong regime-aware bias to the debate.",
+        "failure_mode": "Can be early on rotations — macro plays unfold in weeks.",
+    },
+
+    "SPECK": {
+        "title": "The Small Thing",
+        "strategy": (
+            "Small-cap and overlooked. Actively avoids mega-caps. Looks "
+            "for low-coverage tickers with positive sentiment and price "
+            "above SMA-50 — small edges before the crowd arrives."
+        ),
+        "style": "Under the radar. Small scale, outsized leverage.",
+        "personality": "Ant-Man archetype. Size is an advantage when you're small.",
+        "universe": "IWM, ARKK, non-mega-cap equities.",
+        "strength": "Finds overlooked setups big agents won't touch.",
+        "failure_mode": "Low-coverage names are illiquid; execution slippage matters.",
+    },
+
+    "VESPA": {
+        "title": "The Catalyst Striker",
+        "strategy": (
+            "Event-driven. Takes directional bets into earnings (within "
+            "5 days) when sentiment is one-sided, and trades declared "
+            "event flags (FDA, FOMC, deal close)."
+        ),
+        "style": "Fast in, fast out. Exits around the catalyst, not after.",
+        "personality": "Opportunistic, tactical, short attention span.",
+        "universe": "Equities with known catalysts.",
+        "strength": "Captures positioning into known events before the market prices them.",
+        "failure_mode": "Vulnerable to event-outcome surprise — binary risk.",
+    },
+
+    "MAGUS": {
+        "title": "The Time Reader",
+        "strategy": (
+            "Seasonality and calendar effects. Plays Santa Rally, sell-in-"
+            "May, turn-of-month, Friday drift on the major indices."
+        ),
+        "style": "Cyclical, rhythm-based. Small individual edges, accumulates.",
+        "personality": "Doctor Strange archetype — reading the timelines.",
+        "universe": "SPY, QQQ, DIA, IWM, VTI only.",
+        "strength": "Non-correlated edge — works in any regime.",
+        "failure_mode": "Seasonal effects erode as they become widely known.",
+    },
+
+    "TALON": {
+        "title": "The Aerial View",
+        "strategy": (
+            "Market structure on the indices themselves. Evaluates SPY, "
+            "QQQ, DIA, IWM, VTI based on SMA stack and VIX context."
+        ),
+        "style": "Top-down, macro-structural. Doesn't care about individual names.",
+        "personality": "Falcon archetype — sees the whole board from altitude.",
+        "universe": "Broad indices only.",
+        "strength": "Clean structural read on the market itself.",
+        "failure_mode": "Silent on anything outside the index ETFs.",
+    },
+
+    "SCROOGE": {
+        "title": "The $1 Compounder",
+        "strategy": (
+            "Takes whatever SCROOGE has (starts at $1) and buys the single "
+            "highest-consensus pick every day. Sells next day, rolls into "
+            "the next. Full conviction, every day, forever. When he dies "
+            "(balance under $0.05), he is reborn at $1."
+        ),
+        "style": "Zero diversification. Zero risk management. Pure compounding ceremony.",
+        "personality": "Parsimonious, patient, brutally compounded.",
+        "universe": "Whatever the team ranks highest — any asset class.",
+        "strength": "Demonstrates the raw output of the consensus system.",
+        "failure_mode": "When consensus is wrong, SCROOGE loses everything and resets.",
+    },
+
+    "MIDAS": {
+        "title": "The Hard-Currency Sovereign",
+        "strategy": (
+            "Parallel compounder to SCROOGE, restricted to hard currencies "
+            "and precious metals only. Gold, silver, platinum, palladium, "
+            "USD, EUR, JPY, CHF. Rotates only among these. Refuses to "
+            "touch stocks or crypto."
+        ),
+        "style": "Ancient, patient, sovereign. Wealth that outlasts empires.",
+        "personality": "King Midas — slow accumulation of things that have always been wealth.",
+        "universe": "GLD, IAU, SLV, SIVR, PPLT, PALL, UUP, FXE, FXY, FXF.",
+        "strength": "Uncorrelated to SCROOGE. Survives regimes that break equities.",
+        "failure_mode": "Misses multi-year equity bull markets entirely.",
+    },
+
+    "CRYPTOBRO": {
+        "title": "The Degenerate Optimist",
+        "strategy": (
+            "Third $1 compounder, crypto-only, multi-trade per day. Where "
+            "SCROOGE and MIDAS each take exactly one position daily, "
+            "CryptoBro can rotate up to five times per cycle if the vibes "
+            "shift. He plays momentum and the dip with equal conviction."
+        ),
+        "style": (
+            "Hyperactive, impatient, talks in third person. CryptoBro "
+            "doesn't read 10-Ks. He reads Twitter and the chart."
+        ),
+        "personality": (
+            "Every guy at the bar in 2021. Says 'wagmi' and 'ser' "
+            "unironically. Diamond hands on the way down, paper hands "
+            "at all-time highs, never the other way around."
+        ),
+        "universe": "BTC, ETH, SOL, AVAX, DOGE, LINK, MATIC, ADA, XRP, DOT, ATOM.",
+        "strength": (
+            "Multi-trade-per-day permission. Catches intraday rotations "
+            "that single-shot agents like SCROOGE and MIDAS structurally miss."
+        ),
+        "failure_mode": (
+            "Overtrades. Pays Coinbase 40 bps every rotation, which is "
+            "expensive when conviction is low. Reincarnates often."
+        ),
+        "power": (
+            "MULTI-TRADE — can execute up to 5 transactions per day, "
+            "where SCROOGE and MIDAS are limited to one."
+        ),
+    },
+
+    "BARON": {
+        "title": "The Oil Baron",
+        "strategy": (
+            "Trades the entire oil and energy complex with both directions: "
+            "long crude via USO/BNO, short via SCO/DRIP, plus refiners, E&P "
+            "pure-plays, services, integrated majors, and natural gas. "
+            "Watches WTI/Brent spreads, EIA inventory reports (Wed 10:30 AM), "
+            "OPEC+ production decisions, and crack spreads. Patient and asymmetric."
+        ),
+        "style": (
+            "Patient, asymmetric, two-sided. Sits in cash for weeks "
+            "waiting for the right setup. When he moves, he moves with conviction."
+        ),
+        "personality": (
+            "John D. Rockefeller crossed with a Texas wildcatter. "
+            "Reads inventory reports for fun. Knows what 'contango' means."
+        ),
+        "universe": "USO, BNO, UCO/SCO, UNG/BOIL/KOLD, XLE/XOP/OIH, XOM, CVX, COP, OXY, EOG, SLB, HAL, VLO, PSX, MPC, GUSH, DRIP",
+        "strength": "Captures asymmetric oil moves on EIA + OPEC catalysts that other agents miss.",
+        "failure_mode": "Quiet during long energy bear markets. Patient by design.",
+        "power": (
+            "TWO-SIDED — the only specialist who actively shorts via inverse ETFs. "
+            "2 trades / 24h cap."
+        ),
+    },
+
+    "STEADFAST": {
+        "title": "The Patriot",
+        "strategy": (
+            "Buys only American blue-chip 'Crown Jewels' — KO, JNJ, PG, "
+            "WMT, MCD, DIS, CAT, JPM, BRK-B, etc. Long-history dividend "
+            "payers and household-name moats. Holds for a minimum of 30 days. "
+            "Buys on dips below SMA-200 or RSI under 40."
+        ),
+        "style": (
+            "Quarterly-dividend pace. Slow accumulation. Ignores all hype. "
+            "Refuses to chase — would rather miss a 5% rally than risk it."
+        ),
+        "personality": (
+            "Your grandfather, who bought IBM in 1962 and never sold. "
+            "Lectures everyone else about discipline. Never gets excited."
+        ),
+        "universe": "~45 American blue-chip names — Coca-Cola, Disney, Walmart, Caterpillar, JPMorgan, Berkshire, etc.",
+        "strength": "Never blows up. Compounds slowly through every regime.",
+        "failure_mode": "Misses every multi-bagger. Watches tech rallies he refused to buy.",
+        "power": (
+            "PATIENCE — minimum 30-day hold. 1 trade / 30 days cap. "
+            "The system's anti-impulsivity counterweight."
+        ),
+    },
+
+    "JRR_TOKEN": {
+        "title": "The Two-Tier Token Trader",
+        "strategy": (
+            "Splits his $1 budget 50/50 across two crypto-token tiers: "
+            "the SUB tier (under $100M market cap, high rug risk) and "
+            "the OVER tier ($100M–$1B, established small caps). Each "
+            "tier runs independent rotation. Plays pure momentum on "
+            "the sub tier, sentiment-confirmed momentum on the over tier."
+        ),
+        "style": (
+            "Hyperactive, cynical. Rotates fast — pump windows close in hours. "
+            "Up to 12 trades per 24h across both tiers combined."
+        ),
+        "personality": (
+            "The guy on Telegram who calls every coin '100x' until it isn't. "
+            "Has been rugged a hundred times and will be rugged a hundred more."
+        ),
+        "universe": "SUB tier: PEPE, FLOKI, BONK, WIF, MOG, TURBO, BRETT, POPCAT. OVER tier: SHIB, INJ, ARB, OP, STX, RUNE, FET, LDO, GRT.",
+        "strength": "Catches the first leg of memecoin pumps. High variance, high upside.",
+        "failure_mode": (
+            "Reincarnates often. Tokens vanish, projects abandon, JRR dies. "
+            "By design — this is what penny-token trading actually looks like."
+        ),
+        "power": (
+            "TWO-TIER — operates two independent positions, one per market-cap tier. "
+            "12 trades/24h cap. Highest reincarnation rate of any compounder."
+        ),
+    },
+}
+
+
+def get_bio(codename: str) -> Dict[str, str]:
+    """Return the full bio dict for an agent, or a default skeleton."""
+    return BIOS.get(codename, {
+        "title": codename,
+        "strategy": "No extended bio available.",
+        "style": "",
+        "personality": "",
+        "universe": "",
+        "strength": "",
+        "failure_mode": "",
+    })
+
+
+
+================================================
+FILE: silmaril/agents/cicada.py
+================================================
+"""
+silmaril.agents.cicada — The Earnings Whisperer.
+
+CICADA only sings the week before an earnings release. The other 51
+weeks of the year, it stays silent (ABSTAIN). When earnings is within
+7 days, it looks for setups where:
+  - The whisper number floats above consensus AND price hasn't moved
+  - Or whisper below consensus AND price hasn't sold off
+
+This is a pre-earnings drift trade — riding the gravity of the surprise
+before the surprise happens.
+
+Optional context fields:
+  - days_to_earnings: int   (already in AssetContext)
+  - consensus_eps: float    (wired upstream)
+  - whisper_eps: float      (wired upstream — Estimize, etc.)
+  - week_change_pct: float  (wired upstream — last 5 trading days)
+"""
+from __future__ import annotations
+
+from .base import Agent, AssetContext, Signal, Verdict
+
+
+class Cicada(Agent):
+    codename = "CICADA"
+    specialty = "Pre-Earnings Drift Trader"
+    temperament = (
+        "Silent for 51 weeks. Sings the week before earnings. Looks for "
+        "asymmetric setups where the whisper diverges from consensus "
+        "and price hasn't repriced yet. Disappears the moment earnings "
+        "report — never holds through the announcement."
+    )
+    inspiration = "The cicada — emerges only when conditions are exactly right"
+    asset_classes = ("equity",)
+
+    def _judge(self, ctx: AssetContext) -> Verdict:
+        d2e = ctx.days_to_earnings
+
+        # Outside the earnings window — fully silent
+        if d2e is None or d2e < 0 or d2e > 7:
+            return Verdict(
+                agent=self.codename,
+                ticker=ctx.ticker,
+                signal=Signal.ABSTAIN,
+                conviction=0.0,
+                rationale="not within 7 days of earnings",
+            )
+
+        # Need whisper + consensus for full signal
+        consensus = getattr(ctx, "consensus_eps", None)
+        whisper = getattr(ctx, "whisper_eps", None)
+        wk_change = getattr(ctx, "week_change_pct", None)
+
+        if consensus and whisper and wk_change is not None and consensus != 0:
+            premium = (whisper - consensus) / abs(consensus)
+
+            if premium > 0.05 and wk_change < 2.0:
+                return Verdict(
+                    agent=self.codename,
+                    ticker=ctx.ticker,
+                    signal=Signal.BUY,
+                    conviction=0.65,
+                    rationale=(
+                        f"earnings in {d2e}d, whisper {premium:+.0%} "
+                        f"vs consensus, week move {wk_change:+.1f}% "
+                        f"— undriftd setup"
+                    ),
+                    factors={
+                        "days_to_earnings": d2e,
+                        "whisper_premium": round(premium, 4),
+                        "week_change_pct": wk_change,
+                    },
+                )
+
+            if premium < -0.05 and wk_change > -2.0:
+                return Verdict(
+                    agent=self.codename,
+                    ticker=ctx.ticker,
+                    signal=Signal.SELL,
+                    conviction=0.55,
+                    rationale=(
+                        f"earnings in {d2e}d, whisper {premium:+.0%} "
+                        f"vs consensus, week move {wk_change:+.1f}% "
+                        f"— soft setup"
+                    ),
+                    factors={
+                        "days_to_earnings": d2e,
+                        "whisper_premium": round(premium, 4),
+                        "week_change_pct": wk_change,
+                    },
+                )
+
+        # In-window but no whisper data → just flag proximity, no vote
+        return Verdict(
+            agent=self.codename,
+            ticker=ctx.ticker,
+            signal=Signal.HOLD,
+            conviction=0.0,
+            rationale=f"earnings in {d2e}d, awaiting whisper signal",
+            factors={"days_to_earnings": d2e},
+        )
+
+
+cicada = Cicada()
+
+
+
+================================================
+FILE: silmaril/agents/contrarian.py
+================================================
+"""
+silmaril.agents.contrarian — Crowded-Trade Fade Detector.
+
+CONTRARIAN exists because everyone using the same indicators creates
+predictable behavior at trigger points. When RSI hits 70 and ten million
+retail traders all sell, the market often bounces. CONTRARIAN looks for
+exactly those crowded-positioning extremes and fades them.
+
+Decision logic:
+  1. Compute "crowdedness score" — how aligned are positioning + sentiment
+  2. If crowdedness > 0.60 AND price has moved with the crowd, fade it
+  3. If crowdedness < 0.40, ABSTAIN (no edge in non-extreme conditions)
+"""
+from __future__ import annotations
+
+from .base import Agent, AssetContext, Signal, Verdict
+
+
+class Contrarian(Agent):
+    codename = "CONTRARIAN"
+    specialty = "Crowded-Trade Fade"
+    temperament = (
+        "Cynical and contrarian. Reads what everyone else is doing and "
+        "bets against the consensus when the crowd is most aligned. "
+        "Lives by the rule: 'When everyone leans one way, the boat tips.'"
+    )
+
+    UNIVERSE_TICKERS = {
+        # Large-cap equities only — crowded-fade needs liquidity
+        "AAPL", "MSFT", "GOOGL", "AMZN", "META", "NVDA", "TSLA",
+        "JPM", "BAC", "WFC", "GS", "MS",
+        "XOM", "CVX", "COP",
+        "JNJ", "UNH", "PFE",
+        "SPY", "QQQ", "IWM", "DIA", "XLF", "XLE", "XLK",
+        "BTC-USD", "ETH-USD", "SOL-USD",
+    }
+
+    def _judge(self, ctx: AssetContext) -> Verdict:
+        if ctx.ticker not in self.UNIVERSE_TICKERS:
+            return Verdict(
+                signal=Signal.ABSTAIN,
+                conviction=0.0,
+                rationale="Outside CONTRARIAN universe (large-cap liquid only)",
+            )
+
+        crowded_score = 0.0
+        crowded_dir = 0
+        signals_used = 0
+        reasons = []
+
+        # 1. RSI extreme
+        rsi = getattr(ctx, "rsi", None)
+        if rsi is not None:
+            if rsi > 75:
+                crowded_score += 0.35
+                crowded_dir += 1
+                signals_used += 1
+                reasons.append(f"RSI {rsi:.0f} (overbought)")
+            elif rsi < 25:
+                crowded_score += 0.35
+                crowded_dir -= 1
+                signals_used += 1
+                reasons.append(f"RSI {rsi:.0f} (oversold)")
+
+        # 2. Sentiment extreme
+        sentiment = getattr(ctx, "sentiment_score", None)
+        if sentiment is not None:
+            if sentiment > 0.6:
+                crowded_score += 0.25
+                crowded_dir += 1
+                signals_used += 1
+                reasons.append(f"sentiment +{sentiment:.2f} (euphoric)")
+            elif sentiment < -0.4:
+                crowded_score += 0.25
+                crowded_dir -= 1
+                signals_used += 1
+                reasons.append(f"sentiment {sentiment:.2f} (despair)")
+
+        # 3. Put/call ratio
+        pc_ratio = getattr(ctx, "put_call_ratio", None)
+        if pc_ratio is not None:
+            if pc_ratio < 0.6:
+                crowded_score += 0.20
+                crowded_dir += 1
+                signals_used += 1
+                reasons.append(f"P/C {pc_ratio:.2f} (call-heavy)")
+            elif pc_ratio > 1.3:
+                crowded_score += 0.20
+                crowded_dir -= 1
+                signals_used += 1
+                reasons.append(f"P/C {pc_ratio:.2f} (put-heavy)")
+
+        # 4. Recent stretch from SMA-20
+        change_pct = getattr(ctx, "change_pct", 0) or 0
+        sma_20 = getattr(ctx, "sma_20", None)
+        if sma_20 and ctx.price:
+            stretched = (ctx.price - sma_20) / sma_20
+            if abs(stretched) > 0.05:
+                crowded_score += 0.20
+                crowded_dir += 1 if stretched > 0 else -1
+                signals_used += 1
+                reasons.append(f"price {stretched*100:+.1f}% from SMA-20")
+
+        if signals_used < 2:
+            return Verdict(
+                signal=Signal.ABSTAIN,
+                conviction=0.0,
+                rationale=f"Insufficient crowdedness signals ({signals_used}/2 minimum)",
+            )
+
+        if crowded_score >= 0.55 and crowded_dir > 0:
+            return Verdict(
+                signal=Signal.SELL,
+                conviction=min(0.75, crowded_score),
+                rationale=(
+                    f"Crowded LONG fade — score {crowded_score:.2f} "
+                    f"({signals_used} signals: {', '.join(reasons)}). "
+                    f"Crowd is leaning long; pullback probable."
+                ),
+            )
+        elif crowded_score >= 0.55 and crowded_dir < 0:
+            return Verdict(
+                signal=Signal.BUY,
+                conviction=min(0.75, crowded_score),
+                rationale=(
+                    f"Crowded SHORT fade — score {crowded_score:.2f} "
+                    f"({signals_used} signals: {', '.join(reasons)}). "
+                    f"Oversold extremes typically bounce."
+                ),
+            )
+        else:
+            return Verdict(
+                signal=Signal.HOLD,
+                conviction=0.30,
+                rationale=f"Crowdedness {crowded_score:.2f} below 0.55 threshold",
+            )
+
+
+
+================================================
+FILE: silmaril/agents/cryptobro.py
+================================================
+[Binary file]
+
+
+================================================
+FILE: silmaril/agents/fee_aware_rotation.py
+================================================
+"""
+silmaril.agents.fee_aware_rotation — Should we rotate or HODL?
+
+Every $1 compounder uses this. Compares the expected edge of rotating
+into a new ticker against the round-trip fee cost. Rotates only when
+edge meaningfully exceeds friction.
+
+The learning rule:
+  expected_edge_pct >= round_trip_fees_pct * MULTIPLIER
+
+  MULTIPLIER varies by archetype:
+    - 1.5×  fast traders (CryptoBro, JRR Token)
+    - 2.0×  patient traders (SCROOGE, MIDAS)
+
+Edge is approximated from the consensus delta between current holding
+and target. A larger consensus_score gap implies more expected return.
+"""
+
+from __future__ import annotations
+
+from typing import Any, Dict, Optional, Tuple
+
+from ..execution.detail import build_execution
+
+
+# Map consensus signal → expected pct return (rough heuristic)
+SIGNAL_EXPECTED_RETURN = {
+    "STRONG_BUY":  3.0,
+    "BUY":         1.5,
+    "HOLD":        0.0,
+    "SELL":       -1.5,
+    "STRONG_SELL": -3.0,
+}
+
+
+def estimate_edge_pct(consensus_signal: str, consensus_score: float) -> float:
+    """Estimate the expected % return from a position based on consensus."""
+    base = SIGNAL_EXPECTED_RETURN.get(consensus_signal, 0.0)
+    # Consensus score adds nuance. Score is roughly -2 to +2.
+    score_lift = consensus_score * 0.6
+    return base + score_lift
+
+
+def estimate_round_trip_fee_pct(
+    ticker: str,
+    asset_class: str,
+    price: float,
+    notional: float,
+) -> float:
+    """
+    Round-trip = sell current + buy target. Returns fees as % of notional.
+    """
+    if notional <= 0:
+        return 0.0
+    shares = notional / price if price > 0 else 0
+    sell_exec = build_execution(
+        ticker=ticker, asset_class=asset_class, side="SELL",
+        shares=shares, price=price, available_before=0.0,
+    )
+    buy_exec = build_execution(
+        ticker=ticker, asset_class=asset_class, side="BUY",
+        shares=shares, price=price, available_before=notional,
+    )
+    total_fees = sell_exec["fees"]["total"] + buy_exec["fees"]["total"]
+    return (total_fees / notional) * 100 if notional > 0 else 0.0
+
+
+def should_rotate(
+    current_consensus_signal: Optional[str],
+    current_consensus_score: float,
+    target_consensus_signal: str,
+    target_consensus_score: float,
+    asset_class: str,
+    price: float,
+    notional: float,
+    multiplier: float = 2.0,
+) -> Tuple[bool, str]:
+    """
+    Returns (rotate, explanation).
+
+    Rotate when:
+      (target_edge - current_edge) >= round_trip_fee × multiplier
+
+    Always returns (True, "...") when current_consensus is None (we're flat
+    and need to deploy capital).
+    """
+    target_edge = estimate_edge_pct(target_consensus_signal, target_consensus_score)
+    fee_pct = estimate_round_trip_fee_pct("PROXY", asset_class, max(1.0, price), notional)
+
+    if current_consensus_signal is None:
+        return True, f"Initial entry — no current position. Target edge {target_edge:+.2f}%."
+
+    current_edge = estimate_edge_pct(current_consensus_signal, current_consensus_score)
+    edge_gain = target_edge - current_edge
+    threshold = fee_pct * multiplier
+
+    if edge_gain >= threshold:
+        return (True, (
+            f"Rotate: edge gain {edge_gain:+.2f}% ≥ "
+            f"{multiplier}× round-trip fees ({fee_pct:.3f}% × {multiplier} = {threshold:.3f}%)."
+        ))
+    return (False, (
+        f"HODL: edge gain {edge_gain:+.2f}% < {threshold:.3f}% (fee threshold). "
+        f"Not worth the round-trip cost."
+    ))
+
+
+
+================================================
+FILE: silmaril/agents/forge.py
+================================================
+"""
+silmaril.agents.forge — The Forge.
+
+FORGE is the offensive innovator of the team. Where AEGIS defends,
+FORGE builds. Its domain is technology — the sector where disruption,
+iteration, and scale compound fastest.
+
+v2.0 changes — backtest revealed FORGE was 46% win rate on 16K calls
+because in backtest mode (no sentiment) its bullish path required
+sentiment >= 0.15 (impossible in backtest), while its bearish path
+fired on simple "price < SMA50". Result: FORGE was systematically
+shorting tech without ever going long. Fixed by:
+  - Adding a sentiment-optional BUY path on clean technical setups
+  - Tightening SELL trigger so it doesn't fire on every shallow pullback
+
+Trading philosophy (Iron Man archetype):
+  - Calculated risk, not reckless risk
+  - Biases toward quality technology names in momentum
+  - Values earnings beats, guidance raises, product launches
+  - Comfortable with higher volatility than AEGIS tolerates
+"""
+
+from __future__ import annotations
+
+from typing import Optional
+
+from .base import Agent, AssetContext, Signal, Verdict
+
+
+TECH_ANCHORS = {
+    "AAPL", "MSFT", "GOOGL", "GOOG", "AMZN", "META", "NVDA", "TSLA",
+    "ORCL", "CRM", "ADBE", "AVGO", "AMD", "INTC", "CSCO", "IBM",
+    "QQQ", "XLK", "SMH", "SOXX", "VGT", "IGV", "ARKK", "ARKW",
+    "NFLX", "DIS", "PYPL", "SQ", "SHOP", "SNOW", "PLTR", "NOW",
+    "PANW", "ZS", "CRWD", "DDOG", "NET", "MDB", "TEAM", "WDAY",
+    "ASML", "TSM", "QCOM", "MU", "AMAT", "LRCX", "KLAC",
+}
+
+
+class Forge(Agent):
+    codename = "FORGE"
+    specialty = "Tech-Sector Momentum"
+    temperament = (
+        "Builder's confidence. Believes technology compounds faster than "
+        "other sectors and bets accordingly — but only on clean setups with "
+        "measurable catalysts."
+    )
+    inspiration = "Iron Man — the suit is built, piece by piece"
+    asset_classes = ("equity", "etf")
+
+    STRONG_BUY_SENTIMENT = 0.4
+    BUY_SENTIMENT = 0.15
+    OVERSOLD_RSI = 35.0           # was 40 — now requires deeper oversold for SELL
+    TREND_STRENGTH_MIN = 0.03
+    SELL_TREND_BREAK = -0.03      # need 3%+ below SMA50 to call it broken
+
+    def applies_to(self, ctx: AssetContext) -> bool:
+        if not super().applies_to(ctx):
+            return False
+        return ctx.ticker.upper() in TECH_ANCHORS
+
+    def _judge(self, ctx: AssetContext) -> Verdict:
+        reasons: list[str] = []
+        factors: dict = {}
+
+        if not all([ctx.price, ctx.sma_20, ctx.sma_50]):
+            return self._hold_for_data(ctx)
+
+        sent_available = ctx.sentiment_score is not None
+        sentiment = ctx.sentiment_score or 0.0
+
+        price_above_20 = ctx.price > ctx.sma_20
+        price_above_50 = ctx.price > ctx.sma_50
+        stack_aligned = ctx.sma_20 > ctx.sma_50
+        trend_strength = self._pct_above(ctx.price, ctx.sma_50)
+        factors["trend_strength_vs_sma50"] = round(trend_strength, 4)
+
+        clean_uptrend = (
+            price_above_20
+            and price_above_50
+            and stack_aligned
+            and trend_strength >= self.TREND_STRENGTH_MIN
+        )
+
+        if sent_available:
+            factors["sentiment_score"] = round(sentiment, 3)
+            factors["article_count"] = ctx.article_count
+
+        # ── STRONG_BUY: clean uptrend + strong sentiment (live only) ─
+        if (
+            clean_uptrend
+            and sent_available
+            and sentiment >= self.STRONG_BUY_SENTIMENT
+            and ctx.article_count >= 3
+        ):
+            reasons.append(
+                f"clean uptrend (+{trend_strength*100:.1f}% vs SMA50), "
+                f"strong sentiment {sentiment:+.2f}, {ctx.article_count} articles"
+            )
+            return self._build_verdict(
+                ctx, Signal.STRONG_BUY, conviction=0.78,
+                reasons=reasons, factors=factors,
+                atr_mult_stop=2.0, atr_mult_target=4.0,
+            )
+
+        # ── BUY (sentiment available): clean uptrend + positive sentiment ──
+        if clean_uptrend and sent_available and sentiment >= self.BUY_SENTIMENT:
+            reasons.append(
+                f"uptrend intact (+{trend_strength*100:.1f}% vs SMA50), "
+                f"sentiment {sentiment:+.2f}"
+            )
+            return self._build_verdict(
+                ctx, Signal.BUY, conviction=0.6,
+                reasons=reasons, factors=factors,
+                atr_mult_stop=2.0, atr_mult_target=3.5,
+            )
+
+        # ── BUY (sentiment unavailable): require stronger technical setup ──
+        if clean_uptrend and not sent_available:
+            rsi = ctx.rsi_14 or 50
+            # In sentiment-blind mode, demand RSI room to run AND trend strength
+            if 45 <= rsi <= 70 and trend_strength >= 0.04:
+                factors["technical_only"] = True
+                reasons.append(
+                    f"clean uptrend +{trend_strength*100:.1f}% vs SMA50, "
+                    f"RSI {rsi:.0f} healthy — momentum continuation"
+                )
+                return self._build_verdict(
+                    ctx, Signal.BUY, conviction=0.55,
+                    reasons=reasons, factors=factors,
+                    atr_mult_stop=2.0, atr_mult_target=3.5,
+                )
+
+        # ── SELL: tightened — needs material trend break, not shallow pullback ──
+        deeply_oversold = ctx.rsi_14 is not None and ctx.rsi_14 < self.OVERSOLD_RSI
+        materially_below_50 = trend_strength <= self.SELL_TREND_BREAK
+        if deeply_oversold or materially_below_50:
+            rsi_val = ctx.rsi_14 or 0
+            if materially_below_50:
+                reasons.append(f"tech name {abs(trend_strength)*100:.1f}% below SMA50")
+            else:
+                reasons.append(f"oversold RSI {rsi_val:.0f} without trend support")
+            return self._build_verdict(
+                ctx, Signal.SELL, conviction=0.5,
+                reasons=reasons, factors=factors,
+            )
+
+        reasons.append("setup not yet aligned; awaiting clearer trend")
+        return self._build_verdict(
+            ctx, Signal.HOLD, conviction=0.4,
+            reasons=reasons, factors=factors,
+        )
+
+    def _hold_for_data(self, ctx: AssetContext) -> Verdict:
+        return Verdict(
+            agent=self.codename,
+            ticker=ctx.ticker,
+            signal=Signal.HOLD,
+            conviction=0.2,
+            rationale="Awaiting sufficient price history to form a momentum view.",
+            factors={"insufficient_data": True},
+        )
+
+    def _build_verdict(
+        self,
+        ctx: AssetContext,
+        signal: Signal,
+        conviction: float,
+        reasons: list[str],
+        factors: dict,
+        atr_mult_stop: Optional[float] = None,
+        atr_mult_target: Optional[float] = None,
+    ) -> Verdict:
+        rationale = self._compose(reasons, signal)
+        entry = stop = target = None
+        invalidation = None
+        if signal in (Signal.BUY, Signal.STRONG_BUY) and ctx.price and ctx.atr_14:
+            entry = round(ctx.price, 2)
+            if atr_mult_stop:
+                stop = round(ctx.price - atr_mult_stop * ctx.atr_14, 2)
+            if atr_mult_target:
+                target = round(ctx.price + atr_mult_target * ctx.atr_14, 2)
+            invalidation = (
+                f"Close below ${stop:.2f} OR break of SMA50 (${ctx.sma_50:.2f}) "
+                f"invalidates the momentum thesis."
+            )
+
+        return Verdict(
+            agent=self.codename,
+            ticker=ctx.ticker,
+            signal=signal,
+            conviction=self._clamp(conviction),
+            rationale=rationale,
+            factors=factors,
+            suggested_entry=entry,
+            suggested_stop=stop,
+            suggested_target=target,
+            invalidation=invalidation,
+        )
+
+    @staticmethod
+    def _compose(reasons: list[str], signal: Signal) -> str:
+        stance = {
+            Signal.STRONG_BUY: "High-conviction build: ",
+            Signal.BUY: "Constructive: ",
+            Signal.SELL: "Step away: ",
+            Signal.HOLD: "Standing by: ",
+        }.get(signal, "")
+        return f"{stance}{'; '.join(reasons)}."
+
+
+forge = Forge()
+
+
+
+================================================
+FILE: silmaril/agents/hex_agent.py
+================================================
+"""
+silmaril.agents.hex — The Probabilist.
+
+HEX looks for statistical extremes where mean reversion is probable.
+Its setups are quiet but mathematically grounded: multi-sigma moves
+from recent average, gap fills, historical base-rate edges.
+
+Scarlet Witch's archetype: bends probability, reads the odds.
+
+Decision logic:
+  - 2+ sigma move below 20-day mean → BUY (mean reversion)
+  - 2+ sigma move above 20-day mean (on waning volume) → SELL
+  - Measured conviction scales with how extreme the deviation is
+"""
+
+from __future__ import annotations
+
+from .base import Agent, AssetContext, Signal, Verdict
+
+
+class Hex(Agent):
+    codename = "HEX"
+    specialty = "Probabilistic Edge"
+    temperament = "Reads the odds. Trades extremes when the probability bends its way."
+    inspiration = "Scarlet Witch — probability-bending, hex of fortune"
+    asset_classes = ("equity", "etf", "crypto")
+
+    SIGMA_THRESHOLD = 2.0
+
+    def _judge(self, ctx: AssetContext) -> Verdict:
+        if not ctx.price or len(ctx.price_history) < 21 or not ctx.atr_14:
+            return self._abstain(ctx, "insufficient history for statistical measure")
+
+        window = ctx.price_history[-20:]
+        mean = sum(window) / len(window)
+        variance = sum((x - mean) ** 2 for x in window) / len(window)
+        stdev = variance ** 0.5
+        if stdev == 0:
+            return self._abstain(ctx, "zero volatility — no edge")
+
+        z = (ctx.price - mean) / stdev
+
+        # ── Deeply below mean → reversion buy ───────────────────
+        if z <= -self.SIGMA_THRESHOLD:
+            conv = self._clamp(0.5 + (abs(z) - self.SIGMA_THRESHOLD) * 0.1)
+            entry = ctx.price
+            stop = ctx.price - 1.5 * ctx.atr_14
+            target = mean
+            return Verdict(
+                agent=self.codename, ticker=ctx.ticker,
+                signal=Signal.BUY, conviction=conv,
+                rationale=f"Price {z:.2f}σ below 20-day mean — reversion probable.",
+                factors={"z_score": round(z, 2), "mean_20d": round(mean, 2)},
+                suggested_entry=round(entry, 2),
+                suggested_stop=round(stop, 2),
+                suggested_target=round(target, 2),
+                invalidation=f"Another 1σ lower (${mean - 3*stdev:.2f}) would invalidate mean-reversion setup.",
+            )
+
+        # ── Deeply above mean → reversion sell ──────────────────
+        if z >= self.SIGMA_THRESHOLD:
+            conv = self._clamp(0.45 + (z - self.SIGMA_THRESHOLD) * 0.1)
+            return Verdict(
+                agent=self.codename, ticker=ctx.ticker,
+                signal=Signal.SELL, conviction=conv,
+                rationale=f"Price {z:.2f}σ above 20-day mean — reversion probable.",
+                factors={"z_score": round(z, 2), "mean_20d": round(mean, 2)},
+            )
+
+        return self._abstain(ctx, f"z-score {z:+.2f} — within normal range")
+
+    def _abstain(self, ctx: AssetContext, reason: str) -> Verdict:
+        return Verdict(
+            agent=self.codename, ticker=ctx.ticker,
+            signal=Signal.ABSTAIN, conviction=0.0, rationale=reason,
+        )
+
+
+hex_agent = Hex()   # `hex` is a Python builtin; use a non-colliding module name
+
+
+
+================================================
+FILE: silmaril/agents/jade.py
+================================================
+"""
+silmaril.agents.jade — The Rage-Buyer.
+
+JADE waits through calm markets with no opinion, then rage-buys panic.
+Its signature setup is a deeply oversold RSI near major support, when
+everyone else is selling. Hulk's archetype: quiet until pushed, then
+unstoppable.
+
+Decision logic:
+  - Only takes BUY signals. Never sells, never shorts.
+  - Requires RSI < 30 AND price within 5% of SMA-200 (support).
+  - Bonus conviction if sentiment is extremely negative (capitulation).
+  - Otherwise ABSTAIN.
+"""
+
+from __future__ import annotations
+
+from .base import Agent, AssetContext, Signal, Verdict
+
+
+class Jade(Agent):
+    codename = "JADE"
+    specialty = "Oversold Mean Reversion"
+    temperament = "Silent in calm markets. When panic peaks, rage-buys the capitulation."
+    inspiration = "Hulk — the greener he gets, the stronger he becomes"
+    asset_classes = ("equity", "etf")
+
+    OVERSOLD = 30.0
+    DEEPLY_OVERSOLD = 22.0
+    NEAR_SUPPORT = 0.05          # within 5% of SMA-200
+
+    def _judge(self, ctx: AssetContext) -> Verdict:
+        if ctx.rsi_14 is None or not ctx.price or not ctx.sma_200 or not ctx.atr_14:
+            return self._abstain(ctx, "awaiting oversold conditions")
+
+        if ctx.rsi_14 > self.OVERSOLD:
+            return self._abstain(ctx, f"RSI {ctx.rsi_14:.0f} — not yet oversold")
+
+        dist_from_200 = abs(ctx.price - ctx.sma_200) / ctx.sma_200
+        if dist_from_200 > self.NEAR_SUPPORT:
+            return self._abstain(ctx, "oversold but too far from major support")
+
+        # Deep oversold + negative sentiment = capitulation = STRONG setup
+        deeply_oversold = ctx.rsi_14 < self.DEEPLY_OVERSOLD
+        capitulating = (ctx.sentiment_score or 0) < -0.3 and ctx.article_count >= 3
+        signal = Signal.STRONG_BUY if (deeply_oversold and capitulating) else Signal.BUY
+
+        conv = 0.55
+        if deeply_oversold: conv += 0.1
+        if capitulating:    conv += 0.1
+
+        rationale = (
+            f"RSI {ctx.rsi_14:.0f} at major support (SMA-200 ${ctx.sma_200:.2f})"
+            + (" with heavy negative sentiment — capitulation." if capitulating else " — contrarian entry.")
+        )
+        entry = ctx.price
+        stop = ctx.price - 1.5 * ctx.atr_14
+        target = ctx.price + 3.5 * ctx.atr_14
+
+        return Verdict(
+            agent=self.codename, ticker=ctx.ticker,
+            signal=signal, conviction=self._clamp(conv),
+            rationale=rationale,
+            factors={"rsi": round(ctx.rsi_14, 1), "dist_sma200_pct": round(dist_from_200 * 100, 2)},
+            suggested_entry=round(entry, 2),
+            suggested_stop=round(stop, 2),
+            suggested_target=round(target, 2),
+            invalidation=f"Close below ${stop:.2f} breaks the thesis; capitulation was not the bottom.",
+        )
+
+    def _abstain(self, ctx: AssetContext, reason: str) -> Verdict:
+        return Verdict(
+            agent=self.codename, ticker=ctx.ticker,
+            signal=Signal.ABSTAIN, conviction=0.0, rationale=reason,
+        )
+
+
+jade = Jade()
+
+
+
+================================================
