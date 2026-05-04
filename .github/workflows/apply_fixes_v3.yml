@@ -1,0 +1,1116 @@
+name: Apply Code Fixes V3 (aggressive mode)
+
+# One-click deployment of all V2 + targeted V3 patches now that we've seen
+# the actual cli.py / agent_portfolio.py / sports_bro.py source.
+#
+# What this does:
+#   1. Drops in NEW MODULE: silmaril/portfolios/momentum_exit.py
+#   2. Drops in NEW MODULE: silmaril/ingestion/price_format.py
+#   3. Replaces silmaril/agents/sports_bro.py (adds settle_expired_bets)
+#   4. Replaces silmaril/portfolios/agent_portfolio.py (trailing stop +
+#      specialist domain fallback + consistent date+timestamp + safe_price)
+#   5. Patches silmaril/cli.py:
+#        - min_consensus_conviction: 0.45 → 0.40 (aggressive)
+#        - max_position_pct:         0.05 → 0.08 (aggressive)
+#        - inject settle_expired_bets() call after sports_bro_act()
+#   6. Replaces silmaril/execution/alpaca_paper.py with v2 (HOLD-exit,
+#      all_debate_signals, hardcoded paper-only URL)
+#   7. Patches docs/index.html with frontend helpers that prefer
+#      "timestamp" over "date" for time display (fixes 17:00 bug)
+#
+# Idempotent: safe to run multiple times.
+# After running: trigger Daily Run.
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      # ─────────────────────────────────────────────────────────────
+      # PART 1 — momentum_exit.py
+      # ─────────────────────────────────────────────────────────────
+      - name: Write momentum_exit.py
+        run: |
+          mkdir -p silmaril/portfolios
+          cat > silmaril/portfolios/momentum_exit.py << 'PYEOF'
+          """Trailing stop + momentum stall exit logic for all agent portfolios."""
+          from __future__ import annotations
+          from datetime import date
+          from typing import Any, Dict, List, Optional, Tuple
+
+          DEFAULT_TRAILING_STOP_PCT: float = 0.06
+          DEFAULT_MAX_HOLD_DAYS: int = 3
+          DEFAULT_MOMENTUM_STALL_THRESHOLD: float = -0.005
+          ABSOLUTE_MAX_HOLD_DAYS: int = 7
+
+          AGENT_EXIT_CONFIG: Dict[str, Dict[str, Any]] = {
+              "THUNDERHEAD":  {"trailing_stop_pct": 0.04, "max_hold_days": 2},
+              "FORGE":        {"trailing_stop_pct": 0.06, "max_hold_days": 3},
+              "JADE":         {"trailing_stop_pct": 0.07, "max_hold_days": 4},
+              "KESTREL":      {"trailing_stop_pct": 0.04, "max_hold_days": 2},
+              "KESTREL+":     {"trailing_stop_pct": 0.04, "max_hold_days": 2},
+              "ZENITH":       {"trailing_stop_pct": 0.08, "max_hold_days": 5},
+              "WEAVER":       {"trailing_stop_pct": 0.03, "max_hold_days": 1},
+              "SPECK":        {"trailing_stop_pct": 0.07, "max_hold_days": 3},
+              "VESPA":        {"trailing_stop_pct": 0.05, "max_hold_days": 2},
+              "HEX":          {"trailing_stop_pct": 0.05, "max_hold_days": 3},
+              "SYNTH":        {"trailing_stop_pct": 0.06, "max_hold_days": 4},
+              "VEIL":         {"trailing_stop_pct": 0.06, "max_hold_days": 3},
+              "OBSIDIAN":     {"trailing_stop_pct": 0.07, "max_hold_days": 5},
+              "MAGUS":        {"trailing_stop_pct": 0.05, "max_hold_days": 3},
+              "TALON":        {"trailing_stop_pct": 0.06, "max_hold_days": 3},
+              "AEGIS":        {"trailing_stop_pct": 0.03, "max_hold_days": 5},
+              "BARON":        {"trailing_stop_pct": 0.07, "max_hold_days": 4},
+              "STEADFAST":    {"trailing_stop_pct": 0.10, "max_hold_days": 30},
+              "CONTRARIAN":   {"trailing_stop_pct": 0.05, "max_hold_days": 3},
+              "SHORT_ALPHA":  {"trailing_stop_pct": 0.04, "max_hold_days": 2},
+              "NOMAD":        {"trailing_stop_pct": 0.06, "max_hold_days": 4},
+              "BARNACLE":     {"trailing_stop_pct": 0.06, "max_hold_days": 5},
+              "ATLAS":        {"trailing_stop_pct": 0.05, "max_hold_days": 3},
+              "NIGHTSHADE":   {"trailing_stop_pct": 0.05, "max_hold_days": 2},
+              "CICADA":       {"trailing_stop_pct": 0.05, "max_hold_days": 2},
+              "SHEPHERD":     {"trailing_stop_pct": 0.06, "max_hold_days": 4},
+              "BIOS":         {"trailing_stop_pct": 0.05, "max_hold_days": 3},
+          }
+
+          def get_agent_config(agent_codename: str) -> Dict[str, Any]:
+              o = AGENT_EXIT_CONFIG.get(agent_codename, {})
+              return {
+                  "trailing_stop_pct": o.get("trailing_stop_pct", DEFAULT_TRAILING_STOP_PCT),
+                  "max_hold_days": o.get("max_hold_days", DEFAULT_MAX_HOLD_DAYS),
+                  "momentum_stall_threshold": o.get(
+                      "momentum_stall_threshold", DEFAULT_MOMENTUM_STALL_THRESHOLD),
+              }
+
+          def update_peak_price(position: Dict[str, Any], current_price: float) -> Dict[str, Any]:
+              if current_price and current_price > 0:
+                  current_peak = position.get("peak_price") or position.get("entry_price") or current_price
+                  if current_price > current_peak:
+                      position["peak_price"] = current_price
+              return position
+
+          def record_price_snapshot(position: Dict[str, Any], current_price: float) -> Dict[str, Any]:
+              if current_price and current_price > 0:
+                  snapshots = position.get("price_snapshots", [])
+                  snapshots.append(current_price)
+                  position["price_snapshots"] = snapshots[-10:]
+              return position
+
+          def _days_held(position: Dict[str, Any], today: str) -> int:
+              entry_date = position.get("entry_date", today)
+              try:
+                  return max(0, (date.fromisoformat(today) - date.fromisoformat(entry_date)).days)
+              except Exception:
+                  return 0
+
+          def check_exit_conditions(
+              position: Dict[str, Any],
+              current_price: Optional[float],
+              today: str,
+              trailing_stop_pct: float = DEFAULT_TRAILING_STOP_PCT,
+              max_hold_days: int = DEFAULT_MAX_HOLD_DAYS,
+              momentum_stall_threshold: float = DEFAULT_MOMENTUM_STALL_THRESHOLD,
+          ) -> Tuple[bool, str]:
+              if not current_price or current_price <= 0:
+                  return False, ""
+              ticker = position.get("ticker", "?")
+              entry_price = position.get("entry_price") or current_price
+              peak_price = position.get("peak_price") or entry_price
+              if peak_price > 0:
+                  if current_price < peak_price * (1.0 - trailing_stop_pct):
+                      drop = (current_price / peak_price - 1.0) * 100
+                      return True, (f"TRAILING STOP: {ticker} fell {drop:.1f}% "
+                                    f"from peak {peak_price:.4f} to {current_price:.4f}")
+              days = _days_held(position, today)
+              if days >= ABSOLUTE_MAX_HOLD_DAYS:
+                  return True, f"HARD CAP: {ticker} held {days}d >= {ABSOLUTE_MAX_HOLD_DAYS}d"
+              if days >= max_hold_days:
+                  snapshots: List[float] = position.get("price_snapshots", [])
+                  if len(snapshots) >= 2:
+                      last_return = (snapshots[-1] - snapshots[-2]) / snapshots[-2]
+                      if last_return < momentum_stall_threshold:
+                          return True, (f"MOMENTUM STALL: {ticker} held {days}d, "
+                                        f"last session {last_return*100:+.2f}%")
+                  else:
+                      return True, f"MAX HOLD: {ticker} held {days}d without snapshot data"
+              return False, ""
+          PYEOF
+          echo "OK: momentum_exit.py"
+
+      # ─────────────────────────────────────────────────────────────
+      # PART 2 — price_format.py
+      # ─────────────────────────────────────────────────────────────
+      - name: Write price_format.py
+        run: |
+          mkdir -p silmaril/ingestion
+          cat > silmaril/ingestion/price_format.py << 'PYEOF'
+          """Price formatting for sub-penny tokens. Fixes JRR Token $0.0000 bug."""
+          from __future__ import annotations
+          from typing import Optional
+
+          def price_decimals(price: Optional[float]) -> int:
+              if price is None or price <= 0: return 4
+              if price < 0.001: return 8
+              if price < 0.01:  return 6
+              if price < 1.0:   return 4
+              return 2
+
+          def format_price(price: Optional[float], ticker: str = "") -> str:
+              if price is None or price <= 0: return "N/A"
+              return f"${price:.{price_decimals(price)}f}"
+
+          def safe_price(price: Optional[float], ticker: str = "", min_price: float = 1e-12) -> Optional[float]:
+              if price is None: return None
+              if price <= 0 or price < min_price:
+                  if ticker:
+                      print(f"[price] WARNING: {ticker} price {price} invalid")
+                  return None
+              return price
+
+          def round_price(price: float, ticker: str = "") -> float:
+              if price is None or price <= 0: return 0.0
+              return round(price, price_decimals(price))
+          PYEOF
+          echo "OK: price_format.py"
+
+      # ─────────────────────────────────────────────────────────────
+      # PART 3 — Patch cli.py for aggressive mode + settle_expired_bets call
+      # ─────────────────────────────────────────────────────────────
+      - name: Patch cli.py for aggressive mode + sports bro settle
+        run: |
+          python3 << 'PYEOF'
+          from pathlib import Path
+          import re
+
+          p = Path("silmaril/cli.py")
+          if not p.exists():
+              print("ERROR: silmaril/cli.py not found"); exit(1)
+
+          c = p.read_text()
+          orig = c
+
+          # 3a. Aggressive mode: conviction 0.45 → 0.40
+          c = c.replace("min_consensus_conviction=0.45", "min_consensus_conviction=0.40")
+
+          # 3b. Aggressive mode: position size 5% → 8%
+          c = c.replace("max_position_pct=0.05", "max_position_pct=0.08")
+
+          # 3c. Update sports_bro import to include settle_expired_bets
+          if "settle_expired_bets" not in c:
+              c = re.sub(
+                  r"from \.agents\.sports_bro import \(\s*\n\s*sports_bro,\s*sports_bro_act,\s*SportsBroState,\s*\n\s*\)",
+                  "from .agents.sports_bro import (\n"
+                  "    sports_bro, sports_bro_act, SportsBroState, settle_expired_bets,\n"
+                  ")",
+                  c, count=1,
+              )
+
+          # 3d. Inject settle_expired_bets call BEFORE sports_bro_act
+          # Anchor: "sb_state = sports_bro_act(sb_state, sports_markets)"
+          # Insert a settle line just above it (idempotent — only if not already present)
+          if "settle_expired_bets(sb_state" not in c:
+              c = c.replace(
+                  "sb_state = sports_bro_act(sb_state, sports_markets)",
+                  "sb_state = settle_expired_bets(sb_state)  # v3: auto-resolve expired bets\n"
+                  "    sb_state = sports_bro_act(sb_state, sports_markets)",
+              )
+
+          if c != orig:
+              p.write_text(c)
+              print("OK: cli.py patched (aggressive mode + sports settle)")
+          else:
+              print("OK: cli.py already up-to-date")
+          PYEOF
+
+      # ─────────────────────────────────────────────────────────────
+      # PART 4 — Replace sports_bro.py with full v2 version
+      # ─────────────────────────────────────────────────────────────
+      - name: Write sports_bro.py (full v2)
+        run: |
+          mkdir -p silmaril/agents
+          cat > silmaril/agents/sports_bro.py << 'PYEOF'
+          """silmaril.agents.sports_bro — Prediction-markets compounder. v2 with settle_expired_bets."""
+          from __future__ import annotations
+          import json
+          from dataclasses import dataclass, field
+          from datetime import datetime, timezone, timedelta
+          from pathlib import Path
+          from typing import Dict, List, Optional
+          from .base import Agent, AssetContext, Signal, Verdict
+
+          SPORT_PRIORS = {
+              "nba": 0.54, "nfl": 0.53, "mlb": 0.52, "nhl": 0.52,
+              "epl": 0.52, "champions_league": 0.52,
+              "tennis": 0.55, "mma": 0.51, "golf": 0.50, "default": 0.50,
+          }
+          CLOSEST_HOURS = 72
+          FALLBACK_HOURS = 168
+          DEATH_THRESHOLD = 0.50
+          MAX_TRADES_PER_DAY = 8
+          STARTING_CAPITAL = 10.00
+
+
+          @dataclass
+          class SportsBroState:
+              balance: float = STARTING_CAPITAL
+              open_bets: List[Dict] = field(default_factory=list)
+              history: List[Dict] = field(default_factory=list)
+              lifetime_peak: float = STARTING_CAPITAL
+              current_life: int = 1
+              life_start_date: str = field(
+                  default_factory=lambda: datetime.now(timezone.utc).date().isoformat())
+              deaths: List[Dict] = field(default_factory=list)
+              trades_today: int = 0
+              last_action_date: str = ""
+
+              def to_dict(self) -> Dict:
+                  return {
+                      "codename": "SPORTS_BRO",
+                      "title": "The Prediction-Market Bettor",
+                      "balance": round(self.balance, 4),
+                      "open_bets": self.open_bets,
+                      "history": self.history[-50:],
+                      "lifetime_peak": round(self.lifetime_peak, 4),
+                      "current_life": self.current_life,
+                      "life_start_date": self.life_start_date,
+                      "days_alive": self._days_alive(),
+                      "deaths": self.deaths,
+                      "trades_today": self.trades_today,
+                      "max_trades_per_day": MAX_TRADES_PER_DAY,
+                      "actions_this_life": len(self.history),
+                      "current_position": self.open_bets[0] if self.open_bets else None,
+                  }
+
+              def _days_alive(self) -> int:
+                  try:
+                      start = datetime.fromisoformat(self.life_start_date).date()
+                      return max(0, (datetime.now(timezone.utc).date() - start).days)
+                  except Exception:
+                      return 0
+
+
+          def _hours_until(market: dict, now: datetime) -> Optional[float]:
+              end = market.get("end_date") or market.get("end_time") or market.get("close_time")
+              if not end: return None
+              try:
+                  if isinstance(end, str):
+                      end_dt = datetime.fromisoformat(end.replace("Z", "+00:00"))
+                  else:
+                      end_dt = end
+                  if end_dt.tzinfo is None:
+                      end_dt = end_dt.replace(tzinfo=timezone.utc)
+                  return (end_dt - now).total_seconds() / 3600.0
+              except Exception:
+                  return None
+
+
+          def filter_eligible_markets(markets: List[dict]) -> List[dict]:
+              if not markets: return []
+              now = datetime.now(timezone.utc)
+              enriched = []
+              for m in markets:
+                  h = _hours_until(m, now)
+                  if h is not None and h > 0.5:
+                      enriched.append((m, h))
+              enriched.sort(key=lambda r: r[1])
+              for cap in (CLOSEST_HOURS, FALLBACK_HOURS):
+                  windowed = [m for m, h in enriched if h <= cap]
+                  if windowed: return windowed[:25]
+              return [m for m, _ in enriched[:10]]
+
+
+          def pick_best_bet(markets: List[dict]) -> Optional[dict]:
+              if not markets: return None
+              eligible = filter_eligible_markets(markets)
+              if not eligible: return None
+              now = datetime.now(timezone.utc)
+              scored = []
+              for m in eligible:
+                  sport = (m.get("sport") or "default").lower()
+                  prior = SPORT_PRIORS.get(sport, SPORT_PRIORS["default"])
+                  price = m.get("price") or m.get("yes_price") or m.get("odds")
+                  if not price: continue
+                  try: price = float(price)
+                  except Exception: continue
+                  if 0 < price < 1: implied_p = price
+                  elif price > 1: implied_p = 1.0 / price
+                  else: continue
+                  edge = prior - implied_p
+                  if edge <= 0: continue
+                  h = _hours_until(m, now) or 999
+                  recency_bonus = 1.0 + max(0, (CLOSEST_HOURS - h) / CLOSEST_HOURS)
+                  scored.append((m, edge * recency_bonus, h))
+              if not scored: return None
+              scored.sort(key=lambda r: -r[1])
+              top3 = scored[:3]
+              top3.sort(key=lambda r: r[2])
+              return top3[0][0]
+
+
+          def compose_bet(state: SportsBroState, market: dict) -> dict:
+              return {
+                  "market_id": market.get("id") or market.get("market_id"),
+                  "sport": market.get("sport"),
+                  "label": market.get("label") or market.get("title") or market.get("market"),
+                  "side": market.get("recommended_side") or "YES",
+                  "stake": state.balance,
+                  "odds": market.get("price") or market.get("odds"),
+                  "model_prob": market.get("model_prob"),
+                  "market_prob": market.get("market_prob") or market.get("price") or market.get("yes_price"),
+                  "ends": market.get("end_date") or market.get("end_time"),
+                  "end_date": market.get("end_date") or market.get("end_time"),
+                  "placed_at": datetime.now(timezone.utc).isoformat(),
+              }
+
+
+          def settle_active_bet(state: SportsBroState, won: bool, payout_multiplier: float = 2.0) -> SportsBroState:
+              if not state.open_bets: return state
+              bet = state.open_bets.pop(0)
+              today = datetime.now(timezone.utc).date().isoformat()
+              if won:
+                  new_bankroll = float(bet.get("stake", STARTING_CAPITAL)) * payout_multiplier
+              else:
+                  new_bankroll = STARTING_CAPITAL
+                  state.deaths.append({
+                      "life": state.current_life, "ended": today,
+                      "peak": state.lifetime_peak,
+                  })
+                  state.current_life += 1
+                  state.life_start_date = today
+              state.history.append({
+                  **bet, "won": won,
+                  "settled_at": datetime.now(timezone.utc).isoformat(),
+                  "new_bankroll": new_bankroll,
+              })
+              state.balance = new_bankroll
+              state.lifetime_peak = max(state.lifetime_peak, state.balance)
+              return state
+
+
+          def settle_expired_bets(state: SportsBroState, now: Optional[datetime] = None) -> SportsBroState:
+              """Auto-resolve any open bets whose end_date has passed.
+              Sim mode: model_prob > market_prob → WIN; otherwise LOSS."""
+              if not state.open_bets: return state
+              now = now or datetime.now(timezone.utc)
+              today_iso = now.date().isoformat()
+              ts_iso = now.isoformat()
+              remaining: List[Dict] = []
+              settled_count = 0
+              for bet in state.open_bets:
+                  end_str = bet.get("end_date") or bet.get("ends") or bet.get("end_time")
+                  if not end_str:
+                      remaining.append(bet); continue
+                  try:
+                      if isinstance(end_str, str):
+                          end_dt = datetime.fromisoformat(end_str.replace("Z", "+00:00"))
+                      else:
+                          end_dt = end_str
+                      if end_dt.tzinfo is None:
+                          end_dt = end_dt.replace(tzinfo=timezone.utc)
+                  except Exception:
+                      remaining.append(bet); continue
+                  if end_dt > now:
+                      remaining.append(bet); continue
+                  model_p = float(bet.get("model_prob") or 0.5)
+                  market_p = float(bet.get("market_prob") or bet.get("odds") or 0.5)
+                  stake = float(bet.get("stake") or STARTING_CAPITAL)
+                  won = model_p > market_p
+                  if won and market_p > 0:
+                      new_bankroll = stake * (1.0 / market_p)
+                      pnl = new_bankroll - stake
+                      state.balance = new_bankroll
+                  else:
+                      pnl = -stake
+                      state.balance = max(0.0, state.balance - stake)
+                  state.lifetime_peak = max(state.lifetime_peak, state.balance)
+                  state.history.append({
+                      "date": today_iso, "timestamp": ts_iso, "action": "CLOSE",
+                      "market": bet.get("label"), "sport": bet.get("sport"),
+                      "side": bet.get("side"), "won": won,
+                      "stake": round(stake, 4), "pnl": round(pnl, 4),
+                      "model_prob": model_p, "market_prob": market_p,
+                      "new_bankroll": round(state.balance, 4),
+                      "settled_at": ts_iso, "life": state.current_life,
+                  })
+                  settled_count += 1
+                  if state.balance < DEATH_THRESHOLD:
+                      state.deaths.append({
+                          "date": today_iso, "life": state.current_life,
+                          "final_balance": round(state.balance, 4),
+                          "peak_balance": round(state.lifetime_peak, 4),
+                          "epitaph": f"Sports Bro went bust on Life #{state.current_life}.",
+                      })
+                      state.balance = STARTING_CAPITAL
+                      state.current_life += 1
+                      state.life_start_date = today_iso
+                      state.lifetime_peak = STARTING_CAPITAL
+                      state.trades_today = 0
+                      state.history.append({
+                          "date": today_iso, "timestamp": ts_iso,
+                          "action": "REINCARNATION", "life": state.current_life,
+                      })
+              state.open_bets = remaining
+              if settled_count > 0:
+                  print(f"[sports_bro] settled {settled_count} expired bet(s); balance ${state.balance:.4f}")
+              return state
+
+
+          def sports_bro_act(state: SportsBroState, markets: List[dict]) -> SportsBroState:
+              today = datetime.now(timezone.utc).date().isoformat()
+              ts = datetime.now(timezone.utc).isoformat()
+              if state.last_action_date != today:
+                  state.trades_today = 0
+                  state.last_action_date = today
+              if state.balance < DEATH_THRESHOLD and not state.open_bets:
+                  state.deaths.append({
+                      "date": today, "life": state.current_life,
+                      "final_balance": round(state.balance, 4),
+                      "peak_balance": round(state.lifetime_peak, 4),
+                      "epitaph": f"Sports Bro went bust on Life #{state.current_life}.",
+                  })
+                  state.balance = STARTING_CAPITAL
+                  state.current_life += 1
+                  state.life_start_date = today
+                  state.lifetime_peak = STARTING_CAPITAL
+                  state.trades_today = 0
+                  state.history.append({
+                      "date": today, "timestamp": ts,
+                      "action": "REINCARNATION", "life": state.current_life,
+                  })
+              if state.trades_today >= MAX_TRADES_PER_DAY:
+                  state.history.append({
+                      "date": today, "timestamp": ts, "action": "HOLD",
+                      "reason": f"Daily trade cap ({MAX_TRADES_PER_DAY}) reached.",
+                      "balance": round(state.balance, 4),
+                  })
+                  return state
+              if state.open_bets:
+                  state.history.append({
+                      "date": today, "timestamp": ts, "action": "HOLD",
+                      "reason": "Open bet still pending resolution.",
+                      "balance": round(state.balance, 4),
+                  })
+                  return state
+              best = pick_best_bet(markets)
+              if not best:
+                  state.history.append({
+                      "date": today, "timestamp": ts, "action": "NO_BET",
+                      "reason": "No eligible markets with positive edge found.",
+                      "balance": round(state.balance, 4),
+                  })
+                  return state
+              bet = compose_bet(state, best)
+              state.open_bets.append(bet)
+              state.trades_today += 1
+              state.history.append({
+                  "date": today, "timestamp": ts, "action": "BET",
+                  "market": bet.get("label"), "sport": bet.get("sport"),
+                  "side": bet.get("side"), "stake": round(state.balance, 4),
+                  "odds": bet.get("odds"), "ends": bet.get("ends"),
+                  "end_date": bet.get("end_date"),
+                  "model_prob": bet.get("model_prob"),
+                  "market_prob": bet.get("market_prob"),
+                  "life": state.current_life,
+              })
+              return state
+
+
+          class SportsBro(Agent):
+              codename = "SPORTS_BRO"
+              specialty = "Prediction Markets"
+              temperament = ("Half-Kelly on the closest-resolving bet. Never sportsbooks. "
+                             "Polymarket + Kalshi only. Lives for the 72-hour window.")
+              inspiration = "The Avengers prop-bet guy"
+              asset_classes = ("equity", "etf", "crypto")
+              def applies_to(self, ctx: AssetContext) -> bool: return False
+              def _judge(self, ctx: AssetContext) -> Verdict:
+                  return Verdict(agent=self.codename, ticker=ctx.ticker,
+                                 signal=Signal.ABSTAIN, conviction=0.0,
+                                 rationale="Sports Bro only bets on prediction markets, not financial assets.")
+          sports_bro = SportsBro()
+          PYEOF
+          echo "OK: sports_bro.py"
+
+      # ─────────────────────────────────────────────────────────────
+      # PART 5 — Replace agent_portfolio.py (full v3 with all features)
+      # ─────────────────────────────────────────────────────────────
+      - name: Write agent_portfolio.py (full v3)
+        run: |
+          mkdir -p silmaril/portfolios
+          cat > silmaril/portfolios/agent_portfolio.py << 'PYEOF'
+          """silmaril.portfolios.agent_portfolio — v3: trailing stop + specialist fallback + date/timestamp pair."""
+          from __future__ import annotations
+          import json
+          from dataclasses import dataclass, field, asdict
+          from datetime import datetime, timezone, date
+          from pathlib import Path
+          from typing import Any, Dict, List, Optional, Tuple
+
+          try:
+              from silmaril.portfolios.momentum_exit import (
+                  check_exit_conditions, update_peak_price,
+                  record_price_snapshot, get_agent_config,
+              )
+              _MOMENTUM_EXIT_AVAILABLE = True
+          except Exception:
+              _MOMENTUM_EXIT_AVAILABLE = False
+
+          try:
+              from silmaril.ingestion.price_format import safe_price, round_price
+              _PRICE_FORMAT_AVAILABLE = True
+          except Exception:
+              _PRICE_FORMAT_AVAILABLE = False
+              def safe_price(p, ticker="", min_price=1e-12):
+                  if p is None or p <= 0: return None
+                  return p
+              def round_price(p, ticker=""): return round(p or 0, 6)
+
+          STARTING_EQUITY = 10000.0
+
+          SPECIALIST_DOMAINS: Dict[str, set] = {
+              "BARON": {"XOM","CVX","COP","VLO","MPC","PSX","DVN","OXY","HAL","SLB","EOG",
+                        "XLE","XOP","OIH","USO","BNO","UCO","SCO","DRIP","GUSH","UNG","BOIL","KOLD","AMLP"},
+              "STEADFAST": {"AAPL","MSFT","GOOGL","AMZN","BRK-B","JNJ","JPM","V","MA","PG",
+                            "KO","WMT","COST","HD","GS","MS","WFC","BAC","DIS","NKE","MCD",
+                            "CAT","MMM","IBM","VZ","T","CVX","XOM","PFE","MRK"},
+          }
+
+          def _hist_stamps(today_iso: Optional[str] = None) -> Dict[str, str]:
+              now = datetime.now(timezone.utc)
+              return {"date": today_iso or now.date().isoformat(),
+                      "timestamp": now.isoformat()}
+
+
+          @dataclass
+          class AgentPortfolio:
+              agent: str
+              starting_equity: float = STARTING_EQUITY
+              current_equity: float = STARTING_EQUITY
+              cash: float = STARTING_EQUITY
+              current_position: Optional[Dict] = None
+              history: List[Dict] = field(default_factory=list)
+              equity_curve: List[Dict] = field(default_factory=list)
+              inception_date: str = field(
+                  default_factory=lambda: datetime.now(timezone.utc).date().isoformat())
+
+              @property
+              def total_return_pct(self) -> float:
+                  if self.starting_equity == 0: return 0.0
+                  return (self.current_equity - self.starting_equity) / self.starting_equity
+
+              def total_equity(self, mark_price: Optional[float] = None) -> float:
+                  if self.current_position is None: return self.cash
+                  qty = self.current_position.get("qty", 0) or 0
+                  price = mark_price if mark_price is not None else self.current_position.get("entry_price", 0)
+                  return self.cash + qty * (price or 0)
+
+              def open_position(self, ticker: str, qty: float, entry_price: float, signal: str) -> None:
+                  cost = qty * entry_price
+                  if cost > self.cash: return
+                  self.cash -= cost
+                  now = datetime.now(timezone.utc)
+                  self.current_position = {
+                      "ticker": ticker, "qty": qty, "entry_price": entry_price,
+                      "peak_price": entry_price,
+                      "entry_date": now.date().isoformat(),
+                      "signal": signal,
+                      "opened_at": now.isoformat(),
+                      "price_snapshots": [entry_price],
+                  }
+                  self.history.append({
+                      **_hist_stamps(), "action": "OPEN", "ticker": ticker,
+                      "qty": qty, "price": entry_price, "signal": signal,
+                  })
+
+              def close_position(self, exit_price: float, reason: str = "") -> Optional[float]:
+                  if not self.current_position: return None
+                  validated = safe_price(exit_price, self.current_position.get("ticker", ""))
+                  if validated is None:
+                      self.history.append({
+                          **_hist_stamps(), "action": "HOLD",
+                          "ticker": self.current_position.get("ticker", ""),
+                          "reason": f"Refused close at invalid price {exit_price}",
+                      })
+                      return None
+                  exit_price = validated
+                  qty = self.current_position["qty"]
+                  entry = self.current_position["entry_price"]
+                  signal = self.current_position.get("signal", "BUY")
+                  if signal in ("SELL", "STRONG_SELL"):
+                      pnl = (entry - exit_price) * qty
+                      proceeds = qty * entry + pnl
+                  else:
+                      pnl = (exit_price - entry) * qty
+                      proceeds = qty * exit_price
+                  self.cash += proceeds
+                  self.current_equity = self.cash
+                  ticker = self.current_position["ticker"]
+                  self.history.append({
+                      **_hist_stamps(), "action": "CLOSE", "ticker": ticker,
+                      "qty": qty, "price": exit_price, "pnl": pnl,
+                      "reason": reason or "Consensus flip",
+                  })
+                  self.current_position = None
+                  return pnl
+
+              def snapshot_equity(self) -> None:
+                  now = datetime.now(timezone.utc)
+                  self.equity_curve.append({
+                      "date": now.date().isoformat(),
+                      "timestamp": now.isoformat(),
+                      "equity": self.current_equity, "cash": self.cash,
+                      "in_position": self.current_position is not None,
+                  })
+                  self.equity_curve = self.equity_curve[-2000:]
+
+              def to_dict(self) -> Dict: return asdict(self)
+
+
+          def _find_specialist_buy(agent: str, debate_dicts: List[Dict]) -> Optional[Dict]:
+              domain = SPECIALIST_DOMAINS.get(agent)
+              if not domain: return None
+              best = None; best_score = -999.0
+              for d in debate_dicts:
+                  if d.get("ticker") not in domain: continue
+                  cons = d.get("consensus") or {}
+                  if cons.get("signal") not in ("BUY", "STRONG_BUY"): continue
+                  score = float(cons.get("score") or 0)
+                  if score > best_score:
+                      best_score = score; best = d
+              return best
+
+
+          def agent_portfolio_act(portfolio: AgentPortfolio, debate_dicts: List[Dict],
+                                   prices: Dict[str, float]) -> AgentPortfolio:
+              today_iso = datetime.now(timezone.utc).date().isoformat()
+              agent = portfolio.agent
+
+              if portfolio.current_position:
+                  held_ticker = portfolio.current_position["ticker"]
+                  current_price = safe_price(prices.get(held_ticker), held_ticker)
+                  if current_price:
+                      qty = portfolio.current_position.get("qty", 0) or 0
+                      portfolio.current_equity = portfolio.cash + qty * current_price
+                      if _MOMENTUM_EXIT_AVAILABLE:
+                          portfolio.current_position = update_peak_price(portfolio.current_position, current_price)
+                          portfolio.current_position = record_price_snapshot(portfolio.current_position, current_price)
+                          cfg = get_agent_config(agent)
+                          should_exit, exit_reason = check_exit_conditions(
+                              portfolio.current_position, current_price, today_iso,
+                              trailing_stop_pct=cfg["trailing_stop_pct"],
+                              max_hold_days=cfg["max_hold_days"],
+                              momentum_stall_threshold=cfg["momentum_stall_threshold"])
+                          if should_exit:
+                              portfolio.close_position(current_price, reason=exit_reason)
+                              return portfolio
+                  held_debate = next((d for d in debate_dicts if d.get("ticker") == held_ticker), None)
+                  if held_debate:
+                      cons_signal = held_debate.get("consensus", {}).get("signal", "HOLD")
+                      if cons_signal in ("SELL", "STRONG_SELL", "HOLD") and current_price:
+                          portfolio.close_position(current_price,
+                              reason=f"Consensus on {held_ticker} flipped to {cons_signal}")
+                          portfolio.history.append({
+                              **_hist_stamps(today_iso), "action": "HOLD",
+                              "reason": f"Closed {held_ticker} — consensus {cons_signal}",
+                              "equity": round(portfolio.total_equity(), 2),
+                          })
+                          return portfolio
+                  portfolio.history.append({
+                      **_hist_stamps(today_iso), "action": "HOLD",
+                      "ticker": held_ticker,
+                      "equity": round(portfolio.total_equity(current_price), 2),
+                  })
+                  return portfolio
+
+              best_debate = None; best_score = -999.0
+              agent_appears_in_verdicts = False
+              for d in debate_dicts:
+                  verdicts = d.get("verdicts", [])
+                  if any(v.get("agent") == agent for v in verdicts):
+                      agent_appears_in_verdicts = True
+                  agent_vote = next((v for v in verdicts if v.get("agent") == agent and
+                                     v.get("signal") in ("BUY", "STRONG_BUY")), None)
+                  if agent_vote is None: continue
+                  cons_signal = d.get("consensus", {}).get("signal", "HOLD")
+                  if cons_signal in ("SELL", "STRONG_SELL"): continue
+                  score = d.get("consensus", {}).get("score", 0) or 0
+                  if score > best_score:
+                      best_score = score; best_debate = d
+
+              if best_debate is None and not agent_appears_in_verdicts:
+                  best_debate = _find_specialist_buy(agent, debate_dicts)
+                  if best_debate:
+                      print(f"[portfolio:{agent}] specialist domain → {best_debate.get('ticker')}")
+
+              if best_debate is None:
+                  portfolio.history.append({
+                      **_hist_stamps(today_iso), "action": "HOLD",
+                      "reason": "No qualifying BUY signal found for this agent",
+                      "equity": round(portfolio.total_equity(), 2),
+                  })
+                  return portfolio
+
+              ticker = best_debate["ticker"]
+              entry_price = safe_price(prices.get(ticker), ticker)
+              if not entry_price:
+                  portfolio.history.append({
+                      **_hist_stamps(today_iso), "action": "HOLD",
+                      "reason": f"No valid price available for {ticker}",
+                      "equity": round(portfolio.total_equity(), 2),
+                  })
+                  return portfolio
+
+              position_value = min(portfolio.total_equity() * 0.10, portfolio.cash * 0.95)
+              if position_value < 1.0: return portfolio
+              qty = position_value / entry_price
+              portfolio.open_position(ticker, qty, entry_price, "BUY")
+              portfolio.current_equity = portfolio.total_equity(entry_price)
+              return portfolio
+
+
+          _FIELD_ALIASES: Dict[str, str] = {"balance": "cash"}
+          _KNOWN_FIELDS = set(AgentPortfolio.__dataclass_fields__.keys())
+
+
+          def _coerce_agent_record(raw_record: Dict) -> Dict:
+              record: Dict = {}
+              for k, v in raw_record.items():
+                  record[_FIELD_ALIASES.get(k, k)] = v
+              clean = {k: v for k, v in record.items() if k in _KNOWN_FIELDS}
+              if "cash" not in clean: clean["cash"] = STARTING_EQUITY
+              if "current_equity" not in clean: clean["current_equity"] = clean["cash"]
+              if "starting_equity" not in clean: clean["starting_equity"] = STARTING_EQUITY
+              return clean
+
+
+          def load_portfolios(path: Path) -> Dict[str, AgentPortfolio]:
+              if not path.exists(): return {}
+              try: raw = json.loads(path.read_text())
+              except Exception: return {}
+              if not isinstance(raw, dict): return {}
+              agent_map = raw.get("portfolios")
+              if not isinstance(agent_map, dict):
+                  agent_map = {k: v for k, v in raw.items() if isinstance(v, dict)}
+              out: Dict[str, AgentPortfolio] = {}
+              for agent, record in agent_map.items():
+                  if not isinstance(record, dict): continue
+                  try:
+                      kwargs = _coerce_agent_record(record)
+                      kwargs["agent"] = agent
+                      out[agent] = AgentPortfolio(**kwargs)
+                  except Exception:
+                      continue
+              return out
+
+
+          def save_portfolios(path: Path, portfolios: Dict[str, AgentPortfolio],
+                              prices: Optional[Dict[str, float]] = None) -> None:
+              if prices:
+                  for p in portfolios.values():
+                      if p.current_position:
+                          mark = prices.get(p.current_position.get("ticker", ""))
+                          if mark:
+                              qty = p.current_position.get("qty", 0) or 0
+                              p.current_equity = p.cash + qty * mark
+              out = {agent: asdict(p) for agent, p in portfolios.items()}
+              path.parent.mkdir(parents=True, exist_ok=True)
+              path.write_text(json.dumps(out, indent=2, default=str))
+
+
+          def ensure_all_agents_have_portfolios(portfolios: Dict[str, AgentPortfolio],
+                                                 all_agent_names: List[str]) -> Dict[str, AgentPortfolio]:
+              for name in all_agent_names:
+                  if name not in portfolios:
+                      portfolios[name] = AgentPortfolio(agent=name)
+              return portfolios
+          PYEOF
+          echo "OK: agent_portfolio.py"
+
+      # ─────────────────────────────────────────────────────────────
+      # PART 6 — Replace alpaca_paper.py with v2 (all_debate_signals + HOLD exit)
+      # ─────────────────────────────────────────────────────────────
+      - name: Write alpaca_paper.py (v2)
+        run: |
+          mkdir -p silmaril/execution
+          cat > silmaril/execution/alpaca_paper.py << 'PYEOF'
+          """silmaril.execution.alpaca_paper — v2 with HOLD-exit + all_debate_signals."""
+          from __future__ import annotations
+          import json, os, time
+          from datetime import datetime, timezone
+          from pathlib import Path
+          from typing import Any, Dict, List, Optional
+
+          _BASE_URL = "https://paper-api.alpaca.markets"  # PAPER ONLY — hardcoded
+          _ORDERS_ENDPOINT = f"{_BASE_URL}/v2/orders"
+          _POSITIONS_ENDPOINT = f"{_BASE_URL}/v2/positions"
+          _ACCOUNT_ENDPOINT = f"{_BASE_URL}/v2/account"
+          _MAX_RETRIES = 3
+          _RETRY_DELAY_S = 2.0
+          _SKIP_ASSET_CLASSES = {"crypto", "token"}
+
+          def _get_headers():
+              key = os.environ.get("ALPACA_API_KEY", "").strip()
+              secret = os.environ.get("ALPACA_API_SECRET", "").strip()
+              if not key or not secret: return None
+              return {"APCA-API-KEY-ID": key, "APCA-API-SECRET-KEY": secret,
+                      "Content-Type": "application/json"}
+
+          def _api_get(url, headers):
+              try:
+                  import requests
+                  r = requests.get(url, headers=headers, timeout=15)
+                  r.raise_for_status()
+                  return r.json()
+              except Exception as e:
+                  print(f"[alpaca] GET failed: {e}")
+                  return None
+
+          def _api_post(url, headers, payload):
+              for attempt in range(_MAX_RETRIES):
+                  try:
+                      import requests
+                      r = requests.post(url, headers=headers, json=payload, timeout=15)
+                      if r.status_code in (200, 201): return r.json()
+                      print(f"[alpaca] POST {r.status_code}: {r.text[:200]}")
+                      return None
+                  except Exception as e:
+                      if attempt < _MAX_RETRIES - 1: time.sleep(_RETRY_DELAY_S)
+                      else:
+                          print(f"[alpaca] POST failed: {e}")
+                          return None
+
+          def _now_iso(): return datetime.now(timezone.utc).isoformat()
+
+          def _load_state(path):
+              if path.exists():
+                  try: return json.loads(path.read_text())
+                  except Exception: pass
+              return {"orders": [], "orders_placed": [], "last_run": None,
+                      "account": {}, "errors": [], "enabled": False}
+
+          def _save_state(state, path):
+              state["orders"] = state.get("orders", [])[-500:]
+              state["last_run"] = _now_iso()
+              try: path.write_text(json.dumps(state, indent=2, default=str))
+              except Exception as e: print(f"[alpaca] save failed: {e}")
+
+          def execute_consensus_signals(
+              plans: List[Dict[str, Any]],
+              state_path: Path,
+              max_position_pct: float = 0.08,
+              min_consensus_conviction: float = 0.40,
+              max_total_positions: int = 15,
+              enable_shorts: bool = True,
+              all_debate_signals: Optional[Dict[str, str]] = None,
+          ) -> Dict:
+              state = _load_state(state_path)
+              headers = _get_headers()
+              if not headers:
+                  state["enabled"] = False
+                  state["reason"] = "ALPACA_API_KEY/SECRET not set"
+                  state.setdefault("errors", []).append({"time": _now_iso(), "msg": state["reason"]})
+                  _save_state(state, state_path)
+                  return state
+              account = _api_get(_ACCOUNT_ENDPOINT, headers)
+              if not account:
+                  state["enabled"] = False
+                  state["reason"] = "Account fetch failed"
+                  _save_state(state, state_path)
+                  return state
+              equity = float(account.get("equity", 0))
+              state["enabled"] = True
+              state["account"] = {"equity": round(equity, 2),
+                                  "cash": round(float(account.get("cash", 0)), 2)}
+              print(f"[alpaca] equity ${equity:,.2f}")
+              if equity < 1.0:
+                  _save_state(state, state_path)
+                  return state
+              plan_signals, plan_conv, plan_class = {}, {}, {}
+              for p in plans:
+                  t = p.get("ticker", "")
+                  if not t: continue
+                  plan_signals[t] = p.get("consensus_signal", "HOLD")
+                  plan_conv[t] = float(p.get("consensus_conviction") or p.get("avg_conviction") or 0)
+                  plan_class[t] = p.get("asset_class", "equity")
+              exit_signals = dict(all_debate_signals or {})
+              exit_signals.update(plan_signals)
+              existing = _api_get(_POSITIONS_ENDPOINT, headers) or []
+              if not isinstance(existing, list): existing = []
+              print(f"[alpaca] open positions: {len(existing)}")
+              orders_placed = []
+              closed = 0
+              for pos in existing:
+                  symbol = pos.get("symbol", "")
+                  try: qty = float(pos.get("qty", "0"))
+                  except Exception: qty = 0
+                  if not symbol or qty == 0: continue
+                  side = "long" if qty > 0 else "short"
+                  sig = exit_signals.get(symbol, "HOLD")
+                  should_close = ((side == "long" and sig in ("SELL","STRONG_SELL","HOLD")) or
+                                  (side == "short" and sig in ("BUY","STRONG_BUY","HOLD")))
+                  if should_close:
+                      print(f"[alpaca] CLOSE {side} {symbol} ({sig})")
+                      close_side = "sell" if side == "long" else "buy"
+                      r = _api_post(_ORDERS_ENDPOINT, headers, {
+                          "symbol": symbol, "qty": str(abs(qty)),
+                          "side": close_side, "type": "market", "time_in_force": "day"})
+                      if r:
+                          closed += 1
+                          orders_placed.append({"action": "CLOSE", "symbol": symbol,
+                                                "side": close_side, "qty": abs(qty),
+                                                "trigger_signal": sig, "order_id": r.get("id")})
+              if closed > 0:
+                  time.sleep(1.5)
+                  existing = _api_get(_POSITIONS_ENDPOINT, headers) or []
+                  if not isinstance(existing, list): existing = []
+              open_symbols = {p.get("symbol") for p in existing}
+              open_count = len(existing)
+              opened = 0
+              for p in plans:
+                  ticker = p.get("ticker", "")
+                  signal = p.get("consensus_signal", "HOLD")
+                  conviction = plan_conv.get(ticker, 0.0)
+                  asset_class = plan_class.get(ticker, "equity")
+                  if not ticker: continue
+                  if signal not in ("BUY", "STRONG_BUY"): continue
+                  if conviction < min_consensus_conviction: continue
+                  if ticker in open_symbols: continue
+                  if asset_class in _SKIP_ASSET_CLASSES: continue
+                  if open_count >= max_total_positions: break
+                  notional = round(equity * max_position_pct, 2)
+                  if notional < 1.0: continue
+                  print(f"[alpaca] OPEN {signal} {ticker} ${notional:.2f} (c={conviction:.2f})")
+                  r = _api_post(_ORDERS_ENDPOINT, headers, {
+                      "symbol": ticker, "notional": str(notional),
+                      "side": "buy", "type": "market", "time_in_force": "day"})
+                  if r:
+                      opened += 1; open_count += 1; open_symbols.add(ticker)
+                      orders_placed.append({"action": "OPEN", "symbol": ticker, "side": "buy",
+                                            "notional": notional, "conviction": conviction,
+                                            "signal": signal, "order_id": r.get("id")})
+              if enable_shorts:
+                  for p in plans:
+                      ticker = p.get("ticker", "")
+                      signal = p.get("consensus_signal", "HOLD")
+                      conviction = plan_conv.get(ticker, 0.0)
+                      asset_class = plan_class.get(ticker, "equity")
+                      if signal not in ("SELL", "STRONG_SELL"): continue
+                      if conviction < min_consensus_conviction: continue
+                      if ticker in open_symbols: continue
+                      if asset_class in _SKIP_ASSET_CLASSES: continue
+                      if open_count >= max_total_positions: break
+                      notional = round(equity * max_position_pct, 2)
+                      if notional < 1.0: continue
+                      print(f"[alpaca] SHORT {ticker} ${notional:.2f}")
+                      r = _api_post(_ORDERS_ENDPOINT, headers, {
+                          "symbol": ticker, "notional": str(notional),
+                          "side": "sell", "type": "market", "time_in_force": "day"})
+                      if r:
+                          opened += 1; open_count += 1; open_symbols.add(ticker)
+                          orders_placed.append({"action": "SHORT", "symbol": ticker, "side": "sell",
+                                                "notional": notional, "conviction": conviction,
+                                                "signal": signal, "order_id": r.get("id")})
+              state["orders_placed"] = orders_placed
+              state["orders"] = state.get("orders", []) + [
+                  {**o, "time": _now_iso()} for o in orders_placed]
+              state["last_cycle_summary"] = {"time": _now_iso(), "closed": closed,
+                                              "opened": opened, "open_after": open_count,
+                                              "equity": equity}
+              _save_state(state, state_path)
+              print(f"[alpaca] cycle: closed={closed} opened={opened} total={open_count}")
+              return state
+          PYEOF
+          echo "OK: alpaca_paper.py"
+
+      # ─────────────────────────────────────────────────────────────
+      # PART 7 — Inject frontend helpers (fixes 17:00 display bug)
+      # ─────────────────────────────────────────────────────────────
+      - name: Patch index.html for sub-penny + timestamp display
+        run: |
+          python3 << 'PYEOF'
+          from pathlib import Path
+          p = Path("docs/index.html")
+          if not p.exists():
+              print("docs/index.html not found"); exit(0)
+          c = p.read_text()
+          if "function formatPriceSL" in c:
+              print("OK: index.html helpers already present"); exit(0)
+          helpers = """
+          <script>
+          // Auto-injected by apply_fixes_v3 — sub-penny price + timestamp display
+          window.formatPriceSL = function(price, ticker) {
+              if (price == null || price <= 0 || isNaN(price)) return 'N/A';
+              if (price < 0.001) return '$' + Number(price).toFixed(8);
+              if (price < 0.01)  return '$' + Number(price).toFixed(6);
+              if (price < 1.0)   return '$' + Number(price).toFixed(4);
+              return '$' + Number(price).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+          };
+          window.formatPnlSL = function(pnl, ticker) {
+              if (pnl == null || isNaN(pnl)) return '+$0.00';
+              const sign = pnl >= 0 ? '+' : '-';
+              const abs  = Math.abs(pnl);
+              if (abs < 0.001) return sign + '$' + abs.toFixed(8);
+              if (abs < 0.01)  return sign + '$' + abs.toFixed(6);
+              if (abs < 1.0)   return sign + '$' + abs.toFixed(4);
+              return sign + '$' + abs.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+          };
+          // Prefer entry.timestamp (full ISO with HH:MM) over entry.date (date-only midnight UTC)
+          // This is THE FIX for the 17:00-everywhere bug.
+          window.timestampSL = function(entry) {
+              const t = entry.timestamp || entry.time || entry.opened_at || entry.placed_at || entry.filled_at_utc;
+              if (t) {
+                  try {
+                      const d = new Date(t);
+                      if (!isNaN(d.getTime())) {
+                          const mm = String(d.getMonth()+1).padStart(2,'0');
+                          const dd = String(d.getDate()).padStart(2,'0');
+                          const hh = String(d.getHours()).padStart(2,'0');
+                          const mn = String(d.getMinutes()).padStart(2,'0');
+                          return mm + '-' + dd + ' ' + hh + ':' + mn;
+                      }
+                  } catch(e){}
+              }
+              // Fallback: bare date string — show date only, NO faux time
+              const dateStr = entry.date || '';
+              if (dateStr.length === 10) {
+                  return dateStr.substring(5);  // MM-DD only
+              }
+              return dateStr;
+          };
+          </script>
+          """
+          if "</body>" in c:
+              c = c.replace("</body>", helpers + "\n</body>")
+          else:
+              c = c + "\n" + helpers
+          p.write_text(c)
+          print("OK: index.html helpers injected")
+          PYEOF
+
+      # ─────────────────────────────────────────────────────────────
+      # PART 8 — Commit
+      # ─────────────────────────────────────────────────────────────
+      - name: Commit all v3 fixes
+        run: |
+          git config user.name 'silmaril-bot'
+          git config user.email 'silmaril-bot@users.noreply.github.com'
+          git add silmaril/ docs/ 2>/dev/null || true
+          git diff --staged --quiet && echo "Nothing to commit (already deployed)" || \
+            git commit -m "v3 aggressive: trailing stop + specialist fallback + sports settle + 17:00 fix + 0.40/8% Alpaca $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          git push
+          echo "DONE — trigger Daily Run."
