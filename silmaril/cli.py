@@ -1080,8 +1080,8 @@ def run(mode: str = "demo", output_dir: str = "docs/data") -> None:
     sports_bro_dict = sb_state.to_dict()
     write_markets_json(out / "sports_markets.json", sports_markets)
 
-    # ── Catalysts roundup ───────────────────────────────────────
-    write_catalysts_json(out / "catalysts.json", today_iso)
+    # ── Catalysts roundup ─── moved to after plans_kept is built
+    # (see below, after risk filter) so we can pass relevant tickers.
 
     # ── Chart bundles for each debated ticker ───────────────────
     write_charts_json(out / "charts.json", debate_dicts, ctx_lookup)
@@ -1112,7 +1112,9 @@ def run(mode: str = "demo", output_dir: str = "docs/data") -> None:
         # hasn't already acted on a trade today. Mark-to-market the
         # current equity on every cron run so the dashboard stays fresh.
         already_acted_today = any(
-            h.get("date") == today_iso and h.get("action") in ("BUY", "SELL", "ROTATE", "HODL", "OPEN", "CLOSE", "FROZEN")
+            h.get("date") == today_iso and h.get("action") in (
+                "BUY", "SELL", "ROTATE", "HODL", "OPEN", "CLOSE", "FROZEN", "HOLD",
+            )
             for h in (p.history or [])
         )
 
@@ -1247,6 +1249,20 @@ def run(mode: str = "demo", output_dir: str = "docs/data") -> None:
     plans_kept, plans_rejected = filter_plans_by_risk(plans)
     if plans_rejected:
         log.info("  %d plans rejected by risk engine", len(plans_rejected))
+
+    # ── Catalysts roundup (with portfolio context for noise filtering) ──
+    # Built here, AFTER plans_kept and portfolios are populated, so we can
+    # pass the relevant ticker set. The aggregator uses this to filter the
+    # 1,500-event firehose down to ~80 events that actually affect us.
+    relevant_tickers = set()
+    for _agent_p in portfolios.values():
+        if getattr(_agent_p, "current_position", None):
+            t = _agent_p.current_position.get("ticker")
+            if t: relevant_tickers.add(t.upper())
+    for _plan in plans_kept[:12]:
+        t = _plan.get("ticker")
+        if t: relevant_tickers.add(t.upper())
+    write_catalysts_json(out / "catalysts.json", today_iso, relevant_tickers=relevant_tickers)
 
     # ── ALPHA 2.0: Alpaca paper-trading bridge ──────────────────
     # Every kept plan with consensus_conviction >= 0.60 becomes a real-shaped
@@ -1498,11 +1514,37 @@ Reply in 3-5 bullets, no preamble.
     # ── ALPHA 2.0: Final persistence sanity check ───────────────
     if _HAS_LEARNING:
         try:
-            health = verify_persistence(out)
+            persistence_health = verify_persistence(out)
             log.info("  Learning state: %d/%d protected files present",
-                     len(health["present"]), health["total_protected"])
+                     len(persistence_health["present"]), persistence_health["total_protected"])
         except Exception:
             pass
+
+    # ── ALPHA 2.1: write run_health.json (single source of truth) ────
+    # Captures: Alpaca account/equity/savings, last cycle activity,
+    # catalyst source statuses, every agent's status today (silent or active),
+    # and any issues. Read this ONE file to know if the system is healthy.
+    try:
+        from .diagnostics.run_health import write_run_health
+        cat_diag = {}
+        try:
+            cat_path = out / "catalysts.json"
+            if cat_path.exists():
+                cat_payload = json.loads(cat_path.read_text())
+                cat_diag = cat_payload.get("_diagnostic", {})
+        except Exception:
+            pass
+        write_run_health(
+            out_dir=out,
+            debate_dicts=debate_dicts,
+            portfolios=portfolios if 'portfolios' in dir() else None,
+            alpaca_state=alpaca_state if 'alpaca_state' in dir() else None,
+            catalysts_diag=cat_diag,
+            main_agents=main_agents if 'main_agents' in dir() else None,
+            today_iso=today_iso,
+        )
+    except Exception as e:
+        log.warning("run_health write failed: %s", e)
 
 
 # ─────────────────────────────────────────────────────────────────
