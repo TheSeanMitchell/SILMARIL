@@ -3,7 +3,7 @@
     "version": "2.0.0",
     "project": "SILMARIL",
     "run_type": "live",
-    "generated_at": "2026-05-03T21:12:14.318696+00:00",
+    "generated_at": "2026-05-04T08:20:31.165659+00:00",
     "alpha_2_0_features": {
       "learning_loop": true,
       "alpaca_paper": true,
@@ -15,199 +15,54 @@
   },
   "plans": [
     {
-      "plan_id": "plan_20260503_2119_AAPL",
-      "ticker": "AAPL",
-      "name": "AAPL",
+      "plan_id": "plan_20260504_0826_MS",
+      "ticker": "MS",
+      "name": "MS",
       "direction": "LONG",
-      "entry": 280.14,
-      "stop": 271.74,
-      "target": 292.75,
-      "shares": 7.1393,
+      "entry": 190.17,
+      "stop": 184.46,
+      "target": 198.73,
+      "shares": 10.5169,
       "position_value": 2000.0,
       "risk_amount": 60.0,
       "risk_pct_of_portfolio": 0.006,
       "reward_risk_ratio": 1.5,
-      "invalidation": "Close below $271.74 invalidates the thesis. Re-evaluate if consensus agreement drops below 50%.",
+      "invalidation": "Close below $184.46 invalidates the thesis. Re-evaluate if consensus agreement drops below 50%.",
       "backers": [
         {
           "agent": "AEGIS",
-          "conviction": 0.7135659322004034,
+          "conviction": 0.2772162899712858,
           "rationale": "Cautious constructive: clean uptrend with calm volatility, sentiment supportive."
-        },
-        {
-          "agent": "FORGE",
-          "conviction": 0.9268981231768356,
-          "rationale": "High-conviction build: clean uptrend (+7.2% vs SMA50), strong sentiment +0.60, 5 articles."
-        },
-        {
-          "agent": "THUNDERHEAD",
-          "conviction": 1.0,
-          "rationale": "Broke 20-day high ($273.43) on 1.8\u00d7 avg volume \u2014 storm has arrived."
-        },
-        {
-          "agent": "SYNTH",
-          "conviction": 0.4564261133929252,
-          "rationale": "Risk-on regime supports cyclical exposure."
-        },
-        {
-          "agent": "STEADFAST",
-          "conviction": 0.55,
-          "rationale": "Constructive backdrop on Apple. STEADFAST initiates or adds. Slow and steady wins the race."
-        }
-      ],
-      "dissenters": [
-        {
-          "agent": "HEX",
-          "signal": "SELL",
-          "conviction": 0.27537759907339043,
-          "rationale": "Price 2.06\u03c3 above 20-day mean \u2014 reversion probable."
-        }
-      ],
-      "consensus_signal": "BUY",
-      "portfolio_size": 10000.0,
-      "generated_at": "2026-05-03T21:19:42.303924+00:00",
-      "status": "ACTIVE",
-      "execution": {
-        "order_id": "SIM-20260503-211942-AAPL-B",
-        "side": "BUY",
-        "ticker": "AAPL",
-        "asset_class": "equity",
-        "exchange": "NASDAQ",
-        "venue": "electronic equity exchange",
-        "broker": "Interactive Brokers (simulated paper account)",
-        "order_type": "MARKET",
-        "time_in_force": "DAY",
-        "submitted_at_utc": "2026-05-03T21:19:42+00:00",
-        "filled_at_utc": "2026-05-03T21:19:44+00:00",
-        "settlement_date": "2026-05-04",
-        "account": {
-          "label": "EQUITY-CASH-SIM-001",
-          "type": "Cash Account",
-          "broker": "Interactive Brokers (simulated paper account)",
-          "funding_source": "ACH funding from simulated bank account (routed via broker cash sweep)",
-          "balance_before": 10000.0,
-          "balance_after": 7999.8
-        },
-        "fills": [
-          {
-            "shares": 7.139287,
-            "price": 280.14,
-            "timestamp": "2026-05-03T21:19:44+00:00",
-            "venue": "NASDAQ"
-          }
-        ],
-        "avg_fill_price": 280.14,
-        "gross_notional": 2000.0,
-        "fees": {
-          "commission": 0.0,
-          "sec_section_31": 0.0,
-          "finra_taf": 0.0,
-          "spread_cost": 0.2,
-          "total": 0.2,
-          "notes": "Spread estimate: 1 bps. Zero commission (IBKR Lite/TD-class simulated)."
-        },
-        "net_cost": 2000.2,
-        "net_proceeds": null,
-        "disclaimer": "Simulated execution \u2014 no live orders were placed on any exchange. Fees modeled on US market structure: SEC Section 31 ($27.80/$1M of sale proceeds), FINRA Trading Activity Fee ($0.000166/share on sells, capped $9.30), Coinbase Advanced taker 0.40% for crypto. Spread cost estimated per ticker."
-      },
-      "brokers": [
-        {
-          "name": "Robinhood",
-          "url": "https://robinhood.com/stocks/AAPL",
-          "fee_label": "$0 commission",
-          "key": "robinhood"
-        },
-        {
-          "name": "Fidelity",
-          "url": "https://digital.fidelity.com/prgw/digital/research/quote/dashboard/summary?symbol=AAPL",
-          "fee_label": "$0 commission",
-          "key": "fidelity"
-        },
-        {
-          "name": "Schwab",
-          "url": "https://www.schwab.com/research/stocks/quotes?symbol=AAPL",
-          "fee_label": "$0 commission",
-          "key": "schwab"
-        },
-        {
-          "name": "IBKR",
-          "url": "https://www.interactivebrokers.com/portal/?action=ACCT_MGMT_MAIN&symbol=AAPL",
-          "fee_label": "$0\u20130.005/sh",
-          "key": "ibkr"
-        },
-        {
-          "name": "Webull",
-          "url": "https://www.webull.com/quote/AAPL",
-          "fee_label": "$0 commission",
-          "key": "webull"
-        },
-        {
-          "name": "Alpaca",
-          "url": "https://app.alpaca.markets/",
-          "fee_label": "$0 commission",
-          "key": "alpaca"
-        }
-      ]
-    },
-    {
-      "plan_id": "plan_20260503_2119_APD",
-      "ticker": "APD",
-      "name": "APD",
-      "direction": "LONG",
-      "entry": 301.07,
-      "stop": 292.04,
-      "target": 314.62,
-      "shares": 6.643,
-      "position_value": 2000.0,
-      "risk_amount": 60.0,
-      "risk_pct_of_portfolio": 0.006,
-      "reward_risk_ratio": 1.5,
-      "invalidation": "Close below $292.04 invalidates the thesis. Re-evaluate if consensus agreement drops below 50%.",
-      "backers": [
-        {
-          "agent": "AEGIS",
-          "conviction": 0.7135659322004034,
-          "rationale": "Cautious constructive: clean uptrend with calm volatility, sentiment supportive."
-        },
-        {
-          "agent": "OBSIDIAN",
-          "conviction": 0.841517908044964,
-          "rationale": "Commodity uptrend, RSI 60 not stretched \u2014 momentum continuation."
         },
         {
           "agent": "ZENITH",
-          "conviction": 0.38851872311517366,
-          "rationale": "Perfect stack with 9.6% total separation, +7.9% 50d momentum \u2014 cosmic trend intact."
-        },
-        {
-          "agent": "WEAVER",
-          "conviction": 0.4565824005993141,
-          "rationale": "Pullback to SMA-20 ($298.08) in uptrend"
+          "conviction": 0.6200418401537919,
+          "rationale": "Perfect stack with 11.9% total separation, +9.6% 50d momentum \u2014 cosmic trend intact."
         },
         {
           "agent": "SPECK",
-          "conviction": 0.3930334046520195,
+          "conviction": 0.23768012389484564,
           "rationale": "Low coverage (5 articles) but sentiment +0.20 and price above SMA-50 \u2014 small edge before crowd arrives."
         }
       ],
       "dissenters": [],
       "consensus_signal": "BUY",
       "portfolio_size": 10000.0,
-      "generated_at": "2026-05-03T21:19:42.303993+00:00",
+      "generated_at": "2026-05-04T08:26:39.490728+00:00",
       "status": "ACTIVE",
       "execution": {
-        "order_id": "SIM-20260503-211942-APD-B",
+        "order_id": "SIM-20260504-082639-MS-B",
         "side": "BUY",
-        "ticker": "APD",
+        "ticker": "MS",
         "asset_class": "equity",
         "exchange": "NYSE Arca",
         "venue": "all-electronic ETF/options exchange",
         "broker": "Interactive Brokers (simulated paper account)",
         "order_type": "MARKET",
         "time_in_force": "DAY",
-        "submitted_at_utc": "2026-05-03T21:19:42+00:00",
-        "filled_at_utc": "2026-05-03T21:19:44+00:00",
-        "settlement_date": "2026-05-04",
+        "submitted_at_utc": "2026-05-04T08:26:39+00:00",
+        "filled_at_utc": "2026-05-04T08:26:41+00:00",
+        "settlement_date": "2026-05-05",
         "account": {
           "label": "EQUITY-CASH-SIM-001",
           "type": "Cash Account",
@@ -218,13 +73,13 @@
         },
         "fills": [
           {
-            "shares": 6.642973,
-            "price": 301.07,
-            "timestamp": "2026-05-03T21:19:44+00:00",
+            "shares": 10.516906,
+            "price": 190.17,
+            "timestamp": "2026-05-04T08:26:41+00:00",
             "venue": "NYSE Arca"
           }
         ],
-        "avg_fill_price": 301.07,
+        "avg_fill_price": 190.17,
         "gross_notional": 2000.0,
         "fees": {
           "commission": 0.0,
@@ -241,31 +96,159 @@
       "brokers": [
         {
           "name": "Robinhood",
-          "url": "https://robinhood.com/stocks/APD",
+          "url": "https://robinhood.com/stocks/MS",
           "fee_label": "$0 commission",
           "key": "robinhood"
         },
         {
           "name": "Fidelity",
-          "url": "https://digital.fidelity.com/prgw/digital/research/quote/dashboard/summary?symbol=APD",
+          "url": "https://digital.fidelity.com/prgw/digital/research/quote/dashboard/summary?symbol=MS",
           "fee_label": "$0 commission",
           "key": "fidelity"
         },
         {
           "name": "Schwab",
-          "url": "https://www.schwab.com/research/stocks/quotes?symbol=APD",
+          "url": "https://www.schwab.com/research/stocks/quotes?symbol=MS",
           "fee_label": "$0 commission",
           "key": "schwab"
         },
         {
           "name": "IBKR",
-          "url": "https://www.interactivebrokers.com/portal/?action=ACCT_MGMT_MAIN&symbol=APD",
+          "url": "https://www.interactivebrokers.com/portal/?action=ACCT_MGMT_MAIN&symbol=MS",
           "fee_label": "$0\u20130.005/sh",
           "key": "ibkr"
         },
         {
           "name": "Webull",
-          "url": "https://www.webull.com/quote/APD",
+          "url": "https://www.webull.com/quote/MS",
+          "fee_label": "$0 commission",
+          "key": "webull"
+        },
+        {
+          "name": "Alpaca",
+          "url": "https://app.alpaca.markets/",
+          "fee_label": "$0 commission",
+          "key": "alpaca"
+        }
+      ]
+    },
+    {
+      "plan_id": "plan_20260504_0826_XLK",
+      "ticker": "XLK",
+      "name": "XLK",
+      "direction": "LONG",
+      "entry": 161.87,
+      "stop": 157.01,
+      "target": 169.15,
+      "shares": 12.3556,
+      "position_value": 2000.0,
+      "risk_amount": 60.0,
+      "risk_pct_of_portfolio": 0.006,
+      "reward_risk_ratio": 1.5,
+      "invalidation": "Close below $157.01 invalidates the thesis. Re-evaluate if consensus agreement drops below 50%.",
+      "backers": [
+        {
+          "agent": "AEGIS",
+          "conviction": 0.2772162899712858,
+          "rationale": "Cautious constructive: clean uptrend with calm volatility, sentiment supportive."
+        },
+        {
+          "agent": "FORGE",
+          "conviction": 0.36768469628077466,
+          "rationale": "Constructive: uptrend intact (+13.1% vs SMA50), sentiment +0.20."
+        },
+        {
+          "agent": "ZENITH",
+          "conviction": 0.5808877785317591,
+          "rationale": "Perfect stack with 7.6% total separation, +15.6% 50d momentum \u2014 cosmic trend intact."
+        },
+        {
+          "agent": "SYNTH",
+          "conviction": 0.3475203150468844,
+          "rationale": "Risk-on regime supports cyclical exposure."
+        },
+        {
+          "agent": "SPECK",
+          "conviction": 0.23768012389484564,
+          "rationale": "Low coverage (5 articles) but sentiment +0.20 and price above SMA-50 \u2014 small edge before crowd arrives."
+        }
+      ],
+      "dissenters": [],
+      "consensus_signal": "BUY",
+      "portfolio_size": 10000.0,
+      "generated_at": "2026-05-04T08:26:39.490781+00:00",
+      "status": "ACTIVE",
+      "execution": {
+        "order_id": "SIM-20260504-082639-XLK-B",
+        "side": "BUY",
+        "ticker": "XLK",
+        "asset_class": "etf",
+        "exchange": "NYSE Arca",
+        "venue": "all-electronic ETF/options exchange",
+        "broker": "Interactive Brokers (simulated paper account)",
+        "order_type": "MARKET",
+        "time_in_force": "DAY",
+        "submitted_at_utc": "2026-05-04T08:26:39+00:00",
+        "filled_at_utc": "2026-05-04T08:26:41+00:00",
+        "settlement_date": "2026-05-05",
+        "account": {
+          "label": "EQUITY-CASH-SIM-001",
+          "type": "Cash Account",
+          "broker": "Interactive Brokers (simulated paper account)",
+          "funding_source": "ACH funding from simulated bank account (routed via broker cash sweep)",
+          "balance_before": 10000.0,
+          "balance_after": 7999.8
+        },
+        "fills": [
+          {
+            "shares": 12.355594,
+            "price": 161.87,
+            "timestamp": "2026-05-04T08:26:41+00:00",
+            "venue": "NYSE Arca"
+          }
+        ],
+        "avg_fill_price": 161.87,
+        "gross_notional": 2000.0,
+        "fees": {
+          "commission": 0.0,
+          "sec_section_31": 0.0,
+          "finra_taf": 0.0,
+          "spread_cost": 0.2,
+          "total": 0.2,
+          "notes": "Spread estimate: 1 bps. Zero commission (IBKR Lite/TD-class simulated)."
+        },
+        "net_cost": 2000.2,
+        "net_proceeds": null,
+        "disclaimer": "Simulated execution \u2014 no live orders were placed on any exchange. Fees modeled on US market structure: SEC Section 31 ($27.80/$1M of sale proceeds), FINRA Trading Activity Fee ($0.000166/share on sells, capped $9.30), Coinbase Advanced taker 0.40% for crypto. Spread cost estimated per ticker."
+      },
+      "brokers": [
+        {
+          "name": "Robinhood",
+          "url": "https://robinhood.com/stocks/XLK",
+          "fee_label": "$0 commission",
+          "key": "robinhood"
+        },
+        {
+          "name": "Fidelity",
+          "url": "https://digital.fidelity.com/prgw/digital/research/quote/dashboard/summary?symbol=XLK",
+          "fee_label": "$0 commission",
+          "key": "fidelity"
+        },
+        {
+          "name": "Schwab",
+          "url": "https://www.schwab.com/research/stocks/quotes?symbol=XLK",
+          "fee_label": "$0 commission",
+          "key": "schwab"
+        },
+        {
+          "name": "IBKR",
+          "url": "https://www.interactivebrokers.com/portal/?action=ACCT_MGMT_MAIN&symbol=XLK",
+          "fee_label": "$0\u20130.005/sh",
+          "key": "ibkr"
+        },
+        {
+          "name": "Webull",
+          "url": "https://www.webull.com/quote/XLK",
           "fee_label": "$0 commission",
           "key": "webull"
         },
