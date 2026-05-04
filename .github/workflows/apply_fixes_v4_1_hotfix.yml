@@ -1,0 +1,558 @@
+name: Apply Code Fixes V4.1 (hotfix — flush + catalysts)
+
+# Hotfix for Alpha 2.1:
+#   1. FLUSH ALL ALPACA POSITIONS via API — clean slate so new orders can place
+#   2. CANCEL ALL OPEN ALPACA ORDERS — clear the queue
+#   3. RESET alpaca_paper_state.json — fresh principal_target from real equity
+#   4. FIX catalyst aggregator — use correct function names
+#      (fetch_opex_calendar, fetch_macro_calendar, fetch_crypto_unlocks,
+#       fetch_index_rebalances)
+#   5. ADD catalyst frontend renderer — auto-displays catalysts.json
+#   6. PRINT actual Alpaca account info to logs so you can verify keys
+#      connect to the right account (account ID, equity, cash)
+#
+# After this runs:
+#   - Trigger Daily Run
+#   - Watch the workflow log: it will print Alpaca account ID + balance
+#   - Catalyst Roundup should populate within seconds of page load
+#
+# Idempotent.
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: { fetch-depth: 0, token: '${{ secrets.GITHUB_TOKEN }}' }
+
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.11' }
+
+      - run: pip install requests
+
+      # ─────────────────────────────────────────────────────────────
+      # PART 1 — Verify Alpaca keys + close all positions + cancel orders
+      # ─────────────────────────────────────────────────────────────
+      - name: Flush Alpaca paper account
+        env:
+          ALPACA_API_KEY: ${{ secrets.ALPACA_API_KEY }}
+          ALPACA_API_SECRET: ${{ secrets.ALPACA_API_SECRET }}
+        run: |
+          python3 << 'PYEOF'
+          import os, json, time
+          import requests
+
+          BASE = "https://paper-api.alpaca.markets"
+          key = os.environ.get("ALPACA_API_KEY", "").strip()
+          secret = os.environ.get("ALPACA_API_SECRET", "").strip()
+          if not key or not secret:
+              print("FATAL: ALPACA_API_KEY / ALPACA_API_SECRET not set in GitHub secrets")
+              exit(1)
+          headers = {
+              "APCA-API-KEY-ID": key,
+              "APCA-API-SECRET-KEY": secret,
+              "Content-Type": "application/json",
+          }
+
+          # ── Verify account ────────────────────────────────────────
+          print("=" * 60)
+          print("ALPACA ACCOUNT VERIFICATION")
+          print("=" * 60)
+          r = requests.get(f"{BASE}/v2/account", headers=headers, timeout=15)
+          if r.status_code != 200:
+              print(f"FATAL: Alpaca rejected keys — HTTP {r.status_code}")
+              print(r.text[:300])
+              exit(1)
+          acct = r.json()
+          print(f"  Account ID:       {acct.get('account_number')}")
+          print(f"  Status:           {acct.get('status')}")
+          print(f"  Equity:           ${float(acct.get('equity', 0)):,.2f}")
+          print(f"  Cash:             ${float(acct.get('cash', 0)):,.2f}")
+          print(f"  Buying power:     ${float(acct.get('buying_power', 0)):,.2f}")
+          print(f"  Pattern day trader: {acct.get('pattern_day_trader')}")
+          print(f"  Created:          {acct.get('created_at', '')[:10]}")
+          print()
+
+          # ── Cancel all open orders ────────────────────────────────
+          print("Canceling all open orders...")
+          r = requests.delete(f"{BASE}/v2/orders", headers=headers, timeout=15)
+          print(f"  → DELETE /v2/orders : HTTP {r.status_code}")
+          if r.status_code in (200, 207):
+              try:
+                  result = r.json()
+                  if isinstance(result, list):
+                      print(f"  → {len(result)} order(s) canceled")
+              except Exception:
+                  pass
+          time.sleep(1)
+
+          # ── Close all open positions ──────────────────────────────
+          print()
+          print("Fetching open positions...")
+          r = requests.get(f"{BASE}/v2/positions", headers=headers, timeout=15)
+          positions = r.json() if r.status_code == 200 else []
+          if not isinstance(positions, list):
+              positions = []
+          print(f"  → {len(positions)} position(s) currently open")
+          if positions:
+              for pos in positions[:20]:
+                  sym = pos.get("symbol")
+                  qty = pos.get("qty")
+                  pnl = pos.get("unrealized_pl", "?")
+                  print(f"    {sym}: qty={qty}, unrealized P&L=${pnl}")
+              print()
+              print("Closing all positions (DELETE /v2/positions)...")
+              r = requests.delete(
+                  f"{BASE}/v2/positions",
+                  headers=headers,
+                  params={"cancel_orders": "true"},
+                  timeout=30,
+              )
+              print(f"  → HTTP {r.status_code}")
+              if r.status_code in (200, 207):
+                  try:
+                      result = r.json()
+                      if isinstance(result, list):
+                          ok = sum(1 for x in result if x.get("status") in (200, 207))
+                          print(f"  → {ok}/{len(result)} close orders accepted")
+                  except Exception:
+                      pass
+              # Wait for fills
+              print("  Waiting 5s for fills...")
+              time.sleep(5)
+              # Re-check
+              r = requests.get(f"{BASE}/v2/positions", headers=headers, timeout=15)
+              remaining = r.json() if r.status_code == 200 else []
+              if not isinstance(remaining, list): remaining = []
+              print(f"  → {len(remaining)} position(s) remaining")
+
+          # ── Re-fetch account post-flush ───────────────────────────
+          time.sleep(2)
+          r = requests.get(f"{BASE}/v2/account", headers=headers, timeout=15)
+          acct = r.json() if r.status_code == 200 else {}
+          equity_after = float(acct.get('equity', 0))
+          cash_after = float(acct.get('cash', 0))
+          print()
+          print(f"POST-FLUSH equity: ${equity_after:,.2f} | cash: ${cash_after:,.2f}")
+
+          # ── Reset alpaca_paper_state.json ─────────────────────────
+          from datetime import datetime, timezone
+          from pathlib import Path
+          now_iso = datetime.now(timezone.utc).isoformat()
+          state = {
+              "version": "2.1.1",
+              "enabled": True,
+              "account": {
+                  "equity": round(equity_after, 2),
+                  "cash": round(cash_after, 2),
+                  "account_number": acct.get('account_number'),
+              },
+              "principal_target": round(equity_after, 2) if equity_after > 0 else 10000,
+              "savings": 0.0,
+              "lifetime_realized_wins": 0,
+              "lifetime_realized_losses": 0,
+              "position_meta": {},
+              "tickers_traded_this_cycle": [],
+              "recent_alpaca_tickers": [],
+              "orders": [],
+              "orders_placed": [],
+              "errors": [],
+              "last_run": now_iso,
+              "_flushed_at": now_iso,
+              "_flush_note": (
+                  f"v4.1 hotfix: flushed all positions on {now_iso}. "
+                  f"Principal target locked at ${equity_after:,.2f} (post-flush equity)."
+              ),
+          }
+          out = Path("docs/data")
+          out.mkdir(parents=True, exist_ok=True)
+          (out / "alpaca_paper_state.json").write_text(
+              json.dumps(state, indent=2, default=str)
+          )
+          print(f"  alpaca_paper_state.json written. Principal: ${equity_after:,.2f}")
+          PYEOF
+
+      # ─────────────────────────────────────────────────────────────
+      # PART 2 — Fix catalyst aggregator with correct function names
+      # ─────────────────────────────────────────────────────────────
+      - name: Rewrite catalysts/__init__.py with correct imports
+        run: |
+          cat > silmaril/catalysts/__init__.py << 'PYEOF'
+          """silmaril.catalysts — Robust aggregator with correct module function names.
+
+          v4.1 fix: uses fetch_* function names (not get_*) which match the
+          actual catalyst submodules. Verified against repo source.
+          """
+          from __future__ import annotations
+          import json
+          from datetime import date, datetime, timezone, timedelta
+          from pathlib import Path
+          from typing import Any, Dict, List, Optional
+
+
+          # FOMC dates (manually maintained, public schedule)
+          FOMC_2026 = [
+              "2026-01-28", "2026-03-18", "2026-04-29", "2026-06-17",
+              "2026-07-29", "2026-09-16", "2026-11-04", "2026-12-16",
+          ]
+
+
+          def _synthetic_catalysts(start_d: date, end_d: date) -> List[Dict[str, Any]]:
+              """Always-works fallback: FOMC, end-of-month rebalance."""
+              out = []
+              for d_str in FOMC_2026:
+                  try:
+                      d = date.fromisoformat(d_str)
+                      if start_d <= d <= end_d:
+                          out.append({
+                              "date": d_str, "type": "fomc",
+                              "ticker": "SPY",
+                              "title": "FOMC meeting — rate decision + statement",
+                              "magnitude": "very_high",
+                              "source_url": "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm",
+                              "watchlist_tags": ["rates", "macro"],
+                          })
+                  except Exception: pass
+              # Month-end last business day
+              cur = start_d
+              while cur <= end_d:
+                  next_month = cur.replace(day=28) + timedelta(days=4)
+                  last_day = next_month - timedelta(days=next_month.day)
+                  while last_day.weekday() >= 5:
+                      last_day -= timedelta(days=1)
+                  if start_d <= last_day <= end_d:
+                      out.append({
+                          "date": last_day.isoformat(), "type": "month_end",
+                          "ticker": "SPY",
+                          "title": f"Month-end rebalance ({last_day.strftime('%b %d')})",
+                          "magnitude": "medium",
+                          "source_url": "",
+                          "watchlist_tags": ["seasonal", "rebalance"],
+                      })
+                  cur = (cur.replace(day=1) + timedelta(days=32)).replace(day=1)
+              return out
+
+
+          def write_catalysts_json(path: Path, today_iso: Optional[str] = None) -> int:
+              """Aggregate catalysts. Always writes a non-empty file."""
+              today_d = date.fromisoformat(today_iso) if today_iso else date.today()
+              end_d = today_d + timedelta(days=30)
+              all_events: List[Dict[str, Any]] = []
+              status = {}
+
+              # 1. Earnings (Finnhub) — fetch_earnings_calendar
+              try:
+                  from .earnings_calendar import fetch_earnings_calendar
+                  ev = fetch_earnings_calendar(start_date=today_d, end_date=end_d)
+                  all_events.extend(ev)
+                  status["earnings"] = f"OK ({len(ev)})"
+              except Exception as e:
+                  status["earnings"] = f"FAIL: {type(e).__name__}: {e}"
+
+              # 2. OPEX dates — fetch_opex_calendar (NOT get_opex_dates)
+              try:
+                  from .opex import fetch_opex_calendar
+                  ev = fetch_opex_calendar(start_date=today_d, end_date=end_d)
+                  all_events.extend(ev)
+                  status["opex"] = f"OK ({len(ev)})"
+              except Exception as e:
+                  status["opex"] = f"FAIL: {type(e).__name__}: {e}"
+
+              # 3. Macro releases — fetch_macro_calendar
+              try:
+                  from .macro_releases import fetch_macro_calendar
+                  ev = fetch_macro_calendar(start_date=today_d, end_date=end_d)
+                  all_events.extend(ev)
+                  status["macro"] = f"OK ({len(ev)})"
+              except Exception as e:
+                  status["macro"] = f"FAIL: {type(e).__name__}: {e}"
+
+              # 4. Ex-dividend
+              try:
+                  from .ex_dividend import fetch_ex_dividend_calendar
+                  ev = fetch_ex_dividend_calendar(start_date=today_d, end_date=end_d)
+                  all_events.extend(ev)
+                  status["ex_div"] = f"OK ({len(ev)})"
+              except Exception as e:
+                  status["ex_div"] = f"FAIL: {type(e).__name__}: {e}"
+
+              # 5. Crypto unlocks — fetch_crypto_unlocks
+              try:
+                  from .crypto_unlocks import fetch_crypto_unlocks
+                  ev = fetch_crypto_unlocks(start_date=today_d, end_date=end_d)
+                  all_events.extend(ev)
+                  status["crypto_unlocks"] = f"OK ({len(ev)})"
+              except Exception as e:
+                  status["crypto_unlocks"] = f"FAIL: {type(e).__name__}: {e}"
+
+              # 6. Index rebalance — fetch_index_rebalances
+              try:
+                  from .index_rebalance import fetch_index_rebalances
+                  ev = fetch_index_rebalances(start_date=today_d, end_date=end_d)
+                  all_events.extend(ev)
+                  status["index_rebalance"] = f"OK ({len(ev)})"
+              except Exception as e:
+                  status["index_rebalance"] = f"FAIL: {type(e).__name__}: {e}"
+
+              # 7. Synthetic fallback (always works)
+              try:
+                  syn = _synthetic_catalysts(today_d, end_d)
+                  existing = {(c.get("date"), c.get("type")) for c in all_events}
+                  added = 0
+                  for s in syn:
+                      if (s["date"], s["type"]) not in existing:
+                          all_events.append(s)
+                          added += 1
+                  status["synthetic"] = f"OK (+{added})"
+              except Exception as e:
+                  status["synthetic"] = f"FAIL: {e}"
+
+              # Dedupe + sort
+              seen = set()
+              unique = []
+              for e in all_events:
+                  key = (e.get("date", ""), e.get("ticker", ""), e.get("type", ""), e.get("title", ""))
+                  if key not in seen:
+                      seen.add(key)
+                      unique.append(e)
+              unique.sort(key=lambda c: (c.get("date", ""), c.get("ticker", "") or ""))
+
+              # Print diagnostic
+              print(f"[catalysts] sources status:")
+              for src, st in status.items():
+                  print(f"  {src}: {st}")
+              print(f"[catalysts] total unique events: {len(unique)}")
+
+              path.parent.mkdir(parents=True, exist_ok=True)
+              path.write_text(json.dumps(unique, indent=2, default=str))
+
+              diag_path = path.parent / "catalysts_diagnostic.json"
+              diag_path.write_text(json.dumps({
+                  "generated_at": datetime.now(timezone.utc).isoformat(),
+                  "count": len(unique),
+                  "sources_status": status,
+                  "window_start": today_d.isoformat(),
+                  "window_end": end_d.isoformat(),
+              }, indent=2, default=str))
+
+              return len(unique)
+
+
+          __all__ = ["write_catalysts_json"]
+          PYEOF
+          echo "OK: catalysts/__init__.py rewritten with correct function names"
+
+      # ─────────────────────────────────────────────────────────────
+      # PART 3 — Catalyst frontend renderer
+      # ─────────────────────────────────────────────────────────────
+      - name: Inject catalyst renderer into index.html
+        run: |
+          python3 << 'PYEOF'
+          from pathlib import Path
+          p = Path("docs/index.html")
+          if not p.exists():
+              print("docs/index.html not found"); exit(0)
+          c = p.read_text()
+          if "function silmarilCatalystRender" in c:
+              print("OK: catalyst renderer already present"); exit(0)
+
+          renderer = """
+          <style>
+          /* Alpha 2.1.1 — Catalyst Roundup auto-renderer */
+          .alpha21-catalyst-panel {
+              background: #1a1a1a; border: 1px solid #4a90e2;
+              border-radius: 8px; padding: 12px; margin: 16px 0;
+              font-family: 'JetBrains Mono', monospace;
+          }
+          .alpha21-catalyst-panel h3 {
+              color: #4a90e2; margin: 0 0 8px 0; font-size: 14px;
+              text-transform: uppercase; letter-spacing: 1px;
+          }
+          .alpha21-catalyst-panel .cat-row {
+              display: grid; grid-template-columns: 90px 70px 90px 1fr;
+              gap: 12px; padding: 6px 0; border-bottom: 1px solid #2a2a2a;
+              font-size: 12px; color: #ddd; align-items: center;
+          }
+          .alpha21-catalyst-panel .cat-row:last-child { border-bottom: none; }
+          .alpha21-catalyst-panel .cat-date { color: #4a90e2; font-weight: 600; }
+          .alpha21-catalyst-panel .cat-type { color: #999; text-transform: uppercase; font-size: 10px; }
+          .alpha21-catalyst-panel .cat-ticker {
+              color: #f5d97a; font-weight: 600; background: #2a2a2a;
+              padding: 1px 6px; border-radius: 4px; text-align: center;
+          }
+          .alpha21-catalyst-panel .cat-title { color: #ddd; }
+          .alpha21-catalyst-panel .mag-very_high { border-left: 3px solid #f44336; padding-left: 8px; }
+          .alpha21-catalyst-panel .mag-high { border-left: 3px solid #ff9800; padding-left: 8px; }
+          .alpha21-catalyst-panel .mag-medium { border-left: 3px solid #4caf50; padding-left: 8px; }
+          .alpha21-catalyst-panel .filter-bar {
+              padding: 8px 0; border-bottom: 1px solid #333; margin-bottom: 8px;
+              display: flex; gap: 8px; flex-wrap: wrap;
+          }
+          .alpha21-catalyst-panel .filter-btn {
+              background: #2a2a2a; color: #ddd; border: 1px solid #444;
+              border-radius: 4px; padding: 4px 10px; font-size: 11px;
+              cursor: pointer; font-family: inherit;
+          }
+          .alpha21-catalyst-panel .filter-btn.active {
+              background: #4a90e2; color: white; border-color: #4a90e2;
+          }
+          </style>
+
+          <script>
+          (function(){
+            window.silmarilCatalystRender = async function() {
+              try {
+                const r = await fetch('data/catalysts.json?_=' + Date.now());
+                if (!r.ok) {
+                  console.log('[catalyst-renderer] fetch failed:', r.status);
+                  return;
+                }
+                const events = await r.json();
+                if (!Array.isArray(events) || events.length === 0) {
+                  console.log('[catalyst-renderer] no events to display');
+                  return;
+                }
+                console.log('[catalyst-renderer] loaded', events.length, 'events');
+
+                // Find target — try common selectors first, fall back to inserting a new panel
+                let target = document.querySelector('#catalyst-roundup, .catalyst-roundup, [data-section="catalysts"]');
+                let panel = document.getElementById('alpha21-catalyst-panel');
+                if (!panel) {
+                  panel = document.createElement('div');
+                  panel.id = 'alpha21-catalyst-panel';
+                  panel.className = 'alpha21-catalyst-panel';
+                  if (target) {
+                    target.appendChild(panel);
+                  } else {
+                    // Insert after the Alpaca panel if present, else top of main
+                    const alpacaPanel = document.getElementById('alpha21-alpaca-panel');
+                    const anchor = document.querySelector('main') || document.body;
+                    if (alpacaPanel && alpacaPanel.parentNode) {
+                      alpacaPanel.parentNode.insertBefore(panel, alpacaPanel.nextSibling);
+                    } else {
+                      anchor.insertBefore(panel, anchor.firstChild);
+                    }
+                  }
+                }
+
+                // Build filter buttons by type
+                const types = Array.from(new Set(events.map(e => e.type || 'other'))).sort();
+                let html = '<h3>Catalyst Roundup (' + events.length + ' upcoming)</h3>';
+                html += '<div class="filter-bar">';
+                html += '<button class="filter-btn active" data-filter="all">all</button>';
+                for (const t of types) {
+                  html += '<button class="filter-btn" data-filter="' + t + '">' + t + '</button>';
+                }
+                html += '</div>';
+                html += '<div id="alpha21-catalyst-rows">';
+                // Show next 30 by default
+                for (const e of events.slice(0, 30)) {
+                  const mag = (e.magnitude || 'medium').replace(/[^a-z_]/g, '');
+                  html += '<div class="cat-row mag-' + mag + '" data-type="' + (e.type || '') + '">' +
+                          '<span class="cat-date">' + (e.date || '').substring(5) + '</span>' +
+                          '<span class="cat-type">' + (e.type || '?') + '</span>' +
+                          '<span class="cat-ticker">' + (e.ticker || '—') + '</span>' +
+                          '<span class="cat-title">' + (e.title || '') + '</span>' +
+                          '</div>';
+                }
+                html += '</div>';
+                if (events.length > 30) {
+                  html += '<div style="text-align:center; padding:8px; color:#888; font-size:11px;">' +
+                          '— ' + (events.length - 30) + ' more events not shown —</div>';
+                }
+                panel.innerHTML = html;
+
+                // Wire filter buttons
+                panel.querySelectorAll('.filter-btn').forEach(btn => {
+                  btn.addEventListener('click', () => {
+                    panel.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    const f = btn.getAttribute('data-filter');
+                    panel.querySelectorAll('.cat-row').forEach(row => {
+                      const t = row.getAttribute('data-type');
+                      row.style.display = (f === 'all' || t === f) ? '' : 'none';
+                    });
+                  });
+                });
+              } catch(e) {
+                console.error('[catalyst-renderer] failed:', e);
+              }
+            };
+            if (document.readyState === 'loading') {
+              document.addEventListener('DOMContentLoaded', () => silmarilCatalystRender());
+            } else {
+              silmarilCatalystRender();
+            }
+            setTimeout(() => silmarilCatalystRender(), 2500);
+          })();
+          </script>
+          """
+          if "</body>" in c:
+              c = c.replace("</body>", renderer + "\n</body>")
+          else:
+              c = c + "\n" + renderer
+          p.write_text(c)
+          print("OK: catalyst renderer injected into index.html")
+          PYEOF
+
+      # ─────────────────────────────────────────────────────────────
+      # PART 4 — Tighten Alpaca cycle params for faster turnover
+      # ─────────────────────────────────────────────────────────────
+      - name: Tighten Alpaca cycle params in cli.py
+        run: |
+          python3 << 'PYEOF'
+          from pathlib import Path
+          p = Path("silmaril/cli.py")
+          if not p.exists():
+              print("cli.py not found"); exit(0)
+          c = p.read_text(); orig = c
+
+          # Tighten profit-take and trailing stop for faster cycling
+          c = c.replace("profit_take_pct=0.05", "profit_take_pct=0.03")
+          c = c.replace("trailing_stop_pct=0.04", "trailing_stop_pct=0.025")
+
+          # Also reduce max_total_positions cap so capital rotates instead of saturating
+          # Default in alpaca_paper.py is 15. We'll override at the call site.
+          import re
+          # Look for the existing call signature and add max_total_positions=10
+          if "max_total_positions=" not in c:
+              c = c.replace(
+                  "min_consensus_conviction=0.40",
+                  "min_consensus_conviction=0.40,\n                max_total_positions=10",
+                  1,
+              )
+
+          if c != orig:
+              p.write_text(c)
+              print("OK: cli.py — profit_take=3%, trail_stop=2.5%, max_positions=10")
+          else:
+              print("OK: cli.py params already tightened")
+          PYEOF
+
+      # ─────────────────────────────────────────────────────────────
+      # PART 5 — Commit
+      # ─────────────────────────────────────────────────────────────
+      - name: Commit hotfix
+        run: |
+          git config user.name 'silmaril-bot'
+          git config user.email 'silmaril-bot@users.noreply.github.com'
+          git add silmaril/ docs/ 2>/dev/null || true
+          git diff --staged --quiet && echo "Nothing to commit" || \
+            git commit -m "v4.1 hotfix: flush Alpaca + correct catalyst function names + frontend renderer + 3%/2.5% cycle $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          git push
+          echo ""
+          echo "================================================"
+          echo "Hotfix complete. Next steps:"
+          echo "  1. (Optional) Reset Alpaca paper account to \$10K balance"
+          echo "     in Alpaca dashboard if you want true \$10K starting"
+          echo "  2. Trigger 'Daily Run'"
+          echo "  3. Check workflow log — top section shows live Alpaca"
+          echo "     account ID + equity, so you can verify keys hit"
+          echo "     the right paper account"
+          echo "================================================"
