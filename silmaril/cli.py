@@ -1281,8 +1281,8 @@ def run(mode: str = "demo", output_dir: str = "docs/data") -> None:
                 min_consensus_conviction=0.40,
                 max_total_positions=15,
                 enable_shorts=True,
-                profit_take_pct=0.05,    # v4: harvest at +5%
-                trailing_stop_pct=0.04,  # v4: stop at -4% from peak
+                profit_take_pct=0.03,    # v4: harvest at +5%
+                trailing_stop_pct=0.025,  # v4: stop at -4% from peak
                 # CRITICAL FIX: pass every debated ticker's consensus signal so the
                 # exit loop can close positions whose tickers fell outside the top-16
                 # plan cut. Without this, positions accumulate until the 15-position
