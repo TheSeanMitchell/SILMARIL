@@ -1837,6 +1837,22 @@
       border: 1px solid rgba(180,80,80,0.3);
     }
 
+    /* Unified leaderboard (LEADERBOARD tab) */
+    .lb-full tbody tr.lb-row { border-bottom: 1px solid rgba(255,255,255,.04); transition: background .12s; }
+    .lb-full tbody tr.lb-row:hover { background: rgba(255,255,255,.04); }
+    .lb-full tbody tr.lb-row.you { background: rgba(212,175,55,.07); }
+    .lb-full tbody tr.lb-row.you:hover { background: rgba(212,175,55,.12); }
+    .lb-rank { padding: 10px 12px; font-family: var(--mono); font-size: 13px; color: var(--muted); width: 40px; }
+    .lb-name { padding: 10px 12px; }
+    .lb-nm { font-weight: 600; font-size: 13px; margin-right: 8px; }
+    .lb-type { font-size: 10px; letter-spacing: .08em; color: var(--muted); margin-right: 8px; }
+    .lb-type.you { color: var(--gold); }
+    .lb-type.agent { color: #7eb8f7; }
+    .lb-type.compounder { color: var(--silver); }
+    .lb-pos { font-family: var(--mono); font-size: 10px; color: var(--muted); background: rgba(255,255,255,.06); padding: 2px 6px; border-radius: 4px; }
+    .lb-eq { padding: 10px 12px; text-align: right; font-family: var(--mono); font-size: 13px; }
+    .lb-ret { padding: 10px 16px 10px 12px; text-align: right; font-family: var(--mono); font-size: 13px; font-weight: 700; }
+
     /* Backtest leaderboard table */
     .leaderboard-table {
       width: 100%;
@@ -2709,7 +2725,7 @@
   };
 
   window.careerResetActive = function() {
-    if (!confirm('Reset this profile back to $5,000? All trades and history will be erased.')) return;
+    if (!confirm('Reset this profile back to $10,000? All trades and history will be erased.')) return;
     const c = STATE.careers;
     const oldName = c.slots[c.active_slot].name;
     c.slots[c.active_slot] = _freshSlot(oldName);
@@ -2718,7 +2734,7 @@
   };
 
   window.careerResetAll = function() {
-    if (!confirm('Reset ALL three career profiles back to $5,000 each? Everything will be erased.')) return;
+    if (!confirm('Reset ALL 10 career profiles back to $10,000 each? Everything will be erased.')) return;
     STATE.careers = _freshCareers();
     saveCareers(STATE.careers);
     render();
@@ -2860,7 +2876,7 @@
         <div class="card-header">
           <div>
             <div class="card-title"><span class="diamond"></span>Career Mode</div>
-            <div class="card-subtitle">10 profiles · $5,000 each · trade against the agents · stored in your browser</div>
+            <div class="card-subtitle">10 profiles · $10,000 each · trade against the agents · stored in your browser</div>
           </div>
         </div>
         <div class="career-tabs">${tabs}</div>
@@ -2895,7 +2911,7 @@
           <div class="actions">
             <button class="career-action-btn secondary" onclick="careerRenameSlot()">Rename</button>
             <button class="career-action-btn danger" onclick="careerResetActive()">Reset Profile</button>
-            <button class="career-action-btn danger" onclick="careerResetAll()">Reset All 3</button>
+            <button class="career-action-btn danger" onclick="careerResetAll()">Reset All 10</button>
           </div>
         </div>
 
@@ -2942,24 +2958,48 @@
 
   function _buildCombinedLeaderboard(careers) {
     const rows = [];
+    // ── User profiles ──────────────────────────────────────────
     careers.slots.forEach((s) => {
       const eq = _slotEquity(s);
       rows.push({
         name: s.name, equity: eq,
         ret: ((eq / CAREER_STARTING_CAPITAL) - 1) * 100,
         is_user: true, starting_cap: CAREER_STARTING_CAPITAL,
+        type: 'user',
       });
     });
-    const portfolios = (STATE.agent_portfolios && STATE.agent_portfolios.portfolios) || {};
+
+    // ── $10K portfolio agents (save_portfolios writes a flat dict) ──
+    // agent_portfolios.json is {AGENTNAME: {agent, cash, current_equity, current_position, ...}}
+    // The .portfolios key does NOT exist — handle both flat and wrapped formats.
+    const apRaw = STATE.agent_portfolios;
+    const portfolios = (apRaw && apRaw.portfolios) ? apRaw.portfolios
+                     : (apRaw && typeof apRaw === 'object') ? apRaw
+                     : {};
+    // Names reserved for dollar-compounders (have their own state files + scale)
+    const COMPOUNDERS = new Set(['SCROOGE', 'MIDAS', 'CRYPTOBRO', 'JRR_TOKEN', 'SPORTS_BRO']);
     Object.values(portfolios).forEach(p => {
-      const mark = p.current_position ? _markPrice(p.current_position.ticker) || p.current_position.entry_price : 0;
-      const eq = (p.balance || 0) + (p.current_position ? p.current_position.shares * mark : 0);
+      if (!p || !p.agent || COMPOUNDERS.has(p.agent)) return;
+      // Field names from AgentPortfolio dataclass: cash, current_equity, current_position.qty
+      const mark = p.current_position
+        ? (_markPrice(p.current_position.ticker) || p.current_position.entry_price || 0)
+        : 0;
+      const positionValue = p.current_position
+        ? (p.current_position.qty || p.current_position.shares || 0) * mark
+        : 0;
+      const cash = p.cash || p.balance || 0;
+      const eq = p.current_equity || (cash + positionValue) || cash;
+      const startCap = p.starting_equity || 10000;
       rows.push({
         name: p.agent, equity: eq,
-        ret: ((eq / 10000) - 1) * 100,
-        is_user: false, starting_cap: 10000,
+        ret: ((eq / startCap) - 1) * 100,
+        is_user: false, starting_cap: startCap,
+        type: 'agent10k',
+        ticker: p.current_position ? p.current_position.ticker : null,
       });
     });
+
+    // ── Dollar compounders ($10 starting balance, different scale) ──
     [
       ['SCROOGE', STATE.scrooge],
       ['MIDAS', STATE.midas],
@@ -2968,13 +3008,15 @@
       ['SPORTS_BRO', STATE.sports_bro],
     ].forEach(([name, s]) => {
       if (!s) return;
-      const startingCap = 10.0;  // all $1 → $10 reset
+      const startingCap = 10.0;
       rows.push({
         name, equity: s.balance,
         ret: ((s.balance / startingCap) - 1) * 100,
         is_user: false, starting_cap: startingCap,
+        type: 'compounder',
       });
     });
+
     rows.sort((a, b) => b.ret - a.ret);
     rows.forEach((r, i) => { r.rank = i + 1; });
     return rows;
@@ -4816,10 +4858,82 @@
   //   PORTFOLIO MANAGERS — the 5 compounders running their own books (scrooge/midas/cryptobro/jrr/sports)
   //   EXECUTION       — actionable trade plans with full broker detail and LLM handoff blocks
   //   RESEARCH        — catalysts, tutorials, glossary, about
+  // ── Unified Leaderboard Tab ──────────────────────────────────────
+  function renderUnifiedLeaderboard() {
+    const careers = STATE.careers;
+    const rows = careers ? _buildCombinedLeaderboard(careers) : [];
+
+    // Split into groups for the summary pills
+    const users   = rows.filter(r => r.type === 'user');
+    const agents10k = rows.filter(r => r.type === 'agent10k');
+    const compounders = rows.filter(r => r.type === 'compounder');
+    const topUser  = users.sort((a,b) => b.ret - a.ret)[0];
+    const topAgent = [...agents10k, ...compounders].sort((a,b) => b.ret - a.ret)[0];
+
+    const typeLabel = { user: '· YOU', agent10k: '· $10K AGENT', compounder: '· $1 COMPOUNDER' };
+    const typeClass = { user: 'you', agent10k: 'agent', compounder: 'compounder' };
+
+    const rowsHtml = rows.map(row => {
+      const eqLabel = row.type === 'compounder'
+        ? `${fmtMoney(row.equity, 4)} <span style="font-size:10px;opacity:.5">(of $10)</span>`
+        : fmtMoney(row.equity, 2);
+      const posTag = row.ticker
+        ? `<span class="lb-pos">▸ ${esc(row.ticker)}</span>`
+        : '';
+      return `
+        <tr class="lb-row ${row.is_user ? 'you' : ''}">
+          <td class="lb-rank">${row.rank}</td>
+          <td class="lb-name">
+            <span class="lb-nm">${esc(row.name)}</span>
+            <span class="lb-type ${typeClass[row.type] || ''}">${typeLabel[row.type] || ''}</span>
+            ${posTag}
+          </td>
+          <td class="lb-eq">${eqLabel}</td>
+          <td class="lb-ret ${row.ret > 0.01 ? 'positive' : row.ret < -0.01 ? 'negative' : ''}">${row.ret >= 0 ? '+' : ''}${row.ret.toFixed(2)}%</td>
+        </tr>
+      `;
+    }).join('');
+
+    return `
+      <div class="card" style="margin-top:24px">
+        <div class="card-header">
+          <div>
+            <div class="card-title"><span class="diamond"></span>Full Leaderboard — All Competitors</div>
+            <div class="card-subtitle">${rows.length} total entries · ranked by % return · you vs every agent</div>
+          </div>
+          <div style="display:flex;gap:16px;flex-wrap:wrap;align-items:center">
+            ${topUser ? `<div style="text-align:right"><div style="font-size:10px;color:var(--muted);letter-spacing:.1em">BEST HUMAN</div><div style="font-weight:700;color:var(--gold)">${esc(topUser.name)} <span class="${topUser.ret>0?'positive':'negative'}">${topUser.ret>=0?'+':''}${topUser.ret.toFixed(2)}%</span></div></div>` : ''}
+            ${topAgent ? `<div style="text-align:right"><div style="font-size:10px;color:var(--muted);letter-spacing:.1em">BEST AGENT</div><div style="font-weight:700;color:var(--gold)">${esc(topAgent.name)} <span class="${topAgent.ret>0?'positive':'negative'}">${topAgent.ret>=0?'+':''}${topAgent.ret.toFixed(2)}%</span></div></div>` : ''}
+          </div>
+        </div>
+        <div style="overflow-x:auto">
+          <table style="width:100%;border-collapse:collapse" class="lb-full">
+            <thead>
+              <tr style="border-bottom:1px solid var(--border)">
+                <th style="text-align:left;padding:8px 12px;font-size:10px;letter-spacing:.1em;color:var(--muted)">#</th>
+                <th style="text-align:left;padding:8px 12px;font-size:10px;letter-spacing:.1em;color:var(--muted)">NAME</th>
+                <th style="text-align:right;padding:8px 12px;font-size:10px;letter-spacing:.1em;color:var(--muted)">EQUITY</th>
+                <th style="text-align:right;padding:8px 12px;font-size:10px;letter-spacing:.1em;color:var(--muted)">RETURN</th>
+              </tr>
+            </thead>
+            <tbody>${rowsHtml}</tbody>
+          </table>
+        </div>
+        <div style="padding:16px 0 4px;font-size:11px;color:var(--muted);border-top:1px solid var(--border);margin-top:8px">
+          $10K agents run per-agent portfolios in swing-trade mode. Dollar compounders (Scrooge, Midas, CryptoBro, JRR Token, Sports Bro) each started at $10 and compound from there — their equity is on a different scale.
+          You start at ${fmtMoney(CAREER_STARTING_CAPITAL, 0)} per profile.
+        </div>
+      </div>
+
+      ${renderCareerMode()}
+    `;
+  }
+
   function renderTabNav() {
     const t = STATE.activeTab || 'markets';
     const tabs = [
       ['markets',     'MARKETS',         'Live debates, asset table, prediction markets'],
+      ['leaderboard', 'LEADERBOARD',     'All agents + your profiles ranked by % return'],
       ['strategists', 'STRATEGISTS',     'The 22 specialist agents and their performance'],
       ['managers',    'PORTFOLIO MGRS',  'Scrooge, Midas, CryptoBro, JRR, Sports Bro'],
       ['execution',   'EXECUTION',       'Trade plans with broker deeplinks'],
@@ -4842,6 +4956,9 @@
 
   function renderActiveTab(featured, debates, signals, scrooge, midas, cryptobro, jrr_token, sports_bro, trade_plans, handoff_blocks) {
     const tab = STATE.activeTab || 'markets';
+    if (tab === 'leaderboard') {
+      return renderUnifiedLeaderboard();
+    }
     if (tab === 'markets') {
       return `
         <div class="main-grid">
