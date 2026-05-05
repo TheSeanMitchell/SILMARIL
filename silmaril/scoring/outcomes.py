@@ -310,6 +310,10 @@ def build_scoring_summary(
                 "by_regime": {},
                 "weight_multiplier": 1.0,
                 "weight_explanation": "Insufficient data — neutral weight applied.",
+                "global_weight": 1.0,
+                "regime_aware_weight": 1.0,
+                "best_regime": None,
+                "specialty": "none",
             })
             continue
         wins = sum(1 for o in outcomes if o["correct"])
@@ -327,8 +331,20 @@ def build_scoring_summary(
         # Regime cuts
         by_regime = _split_by_regime(outcomes)
 
-        # Weight multiplier — used by Phase E to up/downweight votes
-        weight_mult, expl = _compute_weight_multiplier(n, wins / n, ev, worst)
+        # Weight multiplier — REGIME-AWARE.
+        # The kill switch reads weight_multiplier; we now set it to the
+        # regime-aware version so specialists don't get killed for being
+        # bad outside their specialty. The global multiplier is also
+        # exposed for transparency (global_weight).
+        (
+            regime_aware_mult,
+            global_mult,
+            best_regime,
+            specialty_label,
+            expl,
+        ) = _compute_weight_multiplier_regime_aware(
+            n, wins / n, ev, worst, by_regime,
+        )
 
         row = {
             "agent": agent,
@@ -342,8 +358,16 @@ def build_scoring_summary(
             "worst_call_pct": round(worst, 3),
             "avg_conviction": round(avg_conv, 3),
             "by_regime": by_regime,
-            "weight_multiplier": round(weight_mult, 3),
+            # The kill switch reads this; it's now regime-aware.
+            "weight_multiplier": round(regime_aware_mult, 3),
             "weight_explanation": expl,
+            # Diagnostic: original global multiplier preserved for the
+            # dashboard so users can see WHY the kill switch chose what
+            # it chose.
+            "global_weight": round(global_mult, 3),
+            "regime_aware_weight": round(regime_aware_mult, 3),
+            "best_regime": best_regime,
+            "specialty": specialty_label,
         }
         if stale_count:
             row["stale_price_calls"] = stale_count
@@ -410,6 +434,136 @@ def _compute_weight_multiplier(n, win_rate, ev, worst) -> Tuple[float, str]:
     else:
         msg = f"On-baseline performance: {win_rate:.0%} win rate, {ev:+.2f}% EV. Weight near neutral."
     return mult, msg
+
+
+# ─────────────────────────────────────────────────────────────────
+# Regime-aware weight (Alpha 2.1.5 — added 2026-05-04)
+# ─────────────────────────────────────────────────────────────────
+#
+# WHY THIS EXISTS:
+# The global _compute_weight_multiplier() above blends ALL of an agent's
+# calls into one win rate. That creates a false-negative on specialists.
+#
+# Example: BARON is +65% win rate in RISK_ON regimes (his expertise) but
+# -35% win rate in RISK_OFF regimes (where he votes anyway, badly). His
+# global win rate averages out to ~50%, EV slightly negative, multiplier
+# drops to 0.78×, the kill switch in engine.py freezes him. He gets
+# capital-frozen even though he's actually a great RISK_ON specialist.
+#
+# WHAT THIS DOES:
+# Looks at the agent's per-regime breakdown. If ANY single regime bucket
+# has 10+ calls and a strong multiplier (≥1.0), the agent's "kill-switch
+# weight" becomes the MAX of (global, best-regime). Specialists don't get
+# killed for being bad outside their specialty — they get to keep voting
+# (Thompson handles that already) AND keep their capital authority.
+#
+# WHAT THIS DOESN'T CHANGE:
+# - Thompson sampling still works per-regime via the Beta posteriors
+#   (thompson_arbiter.py is untouched)
+# - The global weight is still computed and exposed for diagnostics
+# - Agents with no clear regime expertise still get the global weight
+#
+# WHAT THE DASHBOARD GETS NEW:
+#   row["regime_aware_weight"]      — float in [0.5, 1.5] (this is what the
+#                                      kill switch will read going forward)
+#   row["global_weight"]            — float, the old global multiplier
+#                                      (kept for transparency)
+#   row["best_regime"]              — {dimension, label, n, win_rate, ev,
+#                                      multiplier} or None
+#   row["regime_specialty_strength"] — "specialist" | "generalist" | "none"
+
+def _compute_weight_multiplier_regime_aware(
+    n: int,
+    win_rate: float,
+    ev: float,
+    worst: float,
+    by_regime: Dict[str, Dict[str, Any]],
+    min_regime_calls: int = 10,
+) -> Tuple[float, float, Optional[Dict[str, Any]], str, str]:
+    """
+    Returns:
+        regime_aware_mult — float in [0.5, 1.5], the multiplier the kill
+                            switch should use. Equals max(global, best_regime).
+        global_mult       — float in [0.5, 1.5], the original global multiplier.
+        best_regime       — dict describing the agent's strongest regime, or
+                            None if no regime has enough data.
+        specialty_label   — "specialist" | "generalist" | "none"
+        explanation       — human-readable rationale string.
+    """
+    # Step 1: compute the original global multiplier
+    global_mult, global_expl = _compute_weight_multiplier(n, win_rate, ev, worst)
+
+    # Step 2: walk by_regime to find the strongest single bucket
+    best: Optional[Dict[str, Any]] = None
+    best_mult = 0.0
+    for dimension, buckets in (by_regime or {}).items():
+        for label, stats in (buckets or {}).items():
+            bn = stats.get("n", 0)
+            if bn < min_regime_calls:
+                continue
+            bwr = stats.get("win_rate")
+            bev = stats.get("ev")
+            if bwr is None or bev is None:
+                continue
+            # Compute multiplier using the same formula as global (treat
+            # worst as -bev for safety; we don't have per-bucket worst)
+            wr_z = (bwr - 0.5) * 2
+            ev_z = max(-1.0, min(1.0, bev / 2.0))
+            blended = 0.5 * wr_z + 0.5 * ev_z
+            bmult = max(0.5, min(1.5, 1.0 + 0.5 * blended))
+            if bmult > best_mult:
+                best_mult = bmult
+                best = {
+                    "dimension": dimension,
+                    "label": label,
+                    "n": bn,
+                    "win_rate": round(bwr, 3),
+                    "ev": round(bev, 3),
+                    "multiplier": round(bmult, 3),
+                }
+
+    # Step 3: regime-aware weight is the max of global and best-regime
+    if best is None:
+        # No regime has enough data — fall back to global
+        return global_mult, global_mult, None, "none", (
+            f"No regime has {min_regime_calls}+ calls yet. "
+            f"Using global weight: {global_expl}"
+        )
+
+    regime_aware_mult = max(global_mult, best_mult)
+
+    # Step 4: classify specialty strength
+    specialty_label = "generalist"
+    if best_mult >= 1.15 and (best_mult - global_mult) >= 0.15:
+        # Strong in at least one regime AND meaningfully better there than global
+        specialty_label = "specialist"
+    elif best_mult < 0.85:
+        # Even their best regime is below baseline
+        specialty_label = "none"
+
+    # Step 5: build explanation
+    if specialty_label == "specialist":
+        msg = (
+            f"REGIME SPECIALIST: globally {global_mult:.2f}× but "
+            f"{best['multiplier']:.2f}× in {best['label']} ({best['dimension']}, "
+            f"{best['n']} calls, {best['win_rate']:.0%} win rate). "
+            f"Kill switch uses {regime_aware_mult:.2f}× — protected from "
+            f"global-average dilution."
+        )
+    elif specialty_label == "generalist":
+        msg = (
+            f"GENERALIST: global {global_mult:.2f}×, best regime "
+            f"{best['multiplier']:.2f}× in {best['label']}. "
+            f"Kill switch weight: {regime_aware_mult:.2f}×."
+        )
+    else:
+        msg = (
+            f"UNDERPERFORMING: best regime ({best['label']}) only "
+            f"{best['multiplier']:.2f}×. Kill switch weight: {regime_aware_mult:.2f}×."
+        )
+
+    return regime_aware_mult, global_mult, best, specialty_label, msg
+
 
 
 # ─────────────────────────────────────────────────────────────────
