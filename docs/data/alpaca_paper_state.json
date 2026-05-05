@@ -2,12 +2,12 @@
   "version": "2.1.1",
   "enabled": true,
   "account": {
-    "equity": 10000.0,
-    "cash": 10000.0
+    "equity": 10002.21,
+    "cash": 5200.0
   },
   "principal_target": 100944.59,
-  "savings": 0.0,
-  "lifetime_realized_wins": 0,
+  "savings": 9.3762516052801,
+  "lifetime_realized_wins": 1,
   "lifetime_realized_losses": 0,
   "position_meta": {
     "ABNB": {
@@ -39,11 +39,27 @@
       "peak_price": 162.14,
       "first_seen": "2026-05-04T19:20:11.933380+00:00",
       "qty": 49.806155174
+    },
+    "NSC": {
+      "entry_price": 313.0,
+      "peak_price": 313.0,
+      "first_seen": "2026-05-05T16:03:52.983268+00:00",
+      "qty": 7.667731629
+    },
+    "SPG": {
+      "entry_price": 203.106787,
+      "peak_price": 203.106787,
+      "first_seen": "2026-05-05T16:03:52.983287+00:00",
+      "qty": 3.938814719
     }
   },
   "tickers_traded_this_cycle": [
-    "CRWD",
-    "NSC"
+    "MRVL",
+    "ANET",
+    "ABNB",
+    "MO",
+    "AMAT",
+    "CRWD"
   ],
   "recent_alpaca_tickers": [
     "COST",
@@ -53,7 +69,11 @@
     "CSX",
     "CRWD",
     "NSC",
-    "SPG"
+    "SPG",
+    "AMAT",
+    "ANET",
+    "MO",
+    "MRVL"
   ],
   "orders": [
     {
@@ -165,45 +185,153 @@
       "signal": "BUY",
       "order_id": "d87d8109-f989-46af-aa69-7a9ade6dc4f9",
       "time": "2026-05-05T08:03:26.392053+00:00"
+    },
+    {
+      "action": "CLOSE",
+      "symbol": "CRWD",
+      "side": "sell",
+      "qty": 3.372752376,
+      "trigger_reason": "Consensus flipped to HOLD",
+      "realized_pnl": 9.38,
+      "entry_price": 474.39,
+      "exit_price": 477.17,
+      "order_id": "e1e0c916-ad1f-4526-bec7-1a8c20b00afe",
+      "time": "2026-05-05T16:03:52.983251+00:00"
+    },
+    {
+      "action": "OPEN",
+      "symbol": "AMAT",
+      "side": "buy",
+      "notional": 800.18,
+      "conviction": 0.5044,
+      "signal": "STRONG_BUY",
+      "order_id": "f589c276-3e37-4385-b861-ee560809c921",
+      "time": "2026-05-05T16:03:55.141757+00:00"
+    },
+    {
+      "action": "OPEN",
+      "symbol": "ANET",
+      "side": "buy",
+      "notional": 800.18,
+      "conviction": 0.5803,
+      "signal": "BUY",
+      "order_id": "22e6d364-17c6-49b2-bd09-ebd31811451e",
+      "time": "2026-05-05T16:03:55.382271+00:00"
+    },
+    {
+      "action": "OPEN",
+      "symbol": "ABNB",
+      "side": "buy",
+      "notional": 800.18,
+      "conviction": 0.5465,
+      "signal": "BUY",
+      "order_id": "7b5ed5ee-57cc-499e-8e0c-d7750ad4d0df",
+      "time": "2026-05-05T16:03:55.630860+00:00"
+    },
+    {
+      "action": "OPEN",
+      "symbol": "MO",
+      "side": "buy",
+      "notional": 800.18,
+      "conviction": 0.5367,
+      "signal": "BUY",
+      "order_id": "f4c4dbff-25b8-4ac1-8932-a168d6844c0f",
+      "time": "2026-05-05T16:03:55.872190+00:00"
+    },
+    {
+      "action": "OPEN",
+      "symbol": "MRVL",
+      "side": "buy",
+      "notional": 800.18,
+      "conviction": 0.4703,
+      "signal": "BUY",
+      "order_id": "c443600f-5b9e-42ac-93e8-b9aa34a1f535",
+      "time": "2026-05-05T16:03:56.114379+00:00"
     }
   ],
   "orders_placed": [
     {
-      "action": "OPEN",
+      "action": "CLOSE",
       "symbol": "CRWD",
-      "side": "buy",
-      "notional": 800.0,
-      "conviction": 0.9568,
-      "signal": "STRONG_BUY",
-      "order_id": "8dee2daa-ffd0-438d-ad40-1a79ef7eb9d4",
-      "time": "2026-05-05T08:03:26.036021+00:00"
+      "side": "sell",
+      "qty": 3.372752376,
+      "trigger_reason": "Consensus flipped to HOLD",
+      "realized_pnl": 9.38,
+      "entry_price": 474.39,
+      "exit_price": 477.17,
+      "order_id": "e1e0c916-ad1f-4526-bec7-1a8c20b00afe",
+      "time": "2026-05-05T16:03:52.983251+00:00"
     },
     {
       "action": "OPEN",
-      "symbol": "NSC",
+      "symbol": "AMAT",
       "side": "buy",
-      "notional": 800.0,
-      "conviction": 0.7788,
+      "notional": 800.18,
+      "conviction": 0.5044,
+      "signal": "STRONG_BUY",
+      "order_id": "f589c276-3e37-4385-b861-ee560809c921",
+      "time": "2026-05-05T16:03:55.141757+00:00"
+    },
+    {
+      "action": "OPEN",
+      "symbol": "ANET",
+      "side": "buy",
+      "notional": 800.18,
+      "conviction": 0.5803,
       "signal": "BUY",
-      "order_id": "d87d8109-f989-46af-aa69-7a9ade6dc4f9",
-      "time": "2026-05-05T08:03:26.392053+00:00"
+      "order_id": "22e6d364-17c6-49b2-bd09-ebd31811451e",
+      "time": "2026-05-05T16:03:55.382271+00:00"
+    },
+    {
+      "action": "OPEN",
+      "symbol": "ABNB",
+      "side": "buy",
+      "notional": 800.18,
+      "conviction": 0.5465,
+      "signal": "BUY",
+      "order_id": "7b5ed5ee-57cc-499e-8e0c-d7750ad4d0df",
+      "time": "2026-05-05T16:03:55.630860+00:00"
+    },
+    {
+      "action": "OPEN",
+      "symbol": "MO",
+      "side": "buy",
+      "notional": 800.18,
+      "conviction": 0.5367,
+      "signal": "BUY",
+      "order_id": "f4c4dbff-25b8-4ac1-8932-a168d6844c0f",
+      "time": "2026-05-05T16:03:55.872190+00:00"
+    },
+    {
+      "action": "OPEN",
+      "symbol": "MRVL",
+      "side": "buy",
+      "notional": 800.18,
+      "conviction": 0.4703,
+      "signal": "BUY",
+      "order_id": "c443600f-5b9e-42ac-93e8-b9aa34a1f535",
+      "time": "2026-05-05T16:03:56.114379+00:00"
     }
   ],
   "errors": [],
-  "last_run": "2026-05-05T08:03:26.392112+00:00",
+  "last_run": "2026-05-05T16:03:56.114442+00:00",
   "_flushed_at": "2026-05-04T17:43:50.085629+00:00",
   "_flush_note": "v4.1 hotfix: flushed all positions on 2026-05-04T17:43:50.085629+00:00. Principal target locked at $100,944.59 (post-flush equity).",
   "last_cycle_summary": {
-    "time": "2026-05-05T08:03:26.392100+00:00",
-    "closed": 0,
-    "opened": 2,
-    "open_after": 2,
-    "equity": 10000.0,
-    "savings": 0.0,
-    "total_value": 10000.0,
+    "time": "2026-05-05T16:03:56.114430+00:00",
+    "closed": 1,
+    "opened": 5,
+    "open_after": 7,
+    "equity": 10002.21,
+    "savings": 9.38,
+    "total_value": 10011.59,
     "tickers_traded": [
-      "CRWD",
-      "NSC"
+      "MRVL",
+      "ANET",
+      "ABNB",
+      "MO",
+      "AMAT",
+      "CRWD"
     ]
   },
   "reason": "Account fetch failed"
