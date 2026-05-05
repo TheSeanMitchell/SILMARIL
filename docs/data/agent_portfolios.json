@@ -9,12 +9,13 @@
       "ticker": "SOXX",
       "qty": 2.171694132840372,
       "entry_price": 460.4700012207031,
-      "peak_price": 460.4700012207031,
+      "peak_price": 462.05999755859375,
       "entry_date": "2026-05-04",
       "signal": "BUY",
       "opened_at": "2026-05-04T16:53:43.095874+00:00",
       "price_snapshots": [
-        460.4700012207031
+        460.4700012207031,
+        462.05999755859375
       ]
     },
     "history": [
@@ -33,6 +34,14 @@
         "qty": 2.171694132840372,
         "price": 460.4700012207031,
         "signal": "BUY"
+      },
+      {
+        "date": "2026-05-05",
+        "timestamp": "2026-05-05T00:58:12.194433+00:00",
+        "action": "HOLD",
+        "ticker": "SOXX",
+        "equity": 10003.45,
+        "savings": 0.0
       }
     ],
     "equity_curve": [],
@@ -50,12 +59,13 @@
       "ticker": "AMZN",
       "qty": 3.7032922435307944,
       "entry_price": 270.0299987792969,
-      "peak_price": 270.0299987792969,
+      "peak_price": 272.04998779296875,
       "entry_date": "2026-05-04",
       "signal": "BUY",
       "opened_at": "2026-05-04T16:53:43.096635+00:00",
       "price_snapshots": [
-        270.0299987792969
+        270.0299987792969,
+        272.04998779296875
       ]
     },
     "history": [
@@ -74,6 +84,14 @@
         "qty": 3.7032922435307944,
         "price": 270.0299987792969,
         "signal": "BUY"
+      },
+      {
+        "date": "2026-05-05",
+        "timestamp": "2026-05-05T00:58:12.194468+00:00",
+        "action": "HOLD",
+        "ticker": "AMZN",
+        "equity": 10007.48,
+        "savings": 0.0
       }
     ],
     "equity_curve": [],
@@ -84,21 +102,10 @@
   "THUNDERHEAD": {
     "agent": "THUNDERHEAD",
     "starting_equity": 10000.0,
-    "current_equity": 9994.666938568302,
-    "cash": 9000.0,
-    "savings": 0.0,
-    "current_position": {
-      "ticker": "DOGE-USD",
-      "qty": 9039.139625283538,
-      "entry_price": 0.11062999814748764,
-      "peak_price": 0.11062999814748764,
-      "entry_date": "2026-05-04",
-      "signal": "BUY",
-      "opened_at": "2026-05-04T16:53:43.097203+00:00",
-      "price_snapshots": [
-        0.11062999814748764
-      ]
-    },
+    "current_equity": 10000.0,
+    "cash": 10000.0,
+    "savings": 0.5423440888698678,
+    "current_position": null,
     "history": [
       {
         "date": "2026-05-04",
@@ -115,31 +122,40 @@
         "qty": 9039.139625283538,
         "price": 0.11062999814748764,
         "signal": "BUY"
+      },
+      {
+        "date": "2026-05-05",
+        "timestamp": "2026-05-05T00:58:12.194517+00:00",
+        "action": "CLOSE",
+        "ticker": "DOGE-USD",
+        "qty": 9039.139625283538,
+        "price": 0.11068999767303467,
+        "pnl": 0.5423,
+        "pnl_pct": 0.05,
+        "reason": "Consensus on DOGE-USD flipped to HOLD"
+      },
+      {
+        "date": "2026-05-05",
+        "timestamp": "2026-05-05T00:58:12.194526+00:00",
+        "action": "HARVEST",
+        "amount": 0.5423,
+        "savings_total": 0.5423,
+        "principal_target": 10000.0,
+        "reason": "Cash exceeded principal \u2014 pocketed $0.54"
       }
     ],
     "equity_curve": [],
     "inception_date": "2026-05-04",
-    "lifetime_total": 10000.0,
+    "lifetime_total": 10000.5423,
     "principal_target": 10000.0
   },
   "JADE": {
     "agent": "JADE",
     "starting_equity": 10000.0,
     "current_equity": 9995.313005790478,
-    "cash": 9000.0,
+    "cash": 9995.313005790478,
     "savings": 0.0,
-    "current_position": {
-      "ticker": "LMT",
-      "qty": 1.9208973441929376,
-      "entry_price": 520.5900268554688,
-      "peak_price": 520.5900268554688,
-      "entry_date": "2026-05-04",
-      "signal": "BUY",
-      "opened_at": "2026-05-04T16:53:43.097765+00:00",
-      "price_snapshots": [
-        520.5900268554688
-      ]
-    },
+    "current_position": null,
     "history": [
       {
         "date": "2026-05-04",
@@ -156,11 +172,22 @@
         "qty": 1.9208973441929376,
         "price": 520.5900268554688,
         "signal": "BUY"
+      },
+      {
+        "date": "2026-05-05",
+        "timestamp": "2026-05-05T00:58:12.194569+00:00",
+        "action": "CLOSE",
+        "ticker": "LMT",
+        "qty": 1.9208973441929376,
+        "price": 518.1500244140625,
+        "pnl": -4.687,
+        "pnl_pct": -0.47,
+        "reason": "Consensus on LMT flipped to HOLD"
       }
     ],
     "equity_curve": [],
     "inception_date": "2026-05-04",
-    "lifetime_total": 10000.0,
+    "lifetime_total": 9995.313,
     "principal_target": 10000.0
   },
   "VEIL": {
@@ -173,12 +200,13 @@
       "ticker": "SOXX",
       "qty": 2.171694132840372,
       "entry_price": 460.4700012207031,
-      "peak_price": 460.4700012207031,
+      "peak_price": 462.05999755859375,
       "entry_date": "2026-05-04",
       "signal": "BUY",
       "opened_at": "2026-05-04T16:53:43.098377+00:00",
       "price_snapshots": [
-        460.4700012207031
+        460.4700012207031,
+        462.05999755859375
       ]
     },
     "history": [
@@ -197,6 +225,14 @@
         "qty": 2.171694132840372,
         "price": 460.4700012207031,
         "signal": "BUY"
+      },
+      {
+        "date": "2026-05-05",
+        "timestamp": "2026-05-05T00:58:12.194585+00:00",
+        "action": "HOLD",
+        "ticker": "SOXX",
+        "equity": 10003.45,
+        "savings": 0.0
       }
     ],
     "equity_curve": [],
@@ -214,12 +250,13 @@
       "ticker": "FXC",
       "qty": 13.935339607454054,
       "entry_price": 71.76000213623047,
-      "peak_price": 71.76000213623047,
+      "peak_price": 71.78579711914062,
       "entry_date": "2026-05-04",
       "signal": "BUY",
       "opened_at": "2026-05-04T16:53:43.098994+00:00",
       "price_snapshots": [
-        71.76000213623047
+        71.76000213623047,
+        71.78579711914062
       ]
     },
     "history": [
@@ -238,6 +275,14 @@
         "qty": 13.935339607454054,
         "price": 71.76000213623047,
         "signal": "BUY"
+      },
+      {
+        "date": "2026-05-05",
+        "timestamp": "2026-05-05T00:58:12.194601+00:00",
+        "action": "HOLD",
+        "ticker": "FXC",
+        "equity": 10000.36,
+        "savings": 0.0
       }
     ],
     "equity_curve": [],
@@ -323,6 +368,14 @@
         "reason": "No qualifying BUY signal",
         "equity": 10000.0,
         "savings": 0.0
+      },
+      {
+        "date": "2026-05-05",
+        "timestamp": "2026-05-05T00:58:12.200793+00:00",
+        "action": "HOLD",
+        "reason": "No qualifying BUY signal",
+        "equity": 10000.0,
+        "savings": 0.0
       }
     ],
     "equity_curve": [],
@@ -340,12 +393,13 @@
       "ticker": "VLO",
       "qty": 3.985969310177213,
       "entry_price": 250.8800048828125,
-      "peak_price": 250.8800048828125,
+      "peak_price": 251.6300048828125,
       "entry_date": "2026-05-04",
       "signal": "BUY",
       "opened_at": "2026-05-04T16:53:43.099692+00:00",
       "price_snapshots": [
-        250.8800048828125
+        250.8800048828125,
+        251.6300048828125
       ]
     },
     "history": [
@@ -364,6 +418,14 @@
         "qty": 3.985969310177213,
         "price": 250.8800048828125,
         "signal": "BUY"
+      },
+      {
+        "date": "2026-05-05",
+        "timestamp": "2026-05-05T00:58:12.194615+00:00",
+        "action": "HOLD",
+        "ticker": "VLO",
+        "equity": 10002.99,
+        "savings": 0.0
       }
     ],
     "equity_curve": [],
@@ -381,12 +443,13 @@
       "ticker": "SOXX",
       "qty": 2.171694132840372,
       "entry_price": 460.4700012207031,
-      "peak_price": 460.4700012207031,
+      "peak_price": 462.05999755859375,
       "entry_date": "2026-05-04",
       "signal": "BUY",
       "opened_at": "2026-05-04T16:53:43.100343+00:00",
       "price_snapshots": [
-        460.4700012207031
+        460.4700012207031,
+        462.05999755859375
       ]
     },
     "history": [
@@ -405,6 +468,14 @@
         "qty": 2.171694132840372,
         "price": 460.4700012207031,
         "signal": "BUY"
+      },
+      {
+        "date": "2026-05-05",
+        "timestamp": "2026-05-05T00:58:12.194639+00:00",
+        "action": "HOLD",
+        "ticker": "SOXX",
+        "equity": 10003.45,
+        "savings": 0.0
       }
     ],
     "equity_curve": [],
@@ -422,12 +493,13 @@
       "ticker": "EQIX",
       "qty": 0.9266724078426439,
       "entry_price": 1079.1300048828125,
-      "peak_price": 1079.1300048828125,
+      "peak_price": 1083.199951171875,
       "entry_date": "2026-05-04",
       "signal": "BUY",
       "opened_at": "2026-05-04T16:53:43.101025+00:00",
       "price_snapshots": [
-        1079.1300048828125
+        1079.1300048828125,
+        1083.199951171875
       ]
     },
     "history": [
@@ -446,6 +518,14 @@
         "qty": 0.9266724078426439,
         "price": 1079.1300048828125,
         "signal": "BUY"
+      },
+      {
+        "date": "2026-05-05",
+        "timestamp": "2026-05-05T00:58:12.194656+00:00",
+        "action": "HOLD",
+        "ticker": "EQIX",
+        "equity": 10003.77,
+        "savings": 0.0
       }
     ],
     "equity_curve": [],
@@ -463,12 +543,13 @@
       "ticker": "LQD",
       "qty": 9.257116277479858,
       "entry_price": 108.0250015258789,
-      "peak_price": 108.0250015258789,
+      "peak_price": 108.25,
       "entry_date": "2026-05-04",
       "signal": "BUY",
       "opened_at": "2026-05-04T16:53:43.101699+00:00",
       "price_snapshots": [
-        108.0250015258789
+        108.0250015258789,
+        108.25
       ]
     },
     "history": [
@@ -487,6 +568,14 @@
         "qty": 9.257116277479858,
         "price": 108.0250015258789,
         "signal": "BUY"
+      },
+      {
+        "date": "2026-05-05",
+        "timestamp": "2026-05-05T00:58:12.194673+00:00",
+        "action": "HOLD",
+        "ticker": "LQD",
+        "equity": 10002.08,
+        "savings": 0.0
       }
     ],
     "equity_curve": [],
@@ -504,12 +593,13 @@
       "ticker": "AMZN",
       "qty": 3.7032922435307944,
       "entry_price": 270.0299987792969,
-      "peak_price": 270.0299987792969,
+      "peak_price": 272.04998779296875,
       "entry_date": "2026-05-04",
       "signal": "BUY",
       "opened_at": "2026-05-04T16:53:43.102414+00:00",
       "price_snapshots": [
-        270.0299987792969
+        270.0299987792969,
+        272.04998779296875
       ]
     },
     "history": [
@@ -528,6 +618,14 @@
         "qty": 3.7032922435307944,
         "price": 270.0299987792969,
         "signal": "BUY"
+      },
+      {
+        "date": "2026-05-05",
+        "timestamp": "2026-05-05T00:58:12.194685+00:00",
+        "action": "HOLD",
+        "ticker": "AMZN",
+        "equity": 10007.48,
+        "savings": 0.0
       }
     ],
     "equity_curve": [],
@@ -545,12 +643,13 @@
       "ticker": "SOXX",
       "qty": 2.171694132840372,
       "entry_price": 460.4700012207031,
-      "peak_price": 460.4700012207031,
+      "peak_price": 462.05999755859375,
       "entry_date": "2026-05-04",
       "signal": "BUY",
       "opened_at": "2026-05-04T16:53:43.103156+00:00",
       "price_snapshots": [
-        460.4700012207031
+        460.4700012207031,
+        462.05999755859375
       ]
     },
     "history": [
@@ -569,6 +668,14 @@
         "qty": 2.171694132840372,
         "price": 460.4700012207031,
         "signal": "BUY"
+      },
+      {
+        "date": "2026-05-05",
+        "timestamp": "2026-05-05T00:58:12.194696+00:00",
+        "action": "HOLD",
+        "ticker": "SOXX",
+        "equity": 10003.45,
+        "savings": 0.0
       }
     ],
     "equity_curve": [],
@@ -591,7 +698,8 @@
       "signal": "BUY",
       "opened_at": "2026-05-04T16:53:43.103881+00:00",
       "price_snapshots": [
-        140.05499267578125
+        140.05499267578125,
+        138.86000061035156
       ]
     },
     "history": [
@@ -610,6 +718,14 @@
         "qty": 7.140052495771706,
         "price": 140.05499267578125,
         "signal": "BUY"
+      },
+      {
+        "date": "2026-05-05",
+        "timestamp": "2026-05-05T00:58:12.194707+00:00",
+        "action": "HOLD",
+        "ticker": "ABNB",
+        "equity": 9991.47,
+        "savings": 0.0
       }
     ],
     "equity_curve": [],
@@ -695,6 +811,14 @@
         "reason": "No qualifying BUY signal",
         "equity": 10000.0,
         "savings": 0.0
+      },
+      {
+        "date": "2026-05-05",
+        "timestamp": "2026-05-05T00:58:12.196094+00:00",
+        "action": "HOLD",
+        "reason": "No qualifying BUY signal",
+        "equity": 10000.0,
+        "savings": 0.0
       }
     ],
     "equity_curve": [],
@@ -712,12 +836,13 @@
       "ticker": "QQQ",
       "qty": 1.4898355370332432,
       "entry_price": 671.2150268554688,
-      "peak_price": 671.2150268554688,
+      "peak_price": 672.8800048828125,
       "entry_date": "2026-05-04",
       "signal": "BUY",
       "opened_at": "2026-05-04T16:53:43.105347+00:00",
       "price_snapshots": [
-        671.2150268554688
+        671.2150268554688,
+        672.8800048828125
       ]
     },
     "history": [
@@ -736,6 +861,14 @@
         "qty": 1.4898355370332432,
         "price": 671.2150268554688,
         "signal": "BUY"
+      },
+      {
+        "date": "2026-05-05",
+        "timestamp": "2026-05-05T00:58:12.196120+00:00",
+        "action": "HOLD",
+        "ticker": "QQQ",
+        "equity": 10002.48,
+        "savings": 0.0
       }
     ],
     "equity_curve": [],
@@ -753,12 +886,13 @@
       "ticker": "VLO",
       "qty": 3.985969310177213,
       "entry_price": 250.8800048828125,
-      "peak_price": 250.8800048828125,
+      "peak_price": 251.6300048828125,
       "entry_date": "2026-05-04",
       "signal": "BUY",
       "opened_at": "2026-05-04T16:53:43.112794+00:00",
       "price_snapshots": [
-        250.8800048828125
+        250.8800048828125,
+        251.6300048828125
       ]
     },
     "history": [
@@ -777,6 +911,14 @@
         "qty": 3.985969310177213,
         "price": 250.8800048828125,
         "signal": "BUY"
+      },
+      {
+        "date": "2026-05-05",
+        "timestamp": "2026-05-05T00:58:12.202272+00:00",
+        "action": "HOLD",
+        "ticker": "VLO",
+        "equity": 10002.99,
+        "savings": 0.0
       }
     ],
     "equity_curve": [],
@@ -794,12 +936,13 @@
       "ticker": "MA",
       "qty": 1.985624100900342,
       "entry_price": 503.6199951171875,
-      "peak_price": 503.6199951171875,
+      "peak_price": 504.739990234375,
       "entry_date": "2026-05-04",
       "signal": "BUY",
       "opened_at": "2026-05-04T16:53:43.113531+00:00",
       "price_snapshots": [
-        503.6199951171875
+        503.6199951171875,
+        504.739990234375
       ]
     },
     "history": [
@@ -818,6 +961,14 @@
         "qty": 1.985624100900342,
         "price": 503.6199951171875,
         "signal": "BUY"
+      },
+      {
+        "date": "2026-05-05",
+        "timestamp": "2026-05-05T00:58:12.202288+00:00",
+        "action": "HOLD",
+        "ticker": "MA",
+        "equity": 10002.22,
+        "savings": 0.0
       }
     ],
     "equity_curve": [],
@@ -899,6 +1050,14 @@
       {
         "date": "2026-05-04",
         "timestamp": "2026-05-04T21:54:55.947333+00:00",
+        "action": "HOLD",
+        "reason": "No qualifying BUY signal",
+        "equity": 10000.0,
+        "savings": 0.0
+      },
+      {
+        "date": "2026-05-05",
+        "timestamp": "2026-05-05T00:58:12.201528+00:00",
         "action": "HOLD",
         "reason": "No qualifying BUY signal",
         "equity": 10000.0,
@@ -988,6 +1147,14 @@
         "reason": "No qualifying BUY signal",
         "equity": 10000.0,
         "savings": 0.0
+      },
+      {
+        "date": "2026-05-05",
+        "timestamp": "2026-05-05T00:58:12.202255+00:00",
+        "action": "HOLD",
+        "reason": "No qualifying BUY signal",
+        "equity": 10000.0,
+        "savings": 0.0
       }
     ],
     "equity_curve": [],
@@ -1069,6 +1236,14 @@
       {
         "date": "2026-05-04",
         "timestamp": "2026-05-04T21:54:55.945074+00:00",
+        "action": "HOLD",
+        "reason": "No qualifying BUY signal",
+        "equity": 10000.0,
+        "savings": 0.0
+      },
+      {
+        "date": "2026-05-05",
+        "timestamp": "2026-05-05T00:58:12.199156+00:00",
         "action": "HOLD",
         "reason": "No qualifying BUY signal",
         "equity": 10000.0,
@@ -1158,6 +1333,14 @@
         "reason": "No qualifying BUY signal",
         "equity": 10000.0,
         "savings": 0.0
+      },
+      {
+        "date": "2026-05-05",
+        "timestamp": "2026-05-05T00:58:12.199994+00:00",
+        "action": "HOLD",
+        "reason": "No qualifying BUY signal",
+        "equity": 10000.0,
+        "savings": 0.0
       }
     ],
     "equity_curve": [],
@@ -1175,12 +1358,13 @@
       "ticker": "QQQ",
       "qty": 1.4898355370332432,
       "entry_price": 671.2150268554688,
-      "peak_price": 671.2150268554688,
+      "peak_price": 672.8800048828125,
       "entry_date": "2026-05-04",
       "signal": "BUY",
       "opened_at": "2026-05-04T16:53:43.106102+00:00",
       "price_snapshots": [
-        671.2150268554688
+        671.2150268554688,
+        672.8800048828125
       ]
     },
     "history": [
@@ -1199,6 +1383,14 @@
         "qty": 1.4898355370332432,
         "price": 671.2150268554688,
         "signal": "BUY"
+      },
+      {
+        "date": "2026-05-05",
+        "timestamp": "2026-05-05T00:58:12.196137+00:00",
+        "action": "HOLD",
+        "ticker": "QQQ",
+        "equity": 10002.48,
+        "savings": 0.0
       }
     ],
     "equity_curve": [],
@@ -1280,6 +1472,14 @@
       {
         "date": "2026-05-04",
         "timestamp": "2026-05-04T21:54:55.942782+00:00",
+        "action": "HOLD",
+        "reason": "No qualifying BUY signal",
+        "equity": 10000.0,
+        "savings": 0.0
+      },
+      {
+        "date": "2026-05-05",
+        "timestamp": "2026-05-05T00:58:12.196896+00:00",
         "action": "HOLD",
         "reason": "No qualifying BUY signal",
         "equity": 10000.0,
@@ -1369,6 +1569,14 @@
         "reason": "No qualifying BUY signal",
         "equity": 10000.0,
         "savings": 0.0
+      },
+      {
+        "date": "2026-05-05",
+        "timestamp": "2026-05-05T00:58:12.197661+00:00",
+        "action": "HOLD",
+        "reason": "No qualifying BUY signal",
+        "equity": 10000.0,
+        "savings": 0.0
       }
     ],
     "equity_curve": [],
@@ -1454,6 +1662,14 @@
         "reason": "No qualifying BUY signal",
         "equity": 10000.0,
         "savings": 0.0
+      },
+      {
+        "date": "2026-05-05",
+        "timestamp": "2026-05-05T00:58:12.198397+00:00",
+        "action": "HOLD",
+        "reason": "No qualifying BUY signal",
+        "equity": 10000.0,
+        "savings": 0.0
       }
     ],
     "equity_curve": [],
@@ -1483,9 +1699,9 @@
     "principal_target": 10000.0
   },
   "_summary": {
-    "total_savings_all_agents": 0.0,
-    "total_lifetime_value": 280000.0,
+    "total_savings_all_agents": 0.5423,
+    "total_lifetime_value": 279995.8553,
     "agent_count": 28,
-    "generated_at": "2026-05-04T23:21:40.314055+00:00"
+    "generated_at": "2026-05-05T00:58:12.204438+00:00"
   }
 }
