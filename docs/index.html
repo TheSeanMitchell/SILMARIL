@@ -5307,5 +5307,401 @@
   }
 })();
 </script>
+<style>
+  .regime-specialty-panel {
+    margin: 24px 0;
+    padding: 18px 20px;
+    background: rgba(0, 0, 0, 0.30);
+    border: 1px solid rgba(110, 232, 211, 0.30);
+    border-radius: 8px;
+    font-family: var(--mono, 'JetBrains Mono', monospace);
+    font-size: 12px;
+  }
+  .regime-specialty-panel h3 {
+    margin: 0 0 6px 0;
+    font-family: var(--display, sans-serif);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #6ee8d3;
+  }
+  .regime-specialty-panel .subtitle {
+    color: var(--muted, #888);
+    font-size: 11px;
+    margin-bottom: 14px;
+    line-height: 1.5;
+  }
+  .regime-specialty-panel .summary-strip {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-bottom: 16px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+  .regime-specialty-panel .stat-cell {
+    text-align: center;
+  }
+  .regime-specialty-panel .stat-num {
+    font-family: var(--display, sans-serif);
+    font-size: 22px;
+    color: var(--text, #ddd);
+  }
+  .regime-specialty-panel .stat-label {
+    color: var(--muted, #888);
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    margin-top: 2px;
+  }
+  .regime-specialty-panel .stat-num.specialist { color: #6ee8d3; }
+  .regime-specialty-panel .stat-num.generalist { color: #c9a449; }
+  .regime-specialty-panel .stat-num.underperforming { color: #ff9800; }
+ 
+  .regime-specialty-panel .filter-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 12px;
+  }
+  .regime-specialty-panel .filter-btn {
+    background: rgba(255,255,255,0.05);
+    color: var(--text, #ddd);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 3px;
+    padding: 4px 10px;
+    font-size: 10px;
+    font-family: inherit;
+    cursor: pointer;
+  }
+  .regime-specialty-panel .filter-btn:hover {
+    background: rgba(255,255,255,0.08);
+  }
+  .regime-specialty-panel .filter-btn.active {
+    background: rgba(110, 232, 211, 0.18);
+    color: #6ee8d3;
+    border-color: #6ee8d3;
+  }
+ 
+  .regime-specialty-panel table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 4px;
+  }
+  .regime-specialty-panel thead th {
+    text-align: left;
+    padding: 6px 8px;
+    color: var(--muted, #888);
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    font-weight: normal;
+  }
+  .regime-specialty-panel tbody tr {
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+  }
+  .regime-specialty-panel tbody td {
+    padding: 8px 8px;
+    color: var(--text, #ddd);
+    vertical-align: middle;
+  }
+  .regime-specialty-panel .agent-name {
+    font-weight: 600;
+    color: var(--gold, #c9a449);
+    font-size: 12px;
+  }
+  .regime-specialty-panel .specialty-badge {
+    display: inline-block;
+    padding: 2px 7px;
+    border-radius: 3px;
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+  .regime-specialty-panel .badge-specialist {
+    background: rgba(110, 232, 211, 0.15);
+    color: #6ee8d3;
+    border: 1px solid rgba(110, 232, 211, 0.3);
+  }
+  .regime-specialty-panel .badge-generalist {
+    background: rgba(201, 164, 73, 0.12);
+    color: #c9a449;
+    border: 1px solid rgba(201, 164, 73, 0.3);
+  }
+  .regime-specialty-panel .badge-none {
+    background: rgba(255, 152, 0, 0.12);
+    color: #ff9800;
+    border: 1px solid rgba(255, 152, 0, 0.3);
+  }
+  .regime-specialty-panel .weight-comparison {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+  }
+  .regime-specialty-panel .weight-global {
+    color: var(--muted, #888);
+  }
+  .regime-specialty-panel .weight-arrow {
+    color: var(--muted, #555);
+    font-size: 10px;
+  }
+  .regime-specialty-panel .weight-regime {
+    font-weight: 600;
+  }
+  .regime-specialty-panel .weight-protected {
+    color: #6ee8d3;
+  }
+  .regime-specialty-panel .weight-same {
+    color: var(--text, #ddd);
+  }
+  .regime-specialty-panel .weight-killed {
+    color: #f44336;
+  }
+  .regime-specialty-panel .regime-cell {
+    font-size: 11px;
+  }
+  .regime-specialty-panel .regime-label {
+    color: #6ee8d3;
+    font-weight: 600;
+  }
+  .regime-specialty-panel .regime-stats {
+    color: var(--muted, #888);
+    font-size: 10px;
+  }
+  .regime-specialty-panel .empty-state {
+    color: var(--muted, #888);
+    font-style: italic;
+    padding: 20px;
+    text-align: center;
+  }
+  .regime-specialty-panel .legend {
+    margin-top: 14px;
+    padding-top: 12px;
+    border-top: 1px solid rgba(255,255,255,0.06);
+    color: var(--muted, #888);
+    font-size: 10px;
+    line-height: 1.6;
+  }
+  .regime-specialty-panel .legend strong {
+    color: var(--text, #ddd);
+  }
+  .regime-specialty-panel .protection-arrow {
+    color: #6ee8d3;
+    font-size: 11px;
+  }
+</style>
+ 
+<div id="regime-specialty-panel" class="regime-specialty-panel" style="display:none;">
+  <h3>Agent Specialty Map · Regime-Aware Weighting</h3>
+  <div class="subtitle">
+    Every agent gets a weight based on their track record. The kill switch reads
+    this weight to decide who gets capital. <strong>This panel shows WHY each
+    agent's weight is what it is</strong> — and which regimes they actually have
+    edge in. Specialists get protected from being killed for being mediocre
+    outside their specialty.
+  </div>
+  <div class="summary-strip" id="rsp-summary"></div>
+  <div class="filter-bar" id="rsp-filters"></div>
+  <div id="rsp-table-wrap"></div>
+  <div class="legend">
+    <strong style="color:#6ee8d3;">Specialist</strong> — strong in at least one regime AND meaningfully better there than their global average. Their kill-switch weight uses the regime score, protecting them.
+    &nbsp;·&nbsp;
+    <strong style="color:#c9a449;">Generalist</strong> — consistent across regimes; no single bucket stands out. Their global weight is used.
+    &nbsp;·&nbsp;
+    <strong style="color:#ff9800;">Underperforming</strong> — even in their best regime, they're below baseline. Kill switch is likely to fire.
+  </div>
+</div>
+ 
+<script>
+(function(){
+  let allRows = [];
+  let activeFilter = 'all';
+ 
+  const REGIME_OPTIONS = [
+    { key: 'all',         label: 'All' },
+    { key: 'specialists', label: 'Specialists only' },
+    { key: 'protected',   label: 'Currently protected' },
+    { key: 'killed',      label: 'Below kill threshold' },
+    { key: 'market_regime:RISK_ON',   label: 'RISK_ON edge' },
+    { key: 'market_regime:RISK_OFF',  label: 'RISK_OFF edge' },
+    { key: 'trend_state:TRENDING',    label: 'Trending markets' },
+    { key: 'trend_state:RANGING',     label: 'Ranging markets' },
+    { key: 'vol_state:HIGH_VOL',      label: 'High volatility' },
+    { key: 'vol_state:LOW_VOL',       label: 'Low volatility' },
+    { key: 'news_state:NEWS_DRIVEN',  label: 'News-driven days' },
+  ];
+ 
+  async function loadData() {
+    let scoring;
+    try {
+      const r = await fetch('data/scoring.json?_=' + Date.now());
+      if (!r.ok) return;
+      scoring = await r.json();
+    } catch(e) {
+      console.log('[rsp] scoring fetch failed:', e.message);
+      return;
+    }
+ 
+    const sm = scoring && scoring.summary;
+    if (!sm) return;
+    const lb = sm.leaderboard || [];
+    if (lb.length === 0) return;
+ 
+    // Show panel only if there's data
+    document.getElementById('regime-specialty-panel').style.display = '';
+ 
+    allRows = lb.filter(r => r.scored_calls > 0);
+    renderSummary(allRows);
+    renderFilters();
+    renderTable();
+  }
+ 
+  function renderSummary(rows) {
+    const total = rows.length;
+    const specialists = rows.filter(r => r.specialty === 'specialist').length;
+    const generalists = rows.filter(r => r.specialty === 'generalist').length;
+    const underperf   = rows.filter(r => r.specialty === 'none').length;
+ 
+    const html = `
+      <div class="stat-cell">
+        <div class="stat-num">${total}</div>
+        <div class="stat-label">Agents With Data</div>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-num specialist">${specialists}</div>
+        <div class="stat-label">Specialists</div>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-num generalist">${generalists}</div>
+        <div class="stat-label">Generalists</div>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-num underperforming">${underperf}</div>
+        <div class="stat-label">Underperforming</div>
+      </div>
+    `;
+    document.getElementById('rsp-summary').innerHTML = html;
+  }
+ 
+  function renderFilters() {
+    const html = REGIME_OPTIONS.map(opt => {
+      const cls = opt.key === activeFilter ? 'filter-btn active' : 'filter-btn';
+      return `<button class="${cls}" data-filter="${opt.key}">${opt.label}</button>`;
+    }).join('');
+    document.getElementById('rsp-filters').innerHTML = html;
+  }
+ 
+  function passesFilter(row, filter) {
+    if (filter === 'all') return true;
+    if (filter === 'specialists') return row.specialty === 'specialist';
+    if (filter === 'protected') {
+      return (row.regime_aware_weight || 1.0) > (row.global_weight || 1.0);
+    }
+    if (filter === 'killed') {
+      return (row.weight_multiplier || 1.0) < 0.85;
+    }
+    // Regime-specific filter, e.g. "market_regime:RISK_ON"
+    if (filter.includes(':')) {
+      const [dim, label] = filter.split(':');
+      const br = row.best_regime;
+      if (!br) return false;
+      return br.dimension === dim && br.label === label;
+    }
+    return true;
+  }
+ 
+  function renderTable() {
+    const filtered = allRows.filter(r => passesFilter(r, activeFilter));
+    if (filtered.length === 0) {
+      document.getElementById('rsp-table-wrap').innerHTML =
+        '<div class="empty-state">No agents match this filter yet.</div>';
+      return;
+    }
+ 
+    let html = '<table><thead><tr>';
+    html += '<th>Agent</th>';
+    html += '<th>Specialty</th>';
+    html += '<th>Weights (global → regime-aware)</th>';
+    html += '<th>Best Regime</th>';
+    html += '<th style="text-align:right;">Calls</th>';
+    html += '</tr></thead><tbody>';
+ 
+    for (const r of filtered) {
+      const gw = r.global_weight || 1.0;
+      const rw = r.regime_aware_weight || gw;
+      const protection = (rw - gw);
+ 
+      let weightCls = 'weight-same';
+      let arrow = '→';
+      if (rw < 0.85) {
+        weightCls = 'weight-killed';
+      } else if (protection >= 0.10) {
+        weightCls = 'weight-protected';
+        arrow = '↗';
+      }
+ 
+      const br = r.best_regime;
+      let regimeHtml = '<span class="regime-stats">— need 10+ calls in any regime —</span>';
+      if (br) {
+        regimeHtml = `
+          <div class="regime-cell">
+            <div><span class="regime-label">${escapeHtml(br.label)}</span>
+                 <span class="regime-stats">(${escapeHtml(br.dimension.replace(/_/g, ' '))})</span></div>
+            <div class="regime-stats">${(br.win_rate * 100).toFixed(0)}% win · ${br.n} calls · ${br.multiplier.toFixed(2)}×</div>
+          </div>
+        `;
+      }
+ 
+      const badgeCls = 'badge-' + (r.specialty || 'none');
+      const badgeText = (r.specialty || 'none').toUpperCase();
+ 
+      html += `
+        <tr>
+          <td><span class="agent-name">${escapeHtml(r.agent)}</span></td>
+          <td><span class="specialty-badge ${badgeCls}">${escapeHtml(badgeText)}</span></td>
+          <td>
+            <div class="weight-comparison">
+              <span class="weight-global">${gw.toFixed(2)}×</span>
+              <span class="weight-arrow">${arrow}</span>
+              <span class="weight-regime ${weightCls}">${rw.toFixed(2)}×</span>
+              ${protection >= 0.10
+                ? `<span class="protection-arrow" title="Regime protection">+${protection.toFixed(2)}</span>`
+                : ''}
+            </div>
+          </td>
+          <td>${regimeHtml}</td>
+          <td style="text-align:right;">${r.scored_calls}</td>
+        </tr>
+      `;
+    }
+    html += '</tbody></table>';
+    document.getElementById('rsp-table-wrap').innerHTML = html;
+  }
+ 
+  function escapeHtml(s) {
+    if (s == null) return '';
+    return String(s).replace(/[&<>"']/g, c =>
+      ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  }
+ 
+  document.addEventListener('click', (e) => {
+    const btn = e.target.closest('#regime-specialty-panel .filter-btn');
+    if (!btn) return;
+    activeFilter = btn.getAttribute('data-filter');
+    renderFilters();
+    renderTable();
+  });
+ 
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', loadData);
+  } else {
+    loadData();
+  }
+  // Refresh every 60s in case scoring.json updates
+  setInterval(loadData, 60000);
+})();
+</script>
 </body>
 </html>
