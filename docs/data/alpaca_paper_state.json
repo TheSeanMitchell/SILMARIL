@@ -2,13 +2,13 @@
   "version": "2.1.1",
   "enabled": true,
   "account": {
-    "equity": 9999.79,
-    "cash": 2005.86
+    "equity": 9949.15,
+    "cash": 405.9
   },
   "principal_target": 100944.59,
   "savings": 9.3762516052801,
   "lifetime_realized_wins": 1,
-  "lifetime_realized_losses": 1,
+  "lifetime_realized_losses": 2,
   "position_meta": {
     "ABNB": {
       "entry_price": 139.65,
@@ -29,10 +29,10 @@
       "qty": 40.696285469
     },
     "FXA": {
-      "entry_price": 70.99,
-      "peak_price": 70.99,
+      "entry_price": 71.18,
+      "peak_price": 71.1097,
       "first_seen": "2026-05-04T19:20:11.933365+00:00",
-      "qty": 113.756444569
+      "qty": 11.238831132
     },
     "XLK": {
       "entry_price": 162.14,
@@ -42,7 +42,7 @@
     },
     "NSC": {
       "entry_price": 313.0,
-      "peak_price": 313.0,
+      "peak_price": 313.57,
       "first_seen": "2026-05-05T16:03:52.983268+00:00",
       "qty": 7.667731629
     },
@@ -58,12 +58,6 @@
       "first_seen": "2026-05-05T17:34:50.221405+00:00",
       "qty": 1.938007401
     },
-    "ANET": {
-      "entry_price": 173.75,
-      "peak_price": 174.255,
-      "first_seen": "2026-05-05T17:34:50.221412+00:00",
-      "qty": 4.605352517
-    },
     "MO": {
       "entry_price": 73.04,
       "peak_price": 73.4,
@@ -78,17 +72,23 @@
     },
     "TXN": {
       "entry_price": 280.46,
-      "peak_price": 280.695,
+      "peak_price": 281.0,
       "first_seen": "2026-05-05T19:03:32.695960+00:00",
       "qty": 2.852527989
+    },
+    "VTR": {
+      "entry_price": 86.63,
+      "peak_price": 86.78,
+      "first_seen": "2026-05-05T20:18:45.719509+00:00",
+      "qty": 9.234445342
     }
   },
   "tickers_traded_this_cycle": [
-    "VTR",
-    "FXA"
+    "ANET",
+    "DOW",
+    "FXB"
   ],
   "recent_alpaca_tickers": [
-    "CSX",
     "CRWD",
     "NSC",
     "SPG",
@@ -100,7 +100,9 @@
     "WELL",
     "TXN",
     "FXA",
-    "VTR"
+    "VTR",
+    "FXB",
+    "DOW"
   ],
   "orders": [
     {
@@ -326,45 +328,90 @@
       "signal": "BUY",
       "order_id": "668b3a3f-5a72-4423-a5dc-a0f3df2ec387",
       "time": "2026-05-05T19:03:32.911547+00:00"
+    },
+    {
+      "action": "CLOSE",
+      "symbol": "ANET",
+      "side": "sell",
+      "qty": 4.605352517,
+      "trigger_reason": "TRAILING STOP: ANET -5.95% from peak $174.25",
+      "realized_pnl": -45.45,
+      "entry_price": 173.75,
+      "exit_price": 163.88,
+      "order_id": "bd9fc048-4f55-44d7-a849-53d5268f0d02",
+      "time": "2026-05-05T20:18:45.666839+00:00"
+    },
+    {
+      "action": "OPEN",
+      "symbol": "FXB",
+      "side": "buy",
+      "notional": 795.93,
+      "conviction": 0.5395,
+      "signal": "BUY",
+      "order_id": "4679827a-1ba1-475a-b454-7a183a4572ec",
+      "time": "2026-05-05T20:18:47.325618+00:00"
+    },
+    {
+      "action": "OPEN",
+      "symbol": "DOW",
+      "side": "buy",
+      "notional": 795.93,
+      "conviction": 0.5078,
+      "signal": "BUY",
+      "order_id": "1e7f99e9-22ee-4bb1-963c-e069133e4646",
+      "time": "2026-05-05T20:18:47.375776+00:00"
     }
   ],
   "orders_placed": [
     {
-      "action": "OPEN",
-      "symbol": "FXA",
-      "side": "buy",
-      "notional": 799.98,
-      "conviction": 0.7064,
-      "signal": "BUY",
-      "order_id": "718ef065-6860-4819-be48-13f5ba98f6be",
-      "time": "2026-05-05T19:03:32.805748+00:00"
+      "action": "CLOSE",
+      "symbol": "ANET",
+      "side": "sell",
+      "qty": 4.605352517,
+      "trigger_reason": "TRAILING STOP: ANET -5.95% from peak $174.25",
+      "realized_pnl": -45.45,
+      "entry_price": 173.75,
+      "exit_price": 163.88,
+      "order_id": "bd9fc048-4f55-44d7-a849-53d5268f0d02",
+      "time": "2026-05-05T20:18:45.666839+00:00"
     },
     {
       "action": "OPEN",
-      "symbol": "VTR",
+      "symbol": "FXB",
       "side": "buy",
-      "notional": 799.98,
-      "conviction": 0.6737,
+      "notional": 795.93,
+      "conviction": 0.5395,
       "signal": "BUY",
-      "order_id": "668b3a3f-5a72-4423-a5dc-a0f3df2ec387",
-      "time": "2026-05-05T19:03:32.911547+00:00"
+      "order_id": "4679827a-1ba1-475a-b454-7a183a4572ec",
+      "time": "2026-05-05T20:18:47.325618+00:00"
+    },
+    {
+      "action": "OPEN",
+      "symbol": "DOW",
+      "side": "buy",
+      "notional": 795.93,
+      "conviction": 0.5078,
+      "signal": "BUY",
+      "order_id": "1e7f99e9-22ee-4bb1-963c-e069133e4646",
+      "time": "2026-05-05T20:18:47.375776+00:00"
     }
   ],
   "errors": [],
-  "last_run": "2026-05-05T19:03:32.911615+00:00",
+  "last_run": "2026-05-05T20:18:47.375826+00:00",
   "_flushed_at": "2026-05-04T17:43:50.085629+00:00",
   "_flush_note": "v4.1 hotfix: flushed all positions on 2026-05-04T17:43:50.085629+00:00. Principal target locked at $100,944.59 (post-flush equity).",
   "last_cycle_summary": {
-    "time": "2026-05-05T19:03:32.911601+00:00",
-    "closed": 0,
+    "time": "2026-05-05T20:18:47.375816+00:00",
+    "closed": 1,
     "opened": 2,
-    "open_after": 10,
-    "equity": 9999.79,
+    "open_after": 12,
+    "equity": 9949.15,
     "savings": 9.38,
-    "total_value": 10009.17,
+    "total_value": 9958.53,
     "tickers_traded": [
-      "VTR",
-      "FXA"
+      "ANET",
+      "DOW",
+      "FXB"
     ]
   },
   "reason": "Account fetch failed"
