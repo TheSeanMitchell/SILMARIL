@@ -2,8 +2,8 @@
   "version": "2.1.1",
   "enabled": true,
   "account": {
-    "equity": 10000.31,
-    "cash": 2007.41
+    "equity": 9999.79,
+    "cash": 2005.86
   },
   "principal_target": 100944.59,
   "savings": 9.3762516052801,
@@ -48,7 +48,7 @@
     },
     "SPG": {
       "entry_price": 203.106787,
-      "peak_price": 203.106787,
+      "peak_price": 203.21,
       "first_seen": "2026-05-05T16:03:52.983287+00:00",
       "qty": 3.938814719
     },
@@ -66,7 +66,7 @@
     },
     "MO": {
       "entry_price": 73.04,
-      "peak_price": 73.36,
+      "peak_price": 73.4,
       "first_seen": "2026-05-05T17:34:50.221417+00:00",
       "qty": 10.955366922
     },
@@ -75,11 +75,17 @@
       "peak_price": 172.355,
       "first_seen": "2026-05-05T17:34:50.221422+00:00",
       "qty": 4.679415204
+    },
+    "TXN": {
+      "entry_price": 280.46,
+      "peak_price": 280.695,
+      "first_seen": "2026-05-05T19:03:32.695960+00:00",
+      "qty": 2.852527989
     }
   },
   "tickers_traded_this_cycle": [
-    "TXN",
-    "WELL"
+    "VTR",
+    "FXA"
   ],
   "recent_alpaca_tickers": [
     "CSX",
@@ -92,7 +98,9 @@
     "MO",
     "MRVL",
     "WELL",
-    "TXN"
+    "TXN",
+    "FXA",
+    "VTR"
   ],
   "orders": [
     {
@@ -298,47 +306,65 @@
       "signal": "BUY",
       "order_id": "45d6ab77-78c1-4d0c-9406-4d08b3eb9e60",
       "time": "2026-05-05T18:32:25.435242+00:00"
+    },
+    {
+      "action": "OPEN",
+      "symbol": "FXA",
+      "side": "buy",
+      "notional": 799.98,
+      "conviction": 0.7064,
+      "signal": "BUY",
+      "order_id": "718ef065-6860-4819-be48-13f5ba98f6be",
+      "time": "2026-05-05T19:03:32.805748+00:00"
+    },
+    {
+      "action": "OPEN",
+      "symbol": "VTR",
+      "side": "buy",
+      "notional": 799.98,
+      "conviction": 0.6737,
+      "signal": "BUY",
+      "order_id": "668b3a3f-5a72-4423-a5dc-a0f3df2ec387",
+      "time": "2026-05-05T19:03:32.911547+00:00"
     }
   ],
   "orders_placed": [
     {
-      "action": "CLOSE",
-      "symbol": "WELL",
-      "side": "sell",
-      "qty": 3.722800818,
-      "trigger_reason": "Consensus flipped to HOLD",
-      "realized_pnl": -2.2,
-      "entry_price": 215.08,
-      "exit_price": 214.49,
-      "order_id": "796d60d2-bc8f-4e1f-b230-6ad938668fd3",
-      "time": "2026-05-05T18:32:23.475451+00:00"
+      "action": "OPEN",
+      "symbol": "FXA",
+      "side": "buy",
+      "notional": 799.98,
+      "conviction": 0.7064,
+      "signal": "BUY",
+      "order_id": "718ef065-6860-4819-be48-13f5ba98f6be",
+      "time": "2026-05-05T19:03:32.805748+00:00"
     },
     {
       "action": "OPEN",
-      "symbol": "TXN",
+      "symbol": "VTR",
       "side": "buy",
-      "notional": 800.02,
-      "conviction": 0.5678,
+      "notional": 799.98,
+      "conviction": 0.6737,
       "signal": "BUY",
-      "order_id": "45d6ab77-78c1-4d0c-9406-4d08b3eb9e60",
-      "time": "2026-05-05T18:32:25.435242+00:00"
+      "order_id": "668b3a3f-5a72-4423-a5dc-a0f3df2ec387",
+      "time": "2026-05-05T19:03:32.911547+00:00"
     }
   ],
   "errors": [],
-  "last_run": "2026-05-05T18:32:25.671831+00:00",
+  "last_run": "2026-05-05T19:03:32.911615+00:00",
   "_flushed_at": "2026-05-04T17:43:50.085629+00:00",
   "_flush_note": "v4.1 hotfix: flushed all positions on 2026-05-04T17:43:50.085629+00:00. Principal target locked at $100,944.59 (post-flush equity).",
   "last_cycle_summary": {
-    "time": "2026-05-05T18:32:25.671819+00:00",
-    "closed": 1,
-    "opened": 1,
-    "open_after": 8,
-    "equity": 10000.31,
+    "time": "2026-05-05T19:03:32.911601+00:00",
+    "closed": 0,
+    "opened": 2,
+    "open_after": 10,
+    "equity": 9999.79,
     "savings": 9.38,
-    "total_value": 10009.69,
+    "total_value": 10009.17,
     "tickers_traded": [
-      "TXN",
-      "WELL"
+      "VTR",
+      "FXA"
     ]
   },
   "reason": "Account fetch failed"
