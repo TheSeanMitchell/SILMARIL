@@ -2,13 +2,13 @@
   "version": "2.1.1",
   "enabled": true,
   "account": {
-    "equity": 10008.78,
-    "cash": 2808.11
+    "equity": 10000.31,
+    "cash": 2007.41
   },
   "principal_target": 100944.59,
   "savings": 9.3762516052801,
   "lifetime_realized_wins": 1,
-  "lifetime_realized_losses": 0,
+  "lifetime_realized_losses": 1,
   "position_meta": {
     "ABNB": {
       "entry_price": 139.65,
@@ -66,7 +66,7 @@
     },
     "MO": {
       "entry_price": 73.04,
-      "peak_price": 73.14,
+      "peak_price": 73.36,
       "first_seen": "2026-05-05T17:34:50.221417+00:00",
       "qty": 10.955366922
     },
@@ -78,22 +78,21 @@
     }
   },
   "tickers_traded_this_cycle": [
+    "TXN",
     "WELL"
   ],
   "recent_alpaca_tickers": [
-    "COST",
-    "FXA",
-    "ABNB",
-    "XLK",
     "CSX",
     "CRWD",
     "NSC",
     "SPG",
     "AMAT",
     "ANET",
+    "ABNB",
     "MO",
     "MRVL",
-    "WELL"
+    "WELL",
+    "TXN"
   ],
   "orders": [
     {
@@ -277,33 +276,68 @@
       "signal": "BUY",
       "order_id": "fbe54297-fde9-4f6a-9411-c2100b00e5ce",
       "time": "2026-05-05T17:34:50.319110+00:00"
+    },
+    {
+      "action": "CLOSE",
+      "symbol": "WELL",
+      "side": "sell",
+      "qty": 3.722800818,
+      "trigger_reason": "Consensus flipped to HOLD",
+      "realized_pnl": -2.2,
+      "entry_price": 215.08,
+      "exit_price": 214.49,
+      "order_id": "796d60d2-bc8f-4e1f-b230-6ad938668fd3",
+      "time": "2026-05-05T18:32:23.475451+00:00"
+    },
+    {
+      "action": "OPEN",
+      "symbol": "TXN",
+      "side": "buy",
+      "notional": 800.02,
+      "conviction": 0.5678,
+      "signal": "BUY",
+      "order_id": "45d6ab77-78c1-4d0c-9406-4d08b3eb9e60",
+      "time": "2026-05-05T18:32:25.435242+00:00"
     }
   ],
   "orders_placed": [
     {
-      "action": "OPEN",
+      "action": "CLOSE",
       "symbol": "WELL",
+      "side": "sell",
+      "qty": 3.722800818,
+      "trigger_reason": "Consensus flipped to HOLD",
+      "realized_pnl": -2.2,
+      "entry_price": 215.08,
+      "exit_price": 214.49,
+      "order_id": "796d60d2-bc8f-4e1f-b230-6ad938668fd3",
+      "time": "2026-05-05T18:32:23.475451+00:00"
+    },
+    {
+      "action": "OPEN",
+      "symbol": "TXN",
       "side": "buy",
-      "notional": 800.7,
-      "conviction": 0.5459,
+      "notional": 800.02,
+      "conviction": 0.5678,
       "signal": "BUY",
-      "order_id": "fbe54297-fde9-4f6a-9411-c2100b00e5ce",
-      "time": "2026-05-05T17:34:50.319110+00:00"
+      "order_id": "45d6ab77-78c1-4d0c-9406-4d08b3eb9e60",
+      "time": "2026-05-05T18:32:25.435242+00:00"
     }
   ],
   "errors": [],
-  "last_run": "2026-05-05T17:34:50.319170+00:00",
+  "last_run": "2026-05-05T18:32:25.671831+00:00",
   "_flushed_at": "2026-05-04T17:43:50.085629+00:00",
   "_flush_note": "v4.1 hotfix: flushed all positions on 2026-05-04T17:43:50.085629+00:00. Principal target locked at $100,944.59 (post-flush equity).",
   "last_cycle_summary": {
-    "time": "2026-05-05T17:34:50.319158+00:00",
-    "closed": 0,
+    "time": "2026-05-05T18:32:25.671819+00:00",
+    "closed": 1,
     "opened": 1,
     "open_after": 8,
-    "equity": 10008.78,
+    "equity": 10000.31,
     "savings": 9.38,
-    "total_value": 10018.16,
+    "total_value": 10009.69,
     "tickers_traded": [
+      "TXN",
       "WELL"
     ]
   },
