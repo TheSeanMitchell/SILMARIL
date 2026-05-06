@@ -3,8 +3,8 @@ silmaril.portfolios.status_emitter — The single source of truth for
 agent status entries.
 
 Every compounder ($1 SCROOGE, $1 MIDAS, $1 CRYPTOBRO, $1 JRR_TOKEN,
-$1 SPORTS_BRO) and every $10K career agent must route their status
-writes through emit_status() in this module.
+$1 SPORTS_BRO — soon all $10K) and every $10K career agent must route
+their status writes through emit_status() in this module.
 
 Why one emitter:
   - Every entry uses datetime.now(timezone.utc).isoformat(). No date-only
@@ -24,6 +24,7 @@ Action types:
   FROZEN  — agent is locked by AgentRiskState (drawdown trigger)
   RESET   — agent reincarnated (compounders only, hits at -50% drawdown)
 """
+from __future__ import annotations
 
 from datetime import datetime, timezone
 from typing import Any, Dict, List, Optional
@@ -50,10 +51,7 @@ def emit_status(
 ) -> Dict[str, Any]:
     """
     Append one normalized status entry to history. Returns the entry.
-
     Required: history list, action.
-    Everything else is optional and only included if non-None.
-
     Always writes a full ISO timestamp via datetime.now(timezone.utc),
     or `ts` if explicitly provided. Never writes a date-only string.
     """
@@ -95,36 +93,40 @@ def emit_status(
     return entry
 
 
-def emit_hold(history: List[Dict[str, Any]], balance: float, reason: str = "No qualifying signal") -> Dict[str, Any]:
+def emit_hold(
+    history: List[Dict[str, Any]],
+    balance: float,
+    reason: str = "No qualifying signal",
+) -> Dict[str, Any]:
     """Convenience: agent voted HOLD this cycle, no action taken."""
     return emit_status(
-        history=history,
-        action="HOLD",
-        balance_before=balance,
-        balance_after=balance,
-        reason=reason,
+        history=history, action="HOLD",
+        balance_before=balance, balance_after=balance, reason=reason,
     )
 
 
-def emit_mark(history: List[Dict[str, Any]], balance: float, current_position: Dict[str, Any], reason: str = "Mark-to-market") -> Dict[str, Any]:
+def emit_mark(
+    history: List[Dict[str, Any]],
+    balance: float,
+    current_position: Dict[str, Any],
+    reason: str = "Mark-to-market",
+) -> Dict[str, Any]:
     """Convenience: agent is holding a position, mark-to-market for the cycle."""
     return emit_status(
-        history=history,
-        action="MARK",
-        balance_after=balance,
-        current_position=current_position,
-        reason=reason,
+        history=history, action="MARK",
+        balance_after=balance, current_position=current_position, reason=reason,
     )
 
 
-def emit_frozen(history: List[Dict[str, Any]], balance: float, reason: str) -> Dict[str, Any]:
+def emit_frozen(
+    history: List[Dict[str, Any]],
+    balance: float,
+    reason: str,
+) -> Dict[str, Any]:
     """Convenience: agent is locked by risk state."""
     return emit_status(
-        history=history,
-        action="FROZEN",
-        balance_before=balance,
-        balance_after=balance,
-        reason=reason,
+        history=history, action="FROZEN",
+        balance_before=balance, balance_after=balance, reason=reason,
     )
 
 
