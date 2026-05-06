@@ -200,10 +200,30 @@ def execute_consensus_signals(
             peak_drop_pct = (current_price / new_peak - 1.0) * 100
 
         # ── 1. Profit-take ───────────────────────────────────────
-        if side == "long" and entry_price > 0 and current_price >= entry_price * (1.0 + profit_take_pct):
-            close_reason = f"PROFIT TAKE: {symbol} +{pnl_pct:.2f}% from entry — harvest"
-        elif side == "short" and entry_price > 0 and current_price <= entry_price * (1.0 - profit_take_pct):
-            close_reason = f"PROFIT TAKE: {symbol} short -{abs(pnl_pct):.2f}% from entry — harvest"
+        # ── 1. Tiered grocery harvest ─────────────────────────────
+        # Partial harvests: sweep gains into grocery bucket without
+        # always closing the full position. Let winners run.
+        try:
+            from silmaril.portfolios.grocery import compute_harvest
+            _harv_amt, _remaining, _tier = compute_harvest(
+                entry_price=entry_price,
+                current_price=current_price,
+                qty=abs(qty),
+                principal=float(state.get("principal_target", 10000)),
+            )
+            if _harv_amt > 0 and _tier != "NONE":
+                close_reason = (
+                    f"GROCERY HARVEST ({_tier}): {symbol} "
+                    f"+{pnl_pct:.2f}% — sweeping ${_harv_amt:.2f} to grocery bucket"
+                )
+                state["grocery_pending_harvest"] = (
+                    state.get("grocery_pending_harvest", 0.0) + _harv_amt)
+        except Exception:
+            # Fallback to simple profit-take if grocery module unavailable
+            if side == "long" and entry_price > 0 and current_price >= entry_price * (1.0 + profit_take_pct):
+                close_reason = f"PROFIT TAKE: {symbol} +{pnl_pct:.2f}% from entry — harvest"
+            elif side == "short" and entry_price > 0 and current_price <= entry_price * (1.0 - profit_take_pct):
+                close_reason = f"PROFIT TAKE: {symbol} short -{abs(pnl_pct):.2f}% from entry — harvest"
 
         # ── 2. Trailing stop (only if no profit-take) ────────────
         elif side == "long" and new_peak > 0 and current_price <= new_peak * (1.0 - trailing_stop_pct):
