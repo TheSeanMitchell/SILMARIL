@@ -1563,6 +1563,29 @@ Reply in 3-5 bullets, no preamble.
     _write(out / "jrr_token.json", jrr_token_dict)
     _write(out / "sports_bro.json", sports_bro_dict)
     _write(out / "handoff_blocks.json", handoff_blocks)
+ 
+    # ── Grocery harvest leaderboard ──────────────────────────────
+    if _HAS_GROCERY:
+        try:
+            # Flush any pending Alpaca harvests into the Alpaca ledger
+            _alpaca_st = alpaca_state if 'alpaca_state' in dir() else None
+            if _alpaca_st and _alpaca_st.get("grocery_pending_harvest", 0) > 0:
+                _alp_ledger = load_ledger(out, "ALPACA", 10_000.0)
+                _alp_ledger.harvest(
+                    _alpaca_st["grocery_pending_harvest"],
+                    reason="Alpaca tiered harvest this cycle")
+                save_ledger(out, _alp_ledger)
+                _alpaca_st["grocery_pending_harvest"] = 0.0
+            _leaderboard = build_leaderboard(out)
+            _write(out / "grocery_leaderboard.json", _leaderboard)
+            log.info(
+                "grocery: leaderboard — %d harvesters, "
+                "combined weekly $%.2f / $%.2f",
+                len(_leaderboard.get("leaderboard", [])),
+                _leaderboard.get("total_weekly_all", 0),
+                WEEKLY_TARGET)
+        except Exception as _g_e:
+            log.debug("grocery leaderboard failed: %s", _g_e)
 
     # ── Rolling history (per-agent track record, accumulates each run) ─
     _append_history(out / "history.json", debate_dicts, plans, now)
