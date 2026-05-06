@@ -1,417 +1,312 @@
 """
-SILMARIL Alpha 2.2 — One-time migration script.
+scripts/migrate_alpha_2_2.py — One-shot Alpha 2.2 migration.
 
-Run via the migrate_alpha_2_2.yml workflow.
+What this does:
+  1. Archives the current agent_beliefs.json, creating a .bak before touching it
+  2. Resets the 8 corrupted agents' Beta posteriors to clean Beta(1,1) prior
+  3. Equalizes all main-voter agent portfolios to $10K starting capital
+     (resets cash to $10K, clears open positions, preserves history and XP)
+  4. Equalizes the 5 compounders (Scrooge, Midas, CryptoBro, JRR Token, Sports Bro)
+     to $10 starting balance — resetting current_position, preserving history
+  5. Writes a migration report to docs/data/migration_alpha_2_2.json
 
-Four things in order:
-  1. RESET the 8 corrupted agents' Beta posteriors back to the prior.
-     Their evolution cards, history, level, XP, lifetime calls, and
-     all other learning state are PRESERVED. Only the corrupted Beta
-     posteriors in agent_beliefs.json get reset.
-
-  2. EQUALIZE all agent portfolios to $10,000 starting capital.
-     Their personality, lifetime stats, and historical entries are
-     PRESERVED. Cash and current_equity reset to $10K. Savings ledger
-     preserved as-is. Open positions refunded to cash before reset.
-
-  3. EQUALIZE compounder JSONs (scrooge, midas, cryptobro, jrr_token,
-     sports_bro) to $10K balance. History preserved.
-
-  4. PATCH silmaril/cli.py to fix the directional-only filter and
-     regime threading bugs in _post_debate_learning. Two surgical
-     string replacements. Idempotent — skips if already patched.
-
-Pre-migration snapshots go to docs_archive/{YYYY-MM-DD}/ for every file
-touched. The script is IDEMPOTENT — running it twice is a no-op.
+Run once, on demand, via migrate_alpha_2_2.yml workflow.
+After running: re-enable Daily Run and Weekly Backup.
 """
+from __future__ import annotations
 
 import json
-import re
 import shutil
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any, Dict, List
+from typing import Dict, Any
 
-# ─────────────────────────────────────────────────────────────────────
-# CONFIG
-# ─────────────────────────────────────────────────────────────────────
+# ─── paths ───────────────────────────────────────────────────────
+DATA = Path("docs/data")
+BELIEFS_PATH = DATA / "agent_beliefs.json"
+PORTFOLIOS_PATH = DATA / "agent_portfolios.json"
+SCROOGE_PATH = DATA / "scrooge.json"
+MIDAS_PATH = DATA / "midas.json"
+CRYPTOBRO_PATH = DATA / "cryptobro.json"
+JRR_PATH = DATA / "jrr_token.json"
+SPORTS_PATH = DATA / "sports_bro.json"
+REPORT_PATH = DATA / "migration_alpha_2_2.json"
 
-CORRUPTED_AGENTS_RESET: Dict[str, Dict[str, Any]] = {
-    "CICADA":   {"reason": "alpha=206 beta=1 (99.5% win rate) — HOLD votes inflated by tolerance rule"},
-    "SHEPHERD": {"reason": "alpha=46 beta=1 (97.9% win rate) — same HOLD inflation pattern"},
-    "BARON":    {"reason": "alpha=111 beta=12 (90.6% win rate) — same HOLD inflation pattern"},
-    "SYNTH":    {"reason": "alpha=1 beta=109 (0.9% win rate) — directional voter penalized vs HOLDs"},
-    "ZENITH":   {"reason": "alpha=3 beta=202 (1.6% win rate) — directional voter penalized vs HOLDs"},
-    "VEIL":     {"reason": "alpha=2 beta=71 (2.5% win rate) — directional voter penalized vs HOLDs"},
-    "TALON":    {"reason": "alpha=1 beta=30 (3.2% win rate) — directional voter penalized vs HOLDs"},
-    "HEX":      {"reason": "alpha=10 beta=125 (7.4% win rate) — directional voter penalized vs HOLDs"},
+# ─── constants ───────────────────────────────────────────────────
+CORRUPTED_AGENTS = {
+    "CICADA", "SHEPHERD", "BARON", "SYNTH",
+    "ZENITH", "VEIL", "TALON", "HEX",
 }
-
 PRIOR_ALPHA = 1.0
 PRIOR_BETA = 1.0
-EQUALIZED_STARTING_EQUITY = 10000.0
-
-COMPOUNDER_FILES = [
-    "scrooge.json", "midas.json", "cryptobro.json",
-    "jrr_token.json", "sports_bro.json",
-]
+AGENT_TARGET_CASH = 10_000.0
+COMPOUNDER_TARGET_BALANCE = 10.0
 
 
-# ─────────────────────────────────────────────────────────────────────
-# Belief reset
-# ─────────────────────────────────────────────────────────────────────
-
-def reset_corrupted_beliefs(beliefs_path: Path, archive_dir: Path) -> Dict[str, Any]:
-    if not beliefs_path.exists():
-        return {"step": "belief_reset", "status": "SKIPPED",
-                "reason": "agent_beliefs.json not found"}
-
-    snapshot_path = archive_dir / "agent_beliefs_pre_migration.json"
-    shutil.copy2(beliefs_path, snapshot_path)
-
-    beliefs = json.loads(beliefs_path.read_text())
-    reset_log = []
-
-    for agent_name, meta in CORRUPTED_AGENTS_RESET.items():
-        if agent_name not in beliefs:
-            reset_log.append({"agent": agent_name, "action": "SKIPPED",
-                              "reason": "agent not in agent_beliefs.json"})
-            continue
-
-        pre_state = {regime: dict(state) for regime, state in beliefs[agent_name].items()}
-
-        already_reset = all(
-            (s.get("alpha", 0) == PRIOR_ALPHA and
-             s.get("beta", 0) == PRIOR_BETA and
-             s.get("n", -1) == 0)
-            for s in beliefs[agent_name].values()
-        )
-        if already_reset:
-            reset_log.append({"agent": agent_name, "action": "ALREADY_RESET"})
-            continue
-
-        new_state = {}
-        for regime in beliefs[agent_name].keys():
-            new_state[regime] = {"alpha": PRIOR_ALPHA, "beta": PRIOR_BETA, "n": 0}
-        beliefs[agent_name] = new_state
-
-        reset_log.append({
-            "agent": agent_name, "action": "RESET",
-            "reason": meta["reason"],
-            "pre_state": pre_state,
-            "post_state": dict(new_state),
-        })
-
-    beliefs_path.write_text(json.dumps(beliefs, indent=2))
-
-    return {
-        "step": "belief_reset", "status": "OK",
-        "snapshot_path": str(snapshot_path),
-        "reset_log": reset_log,
-        "agents_reset": len([r for r in reset_log if r["action"] == "RESET"]),
-    }
+def _now() -> str:
+    return datetime.now(timezone.utc).isoformat()
 
 
-# ─────────────────────────────────────────────────────────────────────
-# Portfolio equalization
-# ─────────────────────────────────────────────────────────────────────
-
-def equalize_portfolios(portfolios_path: Path, archive_dir: Path) -> Dict[str, Any]:
-    if not portfolios_path.exists():
-        return {"step": "portfolio_equalization", "status": "SKIPPED",
-                "reason": "agent_portfolios.json not found"}
-
-    snapshot_path = archive_dir / "agent_portfolios_pre_migration.json"
-    shutil.copy2(portfolios_path, snapshot_path)
-
-    raw = json.loads(portfolios_path.read_text())
-    equalized_log = []
-    now_iso = datetime.now(timezone.utc).isoformat()
-    now_date = datetime.now(timezone.utc).date().isoformat()
-
-    for agent_name, record in raw.items():
-        if agent_name.startswith("_"):
-            continue
-        if not isinstance(record, dict):
-            continue
-
-        pre_state = {
-            "starting_equity": record.get("starting_equity"),
-            "current_equity": record.get("current_equity"),
-            "cash": record.get("cash"),
-            "savings": record.get("savings"),
-        }
-
-        if (record.get("starting_equity") == EQUALIZED_STARTING_EQUITY and
-            record.get("cash") == EQUALIZED_STARTING_EQUITY and
-            record.get("current_equity") == EQUALIZED_STARTING_EQUITY and
-            record.get("current_position") is None):
-            equalized_log.append({"agent": agent_name, "action": "ALREADY_EQUALIZED"})
-            continue
-
-        if record.get("current_position"):
-            pos = record["current_position"]
-            qty = pos.get("qty", 0) or 0
-            entry = pos.get("entry_price", 0) or 0
-            refund = qty * entry
-            current_cash = record.get("cash", 0) or 0
-            record["cash"] = current_cash + refund
-
-            history = record.setdefault("history", [])
-            history.append({
-                "timestamp": now_iso, "date": now_date, "action": "CLOSE",
-                "ticker": pos.get("ticker", ""), "qty": qty, "price": entry,
-                "reason": "Alpha 2.2 migration: position closed for capital reset",
-            })
-            record["current_position"] = None
-
-        record["starting_equity"] = EQUALIZED_STARTING_EQUITY
-        record["cash"] = EQUALIZED_STARTING_EQUITY
-        record["current_equity"] = EQUALIZED_STARTING_EQUITY
-
-        history = record.setdefault("history", [])
-        history.append({
-            "timestamp": now_iso, "date": now_date, "action": "RESET",
-            "reason": "Alpha 2.2 equalization to $10,000 starting capital",
-            "balance_after": EQUALIZED_STARTING_EQUITY,
-        })
-
-        equalized_log.append({
-            "agent": agent_name, "action": "EQUALIZED",
-            "pre_state": pre_state,
-            "post_state": {
-                "starting_equity": EQUALIZED_STARTING_EQUITY,
-                "current_equity": EQUALIZED_STARTING_EQUITY,
-                "cash": EQUALIZED_STARTING_EQUITY,
-                "savings": record.get("savings", 0),
-            },
-        })
-
-    portfolios_path.write_text(json.dumps(raw, indent=2, default=str))
-
-    return {
-        "step": "portfolio_equalization", "status": "OK",
-        "snapshot_path": str(snapshot_path),
-        "equalized_log": equalized_log,
-        "agents_equalized": len([r for r in equalized_log if r["action"] == "EQUALIZED"]),
-    }
+def _load_json(path: Path) -> Any:
+    if not path.exists():
+        return {}
+    try:
+        return json.loads(path.read_text())
+    except Exception as e:
+        print(f"[migrate] WARNING: could not read {path}: {e}")
+        return {}
 
 
-# ─────────────────────────────────────────────────────────────────────
-# Compounder equalization
-# ─────────────────────────────────────────────────────────────────────
-
-def equalize_compounders(data_dir: Path, archive_dir: Path) -> Dict[str, Any]:
-    log: List[Dict[str, Any]] = []
-    now_iso = datetime.now(timezone.utc).isoformat()
-    now_date = datetime.now(timezone.utc).date().isoformat()
-
-    for fname in COMPOUNDER_FILES:
-        fpath = data_dir / fname
-        if not fpath.exists():
-            log.append({"file": fname, "action": "SKIPPED", "reason": "file not found"})
-            continue
-
-        snapshot = archive_dir / f"{fname}.pre_migration"
-        shutil.copy2(fpath, snapshot)
-
-        try:
-            data = json.loads(fpath.read_text())
-        except Exception as e:
-            log.append({"file": fname, "action": "ERROR", "reason": str(e)})
-            continue
-
-        current_balance = data.get("balance", 0)
-        if current_balance == EQUALIZED_STARTING_EQUITY and not data.get("current_position"):
-            log.append({"file": fname, "action": "ALREADY_EQUALIZED"})
-            continue
-
-        pre_balance = current_balance
-        if data.get("current_position"):
-            pos = data["current_position"]
-            qty = pos.get("qty", 0) or 0
-            entry = pos.get("entry_price", 0) or 0
-            data["balance"] = current_balance + (qty * entry)
-            data["current_position"] = None
-
-            history = data.setdefault("history", [])
-            history.append({
-                "timestamp": now_iso, "date": now_date, "action": "CLOSE",
-                "ticker": pos.get("ticker", ""),
-                "reason": "Alpha 2.2 migration: position closed for balance reset",
-            })
-
-        data["balance"] = EQUALIZED_STARTING_EQUITY
-        data["starting_balance"] = EQUALIZED_STARTING_EQUITY
-
-        history = data.setdefault("history", [])
-        history.append({
-            "timestamp": now_iso, "date": now_date, "action": "RESET",
-            "reason": "Alpha 2.2 equalization to $10,000 starting capital",
-            "balance_after": EQUALIZED_STARTING_EQUITY,
-        })
-
-        fpath.write_text(json.dumps(data, indent=2, default=str))
-        log.append({
-            "file": fname, "action": "EQUALIZED",
-            "pre_balance": pre_balance,
-            "post_balance": EQUALIZED_STARTING_EQUITY,
-        })
-
-    return {
-        "step": "compounder_equalization", "status": "OK",
-        "log": log,
-        "compounders_equalized": len([r for r in log if r["action"] == "EQUALIZED"]),
-    }
+def _save_json(path: Path, data: Any) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(data, indent=2, default=str))
 
 
-# ─────────────────────────────────────────────────────────────────────
-# CLI source patch — directional-only HOLD filter + regime from tags
-# ─────────────────────────────────────────────────────────────────────
+def _backup(path: Path) -> str:
+    if not path.exists():
+        return "file did not exist — no backup needed"
+    bak = path.with_suffix(path.suffix + ".bak")
+    shutil.copy2(path, bak)
+    return str(bak)
 
-# The exact buggy fragment in silmaril/cli.py's _post_debate_learning function.
-# Read regime from top-level (wrong — it's nested in tags) and fail to filter HOLDs.
-_CLI_BUGGY_BELIEFS_BLOCK = '''            outcomes_for_beliefs = [
-                {
-                    "agent": o.get("agent"),
-                    "regime": o.get("regime") or o.get("market_regime") or "UNKNOWN",
-                    "won": bool(o.get("correct", o.get("was_correct", o.get("won", False)))),
+
+# ─────────────────────────────────────────────────────────────────
+# Step 1: Reset corrupted Bayesian posteriors
+# ─────────────────────────────────────────────────────────────────
+
+def reset_corrupted_beliefs() -> Dict:
+    report = {"step": "reset_beliefs", "reset": [], "kept": [], "errors": []}
+    bak = _backup(BELIEFS_PATH)
+    report["backup"] = bak
+
+    beliefs = _load_json(BELIEFS_PATH)
+    if not beliefs:
+        report["note"] = "agent_beliefs.json not found or empty — created fresh"
+        _save_json(BELIEFS_PATH, {})
+        return report
+
+    for agent in list(beliefs.keys()):
+        if agent in CORRUPTED_AGENTS:
+            # Wipe all regime posteriors to clean Beta(1,1)
+            cleaned_regimes = {}
+            for regime in beliefs[agent].keys():
+                cleaned_regimes[regime] = {
+                    "alpha": PRIOR_ALPHA,
+                    "beta": PRIOR_BETA,
+                    "n": 0,
                 }
-                for o in new_outcome_dicts
-                if o.get("agent")
-            ]'''
+            beliefs[agent] = cleaned_regimes
+            report["reset"].append(agent)
+        else:
+            report["kept"].append(agent)
 
-_CLI_FIXED_BELIEFS_BLOCK = '''            outcomes_for_beliefs = [
-                {
-                    "agent": o.get("agent"),
-                    "regime": (o.get("tags") or {}).get("market_regime") or "UNKNOWN",
-                    "won": bool(o.get("correct", o.get("was_correct", o.get("won", False)))),
-                }
-                for o in new_outcome_dicts
-                if o.get("agent")
-                and o.get("signal") in ("BUY", "STRONG_BUY", "SELL", "STRONG_SELL")
-            ]'''
-
-# Sentinel that proves the patch is already applied (idempotency check).
-_CLI_PATCH_SENTINEL = 'and o.get("signal") in ("BUY", "STRONG_BUY", "SELL", "STRONG_SELL")'
+    _save_json(BELIEFS_PATH, beliefs)
+    print(f"[migrate] Reset posteriors for: {sorted(report['reset'])}")
+    print(f"[migrate] Preserved posteriors for: {sorted(report['kept'])}")
+    return report
 
 
-def patch_cli_directional_filter(cli_path: Path, archive_dir: Path) -> Dict[str, Any]:
-    """
-    Surgical fix to silmaril/cli.py:
-      - Read regime from tags["market_regime"], not from non-existent
-        top-level "regime" or "market_regime" keys.
-      - Filter HOLD/ABSTAIN outcomes out of belief updates so directional
-        skill is measured correctly.
+# ─────────────────────────────────────────────────────────────────
+# Step 2: Equalize main-voter agent portfolios to $10K
+# ─────────────────────────────────────────────────────────────────
 
-    Idempotent. Backs up cli.py to archive_dir before patching.
-    Skips with a warning if the expected buggy text isn't found.
-    """
-    if not cli_path.exists():
-        return {"step": "cli_patch", "status": "SKIPPED",
-                "reason": "silmaril/cli.py not found"}
+def equalize_agent_portfolios() -> Dict:
+    report = {"step": "equalize_portfolios", "equalized": [], "errors": []}
+    bak = _backup(PORTFOLIOS_PATH)
+    report["backup"] = bak
 
-    text = cli_path.read_text()
+    raw = _load_json(PORTFOLIOS_PATH)
+    if not raw:
+        report["note"] = "agent_portfolios.json not found — skipping"
+        return report
 
-    if _CLI_PATCH_SENTINEL in text:
-        return {"step": "cli_patch", "status": "ALREADY_PATCHED"}
+    # The file has a _summary key and per-agent keys
+    updated = {}
+    for key, val in raw.items():
+        if key.startswith("_"):
+            updated[key] = val
+            continue
+        if not isinstance(val, dict):
+            updated[key] = val
+            continue
 
-    if _CLI_BUGGY_BELIEFS_BLOCK not in text:
-        # Safety: don't patch what we can't recognize. Log the situation
-        # so the operator can investigate. The system continues running on
-        # the unpatched code — bug remains but no damage done.
-        return {
-            "step": "cli_patch", "status": "FAILED",
-            "reason": (
-                "Expected buggy code block not found verbatim. "
-                "Whitespace or function body may have changed since this "
-                "patch was authored. Inspect cli.py _post_debate_learning "
-                "manually and update outcomes_for_beliefs comprehension by "
-                "hand: (1) replace top-level regime lookup with "
-                "(o.get('tags') or {}).get('market_regime'), and "
-                "(2) add 'and o.get(\"signal\") in (\"BUY\", \"STRONG_BUY\", "
-                "\"SELL\", \"STRONG_SELL\")' to the if filter."
-            ),
-        }
+        old_cash = val.get("cash", AGENT_TARGET_CASH)
+        old_equity = val.get("current_equity", AGENT_TARGET_CASH)
 
-    # Backup
-    snapshot_path = archive_dir / "cli_pre_migration.py"
-    shutil.copy2(cli_path, snapshot_path)
+        # Reset cash to $10K, close any open position, preserve history + savings
+        val["cash"] = AGENT_TARGET_CASH
+        val["current_equity"] = AGENT_TARGET_CASH
+        val["starting_equity"] = AGENT_TARGET_CASH
+        val["current_position"] = None  # Force close — fresh start
+        # Preserve history, equity_curve, savings, inception_date
+        # Add a MIGRATION entry to history
+        history = val.get("history", [])
+        history.append({
+            "date": datetime.now(timezone.utc).date().isoformat(),
+            "timestamp": _now(),
+            "action": "MIGRATION",
+            "reason": "Alpha 2.2 equalization — reset to $10K principal",
+            "old_cash": round(old_cash, 2),
+            "old_equity": round(old_equity, 2),
+            "new_cash": AGENT_TARGET_CASH,
+        })
+        val["history"] = history
+        # Reset savings separately — agents keep earnings from before migration
+        # (savings are already realized gains, so we don't reset those)
+        updated[key] = val
+        report["equalized"].append(key)
 
-    # Patch
-    new_text = text.replace(_CLI_BUGGY_BELIEFS_BLOCK, _CLI_FIXED_BELIEFS_BLOCK, 1)
-    cli_path.write_text(new_text)
-
-    return {
-        "step": "cli_patch",
-        "status": "OK",
-        "snapshot_path": str(snapshot_path),
-        "applied_changes": [
-            "outcomes_for_beliefs: regime now read from tags['market_regime']",
-            "outcomes_for_beliefs: filter excludes HOLD/ABSTAIN, only directional",
-        ],
+    # Rewrite summary
+    agent_count = sum(1 for k in updated if not k.startswith("_"))
+    updated["_summary"] = {
+        "total_savings_all_agents": 0.0,
+        "total_lifetime_value": round(agent_count * AGENT_TARGET_CASH, 2),
+        "agent_count": agent_count,
+        "generated_at": _now(),
+        "migration_note": "Alpha 2.2 equalization applied",
     }
 
-
-# ─────────────────────────────────────────────────────────────────────
-# Senate log writer
-# ─────────────────────────────────────────────────────────────────────
-
-def append_senate_log(data_dir: Path, event: Dict[str, Any]) -> None:
-    senate_log_path = data_dir / "senate_log.json"
-    if senate_log_path.exists():
-        try:
-            senate_log = json.loads(senate_log_path.read_text())
-        except Exception:
-            senate_log = {"events": []}
-    else:
-        senate_log = {"events": []}
-
-    senate_log.setdefault("events", []).append(event)
-    senate_log_path.write_text(json.dumps(senate_log, indent=2, default=str))
+    _save_json(PORTFOLIOS_PATH, updated)
+    print(f"[migrate] Equalized {len(report['equalized'])} agent portfolios to $10K")
+    return report
 
 
-# ─────────────────────────────────────────────────────────────────────
-# Orchestration
-# ─────────────────────────────────────────────────────────────────────
+# ─────────────────────────────────────────────────────────────────
+# Step 3: Equalize compounders to $10 starting balance
+# ─────────────────────────────────────────────────────────────────
 
-def run_migration(
-    data_dir: Path = Path("docs/data"),
-    archive_root: Path = Path("docs_archive"),
-    repo_root: Path = Path("."),
-) -> Dict[str, Any]:
-    today = datetime.now(timezone.utc).date().isoformat()
-    archive_dir = archive_root / today
-    archive_dir.mkdir(parents=True, exist_ok=True)
+def _reset_compounder_balance(path: Path, codename: str, target: float) -> Dict:
+    result = {"codename": codename, "path": str(path)}
+    bak = _backup(path)
+    result["backup"] = bak
 
-    started_at = datetime.now(timezone.utc).isoformat()
+    state = _load_json(path)
+    if not state:
+        result["note"] = "state file not found — skipping"
+        return result
 
-    belief_report = reset_corrupted_beliefs(data_dir / "agent_beliefs.json", archive_dir)
-    portfolio_report = equalize_portfolios(data_dir / "agent_portfolios.json", archive_dir)
-    compounder_report = equalize_compounders(data_dir, archive_dir)
-    cli_report = patch_cli_directional_filter(repo_root / "silmaril" / "cli.py", archive_dir)
+    old_balance = state.get("balance", target)
+    result["old_balance"] = old_balance
 
-    finished_at = datetime.now(timezone.utc).isoformat()
-    event = {
-        "started_at": started_at,
-        "finished_at": finished_at,
-        "type": "MIGRATION_ALPHA_2_2",
+    state["balance"] = target
+    state["lifetime_peak"] = target
+    state["current_position"] = None  # Close open positions
+
+    # Preserve history, deaths, current_life
+    history = state.get("history", [])
+    history.append({
+        "date": datetime.now(timezone.utc).date().isoformat(),
+        "timestamp": _now(),
+        "action": "MIGRATION",
+        "reason": f"Alpha 2.2 equalization — reset to ${target}",
+        "old_balance": round(old_balance, 4),
+        "new_balance": target,
+    })
+    state["history"] = history
+
+    _save_json(path, state)
+    result["new_balance"] = target
+    print(f"[migrate] {codename}: ${old_balance:.4f} → ${target:.2f}")
+    return result
+
+
+def _reset_jrr_token(path: Path) -> Dict:
+    """JRR Token has a two-tier structure — needs special handling."""
+    result = {"codename": "JRR_TOKEN", "path": str(path)}
+    bak = _backup(path)
+    result["backup"] = bak
+
+    state = _load_json(path)
+    if not state:
+        result["note"] = "jrr_token.json not found — skipping"
+        return result
+
+    old_balance = state.get("balance", COMPOUNDER_TARGET_BALANCE)
+    result["old_balance"] = old_balance
+
+    state["balance"] = COMPOUNDER_TARGET_BALANCE
+    state["lifetime_peak"] = COMPOUNDER_TARGET_BALANCE
+    state["current_position"] = None
+
+    # Reset both tiers
+    tier_balance = COMPOUNDER_TARGET_BALANCE / 2.0
+    tiers = state.get("tiers", {})
+    for tier_key in ("sub_100m", "over_100m"):
+        if tier_key in tiers:
+            tiers[tier_key]["balance"] = tier_balance
+            tiers[tier_key]["current_position"] = None
+    state["tiers"] = tiers
+
+    history = state.get("history", [])
+    history.append({
+        "date": datetime.now(timezone.utc).date().isoformat(),
+        "timestamp": _now(),
+        "action": "MIGRATION",
+        "reason": "Alpha 2.2 equalization — reset to $10",
+        "old_balance": round(old_balance, 4),
+        "new_balance": COMPOUNDER_TARGET_BALANCE,
+    })
+    state["history"] = history
+
+    _save_json(path, state)
+    result["new_balance"] = COMPOUNDER_TARGET_BALANCE
+    print(f"[migrate] JRR_TOKEN: ${old_balance:.4f} → ${COMPOUNDER_TARGET_BALANCE:.2f} (tiers equalized)")
+    return result
+
+
+def equalize_compounders() -> Dict:
+    report = {"step": "equalize_compounders", "results": []}
+
+    compounders = [
+        (SCROOGE_PATH, "SCROOGE"),
+        (MIDAS_PATH, "MIDAS"),
+        (CRYPTOBRO_PATH, "CRYPTOBRO"),
+        (SPORTS_PATH, "SPORTS_BRO"),
+    ]
+    for path, codename in compounders:
+        r = _reset_compounder_balance(path, codename, COMPOUNDER_TARGET_BALANCE)
+        report["results"].append(r)
+
+    # JRR Token special case
+    report["results"].append(_reset_jrr_token(JRR_PATH))
+    return report
+
+
+# ─────────────────────────────────────────────────────────────────
+# Main runner
+# ─────────────────────────────────────────────────────────────────
+
+def run_migration() -> Dict:
+    print("[migrate] ═══════════════════════════════════════════════")
+    print("[migrate] SILMARIL Alpha 2.2 Migration — starting")
+    print(f"[migrate] UTC: {_now()}")
+    print("[migrate] ═══════════════════════════════════════════════")
+
+    report = {
         "version": "alpha_2_2",
-        "archive_dir": str(archive_dir),
-        "belief_reset": belief_report,
-        "portfolio_equalization": portfolio_report,
-        "compounder_equalization": compounder_report,
-        "cli_source_patch": cli_report,
+        "ran_at": _now(),
+        "steps": {},
     }
-    append_senate_log(data_dir, event)
 
-    return {
-        "migration": "alpha_2_2",
-        "started_at": started_at,
-        "finished_at": finished_at,
-        "archive_dir": str(archive_dir),
-        "steps": [belief_report, portfolio_report, compounder_report, cli_report],
-    }
+    # Step 1: beliefs
+    print("\n[migrate] Step 1: Resetting corrupted Bayesian posteriors...")
+    report["steps"]["beliefs"] = reset_corrupted_beliefs()
+
+    # Step 2: agent portfolios
+    print("\n[migrate] Step 2: Equalizing agent portfolios to $10K...")
+    report["steps"]["portfolios"] = equalize_agent_portfolios()
+
+    # Step 3: compounders
+    print("\n[migrate] Step 3: Equalizing compounders to $10...")
+    report["steps"]["compounders"] = equalize_compounders()
+
+    # Write report
+    _save_json(REPORT_PATH, report)
+    print(f"\n[migrate] Report written to {REPORT_PATH}")
+    print("[migrate] ═══════════════════════════════════════════════")
+    print("[migrate] Migration complete. You may now enable Daily Run.")
+    print("[migrate] ═══════════════════════════════════════════════")
+    return report
 
 
 if __name__ == "__main__":
