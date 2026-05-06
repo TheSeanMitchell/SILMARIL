@@ -1,240 +1,176 @@
 """
-silmaril.execution.attribution — Every Alpaca order tagged with its
-source chain.
+silmaril.execution.attribution — Alpaca order tagging and reconciliation.
 
-When you look at the Alpaca dashboard or the Trade Attribution Lab tab,
-every order should answer: "Who decided this trade and why?"
+Every order placed through the Alpaca bridge is tagged with the agent(s)
+whose consensus call drove it. This creates a chain of custody:
 
-The mechanism:
-  1. Each order gets a client_order_id encoding source + agents + signals
-     + cycle. Alpaca preserves it on the order record.
-  2. A parallel record goes to docs/data/trade_attribution.json with the
-     full breakdown (agents, signals, regime, conviction).
-  3. After fills land, resolve_attribution_outcomes() back-fills realized
-     P&L on the attribution records.
+  Gold    — order exists in Alpaca AND in our state (reconciled)
+  Orphan  — order exists in Alpaca but we have NO record of placing it
+  Phantom — we have a record of placing it but Alpaca has NO matching fill
 
-Source kinds (extensible):
-  consensus              — main 15-voter consensus
-  candidate-{NAME}       — a Senate candidate agent's tagged trade
-  conclave-{NAME}        — a Conclave-born descendant's tagged trade
+The attribution map writes to docs/data/alpaca_attribution.json each
+cycle so the dashboard can show which agent is responsible for each
+Alpaca position and whether the books are balanced.
 
-Storage: docs/data/trade_attribution.json (PROTECTED)
+Used by: cli.py (after execute_consensus_signals returns), dashboard.
 """
 from __future__ import annotations
 
-import hashlib
 import json
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
-# Alpaca client_order_id has a 48-character limit. We compress aggressively.
-_MAX_CLIENT_ORDER_ID = 48
 
-_SRC_MAP = {
-    "consensus": "cons",
-    "candidate": "cand",
-    "conclave": "conc",
-}
+def _now() -> str:
+    return datetime.now(timezone.utc).isoformat()
 
 
-def _short_hash(items: List[str]) -> str:
-    """Stable 8-char hash of a sorted list — for compressed encoding."""
-    if not items:
-        return "00000000"
-    joined = ",".join(sorted(items))
-    return hashlib.md5(joined.encode("utf-8")).hexdigest()[:8]
+def _load(path: Path) -> Dict:
+    if not path.exists():
+        return {}
+    try:
+        return json.loads(path.read_text())
+    except Exception:
+        return {}
 
 
-def build_client_order_id(
-    *,
-    source: str,
-    agent_codenames: List[str],
-    signal_types: List[str],
-    cycle_ts: Optional[datetime] = None,
-) -> str:
-    """
-    Build a compact, Alpaca-safe client_order_id encoding the trade source.
-
-    source: "consensus", "candidate-NIGHTSHADE_V2", "conclave-OSPREY", etc.
-    agent_codenames: list of contributing agents.
-    signal_types: list of contributing signal type names.
-    cycle_ts: cycle timestamp, defaults to now.
-
-    Returns a string ≤ 48 chars. Lookup the full record in
-    trade_attribution.json by this client_order_id.
-    """
-    when = cycle_ts if cycle_ts is not None else datetime.now(timezone.utc)
-    cyc = when.strftime("%Y%m%dT%H%M%S")
-
-    kind = source.split("-", 1)[0].lower()
-    src = _SRC_MAP.get(kind, "othr")
-
-    aH = _short_hash(agent_codenames)
-    sH = _short_hash(signal_types)
-
-    cid = f"SIL_{src}_{aH}_{sH}_{cyc}"
-    if len(cid) > _MAX_CLIENT_ORDER_ID:
-        cid = cid[:_MAX_CLIENT_ORDER_ID]
-    return cid
+def _save(path: Path, data: Dict) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(data, indent=2, default=str))
 
 
-def record_attribution(
-    *,
-    attribution_path: Path,
-    client_order_id: str,
-    source: str,
-    ticker: str,
-    side: str,
-    notional: float,
-    consensus_signal: str,
-    consensus_conviction: float,
-    contributing_agents: List[Dict[str, Any]],
-    contributing_signals: List[Dict[str, Any]],
-    regime: Optional[str] = None,
-    cycle_ts: Optional[datetime] = None,
-    extras: Optional[Dict[str, Any]] = None,
+def tag_orders(
+    orders_placed: List[Dict[str, Any]],
+    debate_dicts: List[Dict[str, Any]],
+    alpaca_positions: Optional[List[Dict[str, Any]]] = None,
+    attribution_path: Optional[Path] = None,
 ) -> Dict[str, Any]:
     """
-    Append a full attribution record. Outcome fields (fill_price, slippage,
-    realized_pnl) are filled in later by update_record_outcome().
+    Build the attribution map for this cycle.
 
-    Returns the record written.
+    orders_placed   — list of orders from alpaca_paper_state["orders_placed"]
+    debate_dicts    — the full debate output (used to trace which agents called each ticker)
+    alpaca_positions — live open positions from Alpaca (optional, for reconciliation)
+    attribution_path — where to write the attribution JSON (optional)
+
+    Returns a dict with:
+      "tagged_orders"  — orders annotated with driving agents
+      "gold"           — tickers reconciled between our state and Alpaca
+      "orphans"        — tickers in Alpaca but not in our records
+      "phantoms"       — tickers we ordered but Alpaca has no record of
+      "generated_at"   — timestamp
     """
-    when = cycle_ts if cycle_ts is not None else datetime.now(timezone.utc)
-
-    record: Dict[str, Any] = {
-        "client_order_id": client_order_id,
-        "source": source,
-        "ticker": ticker,
-        "side": side,
-        "notional": round(notional, 4),
-        "consensus_signal": consensus_signal,
-        "consensus_conviction": round(consensus_conviction, 4),
-        "regime": regime or "UNKNOWN",
-        "contributing_agents": contributing_agents,
-        "contributing_signals": contributing_signals,
-        "placed_at": when.isoformat(),
-        "alpaca_order_id": None,
-        "fill_price": None,
-        "slippage_bps": None,
-        "realized_pnl": None,
-        "unrealized_pnl": None,
-        "closed_at": None,
-        "status": "OPEN",
-    }
-    if extras:
-        record["extras"] = extras
-
-    if attribution_path.exists():
-        try:
-            data = json.loads(attribution_path.read_text())
-        except Exception:
-            data = {"records": []}
-    else:
-        data = {"records": []}
-
-    data.setdefault("records", []).append(record)
-    data["last_updated"] = when.isoformat()
-
-    attribution_path.parent.mkdir(parents=True, exist_ok=True)
-    attribution_path.write_text(json.dumps(data, indent=2))
-    return record
-
-
-def find_record(attribution_path: Path, client_order_id: str) -> Optional[Dict[str, Any]]:
-    if not attribution_path.exists():
-        return None
-    try:
-        data = json.loads(attribution_path.read_text())
-    except Exception:
-        return None
-    for rec in data.get("records", []):
-        if rec.get("client_order_id") == client_order_id:
-            return rec
-    return None
-
-
-def update_record_outcome(
-    *,
-    attribution_path: Path,
-    client_order_id: str,
-    alpaca_order_id: Optional[str] = None,
-    fill_price: Optional[float] = None,
-    slippage_bps: Optional[float] = None,
-    realized_pnl: Optional[float] = None,
-    unrealized_pnl: Optional[float] = None,
-    closed_at: Optional[datetime] = None,
-    status: Optional[str] = None,
-) -> Optional[Dict[str, Any]]:
-    if not attribution_path.exists():
-        return None
-    try:
-        data = json.loads(attribution_path.read_text())
-    except Exception:
-        return None
-
-    for rec in data.get("records", []):
-        if rec.get("client_order_id") != client_order_id:
+    # Build a lookup: ticker → agents who voted BUY/STRONG_BUY
+    ticker_agents: Dict[str, List[str]] = {}
+    for d in debate_dicts:
+        ticker = d.get("ticker", "")
+        if not ticker:
             continue
-        if alpaca_order_id is not None:
-            rec["alpaca_order_id"] = alpaca_order_id
-        if fill_price is not None:
-            rec["fill_price"] = round(float(fill_price), 4)
-        if slippage_bps is not None:
-            rec["slippage_bps"] = round(float(slippage_bps), 2)
-        if realized_pnl is not None:
-            rec["realized_pnl"] = round(float(realized_pnl), 4)
-        if unrealized_pnl is not None:
-            rec["unrealized_pnl"] = round(float(unrealized_pnl), 4)
-        if closed_at is not None:
-            rec["closed_at"] = closed_at.isoformat()
-        if status is not None:
-            rec["status"] = status
+        driving = []
+        for v in d.get("verdicts", []):
+            if v.get("signal") in ("BUY", "STRONG_BUY", "SELL", "STRONG_SELL"):
+                driving.append(v.get("agent", "UNKNOWN"))
+        if driving:
+            ticker_agents[ticker] = driving
 
-        data["last_updated"] = datetime.now(timezone.utc).isoformat()
-        attribution_path.write_text(json.dumps(data, indent=2))
-        return rec
+    # Annotate each placed order with its driving agents
+    tagged: List[Dict] = []
+    our_tickers = set()
+    for order in orders_placed:
+        sym = order.get("symbol") or order.get("ticker", "")
+        agents = ticker_agents.get(sym, ["CONSENSUS"])
+        tagged.append({
+            **order,
+            "driving_agents": agents,
+            "attributed_at": _now(),
+        })
+        our_tickers.add(sym)
 
-    return None
+    # Reconcile against live Alpaca positions
+    alpaca_tickers = set()
+    if alpaca_positions:
+        for pos in alpaca_positions:
+            sym = pos.get("symbol", "")
+            if sym:
+                alpaca_tickers.add(sym)
 
+    gold = sorted(our_tickers & alpaca_tickers)
+    orphans = sorted(alpaca_tickers - our_tickers)
+    phantoms = sorted(our_tickers - alpaca_tickers)
 
-def reconcile(
-    attribution_path: Path,
-    alpaca_orders: List[Dict[str, Any]],
-) -> Dict[str, Any]:
-    """
-    Cross-reference SILMARIL records against Alpaca's actual orders.
-    Returns three buckets:
-      gold   — present in both (the happy path)
-      orphan — present in Alpaca but not in attribution.json
-      phantom — present in attribution.json but not in Alpaca
-
-    alpaca_orders: list of dicts with at least 'client_order_id'.
-    """
-    sil_records: List[Dict[str, Any]] = []
-    if attribution_path.exists():
-        try:
-            data = json.loads(attribution_path.read_text())
-            sil_records = data.get("records", [])
-        except Exception:
-            sil_records = []
-
-    sil_by_cid = {r.get("client_order_id"): r for r in sil_records if r.get("client_order_id")}
-    alp_by_cid = {o.get("client_order_id"): o for o in alpaca_orders if o.get("client_order_id")}
-
-    gold_cids = set(sil_by_cid.keys()) & set(alp_by_cid.keys())
-    orphan_cids = set(alp_by_cid.keys()) - set(sil_by_cid.keys())
-    phantom_cids = set(sil_by_cid.keys()) - set(alp_by_cid.keys())
-
-    return {
-        "computed_at": datetime.now(timezone.utc).isoformat(),
-        "gold":    [{"client_order_id": cid, "sil": sil_by_cid[cid], "alpaca": alp_by_cid[cid]} for cid in gold_cids],
-        "orphan":  [{"client_order_id": cid, "alpaca": alp_by_cid[cid]} for cid in orphan_cids],
-        "phantom": [{"client_order_id": cid, "sil": sil_by_cid[cid]} for cid in phantom_cids],
-        "summary": {
-            "gold":    len(gold_cids),
-            "orphan":  len(orphan_cids),
-            "phantom": len(phantom_cids),
-        },
+    result = {
+        "tagged_orders": tagged,
+        "gold": gold,
+        "orphans": orphans,
+        "phantoms": phantoms,
+        "order_count": len(tagged),
+        "generated_at": _now(),
     }
+
+    if orphans:
+        print(f"[attribution] ⚠ {len(orphans)} ORPHAN position(s) in Alpaca not in our records: {orphans}")
+    if phantoms:
+        print(f"[attribution] ⚠ {len(phantoms)} PHANTOM order(s) we placed but Alpaca has no record: {phantoms}")
+    if gold:
+        print(f"[attribution] ✓ {len(gold)} GOLD position(s) reconciled: {gold}")
+
+    if attribution_path:
+        # Merge with existing attribution history
+        existing = _load(attribution_path)
+        history = existing.get("history", [])
+        history.append(result)
+        history = history[-90:]  # keep 90 cycles of history
+        _save(attribution_path, {
+            "latest": result,
+            "history": history,
+            "updated_at": _now(),
+        })
+
+    return result
+
+
+def build_agent_position_map(
+    debate_dicts: List[Dict[str, Any]],
+    alpaca_positions: List[Dict[str, Any]],
+) -> Dict[str, Dict]:
+    """
+    For each open Alpaca position, identify which agents called it.
+    Returns a map: symbol → {agents, signal, conviction, side, unrealized_pnl}
+    Used by the dashboard to display "FORGE's pick" etc.
+    """
+    ticker_to_consensus: Dict[str, Dict] = {
+        d["ticker"]: d.get("consensus", {}) for d in debate_dicts if d.get("ticker")
+    }
+    ticker_to_agents: Dict[str, List[str]] = {}
+    for d in debate_dicts:
+        ticker = d.get("ticker", "")
+        if not ticker:
+            continue
+        agents = [
+            v["agent"] for v in d.get("verdicts", [])
+            if v.get("signal") in ("BUY", "STRONG_BUY", "SELL", "STRONG_SELL")
+            and v.get("agent")
+        ]
+        if agents:
+            ticker_to_agents[ticker] = agents
+
+    result: Dict[str, Dict] = {}
+    for pos in alpaca_positions:
+        sym = pos.get("symbol", "")
+        if not sym:
+            continue
+        cons = ticker_to_consensus.get(sym, {})
+        result[sym] = {
+            "symbol": sym,
+            "driving_agents": ticker_to_agents.get(sym, ["UNKNOWN"]),
+            "consensus_signal": cons.get("signal", "UNKNOWN"),
+            "consensus_conviction": cons.get("avg_conviction"),
+            "side": "long" if float(pos.get("qty", 0)) > 0 else "short",
+            "qty": pos.get("qty"),
+            "avg_entry_price": pos.get("avg_entry_price"),
+            "current_price": pos.get("current_price"),
+            "unrealized_pl": pos.get("unrealized_pl"),
+            "unrealized_plpc": pos.get("unrealized_plpc"),
+        }
+    return result
