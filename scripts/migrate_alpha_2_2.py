@@ -3,29 +3,30 @@ SILMARIL Alpha 2.2 — One-time migration script.
 
 Run via the migrate_alpha_2_2.yml workflow.
 
-Three things in order:
+Four things in order:
   1. RESET the 8 corrupted agents' Beta posteriors back to the prior.
      Their evolution cards, history, level, XP, lifetime calls, and
      all other learning state are PRESERVED. Only the corrupted Beta
      posteriors in agent_beliefs.json get reset.
 
   2. EQUALIZE all agent portfolios to $10,000 starting capital.
-     Their personality (asset class restrictions, trading style),
-     lifetime stats, and historical entries are PRESERVED. Cash is
-     reset to $10K, current_equity is reset to $10K, savings is
-     preserved as a separate ledger.
+     Their personality, lifetime stats, and historical entries are
+     PRESERVED. Cash and current_equity reset to $10K. Savings ledger
+     preserved as-is. Open positions refunded to cash before reset.
 
   3. EQUALIZE compounder JSONs (scrooge, midas, cryptobro, jrr_token,
      sports_bro) to $10K balance. History preserved.
 
-Pre-migration state is snapshotted to docs_archive/{YYYY-MM-DD}/ so we
-have a recovery point for every file we touch.
+  4. PATCH silmaril/cli.py to fix the directional-only filter and
+     regime threading bugs in _post_debate_learning. Two surgical
+     string replacements. Idempotent — skips if already patched.
 
-This script is IDEMPOTENT — running it twice is a no-op (the snapshot
-already exists, the values match, nothing happens).
+Pre-migration snapshots go to docs_archive/{YYYY-MM-DD}/ for every file
+touched. The script is IDEMPOTENT — running it twice is a no-op.
 """
 
 import json
+import re
 import shutil
 from datetime import datetime, timezone
 from pathlib import Path
@@ -148,7 +149,6 @@ def equalize_portfolios(portfolios_path: Path, archive_dir: Path) -> Dict[str, A
             equalized_log.append({"agent": agent_name, "action": "ALREADY_EQUALIZED"})
             continue
 
-        # Refund open position to cash before resetting
         if record.get("current_position"):
             pos = record["current_position"]
             qty = pos.get("qty", 0) or 0
@@ -266,6 +266,94 @@ def equalize_compounders(data_dir: Path, archive_dir: Path) -> Dict[str, Any]:
 
 
 # ─────────────────────────────────────────────────────────────────────
+# CLI source patch — directional-only HOLD filter + regime from tags
+# ─────────────────────────────────────────────────────────────────────
+
+# The exact buggy fragment in silmaril/cli.py's _post_debate_learning function.
+# Read regime from top-level (wrong — it's nested in tags) and fail to filter HOLDs.
+_CLI_BUGGY_BELIEFS_BLOCK = '''            outcomes_for_beliefs = [
+                {
+                    "agent": o.get("agent"),
+                    "regime": o.get("regime") or o.get("market_regime") or "UNKNOWN",
+                    "won": bool(o.get("correct", o.get("was_correct", o.get("won", False)))),
+                }
+                for o in new_outcome_dicts
+                if o.get("agent")
+            ]'''
+
+_CLI_FIXED_BELIEFS_BLOCK = '''            outcomes_for_beliefs = [
+                {
+                    "agent": o.get("agent"),
+                    "regime": (o.get("tags") or {}).get("market_regime") or "UNKNOWN",
+                    "won": bool(o.get("correct", o.get("was_correct", o.get("won", False)))),
+                }
+                for o in new_outcome_dicts
+                if o.get("agent")
+                and o.get("signal") in ("BUY", "STRONG_BUY", "SELL", "STRONG_SELL")
+            ]'''
+
+# Sentinel that proves the patch is already applied (idempotency check).
+_CLI_PATCH_SENTINEL = 'and o.get("signal") in ("BUY", "STRONG_BUY", "SELL", "STRONG_SELL")'
+
+
+def patch_cli_directional_filter(cli_path: Path, archive_dir: Path) -> Dict[str, Any]:
+    """
+    Surgical fix to silmaril/cli.py:
+      - Read regime from tags["market_regime"], not from non-existent
+        top-level "regime" or "market_regime" keys.
+      - Filter HOLD/ABSTAIN outcomes out of belief updates so directional
+        skill is measured correctly.
+
+    Idempotent. Backs up cli.py to archive_dir before patching.
+    Skips with a warning if the expected buggy text isn't found.
+    """
+    if not cli_path.exists():
+        return {"step": "cli_patch", "status": "SKIPPED",
+                "reason": "silmaril/cli.py not found"}
+
+    text = cli_path.read_text()
+
+    if _CLI_PATCH_SENTINEL in text:
+        return {"step": "cli_patch", "status": "ALREADY_PATCHED"}
+
+    if _CLI_BUGGY_BELIEFS_BLOCK not in text:
+        # Safety: don't patch what we can't recognize. Log the situation
+        # so the operator can investigate. The system continues running on
+        # the unpatched code — bug remains but no damage done.
+        return {
+            "step": "cli_patch", "status": "FAILED",
+            "reason": (
+                "Expected buggy code block not found verbatim. "
+                "Whitespace or function body may have changed since this "
+                "patch was authored. Inspect cli.py _post_debate_learning "
+                "manually and update outcomes_for_beliefs comprehension by "
+                "hand: (1) replace top-level regime lookup with "
+                "(o.get('tags') or {}).get('market_regime'), and "
+                "(2) add 'and o.get(\"signal\") in (\"BUY\", \"STRONG_BUY\", "
+                "\"SELL\", \"STRONG_SELL\")' to the if filter."
+            ),
+        }
+
+    # Backup
+    snapshot_path = archive_dir / "cli_pre_migration.py"
+    shutil.copy2(cli_path, snapshot_path)
+
+    # Patch
+    new_text = text.replace(_CLI_BUGGY_BELIEFS_BLOCK, _CLI_FIXED_BELIEFS_BLOCK, 1)
+    cli_path.write_text(new_text)
+
+    return {
+        "step": "cli_patch",
+        "status": "OK",
+        "snapshot_path": str(snapshot_path),
+        "applied_changes": [
+            "outcomes_for_beliefs: regime now read from tags['market_regime']",
+            "outcomes_for_beliefs: filter excludes HOLD/ABSTAIN, only directional",
+        ],
+    }
+
+
+# ─────────────────────────────────────────────────────────────────────
 # Senate log writer
 # ─────────────────────────────────────────────────────────────────────
 
@@ -290,6 +378,7 @@ def append_senate_log(data_dir: Path, event: Dict[str, Any]) -> None:
 def run_migration(
     data_dir: Path = Path("docs/data"),
     archive_root: Path = Path("docs_archive"),
+    repo_root: Path = Path("."),
 ) -> Dict[str, Any]:
     today = datetime.now(timezone.utc).date().isoformat()
     archive_dir = archive_root / today
@@ -300,6 +389,7 @@ def run_migration(
     belief_report = reset_corrupted_beliefs(data_dir / "agent_beliefs.json", archive_dir)
     portfolio_report = equalize_portfolios(data_dir / "agent_portfolios.json", archive_dir)
     compounder_report = equalize_compounders(data_dir, archive_dir)
+    cli_report = patch_cli_directional_filter(repo_root / "silmaril" / "cli.py", archive_dir)
 
     finished_at = datetime.now(timezone.utc).isoformat()
     event = {
@@ -311,6 +401,7 @@ def run_migration(
         "belief_reset": belief_report,
         "portfolio_equalization": portfolio_report,
         "compounder_equalization": compounder_report,
+        "cli_source_patch": cli_report,
     }
     append_senate_log(data_dir, event)
 
@@ -319,7 +410,7 @@ def run_migration(
         "started_at": started_at,
         "finished_at": finished_at,
         "archive_dir": str(archive_dir),
-        "steps": [belief_report, portfolio_report, compounder_report],
+        "steps": [belief_report, portfolio_report, compounder_report, cli_report],
     }
 
 
