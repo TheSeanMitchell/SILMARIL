@@ -716,18 +716,17 @@ def _post_debate_learning(
     if new_outcome_dicts:
         try:
             outcomes_for_beliefs = [
-    {
-        "agent": o.get("agent"),
-        "regime": o.get("regime") or o.get("market_regime") or "UNKNOWN",
-        "won": bool(o.get("correct", o.get("was_correct", o.get("won", False)))),
-    }
-    for o in new_outcome_dicts
-    if o.get("agent")
-    # Alpha 2.2: HOLD votes do not carry directional signal.
-    # Exclude them from Bayesian win/loss belief updates so
-    # agents are only judged on their BUY and SELL calls.
-    and o.get("signal") not in ("HOLD",)
-]
+                {
+                    "agent": o.get("agent"),
+                    "regime": o.get("regime") or o.get("market_regime") or "UNKNOWN",
+                    "won": bool(o.get("correct", o.get("was_correct", o.get("won", False)))),
+                }
+                for o in new_outcome_dicts
+                if o.get("agent")
+                # Alpha 2.2: Only directional calls update beliefs.
+                # HOLD votes carry no signal about future direction.
+                and o.get("signal") not in ("HOLD",)
+            ]
             beliefs = update_beliefs(bundle["beliefs"], outcomes_for_beliefs)
             save_beliefs(out / "agent_beliefs.json", beliefs)
             log.info("learning: updated beliefs on %d outcomes", len(outcomes_for_beliefs))
