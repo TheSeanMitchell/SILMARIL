@@ -84,6 +84,7 @@ class CryptoBroState:
             "history": self.history,
             "deaths": self.deaths,
             "trades_today": self.trades_today,
+            "last_action_date": self.last_action_date,
             "max_trades_per_day": MAX_TRADES_PER_DAY,
         }
 
