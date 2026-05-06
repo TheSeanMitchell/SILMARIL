@@ -20,10 +20,10 @@ Source kinds (extensible):
 
 Storage: docs/data/trade_attribution.json (PROTECTED)
 """
+from __future__ import annotations
 
 import hashlib
 import json
-import re
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, List, Optional
@@ -31,12 +31,6 @@ from typing import Any, Dict, List, Optional
 # Alpaca client_order_id has a 48-character limit. We compress aggressively.
 _MAX_CLIENT_ORDER_ID = 48
 
-# Pattern: SIL_{src}_{agentH}_{signalH}_{cyc}
-# - src: 4 chars   (e.g. "cons", "cand", "conc")
-# - agentH: 8 chars MD5 of comma-joined agent codenames
-# - signalH: 8 chars MD5 of comma-joined signal types
-# - cyc: 14 chars YYYYMMDDTHHMMSS
-# Total with separators: 4 + 4 + 8 + 1 + 8 + 1 + 14 = 40 + SIL_ prefix = 44
 _SRC_MAP = {
     "consensus": "cons",
     "candidate": "cand",
@@ -63,8 +57,8 @@ def build_client_order_id(
     Build a compact, Alpaca-safe client_order_id encoding the trade source.
 
     source: "consensus", "candidate-NIGHTSHADE_V2", "conclave-OSPREY", etc.
-    agent_codenames: list of contributing agents (e.g. ["AEGIS", "FORGE"]).
-    signal_types: list of contributing signal type names (may be empty).
+    agent_codenames: list of contributing agents.
+    signal_types: list of contributing signal type names.
     cycle_ts: cycle timestamp, defaults to now.
 
     Returns a string ≤ 48 chars. Lookup the full record in
@@ -73,7 +67,6 @@ def build_client_order_id(
     when = cycle_ts if cycle_ts is not None else datetime.now(timezone.utc)
     cyc = when.strftime("%Y%m%dT%H%M%S")
 
-    # Source kind: take the prefix before any "-" suffix
     kind = source.split("-", 1)[0].lower()
     src = _SRC_MAP.get(kind, "othr")
 
@@ -92,19 +85,19 @@ def record_attribution(
     client_order_id: str,
     source: str,
     ticker: str,
-    side: str,                     # "buy" | "sell" | "buy_to_cover" etc.
+    side: str,
     notional: float,
     consensus_signal: str,
     consensus_conviction: float,
-    contributing_agents: List[Dict[str, Any]],   # [{codename, signal, conviction}]
-    contributing_signals: List[Dict[str, Any]],  # [{type, value, weight}]
+    contributing_agents: List[Dict[str, Any]],
+    contributing_signals: List[Dict[str, Any]],
     regime: Optional[str] = None,
     cycle_ts: Optional[datetime] = None,
     extras: Optional[Dict[str, Any]] = None,
 ) -> Dict[str, Any]:
     """
     Append a full attribution record. Outcome fields (fill_price, slippage,
-    realized_pnl) are filled in later by resolve_attribution_outcomes().
+    realized_pnl) are filled in later by update_record_outcome().
 
     Returns the record written.
     """
@@ -122,7 +115,6 @@ def record_attribution(
         "contributing_agents": contributing_agents,
         "contributing_signals": contributing_signals,
         "placed_at": when.isoformat(),
-        # Outcome fields — populated by resolve_attribution_outcomes()
         "alpaca_order_id": None,
         "fill_price": None,
         "slippage_bps": None,
@@ -135,21 +127,28 @@ def record_attribution(
         record["extras"] = extras
 
     if attribution_path.exists():
-        data = json.loads(attribution_path.read_text())
+        try:
+            data = json.loads(attribution_path.read_text())
+        except Exception:
+            data = {"records": []}
     else:
         data = {"records": []}
 
     data.setdefault("records", []).append(record)
     data["last_updated"] = when.isoformat()
+
+    attribution_path.parent.mkdir(parents=True, exist_ok=True)
     attribution_path.write_text(json.dumps(data, indent=2))
     return record
 
 
 def find_record(attribution_path: Path, client_order_id: str) -> Optional[Dict[str, Any]]:
-    """Lookup a record by client_order_id. Returns None if not found."""
     if not attribution_path.exists():
         return None
-    data = json.loads(attribution_path.read_text())
+    try:
+        data = json.loads(attribution_path.read_text())
+    except Exception:
+        return None
     for rec in data.get("records", []):
         if rec.get("client_order_id") == client_order_id:
             return rec
@@ -168,13 +167,12 @@ def update_record_outcome(
     closed_at: Optional[datetime] = None,
     status: Optional[str] = None,
 ) -> Optional[Dict[str, Any]]:
-    """
-    Update outcome fields on an existing record. Returns the updated record
-    or None if not found.
-    """
     if not attribution_path.exists():
         return None
-    data = json.loads(attribution_path.read_text())
+    try:
+        data = json.loads(attribution_path.read_text())
+    except Exception:
+        return None
 
     for rec in data.get("records", []):
         if rec.get("client_order_id") != client_order_id:
@@ -214,11 +212,13 @@ def reconcile(
 
     alpaca_orders: list of dicts with at least 'client_order_id'.
     """
+    sil_records: List[Dict[str, Any]] = []
     if attribution_path.exists():
-        data = json.loads(attribution_path.read_text())
-        sil_records = data.get("records", [])
-    else:
-        sil_records = []
+        try:
+            data = json.loads(attribution_path.read_text())
+            sil_records = data.get("records", [])
+        except Exception:
+            sil_records = []
 
     sil_by_cid = {r.get("client_order_id"): r for r in sil_records if r.get("client_order_id")}
     alp_by_cid = {o.get("client_order_id"): o for o in alpaca_orders if o.get("client_order_id")}
