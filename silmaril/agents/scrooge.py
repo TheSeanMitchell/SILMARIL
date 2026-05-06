@@ -18,6 +18,8 @@ agents. His logic lives in silmaril.agents.scrooge.scrooge_act().
 The $1 starting capital is the key: fractional shares are available for $1
 minimums on Robinhood, Fidelity, and Cash App as of 2026. One dollar is
 the genuine floor of retail participation.
+
+v4.1 (PR 1B): timestamps added to every history entry (fixes 17:00 display bug).
 """
 
 from __future__ import annotations
@@ -32,6 +34,11 @@ from ..execution.detail import build_execution
 
 STARTING_CAPITAL = 10.00  # $10 starting capital
 REINCARNATION_THRESHOLD = 0.50  # Below $0.50 = reset
+
+
+def _ts() -> str:
+    """Current UTC timestamp as ISO string."""
+    return datetime.now(timezone.utc).isoformat()
 
 
 @dataclass
@@ -53,7 +60,7 @@ class ScroogeState:
             "current_life": self.current_life,
             "life_start_date": self.life_start_date,
             "days_alive": self._days_alive(),
-            "history": self.history[-365:],   # last year on disk; keep storage finite
+            "history": self.history[-365:],   # last year on disk
             "deaths": self.deaths,
         }
 
@@ -103,13 +110,6 @@ def scrooge_act(
       3. Find today's highest-consensus BUY among top_consensus
       4. Put the entire balance into it (fractional shares allowed)
       5. Record everything to history
-
-    Arguments:
-      state:          SCROOGE's current state (mutated and returned)
-      top_consensus:  list of debate entries sorted by consensus strength,
-                      each {"ticker", "signal", "consensus_score", ...}
-      prices:         ticker -> latest close price
-      today:          ISO date string; defaults to UTC today
     """
     today = today or datetime.now(timezone.utc).date().isoformat()
 
@@ -117,55 +117,55 @@ def scrooge_act(
     next_pick = _pick_best_buy(top_consensus)
 
     # ── Step 0: Fee-aware rotation gate ──────────────────────────
-    # If SCROOGE already holds something AND the new pick isn't significantly
-    # better than what he holds (after round-trip fees), HODL instead.
     if state.current_position and next_pick:
-        from .fee_aware_rotation import should_rotate
-        held_ticker = state.current_position["ticker"]
-        target_ticker = next_pick["ticker"]
-        target_price = prices.get(target_ticker, 0)
+        try:
+            from .fee_aware_rotation import should_rotate
+            held_ticker = state.current_position["ticker"]
+            target_ticker = next_pick["ticker"]
+            target_price = prices.get(target_ticker, 0)
 
-        # Find the held ticker's current consensus from the same list (if present)
-        held_consensus = next(
-            (c for c in top_consensus if c.get("ticker") == held_ticker), None,
-        )
-        if held_consensus:
-            held_signal = held_consensus.get("signal", "HOLD")
-            held_score = held_consensus.get("consensus_score", 0)
-        else:
-            held_signal = "HOLD"
-            held_score = 0
+            held_consensus = next(
+                (c for c in top_consensus if c.get("ticker") == held_ticker), None,
+            )
+            if held_consensus:
+                held_signal = held_consensus.get("signal", "HOLD")
+                held_score = held_consensus.get("consensus_score", 0)
+            else:
+                held_signal = "HOLD"
+                held_score = 0
 
-        if held_ticker == target_ticker:
-            # Same pick — pure HODL, no rotation, no fees
-            state.history.append({
-                "date": today,
-                "action": "HODL",
-                "ticker": held_ticker,
-                "reason": "Top pick unchanged. SCROOGE holds, avoids round-trip fees.",
-                "life": state.current_life,
-            })
-            return state
+            if held_ticker == target_ticker:
+                state.history.append({
+                    "date": today, "timestamp": _ts(),
+                    "action": "HODL",
+                    "ticker": held_ticker,
+                    "reason": "Top pick unchanged. SCROOGE holds, avoids round-trip fees.",
+                    "life": state.current_life,
+                })
+                return state
 
-        rotate, why = should_rotate(
-            current_consensus_signal=held_signal,
-            current_consensus_score=held_score,
-            target_consensus_signal=next_pick.get("signal", "HOLD"),
-            target_consensus_score=next_pick.get("consensus_score", 0),
-            asset_class="crypto" if held_ticker.endswith("-USD") else "etf",
-            price=target_price or 1.0,
-            notional=state.balance,
-            multiplier=2.0,  # SCROOGE is patient
-        )
-        if not rotate:
-            state.history.append({
-                "date": today,
-                "action": "HODL",
-                "ticker": held_ticker,
-                "reason": why,
-                "life": state.current_life,
-            })
-            return state
+            rotate, why = should_rotate(
+                current_consensus_signal=held_signal,
+                current_consensus_score=held_score,
+                target_consensus_signal=next_pick.get("signal", "HOLD"),
+                target_consensus_score=next_pick.get("consensus_score", 0),
+                asset_class="crypto" if held_ticker.endswith("-USD") else "etf",
+                price=target_price or 1.0,
+                notional=state.balance,
+                multiplier=2.0,
+            )
+            if not rotate:
+                state.history.append({
+                    "date": today, "timestamp": _ts(),
+                    "action": "HODL",
+                    "ticker": held_ticker,
+                    "reason": why,
+                    "life": state.current_life,
+                })
+                return state
+        except Exception as e:
+            # fee_aware_rotation unavailable or errored — proceed with rotation
+            print(f"[scrooge] fee_aware_rotation skipped: {e}")
 
     # ── Step 1: Close yesterday's position, if any ──────────────
     if state.current_position:
@@ -174,22 +174,24 @@ def scrooge_act(
         entry_price = state.current_position["entry_price"]
         exit_price = prices.get(ticker)
 
-        if exit_price is not None:
+        if exit_price is not None and exit_price > 0:
             new_balance = shares * exit_price
-            pnl = new_balance - state.balance
             pnl_pct = (exit_price / entry_price - 1) * 100 if entry_price else 0.0
 
             asset_class = "crypto" if ticker.endswith("-USD") else "etf"
-            execution = build_execution(
-                ticker=ticker, asset_class=asset_class, side="SELL",
-                shares=shares, price=exit_price,
-                available_before=0.0,  # was all-in
-            )
-            # Realize the fee drag against the proceeds
-            realized = execution["net_proceeds"] or new_balance
+            try:
+                execution = build_execution(
+                    ticker=ticker, asset_class=asset_class, side="SELL",
+                    shares=shares, price=exit_price,
+                    available_before=0.0,
+                )
+                realized = execution["net_proceeds"] or new_balance
+            except Exception:
+                realized = new_balance
+                execution = {}
 
             state.history.append({
-                "date": today,
+                "date": today, "timestamp": _ts(),
                 "action": "SELL",
                 "ticker": ticker,
                 "shares": shares,
@@ -208,7 +210,7 @@ def scrooge_act(
         else:
             # Price unavailable — hold the position one more day
             state.history.append({
-                "date": today,
+                "date": today, "timestamp": _ts(),
                 "action": "HOLD",
                 "ticker": ticker,
                 "reason": "no closing price available",
@@ -230,17 +232,17 @@ def scrooge_act(
         state.balance = STARTING_CAPITAL
         state.lifetime_peak = STARTING_CAPITAL
         state.history.append({
-            "date": today,
+            "date": today, "timestamp": _ts(),
             "action": "REINCARNATION",
             "life": state.current_life,
-            "rationale": "Previous life ended below $0.05. SCROOGE begins again with $1.",
+            "rationale": "Previous life ended below $0.50. SCROOGE begins again.",
         })
 
     # ── Step 3: Pick today's conviction play ────────────────────
     pick = _pick_best_buy(top_consensus)
     if not pick:
         state.history.append({
-            "date": today,
+            "date": today, "timestamp": _ts(),
             "action": "CASH",
             "reason": "no BUY-consensus assets today",
             "balance": round(state.balance, 4),
@@ -252,9 +254,9 @@ def scrooge_act(
     entry_price = prices.get(ticker)
     if not entry_price or entry_price <= 0:
         state.history.append({
-            "date": today,
+            "date": today, "timestamp": _ts(),
             "action": "CASH",
-            "reason": f"no price available for {ticker}",
+            "reason": f"no valid price available for {ticker}",
             "balance": round(state.balance, 4),
             "life": state.current_life,
         })
@@ -262,24 +264,24 @@ def scrooge_act(
 
     # ── Step 4: Full allocation into the single best pick ───────
     asset_class = "crypto" if ticker.endswith("-USD") else "etf"
-    # Account for buy-side fees so we don't over-allocate
     available = state.balance
-    # Rough pre-compute: we want shares such that shares*price + fees ≈ balance
-    # Simple iterative fit (cheap because fees are tiny)
     shares = available / entry_price
-    for _ in range(3):
-        test_exec = build_execution(
+    try:
+        for _ in range(3):
+            test_exec = build_execution(
+                ticker=ticker, asset_class=asset_class, side="BUY",
+                shares=shares, price=entry_price, available_before=available,
+            )
+            over = (test_exec["net_cost"] or 0) - available
+            if over <= 0.0001:
+                break
+            shares -= (over / entry_price) * 1.01
+        execution = build_execution(
             ticker=ticker, asset_class=asset_class, side="BUY",
             shares=shares, price=entry_price, available_before=available,
         )
-        over = (test_exec["net_cost"] or 0) - available
-        if over <= 0.0001:
-            break
-        shares -= (over / entry_price) * 1.01
-    execution = build_execution(
-        ticker=ticker, asset_class=asset_class, side="BUY",
-        shares=shares, price=entry_price, available_before=available,
-    )
+    except Exception:
+        execution = {}
 
     state.current_position = {
         "ticker": ticker,
@@ -291,7 +293,7 @@ def scrooge_act(
     }
 
     state.history.append({
-        "date": today,
+        "date": today, "timestamp": _ts(),
         "action": "BUY",
         "ticker": ticker,
         "shares": round(shares, 8),
@@ -312,7 +314,6 @@ def _pick_best_buy(top_consensus: List[Dict[str, Any]]) -> Optional[Dict[str, An
     ]
     if not candidates:
         return None
-    # Sort by consensus_score descending, then conviction
     candidates.sort(
         key=lambda c: (c.get("consensus_score", 0), c.get("avg_conviction", 0)),
         reverse=True,

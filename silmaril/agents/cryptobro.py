@@ -9,7 +9,10 @@ uses HODL/ser/wagmi/diamond hands language, and trades only crypto.
 
 Universe: BTC, ETH, SOL, AVAX, DOGE, LINK, MATIC, ADA, XRP, DOT, ATOM.
 Fees: Coinbase 40 bps taker + spread cost. No SEC/FINRA on crypto.
-Reincarnation: at $0.05, like the others.
+Reincarnation: at $0.50, like the others.
+
+v4.1 (PR 1B): timestamps added to every history entry (fixes 17:00 display bug).
+              fee_aware_rotation guarded with try/except.
 """
 
 from __future__ import annotations
@@ -40,11 +43,12 @@ CRYPTOBRO_UNIVERSE: Dict[str, str] = {
     "ATOM-USD":  "Cosmos",
 }
 
-# Max trades per cycle. CryptoBro can rotate up to this many times in
-# a single run if his vibe-meter says different things on different coins.
 MAX_TRADES_PER_DAY = 5
+DEATH_THRESHOLD = 0.50
 
-DEATH_THRESHOLD = 0.50  # below 5 cents → reincarnation
+
+def _ts() -> str:
+    return datetime.now(timezone.utc).isoformat()
 
 
 # ─────────────────────────────────────────────────────────────────
@@ -168,11 +172,7 @@ def cryptobro_act(
     """
     CryptoBro acts. Unlike SCROOGE and MIDAS who do one trade per day,
     CryptoBro can rotate up to MAX_TRADES_PER_DAY times if conditions
-    keep shifting. Each rotation is its own SELL → BUY pair with full
-    fee accounting.
-
-    ranked_candidates: list of dicts sorted by consensus_score desc,
-        each with {ticker, consensus, signal, ...}. Filtered to crypto.
+    keep shifting.
     """
     today = datetime.now(timezone.utc).date().isoformat()
 
@@ -200,7 +200,7 @@ def cryptobro_act(
         state.life_start_date = today
         state.lifetime_peak = 10.00
         state.history.append({
-            "date": today,
+            "date": today, "timestamp": _ts(),
             "action": "REINCARNATION",
             "life": state.current_life,
             "note": "CryptoBro respawns. Diamond hands forever.",
@@ -214,9 +214,8 @@ def cryptobro_act(
     ]
 
     if not crypto_picks:
-        # No crypto signals today — HODL whatever we have, log the day
         state.history.append({
-            "date": today,
+            "date": today, "timestamp": _ts(),
             "action": "HODL",
             "reason": "CryptoBro sees no setups in the crypto market today. He waits.",
             "balance": round(state.balance, 6),
@@ -224,24 +223,19 @@ def cryptobro_act(
         })
         return state
 
-    # ── Decision: should CryptoBro rotate? ──────────────────────
-    # If holding nothing, BUY the top-ranked crypto signal.
-    # If already holding, only rotate if the top signal is meaningfully
-    # better than what we have AND we haven't burned our daily trades.
     target = crypto_picks[0]
     target_ticker = target["ticker"]
     target_price = prices.get(target_ticker)
 
-    if target_price is None:
+    if not target_price or target_price <= 0:
         return state
 
-    # Sell-side: do we already hold something?
     held_ticker = state.current_position["ticker"] if state.current_position else None
 
     # If holding the same coin: HODL
     if held_ticker == target_ticker:
         state.history.append({
-            "date": today,
+            "date": today, "timestamp": _ts(),
             "action": "HODL",
             "ticker": held_ticker,
             "reason": f"CryptoBro is HODLing {held_ticker}. Still his top conviction. Diamond hands.",
@@ -253,7 +247,7 @@ def cryptobro_act(
     # If we've already burned the daily budget: HODL
     if state.trades_today >= MAX_TRADES_PER_DAY:
         state.history.append({
-            "date": today,
+            "date": today, "timestamp": _ts(),
             "action": "HODL",
             "ticker": held_ticker or "—",
             "reason": (
@@ -266,38 +260,38 @@ def cryptobro_act(
         return state
 
     # ── Fee-aware rotation gate ────────────────────────────────
-    # CryptoBro is fast-paced (1.5× multiplier) — he rotates more
-    # readily than SCROOGE/MIDAS, but still HODLs when edge isn't
-    # worth the 80bps round-trip Coinbase fees.
     if state.current_position:
-        from .fee_aware_rotation import should_rotate
-        held_consensus = next(
-            (c for c in ranked_candidates if c.get("ticker") == held_ticker), None,
-        )
-        held_signal = held_consensus["consensus"]["signal"] if held_consensus else "HOLD"
-        held_score = held_consensus["consensus"]["score"] if held_consensus else 0
+        try:
+            from .fee_aware_rotation import should_rotate
+            held_consensus = next(
+                (c for c in ranked_candidates if c.get("ticker") == held_ticker), None,
+            )
+            held_signal = held_consensus["consensus"]["signal"] if held_consensus else "HOLD"
+            held_score = held_consensus["consensus"]["score"] if held_consensus else 0
 
-        rotate, why = should_rotate(
-            current_consensus_signal=held_signal,
-            current_consensus_score=held_score,
-            target_consensus_signal=target["consensus"]["signal"],
-            target_consensus_score=target["consensus"]["score"],
-            asset_class="crypto",
-            price=target_price,
-            notional=state.balance,
-            multiplier=1.5,  # CryptoBro is fast
-        )
-        if not rotate:
-            state.history.append({
-                "date": today,
-                "action": "HODL",
-                "ticker": held_ticker,
-                "reason": (f"CryptoBro is HODLing {held_ticker}. {why} "
-                           f"Even degens know fees compound, ser."),
-                "balance": round(state.balance, 6),
-                "trades_today": state.trades_today,
-            })
-            return state
+            rotate, why = should_rotate(
+                current_consensus_signal=held_signal,
+                current_consensus_score=held_score,
+                target_consensus_signal=target["consensus"]["signal"],
+                target_consensus_score=target["consensus"]["score"],
+                asset_class="crypto",
+                price=target_price,
+                notional=state.balance,
+                multiplier=1.5,
+            )
+            if not rotate:
+                state.history.append({
+                    "date": today, "timestamp": _ts(),
+                    "action": "HODL",
+                    "ticker": held_ticker,
+                    "reason": (f"CryptoBro is HODLing {held_ticker}. {why} "
+                               f"Even degens know fees compound, ser."),
+                    "balance": round(state.balance, 6),
+                    "trades_today": state.trades_today,
+                })
+                return state
+        except Exception as e:
+            print(f"[cryptobro] fee_aware_rotation skipped: {e}")
 
     # ── SELL the current position if any ────────────────────────
     if state.current_position:
@@ -305,17 +299,22 @@ def cryptobro_act(
         old_ticker = old["ticker"]
         old_shares = old["shares"]
         old_entry = old["entry_price"]
-        old_current = prices.get(old_ticker, old_entry)
-
-        execution = build_execution(
-            ticker=old_ticker, asset_class="crypto", side="SELL",
-            shares=old_shares, price=old_current, available_before=0.0,
-        )
-        proceeds = execution["net_proceeds"] or (old_shares * old_current)
-        pnl_pct = ((old_current / old_entry) - 1) * 100 if old_entry else 0.0
+        old_current = prices.get(old_ticker)
+        if not old_current or old_current <= 0:
+            old_current = old_entry  # fallback to entry price
+        try:
+            execution = build_execution(
+                ticker=old_ticker, asset_class="crypto", side="SELL",
+                shares=old_shares, price=old_current, available_before=0.0,
+            )
+            proceeds = execution["net_proceeds"] or (old_shares * old_current)
+        except Exception:
+            proceeds = old_shares * old_current
+            execution = {}
+        pnl_pct = ((old_current / old_entry) - 1) * 100 if old_entry and old_entry > 0 else 0.0
 
         state.history.append({
-            "date": today,
+            "date": today, "timestamp": _ts(),
             "action": "SELL",
             "ticker": old_ticker,
             "shares": round(old_shares, 8),
@@ -334,20 +333,23 @@ def cryptobro_act(
     # ── BUY the new target ──────────────────────────────────────
     available = state.balance
     shares = available / target_price
-    for _ in range(3):
-        test_exec = build_execution(
+    try:
+        for _ in range(3):
+            test_exec = build_execution(
+                ticker=target_ticker, asset_class="crypto", side="BUY",
+                shares=shares, price=target_price, available_before=available,
+            )
+            over = (test_exec["net_cost"] or 0) - available
+            if over <= 0.00001:
+                break
+            shares -= (over / target_price) * 1.01
+        execution = build_execution(
             ticker=target_ticker, asset_class="crypto", side="BUY",
             shares=shares, price=target_price, available_before=available,
         )
-        over = (test_exec["net_cost"] or 0) - available
-        if over <= 0.00001:
-            break
-        shares -= (over / target_price) * 1.01
+    except Exception:
+        execution = {}
 
-    execution = build_execution(
-        ticker=target_ticker, asset_class="crypto", side="BUY",
-        shares=shares, price=target_price, available_before=available,
-    )
     state.current_position = {
         "ticker": target_ticker,
         "name": CRYPTOBRO_UNIVERSE.get(target_ticker, target_ticker),
@@ -361,7 +363,7 @@ def cryptobro_act(
         "execution": execution,
     }
     state.history.append({
-        "date": today,
+        "date": today, "timestamp": _ts(),
         "action": "BUY",
         "ticker": target_ticker,
         "shares": round(shares, 8),
@@ -380,7 +382,6 @@ def cryptobro_act(
 # ─────────────────────────────────────────────────────────────────
 
 def _buy_narrative(ticker: str, signal: str) -> str:
-    """CryptoBro's bro-talk for a BUY."""
     coin = ticker.replace("-USD", "")
     if signal == "STRONG_BUY":
         return f"CryptoBro is going all-in on {coin}. This is THE pick. Wagmi, ser."
@@ -390,7 +391,6 @@ def _buy_narrative(ticker: str, signal: str) -> str:
 
 
 def _sell_narrative(ticker: str, pnl_pct: float) -> str:
-    """CryptoBro's bro-talk for a SELL."""
     coin = ticker.replace("-USD", "")
     if pnl_pct > 5:
         return f"CryptoBro took profits on {coin} ({pnl_pct:+.1f}%). Number go up. Few understand."

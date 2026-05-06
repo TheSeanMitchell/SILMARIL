@@ -13,6 +13,9 @@ things that have been wealth for thousands of years:
 Where SCROOGE is volatile, MIDAS is patient. His edge is not a clever
 setup; it is refusing to trade anything that wasn't wealth when
 kingdoms rose and fell.
+
+v4.1 (PR 1B): timestamps added to every history entry (fixes 17:00 display bug).
+              fee_aware_rotation guarded with try/except.
 """
 
 from __future__ import annotations
@@ -43,6 +46,10 @@ MIDAS_UNIVERSE: Dict[str, str] = {
     "FXY":  "Japanese Yen",
     "FXF":  "Swiss Franc",
 }
+
+
+def _ts() -> str:
+    return datetime.now(timezone.utc).isoformat()
 
 
 # ─────────────────────────────────────────────────────────────────
@@ -163,7 +170,7 @@ def midas_act(
     if state.current_position:
         ticker = state.current_position["ticker"]
         current_price = prices.get(ticker)
-        if current_price:
+        if current_price and current_price > 0:
             shares = state.current_position["shares"]
             state.balance = round(shares * current_price, 4)
             state.lifetime_peak = max(state.lifetime_peak, state.balance)
@@ -187,13 +194,13 @@ def midas_act(
     target = candidates[0]
     target_ticker = target["ticker"]
     target_price = prices.get(target_ticker)
-    if not target_price:
+    if not target_price or target_price <= 0:
         return state
 
-    # ── If already holding the target, nothing to do ────────────
+    # ── If already holding the target, HODL ─────────────────────
     if state.current_position and state.current_position["ticker"] == target_ticker:
         state.history.append({
-            "date": today,
+            "date": today, "timestamp": _ts(),
             "action": "HODL",
             "ticker": target_ticker,
             "reason": "Top hard-currency pick unchanged. MIDAS holds.",
@@ -201,35 +208,36 @@ def midas_act(
         return state
 
     # ── Fee-aware rotation gate ─────────────────────────────────
-    # MIDAS is the most patient compounder. He only rotates when edge
-    # decisively beats round-trip fees (2.0× threshold).
     if state.current_position:
-        from .fee_aware_rotation import should_rotate
-        held_ticker = state.current_position["ticker"]
-        held_consensus = next(
-            (d for d in debates if d.get("ticker") == held_ticker), None,
-        )
-        held_signal = held_consensus["consensus"]["signal"] if held_consensus else "HOLD"
-        held_score = held_consensus["consensus"]["score"] if held_consensus else 0
+        try:
+            from .fee_aware_rotation import should_rotate
+            held_ticker = state.current_position["ticker"]
+            held_consensus = next(
+                (d for d in debates if d.get("ticker") == held_ticker), None,
+            )
+            held_signal = held_consensus["consensus"]["signal"] if held_consensus else "HOLD"
+            held_score = held_consensus["consensus"]["score"] if held_consensus else 0
 
-        rotate, why = should_rotate(
-            current_consensus_signal=held_signal,
-            current_consensus_score=held_score,
-            target_consensus_signal=target["consensus"]["signal"],
-            target_consensus_score=target["consensus"]["score"],
-            asset_class="etf",
-            price=target_price,
-            notional=state.balance,
-            multiplier=2.0,  # MIDAS is patient
-        )
-        if not rotate:
-            state.history.append({
-                "date": today,
-                "action": "HODL",
-                "ticker": held_ticker,
-                "reason": why,
-            })
-            return state
+            rotate, why = should_rotate(
+                current_consensus_signal=held_signal,
+                current_consensus_score=held_score,
+                target_consensus_signal=target["consensus"]["signal"],
+                target_consensus_score=target["consensus"]["score"],
+                asset_class="etf",
+                price=target_price,
+                notional=state.balance,
+                multiplier=2.0,
+            )
+            if not rotate:
+                state.history.append({
+                    "date": today, "timestamp": _ts(),
+                    "action": "HODL",
+                    "ticker": held_ticker,
+                    "reason": why,
+                })
+                return state
+        except Exception as e:
+            print(f"[midas] fee_aware_rotation skipped: {e}")
 
     # ── Rotate: sell old, buy new ───────────────────────────────
     if state.current_position:
@@ -237,19 +245,25 @@ def midas_act(
         old_shares = state.current_position["shares"]
         old_entry = state.current_position["entry_price"]
         old_current = prices.get(old_tkr, old_entry)
-        execution = build_execution(
-            ticker=old_tkr, asset_class="etf", side="SELL",
-            shares=old_shares, price=old_current, available_before=0.0,
-        )
-        proceeds = execution["net_proceeds"] or (old_shares * old_current)
+        if not old_current or old_current <= 0:
+            old_current = old_entry
+        try:
+            execution = build_execution(
+                ticker=old_tkr, asset_class="etf", side="SELL",
+                shares=old_shares, price=old_current, available_before=0.0,
+            )
+            proceeds = execution["net_proceeds"] or (old_shares * old_current)
+        except Exception:
+            proceeds = old_shares * old_current
+            execution = {}
         state.history.append({
-            "date": today,
+            "date": today, "timestamp": _ts(),
             "action": "SELL",
             "ticker": old_tkr,
             "shares": round(old_shares, 6),
             "price": round(old_current, 4),
             "proceeds": round(proceeds, 4),
-            "pnl_pct": round(((old_current / old_entry) - 1) * 100, 2),
+            "pnl_pct": round(((old_current / old_entry) - 1) * 100, 2) if old_entry else 0.0,
             "execution": execution,
         })
         state.balance = round(proceeds, 4)
@@ -269,19 +283,22 @@ def midas_act(
     # Account for buy-side fees when sizing
     available = state.balance
     shares = available / target_price
-    for _ in range(3):
-        test_exec = build_execution(
+    try:
+        for _ in range(3):
+            test_exec = build_execution(
+                ticker=target_ticker, asset_class="etf", side="BUY",
+                shares=shares, price=target_price, available_before=available,
+            )
+            over = (test_exec["net_cost"] or 0) - available
+            if over <= 0.0001:
+                break
+            shares -= (over / target_price) * 1.01
+        execution = build_execution(
             ticker=target_ticker, asset_class="etf", side="BUY",
             shares=shares, price=target_price, available_before=available,
         )
-        over = (test_exec["net_cost"] or 0) - available
-        if over <= 0.0001:
-            break
-        shares -= (over / target_price) * 1.01
-    execution = build_execution(
-        ticker=target_ticker, asset_class="etf", side="BUY",
-        shares=shares, price=target_price, available_before=available,
-    )
+    except Exception:
+        execution = {}
 
     state.current_position = {
         "ticker": target_ticker,
@@ -296,7 +313,7 @@ def midas_act(
         "execution": execution,
     }
     state.history.append({
-        "date": today,
+        "date": today, "timestamp": _ts(),
         "action": "BUY",
         "ticker": target_ticker,
         "shares": round(shares, 6),

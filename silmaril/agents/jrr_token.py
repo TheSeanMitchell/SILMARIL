@@ -3,15 +3,18 @@ silmaril.agents.jrr_token — JRR Token, the penny-token compounder.
 
 Plays the lowest tier of the crypto market: tokens, not majors.
 Splits his $1 budget 50/50:
-  - $0.50 in the SUB tier  (under $100M market cap)  — high rug risk
-  - $0.50 in the OVER tier ($100M – $1B market cap)  — established small caps
+  - $5.00 in the SUB tier  (under $100M market cap)  — high rug risk
+  - $5.00 in the OVER tier ($100M – $1B market cap)  — established small caps
 
 Each tier acts independently, with its own position and rotation logic.
 12 trades / 24h cap across both tiers combined. Pump-and-dump windows
 close fast; JRR rotates often.
 
-Reincarnates at $0.05 like the other $1 compounders. The rug rate is
+Reincarnates at $0.50 like the other compounders. The rug rate is
 real: tokens vanish, projects abandon, JRR dies. He always comes back.
+
+v4.1 (PR 1B): Stricter price guard prevents $0.0000 sells.
+              Timestamps already present, confirmed correct.
 """
 
 from __future__ import annotations
@@ -55,13 +58,14 @@ JRR_UNIVERSE = {**SUB_100M_TOKENS, **OVER_100M_TOKENS}
 MAX_TRADES_PER_DAY = 12
 DEATH_THRESHOLD = 0.50
 TIER_BUDGET_PCT = 0.50  # 50/50 split
+MIN_VALID_PRICE = 1e-10  # guard against zero-price buys
 
 
 @dataclass
 class TierState:
     """Per-tier state inside JRR Token."""
     name: str                            # 'SUB_100M' or 'OVER_100M'
-    balance: float = 5.00                # half of $1.00
+    balance: float = 5.00                # half of $10.00
     current_position: Optional[Dict] = None
     history: List[Dict] = field(default_factory=list)
 
@@ -131,7 +135,6 @@ class JRRTokenState:
             positions.append((self.over_tier.current_position, "OVER"))
         if not positions:
             return None
-        # Return the more recent / larger
         return positions[0][0]
 
     def _merged_history(self) -> List[Dict]:
@@ -141,7 +144,6 @@ class JRRTokenState:
             merged.append({**h, "tier": "SUB_100M"})
         for h in self.over_tier.history:
             merged.append({**h, "tier": "OVER_100M"})
-        # BUG 3: sort by timestamp when available, fall back to date
         merged.sort(key=lambda h: h.get("timestamp") or h.get("date", ""), reverse=False)
         return merged
 
@@ -255,7 +257,7 @@ def jrr_token_act(
                         f"Peaked at ${state.lifetime_peak:.4f}, busted at ${state.balance:.4f}. "
                         f"Tokens taketh away."),
         })
-        # Reset both tiers to 50/50 of fresh $1
+        # Reset both tiers to 50/50 of fresh $10
         state.sub_tier = TierState(name="SUB_100M", balance=5.00)
         state.over_tier = TierState(name="OVER_100M", balance=5.00)
         state.current_life += 1
@@ -289,8 +291,6 @@ def _act_on_tier(
     tier_universe: Dict[str, str],
 ) -> None:
     """Run one tier's decision."""
-    # BUG 3 FIX: add timestamp to every history.append so the UI renders
-    # correct times instead of defaulting to midnight (17:00 Las Vegas time)
     ts = datetime.now(timezone.utc).isoformat()
 
     if not picks:
@@ -306,7 +306,15 @@ def _act_on_tier(
     target = picks[0]
     target_ticker = target["ticker"]
     target_price = prices.get(target_ticker)
-    if not target_price:
+
+    # STRICT price guard: reject missing, zero, or sub-epsilon prices
+    if not target_price or target_price < MIN_VALID_PRICE:
+        tier.history.append({
+            "date": today, "timestamp": ts,
+            "action": "HODL",
+            "reason": f"No valid price for {target_ticker} (got {target_price}). JRR skips.",
+            "balance": round(tier.balance, 6),
+        })
         return
 
     # If we already hold the same ticker, HODL
@@ -324,20 +332,43 @@ def _act_on_tier(
     # Sell existing position
     if tier.current_position:
         old = tier.current_position
-        old_current = prices.get(old["ticker"], old["entry_price"])
-        execution = build_execution(
-            ticker=old["ticker"], asset_class="crypto", side="SELL",
-            shares=old["shares"], price=old_current, available_before=0.0,
-        )
-        proceeds = execution["net_proceeds"] or (old["shares"] * old_current)
-        pnl_pct = ((old_current / old["entry_price"]) - 1) * 100 if old["entry_price"] else 0.0
+        old_entry = old.get("entry_price", 0)
+        old_current = prices.get(old["ticker"])
+
+        # Guard: only sell at a valid price; fallback to entry if live price missing
+        if not old_current or old_current < MIN_VALID_PRICE:
+            if old_entry and old_entry > MIN_VALID_PRICE:
+                old_current = old_entry
+                print(f"[jrr] WARNING: no live price for {old['ticker']}, using entry {old_entry}")
+            else:
+                # Can't sell without any valid price reference
+                tier.history.append({
+                    "date": today, "timestamp": ts,
+                    "action": "HOLD",
+                    "ticker": old["ticker"],
+                    "reason": f"No valid exit price for {old['ticker']} — JRR holds.",
+                    "balance": round(tier.balance, 6),
+                })
+                return
+
+        try:
+            execution = build_execution(
+                ticker=old["ticker"], asset_class="crypto", side="SELL",
+                shares=old["shares"], price=old_current, available_before=0.0,
+            )
+            proceeds = execution["net_proceeds"] or (old["shares"] * old_current)
+        except Exception:
+            proceeds = old["shares"] * old_current
+            execution = {}
+
+        pnl_pct = ((old_current / old_entry) - 1) * 100 if old_entry and old_entry > 0 else 0.0
         tier.history.append({
             "date": today,
             "timestamp": ts,
             "action": "SELL",
             "ticker": old["ticker"],
             "shares": old["shares"],
-            "price": old_current,
+            "price": round(old_current, 6),
             "proceeds": round(proceeds, 6),
             "pnl_pct": round(pnl_pct, 2),
             "execution": execution,
@@ -349,19 +380,23 @@ def _act_on_tier(
     # Buy the new target
     available = tier.balance
     shares = available / target_price
-    for _ in range(3):
-        test_exec = build_execution(
+    try:
+        for _ in range(3):
+            test_exec = build_execution(
+                ticker=target_ticker, asset_class="crypto", side="BUY",
+                shares=shares, price=target_price, available_before=available,
+            )
+            over_amt = (test_exec["net_cost"] or 0) - available
+            if over_amt <= 0.00001:
+                break
+            shares -= (over_amt / target_price) * 1.01
+        execution = build_execution(
             ticker=target_ticker, asset_class="crypto", side="BUY",
             shares=shares, price=target_price, available_before=available,
         )
-        over_amt = (test_exec["net_cost"] or 0) - available
-        if over_amt <= 0.00001:
-            break
-        shares -= (over_amt / target_price) * 1.01
-    execution = build_execution(
-        ticker=target_ticker, asset_class="crypto", side="BUY",
-        shares=shares, price=target_price, available_before=available,
-    )
+    except Exception:
+        execution = {}
+
     tier.current_position = {
         "ticker": target_ticker,
         "name": tier_universe.get(target_ticker, target_ticker),
@@ -383,5 +418,3 @@ def _act_on_tier(
         "execution": execution,
     })
     state.trades_today += 1
-
-
