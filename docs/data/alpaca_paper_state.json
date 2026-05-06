@@ -2,13 +2,13 @@
   "version": "2.1.1",
   "enabled": true,
   "account": {
-    "equity": 9872.12,
-    "cash": 405.9
+    "equity": 10019.94,
+    "cash": -3648.73
   },
   "principal_target": 100944.59,
-  "savings": 9.3762516052801,
-  "lifetime_realized_wins": 1,
-  "lifetime_realized_losses": 2,
+  "savings": 69.6320266643822,
+  "lifetime_realized_wins": 3,
+  "lifetime_realized_losses": 3,
   "position_meta": {
     "ABNB": {
       "entry_price": 139.65,
@@ -30,7 +30,7 @@
     },
     "FXA": {
       "entry_price": 71.18,
-      "peak_price": 71.1097,
+      "peak_price": 71.66,
       "first_seen": "2026-05-04T19:20:11.933365+00:00",
       "qty": 11.238831132
     },
@@ -42,39 +42,21 @@
     },
     "NSC": {
       "entry_price": 313.0,
-      "peak_price": 313.57,
+      "peak_price": 319.18,
       "first_seen": "2026-05-05T16:03:52.983268+00:00",
       "qty": 7.667731629
     },
     "SPG": {
-      "entry_price": 203.106787,
-      "peak_price": 203.21,
+      "entry_price": 203.106786,
+      "peak_price": 205.8,
       "first_seen": "2026-05-05T16:03:52.983287+00:00",
       "qty": 3.938814719
-    },
-    "AMAT": {
-      "entry_price": 412.888,
-      "peak_price": 414.98,
-      "first_seen": "2026-05-05T17:34:50.221405+00:00",
-      "qty": 1.938007401
-    },
-    "MO": {
-      "entry_price": 73.04,
-      "peak_price": 73.4,
-      "first_seen": "2026-05-05T17:34:50.221417+00:00",
-      "qty": 10.955366922
     },
     "MRVL": {
       "entry_price": 171.0,
       "peak_price": 172.355,
       "first_seen": "2026-05-05T17:34:50.221422+00:00",
       "qty": 4.679415204
-    },
-    "TXN": {
-      "entry_price": 280.46,
-      "peak_price": 281.0,
-      "first_seen": "2026-05-05T19:03:32.695960+00:00",
-      "qty": 2.852527989
     },
     "VTR": {
       "entry_price": 86.63,
@@ -87,26 +69,36 @@
       "peak_price": 173.75,
       "first_seen": "2026-05-05T20:38:28.697629+00:00",
       "qty": 4.605352517
+    },
+    "DOW": {
+      "entry_price": 38.116252,
+      "peak_price": 38.27,
+      "first_seen": "2026-05-06T19:08:54.093132+00:00",
+      "qty": 104.017311903
+    },
+    "FXB": {
+      "entry_price": 130.766572,
+      "peak_price": 130.766572,
+      "first_seen": "2026-05-06T19:08:54.093161+00:00",
+      "qty": 6.086647292
     }
   },
   "tickers_traded_this_cycle": [
-    "DOW"
+    "IWM",
+    "AMAT",
+    "MO",
+    "AVGO",
+    "TXN"
   ],
   "recent_alpaca_tickers": [
-    "CRWD",
-    "NSC",
-    "SPG",
-    "AMAT",
     "ANET",
-    "ABNB",
-    "MO",
-    "MRVL",
-    "WELL",
-    "TXN",
-    "FXA",
-    "VTR",
     "FXB",
-    "DOW"
+    "DOW",
+    "AMAT",
+    "MO",
+    "TXN",
+    "AVGO",
+    "IWM"
   ],
   "orders": [
     {
@@ -404,34 +396,173 @@
       "signal": "BUY",
       "order_id": "55a428a7-203f-4dbf-ae46-79222199f7ee",
       "time": "2026-05-05T22:23:56.331457+00:00"
+    },
+    {
+      "action": "CLOSE",
+      "symbol": "AMAT",
+      "side": "sell",
+      "qty": 1.938007401,
+      "trigger_reason": "PROFIT TAKE: AMAT +3.28% from entry \u2014 harvest",
+      "realized_pnl": 26.23,
+      "entry_price": 412.888,
+      "exit_price": 426.42,
+      "order_id": "6f3fbc7d-23c8-40c6-bd00-c58623dbc30d",
+      "time": "2026-05-06T19:08:54.093109+00:00",
+      "timestamp": "2026-05-06T19:08:54.093120+00:00"
+    },
+    {
+      "action": "CLOSE",
+      "symbol": "MO",
+      "side": "sell",
+      "qty": 10.955366922,
+      "trigger_reason": "TRAILING STOP: MO -3.92% from peak $73.40",
+      "realized_pnl": -27.61,
+      "entry_price": 73.04,
+      "exit_price": 70.52,
+      "order_id": "9e6685eb-28ca-4f54-bd0e-362730f7686b",
+      "time": "2026-05-06T19:08:54.134414+00:00",
+      "timestamp": "2026-05-06T19:08:54.134424+00:00"
+    },
+    {
+      "action": "CLOSE",
+      "symbol": "TXN",
+      "side": "sell",
+      "qty": 2.852527989,
+      "trigger_reason": "PROFIT TAKE: TXN +4.25% from entry \u2014 harvest",
+      "realized_pnl": 34.03,
+      "entry_price": 280.46,
+      "exit_price": 292.39,
+      "order_id": "7c5bc182-57b8-4fe8-9c25-056e1c6498dc",
+      "time": "2026-05-06T19:08:54.180225+00:00",
+      "timestamp": "2026-05-06T19:08:54.180236+00:00"
+    },
+    {
+      "action": "OPEN",
+      "symbol": "AVGO",
+      "side": "buy",
+      "notional": 801.6,
+      "conviction": 0.637,
+      "signal": "BUY",
+      "order_id": "63c3ef4e-207f-4486-9656-250ce19256ad",
+      "time": "2026-05-06T19:08:55.769348+00:00",
+      "timestamp": "2026-05-06T19:08:55.769366+00:00"
+    },
+    {
+      "action": "OPEN",
+      "symbol": "TXN",
+      "side": "buy",
+      "notional": 801.6,
+      "conviction": 0.6297,
+      "signal": "BUY",
+      "order_id": "b1a17526-e2e0-48a0-be92-c1d2146a91e9",
+      "time": "2026-05-06T19:08:55.819145+00:00",
+      "timestamp": "2026-05-06T19:08:55.819160+00:00"
+    },
+    {
+      "action": "OPEN",
+      "symbol": "IWM",
+      "side": "buy",
+      "notional": 801.6,
+      "conviction": 0.5868,
+      "signal": "BUY",
+      "order_id": "73e42c30-d6a4-48a2-ba2d-cba4e9dba18e",
+      "time": "2026-05-06T19:08:55.861019+00:00",
+      "timestamp": "2026-05-06T19:08:55.861031+00:00"
     }
   ],
   "orders_placed": [
     {
+      "action": "CLOSE",
+      "symbol": "AMAT",
+      "side": "sell",
+      "qty": 1.938007401,
+      "trigger_reason": "PROFIT TAKE: AMAT +3.28% from entry \u2014 harvest",
+      "realized_pnl": 26.23,
+      "entry_price": 412.888,
+      "exit_price": 426.42,
+      "order_id": "6f3fbc7d-23c8-40c6-bd00-c58623dbc30d",
+      "time": "2026-05-06T19:08:54.093109+00:00",
+      "timestamp": "2026-05-06T19:08:54.093120+00:00"
+    },
+    {
+      "action": "CLOSE",
+      "symbol": "MO",
+      "side": "sell",
+      "qty": 10.955366922,
+      "trigger_reason": "TRAILING STOP: MO -3.92% from peak $73.40",
+      "realized_pnl": -27.61,
+      "entry_price": 73.04,
+      "exit_price": 70.52,
+      "order_id": "9e6685eb-28ca-4f54-bd0e-362730f7686b",
+      "time": "2026-05-06T19:08:54.134414+00:00",
+      "timestamp": "2026-05-06T19:08:54.134424+00:00"
+    },
+    {
+      "action": "CLOSE",
+      "symbol": "TXN",
+      "side": "sell",
+      "qty": 2.852527989,
+      "trigger_reason": "PROFIT TAKE: TXN +4.25% from entry \u2014 harvest",
+      "realized_pnl": 34.03,
+      "entry_price": 280.46,
+      "exit_price": 292.39,
+      "order_id": "7c5bc182-57b8-4fe8-9c25-056e1c6498dc",
+      "time": "2026-05-06T19:08:54.180225+00:00",
+      "timestamp": "2026-05-06T19:08:54.180236+00:00"
+    },
+    {
       "action": "OPEN",
-      "symbol": "DOW",
+      "symbol": "AVGO",
       "side": "buy",
-      "notional": 789.77,
-      "conviction": 0.7091,
+      "notional": 801.6,
+      "conviction": 0.637,
       "signal": "BUY",
-      "order_id": "55a428a7-203f-4dbf-ae46-79222199f7ee",
-      "time": "2026-05-05T22:23:56.331457+00:00"
+      "order_id": "63c3ef4e-207f-4486-9656-250ce19256ad",
+      "time": "2026-05-06T19:08:55.769348+00:00",
+      "timestamp": "2026-05-06T19:08:55.769366+00:00"
+    },
+    {
+      "action": "OPEN",
+      "symbol": "TXN",
+      "side": "buy",
+      "notional": 801.6,
+      "conviction": 0.6297,
+      "signal": "BUY",
+      "order_id": "b1a17526-e2e0-48a0-be92-c1d2146a91e9",
+      "time": "2026-05-06T19:08:55.819145+00:00",
+      "timestamp": "2026-05-06T19:08:55.819160+00:00"
+    },
+    {
+      "action": "OPEN",
+      "symbol": "IWM",
+      "side": "buy",
+      "notional": 801.6,
+      "conviction": 0.5868,
+      "signal": "BUY",
+      "order_id": "73e42c30-d6a4-48a2-ba2d-cba4e9dba18e",
+      "time": "2026-05-06T19:08:55.861019+00:00",
+      "timestamp": "2026-05-06T19:08:55.861031+00:00"
     }
   ],
   "errors": [],
-  "last_run": "2026-05-05T22:23:56.331526+00:00",
+  "last_run": "2026-05-06T19:08:55.861091+00:00",
   "_flushed_at": "2026-05-04T17:43:50.085629+00:00",
   "_flush_note": "v4.1 hotfix: flushed all positions on 2026-05-04T17:43:50.085629+00:00. Principal target locked at $100,944.59 (post-flush equity).",
   "last_cycle_summary": {
-    "time": "2026-05-05T22:23:56.331513+00:00",
-    "closed": 0,
-    "opened": 1,
+    "time": "2026-05-06T19:08:55.861077+00:00",
+    "timestamp": "2026-05-06T19:08:55.861079+00:00",
+    "closed": 3,
+    "opened": 3,
     "open_after": 11,
-    "equity": 9872.12,
-    "savings": 9.38,
-    "total_value": 9881.5,
+    "equity": 10019.94,
+    "savings": 69.63,
+    "total_value": 10089.57,
     "tickers_traded": [
-      "DOW"
+      "IWM",
+      "AMAT",
+      "MO",
+      "AVGO",
+      "TXN"
     ]
   },
   "reason": "Account fetch failed"
