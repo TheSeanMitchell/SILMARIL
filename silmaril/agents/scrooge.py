@@ -51,7 +51,8 @@ class ScroogeState:
     life_start_date: str = field(default_factory=lambda: datetime.now(timezone.utc).date().isoformat())
     history: List[Dict[str, Any]] = field(default_factory=list)
     deaths: List[Dict[str, Any]] = field(default_factory=list)
-
+    last_action_date: str = ""
+ 
     def to_dict(self) -> Dict[str, Any]:
         return {
             "balance": round(self.balance, 4),
@@ -59,6 +60,7 @@ class ScroogeState:
             "lifetime_peak": round(self.lifetime_peak, 4),
             "current_life": self.current_life,
             "life_start_date": self.life_start_date,
+            "last_action_date": self.last_action_date,
             "days_alive": self._days_alive(),
             "history": self.history[-365:],   # last year on disk
             "deaths": self.deaths,
@@ -112,7 +114,12 @@ def scrooge_act(
       5. Record everything to history
     """
     today = today or datetime.now(timezone.utc).date().isoformat()
-
+ 
+    # ── Daily guard: SCROOGE acts once per calendar day only ─────
+    # Without this, every 10-min run triggers a full sell+rebuy cycle.
+    if state.last_action_date == today:
+        return state  # Already acted today — hold current position
+ 
     # ── Determine today's pick FIRST so we can decide whether to rotate ─
     next_pick = _pick_best_buy(top_consensus)
 
@@ -135,14 +142,19 @@ def scrooge_act(
                 held_score = 0
 
             if held_ticker == target_ticker:
-                state.history.append({
-                    "date": today, "timestamp": _ts(),
-                    "action": "HODL",
-                    "ticker": held_ticker,
-                    "reason": "Top pick unchanged. SCROOGE holds, avoids round-trip fees.",
-                    "life": state.current_life,
-                })
-                return state
+                state.last_action_date = today   # mark as acted today
+    state.history.append({
+        "date": today, "timestamp": _ts(),
+        "action": "BUY",
+        "ticker": ticker,
+        "shares": round(shares, 8),
+        "entry_price": round(entry_price, 4),
+        "allocated": round(state.balance, 4),
+        "life": state.current_life,
+        "execution": execution,
+    })
+ 
+    return state
 
             rotate, why = should_rotate(
                 current_consensus_signal=held_signal,
