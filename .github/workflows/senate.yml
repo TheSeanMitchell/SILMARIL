@@ -1,0 +1,88 @@
+name: Senate Elections
+
+on:
+  schedule:
+    # Every Sunday at 06:00 UTC — after the weekend data settles
+    - cron: '0 6 * * 0'
+  workflow_dispatch:
+    inputs:
+      run_conclave:
+        description: "Also run the Conclave (new agent proposal)? yes/no"
+        required: false
+        default: "no"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: silmaril-senate
+  cancel-in-progress: false
+
+jobs:
+  election:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run Senate election
+        run: |
+          python -c "
+          from pathlib import Path
+          from silmaril.senate.elections import run_election
+          results = run_election(Path('docs/data'))
+          summary = results['summary']
+          print('=== Senate Election Results ===')
+          print(f'  Promoted to Probationary: {summary[\"promoted\"]}')
+          print(f'  Demoted to Probationary:  {summary[\"demoted\"]}')
+          print(f'  Graduated to Voter:       {summary[\"graduated\"]}')
+          print(f'  Moved to Emeritus:        {summary[\"emeritus\"]}')
+          print(f'  Total evaluated:          {summary[\"total_evaluated\"]}')
+          print('==============================')
+          "
+
+      - name: Run Conclave (bi-weekly or manual)
+        if: |
+          github.event.inputs.run_conclave == 'yes' ||
+          (github.event_name == 'schedule' && format('{0}', github.run_number) == '1')
+        run: |
+          python -c "
+          from pathlib import Path
+          from silmaril.senate.conclave import run_conclave
+          proposal = run_conclave(Path('docs/data'))
+          print(f'Conclave proposed: {proposal[\"proposed_codename\"]}')
+          print(f'Specialty: {proposal[\"specialty\"]}')
+          print(f'Rationale: {proposal[\"rationale\"]}')
+          "
+        continue-on-error: true
+
+      - name: Commit election results
+        run: |
+          git config user.name 'silmaril-senate'
+          git config user.email 'silmaril-senate@users.noreply.github.com'
+          git add docs/data/senate_state.json || true
+          git add docs/data/senate_results.json || true
+          git add docs/data/conclave_proposal.json || true
+          git diff --staged --quiet || git commit -m \
+            "🏛️ Senate election $(date -u +%Y-%m-%d): $(python -c "
+          import json
+          from pathlib import Path
+          r = json.loads(Path('docs/data/senate_results.json').read_text())
+          s = r['summary']
+          print(f\"+{len(s['promoted'])+len(s['graduated'])} promoted, -{len(s['demoted'])+len(s['emeritus'])} demoted\")
+          " 2>/dev/null || echo 'results committed')"
+          git push || echo "nothing to push"
