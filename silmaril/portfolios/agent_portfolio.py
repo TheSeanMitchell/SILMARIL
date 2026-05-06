@@ -1,4 +1,13 @@
-"""silmaril.portfolios.agent_portfolio — v4 Alpha 2.1: savings + trailing stop + specialist fallback."""
+"""silmaril.portfolios.agent_portfolio — v4.1 Alpha 2.2.
+
+v4.1 changes (PR 1B fix):
+  * CRITICAL: HOLD signal no longer triggers position close.
+    Previously, HOLD caused agents to exit positions within 1–2 cycles,
+    producing $0.0000 PnL (open and close at identical price).
+  * Only SELL / STRONG_SELL exits a LONG position from consensus.
+  * Momentum exit (trailing stop) is unaffected — still fires normally.
+  * Savings + specialist fallback logic unchanged.
+"""
 from __future__ import annotations
 import json
 from dataclasses import dataclass, field, asdict
@@ -41,8 +50,10 @@ SPECIALIST_DOMAINS: Dict[str, set] = {
 
 def _hist_stamps(today_iso: Optional[str] = None) -> Dict[str, str]:
     now = datetime.now(timezone.utc)
-    return {"date": today_iso or now.date().isoformat(),
-            "timestamp": now.isoformat()}
+    return {
+        "date": today_iso or now.date().isoformat(),
+        "timestamp": now.isoformat(),
+    }
 
 
 @dataclass
@@ -51,7 +62,7 @@ class AgentPortfolio:
     starting_equity: float = STARTING_EQUITY
     current_equity: float = STARTING_EQUITY
     cash: float = STARTING_EQUITY
-    savings: float = 0.0  # NEW v4: profit-harvest ledger
+    savings: float = 0.0  # v4: profit-harvest ledger
     current_position: Optional[Dict] = None
     history: List[Dict] = field(default_factory=list)
     equity_curve: List[Dict] = field(default_factory=list)
@@ -125,9 +136,6 @@ class AgentPortfolio:
             "reason": reason or "Consensus flip",
         })
         self.current_position = None
-        # ── HARVEST ────────────────────────────────────────────
-        # If close was profitable AND total cash > principal,
-        # sweep the excess to savings.
         harvested = harvest_to_savings(self, self.starting_equity)
         self.current_equity = self.cash
         return pnl
@@ -146,7 +154,6 @@ class AgentPortfolio:
 
     def to_dict(self) -> Dict:
         d = asdict(self)
-        # Surface key totals at top level for dashboard convenience
         d["lifetime_total"] = round(self.lifetime_total(), 4)
         d["principal_target"] = self.starting_equity
         return d
@@ -189,13 +196,21 @@ def agent_portfolio_act(portfolio: AgentPortfolio, debate_dicts: List[Dict],
                 if should_exit:
                     portfolio.close_position(current_price, reason=reason)
                     return portfolio
+
+        # ── Consensus exit — ONLY on genuine SELL signal ─────────
+        # FIX v4.1: HOLD was previously closing positions immediately,
+        # producing $0 PnL. A HOLD means "no directional conviction."
+        # Agents should RIDE positions through neutral consensus,
+        # only exiting when the panel turns actively bearish (SELL/STRONG_SELL).
         held_debate = next((d for d in debate_dicts if d.get("ticker") == held_ticker), None)
         if held_debate:
             cons_signal = held_debate.get("consensus", {}).get("signal", "HOLD")
-            if cons_signal in ("SELL", "STRONG_SELL", "HOLD") and current_price:
+            if cons_signal in ("SELL", "STRONG_SELL") and current_price:
                 portfolio.close_position(current_price,
-                    reason=f"Consensus on {held_ticker} flipped to {cons_signal}")
+                    reason=f"Consensus on {held_ticker} turned bearish: {cons_signal}")
                 return portfolio
+
+        # Still holding — log with current mark
         portfolio.history.append({
             **_hist_stamps(today_iso), "action": "HOLD",
             "ticker": held_ticker,
@@ -296,7 +311,6 @@ def save_portfolios(path: Path, portfolios: Dict[str, AgentPortfolio],
                 if mark:
                     qty = p.current_position.get("qty", 0) or 0
                     p.current_equity = p.cash + qty * mark
-    # Build summary at top level for dashboard
     total_savings = sum(p.savings for p in portfolios.values())
     total_lifetime = sum(p.lifetime_total() for p in portfolios.values())
     out = {agent: p.to_dict() for agent, p in portfolios.items()}
