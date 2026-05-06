@@ -194,9 +194,39 @@ def agent_portfolio_act(portfolio: AgentPortfolio, debate_dicts: List[Dict],
                     max_hold_days=cfg["max_hold_days"],
                     momentum_stall_threshold=cfg["momentum_stall_threshold"])
                 if should_exit:
-                    portfolio.close_position(current_price, reason=reason)
-                    return portfolio
-
+                portfolio.close_position(current_price, reason=reason)
+                return portfolio
+ 
+        # ── Grocery harvest check ─────────────────────────────────
+        try:
+            from silmaril.portfolios.grocery import (
+                compute_harvest, save_ledger, load_ledger)
+            from pathlib import Path
+            _pos    = portfolio.current_position
+            _entry  = float(_pos.get("entry_price", 0) or 0) if _pos else 0
+            _qty    = float(_pos.get("qty", portfolio.cash / max(_entry, 1))) if _pos else 0
+            _ticker = _pos.get("ticker", "") if _pos else ""
+            if _entry > 0 and _qty > 0 and current_price:
+                _harv, _, _tier = compute_harvest(
+                    _entry, current_price, _qty, portfolio.starting_equity)
+                if _harv > 0:
+                    _ledger = load_ledger(Path("docs/data"), agent,
+                                         portfolio.starting_equity)
+                    _ledger.harvest(
+                        _harv,
+                        reason=f"{_tier} on {_ticker} "
+                               f"+{((current_price/_entry)-1)*100:.1f}%",
+                        source_ticker=_ticker)
+                    save_ledger(Path("docs/data"), _ledger)
+                    portfolio.savings = float(portfolio.savings or 0) + _harv
+                    portfolio.history.append({
+                        **_hist_stamps(today_iso), "action": "HARVEST",
+                        "tier": _tier, "amount": round(_harv, 4),
+                        "ticker": _ticker,
+                    })
+        except Exception:
+            pass
+ 
         # ── Consensus exit — ONLY on genuine SELL signal ─────────
         # FIX v4.1: HOLD was previously closing positions immediately,
         # producing $0 PnL. A HOLD means "no directional conviction."
