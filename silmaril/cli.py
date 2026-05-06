@@ -170,6 +170,24 @@ try:
     _HAS_RENAME_MAP = True
 except Exception as _e:
     _HAS_RENAME_MAP = False
+ 
+try:
+    from .senate.candidates import (
+        load_candidates, tag_shadow_verdicts,
+        filter_shadow_verdicts_for_consensus, extract_candidate_summary)
+    _HAS_SENATE = True
+except Exception:
+    _HAS_SENATE = False
+    def load_candidates(): return []
+    def tag_shadow_verdicts(d): pass
+    def filter_shadow_verdicts_for_consensus(v): return v
+    def extract_candidate_summary(d): return {}
+ 
+try:
+    from .ingestion.fred import get_macro_signals
+    _HAS_FRED = True
+except Exception:
+    _HAS_FRED = False
 
 
 # ─────────────────────────────────────────────────────────────────
@@ -206,6 +224,12 @@ SPECIALIST_AGENTS: List[Agent] = [
 
 # Backward compat alias — used elsewhere in the CLI for serialization
 AGENTS: List[Agent] = MAIN_VOTERS + SPECIALIST_AGENTS
+ 
+if _HAS_SENATE:
+    _candidates = load_candidates()
+    AGENTS = AGENTS + _candidates
+    logging.getLogger("silmaril").info(
+        "senate: %d candidate agent(s) loaded in shadow mode", len(_candidates))
 
 
 log = logging.getLogger("silmaril")
@@ -920,6 +944,14 @@ def run(mode: str = "demo", output_dir: str = "docs/data") -> None:
     # Each agent's voted conviction gets scaled by how confident the
     # Bayesian posterior is in that agent's win rate in this regime.
     # Confident hot agents get amplified voice; cold agents get muted.
+    # Alpha 2.3: strip candidate shadow verdicts before consensus recomputation
+    # so they don't affect the main panel vote. They remain in debate_dicts
+    # for outcomes.py to score them — they just don't move the consensus needle.
+    if _HAS_SENATE:
+        tag_shadow_verdicts(debate_dicts)
+        for _d in debate_dicts:
+            _d["verdicts"] = filter_shadow_verdicts_for_consensus(_d["verdicts"])
+ 
     if learning_bundle.get("multipliers"):
         for d in debate_dicts:
             verdicts = d.get("verdicts", [])
@@ -1498,6 +1530,8 @@ Reply in 3-5 bullets, no preamble.
         "agent_roster": agent_roster,
         "summary": _compute_summary(debate_dicts),
         "debates": debate_dicts,
+        "candidate_summary": extract_candidate_summary(debate_dicts) if _HAS_SENATE else {},
+        "senate_enabled": _HAS_SENATE,
     }
 
     _write(out / "signals.json", signals_output)
