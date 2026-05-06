@@ -1,11 +1,13 @@
-"""silmaril.execution.alpaca_paper — v4 Alpha 2.1.
+"""silmaril.execution.alpaca_paper — v4.1 Alpha 2.2.
 
-v4 changes:
-  * Profit-take: close at +5% from entry → harvest to savings
-  * Trailing stop: close at -4% from peak (independent of consensus)
-  * Virtual savings ledger — only grows on realized profits
-  * tickers_traded_this_cycle / recent_alpaca_tickers for dashboard
-  * principal_target tracking for harvest math
+v4.1 changes (PR 1B fix):
+  * CRITICAL: HOLD signal no longer triggers position close.
+    Only SELL/STRONG_SELL closes longs; only BUY/STRONG_BUY closes shorts.
+    Previously, HOLD was closing every position, causing $0 PnL and
+    Alpaca going silent after May 1.
+  * Agents now RIDE their positions until a genuine exit signal fires.
+  * Profit-take and trailing stop still operate independently.
+  * timestamp added to every order record for dashboard accuracy.
 """
 from __future__ import annotations
 import json, os, time
@@ -63,7 +65,7 @@ def _load_state(path):
         try: return json.loads(path.read_text())
         except Exception: pass
     return {
-        "version": "2.1",
+        "version": "2.2",
         "enabled": False,
         "account": {},
         "principal_target": 100000,
@@ -197,22 +199,27 @@ def execute_consensus_signals(
         if new_peak > 0 and current_price > 0:
             peak_drop_pct = (current_price / new_peak - 1.0) * 100
 
-        # ── 1. Profit-take ───────────────────────────────────
+        # ── 1. Profit-take ───────────────────────────────────────
         if side == "long" and entry_price > 0 and current_price >= entry_price * (1.0 + profit_take_pct):
             close_reason = f"PROFIT TAKE: {symbol} +{pnl_pct:.2f}% from entry — harvest"
         elif side == "short" and entry_price > 0 and current_price <= entry_price * (1.0 - profit_take_pct):
             close_reason = f"PROFIT TAKE: {symbol} short -{abs(pnl_pct):.2f}% from entry — harvest"
 
-        # ── 2. Trailing stop (only if no profit-take) ────────
+        # ── 2. Trailing stop (only if no profit-take) ────────────
         elif side == "long" and new_peak > 0 and current_price <= new_peak * (1.0 - trailing_stop_pct):
             close_reason = f"TRAILING STOP: {symbol} -{abs(peak_drop_pct):.2f}% from peak ${new_peak:.2f}"
 
-        # ── 3. Consensus flip (existing logic) ───────────────
+        # ── 3. Consensus flip — ONLY on genuine SELL signal ──────
+        # FIX v4.1: HOLD signal no longer closes positions.
+        # A HOLD means "neutral — no new conviction either way."
+        # Riding a position through neutral consensus is correct behavior.
+        # Only a genuine SELL/STRONG_SELL (bearish conviction) exits longs.
         else:
             sig = exit_signals.get(symbol, "HOLD")
-            if (side == "long" and sig in ("SELL", "STRONG_SELL", "HOLD")) or \
-               (side == "short" and sig in ("BUY", "STRONG_BUY", "HOLD")):
-                close_reason = f"Consensus flipped to {sig}"
+            if side == "long" and sig in ("SELL", "STRONG_SELL"):
+                close_reason = f"Consensus turned bearish: {sig}"
+            elif side == "short" and sig in ("BUY", "STRONG_BUY"):
+                close_reason = f"Consensus turned bullish on short: {sig}"
 
         if close_reason:
             print(f"[alpaca] CLOSE {side} {symbol}: {close_reason}")
@@ -242,6 +249,7 @@ def execute_consensus_signals(
                     "realized_pnl": round(realized, 2),
                     "entry_price": entry_price, "exit_price": current_price,
                     "order_id": r.get("id"), "time": _now_iso(),
+                    "timestamp": _now_iso(),
                 })
                 # Drop from meta
                 position_meta.pop(symbol, None)
@@ -279,7 +287,8 @@ def execute_consensus_signals(
             orders_placed.append({
                 "action": "OPEN", "symbol": ticker, "side": "buy",
                 "notional": notional, "conviction": conviction,
-                "signal": signal, "order_id": r.get("id"), "time": _now_iso(),
+                "signal": signal, "order_id": r.get("id"),
+                "time": _now_iso(), "timestamp": _now_iso(),
             })
 
     # Open shorts
@@ -306,7 +315,8 @@ def execute_consensus_signals(
                 orders_placed.append({
                     "action": "SHORT", "symbol": ticker, "side": "sell",
                     "notional": notional, "conviction": conviction,
-                    "signal": signal, "order_id": r.get("id"), "time": _now_iso(),
+                    "signal": signal, "order_id": r.get("id"),
+                    "time": _now_iso(), "timestamp": _now_iso(),
                 })
 
     # Append orders to history
@@ -318,7 +328,8 @@ def execute_consensus_signals(
 
     total_value = equity + state.get("savings", 0)
     state["last_cycle_summary"] = {
-        "time": _now_iso(), "closed": closed, "opened": opened,
+        "time": _now_iso(), "timestamp": _now_iso(),
+        "closed": closed, "opened": opened,
         "open_after": open_count, "equity": equity,
         "savings": round(state.get("savings", 0), 2),
         "total_value": round(total_value, 2),
