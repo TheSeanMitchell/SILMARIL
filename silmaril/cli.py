@@ -1321,6 +1321,22 @@ def run(mode: str = "demo", output_dir: str = "docs/data") -> None:
                 log.info("  Alpaca paper bridge skipped: %s", alpaca_state.get("reason", ""))
         except Exception as e:
             log.warning("alpaca: bridge failed: %s", e)
+ 
+    # ── Alpha 2.2: Attribution tagging ──────────────────────────
+    try:
+        from .execution.attribution import tag_orders
+        _alpaca_state = alpaca_state if 'alpaca_state' in dir() else {}
+        _orders_placed = _alpaca_state.get("orders_placed", [])
+        if _orders_placed:
+            tag_orders(
+                orders_placed=_orders_placed,
+                debate_dicts=debate_dicts,
+                attribution_path=out / "alpaca_attribution.json",
+            )
+    except Exception as _attr_e:
+        log.debug("attribution tagging skipped: %s", _attr_e)
+ 
+    # ── Handoff Blocks ──────────────────────────────────────────
 
     # ── Handoff Blocks ──────────────────────────────────────────
     per_asset_handoffs = {
