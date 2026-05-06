@@ -133,7 +133,8 @@ class MidasState:
     )
     history: List[Dict] = field(default_factory=list)
     deaths: List[Dict] = field(default_factory=list)
-
+    last_action_date: str = ""
+ 
     def to_dict(self) -> Dict:
         try:
             start = datetime.fromisoformat(self.life_start_date).date()
@@ -152,6 +153,7 @@ class MidasState:
             "life_start_date": self.life_start_date,
             "actions_this_life": len(self.history),
             "days_alive": days_alive,
+            "last_action_date": self.last_action_date,
             "history": self.history[-30:],
             "deaths": self.deaths,
             "universe": list(MIDAS_UNIVERSE.keys()),
@@ -165,7 +167,11 @@ def midas_act(
 ) -> MidasState:
     """Midas picks the highest-consensus hard-currency BUY. Otherwise holds."""
     today = datetime.now(timezone.utc).date().isoformat()
-
+ 
+    # ── Daily guard: MIDAS acts once per calendar day only ───────
+    if state.last_action_date == today:
+        return state  # Already acted today — hold current position
+ 
     # ── First, mark-to-market any existing position ─────────────
     if state.current_position:
         ticker = state.current_position["ticker"]
@@ -312,6 +318,7 @@ def midas_act(
         ),
         "execution": execution,
     }
+    state.last_action_date = today   # mark as acted today
     state.history.append({
         "date": today, "timestamp": _ts(),
         "action": "BUY",
