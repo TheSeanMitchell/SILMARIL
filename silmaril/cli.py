@@ -186,15 +186,15 @@ except Exception:
 try:
     from .ingestion.fred import get_macro_signals
     _HAS_FRED = True
-    except Exception:
+except Exception:
     _HAS_FRED = False
- 
-    try:
-        from .portfolios.grocery import (
-            load_ledger, save_ledger, build_leaderboard,
-            COMPOUNDER_STARTING_CAPITAL, WEEKLY_TARGET)
+
+try:
+    from .portfolios.grocery import (
+        load_ledger, save_ledger, build_leaderboard,
+        COMPOUNDER_STARTING_CAPITAL, WEEKLY_TARGET)
     _HAS_GROCERY = True
-    except Exception:
+except Exception:
     _HAS_GROCERY = False
 
 
