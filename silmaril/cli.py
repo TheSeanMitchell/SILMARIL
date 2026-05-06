@@ -197,7 +197,6 @@ try:
 except Exception:
     _HAS_GROCERY = False
 
-
 # ─────────────────────────────────────────────────────────────────
 # Full agent roster — the order here is the order shown in the UI
 # ─────────────────────────────────────────────────────────────────
