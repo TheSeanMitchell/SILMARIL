@@ -184,18 +184,18 @@ except Exception:
     def extract_candidate_summary(d): return {}
  
 try:
-        from .ingestion.fred import get_macro_signals
-        _HAS_FRED = True
+    from .ingestion.fred import get_macro_signals
+    _HAS_FRED = True
     except Exception:
-        _HAS_FRED = False
+    _HAS_FRED = False
  
     try:
         from .portfolios.grocery import (
             load_ledger, save_ledger, build_leaderboard,
             COMPOUNDER_STARTING_CAPITAL, WEEKLY_TARGET)
-        _HAS_GROCERY = True
+    _HAS_GROCERY = True
     except Exception:
-        _HAS_GROCERY = False
+    _HAS_GROCERY = False
 
 
 # ─────────────────────────────────────────────────────────────────
