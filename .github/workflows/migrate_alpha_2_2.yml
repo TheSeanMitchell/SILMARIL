@@ -1,0 +1,84 @@
+name: "Alpha 2.2 Migration"
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirm:
+        description: "Type CONFIRM to run the migration"
+        required: true
+        default: ""
+
+jobs:
+  migrate:
+    if: github.event.inputs.confirm == 'CONFIRM'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt --quiet
+
+      - name: Run Alpha 2.2 Migration
+        run: |
+          echo "Running Alpha 2.2 migration..."
+          python scripts/migrate_alpha_2_2.py
+          echo "Migration complete."
+
+      - name: Verify migration report
+        run: |
+          if [ -f "docs/data/migration_alpha_2_2.json" ]; then
+            echo "✓ Migration report written"
+            cat docs/data/migration_alpha_2_2.json | python3 -c "
+          import json, sys
+          r = json.load(sys.stdin)
+          print(f'  Ran at: {r[\"ran_at\"]}')
+          beliefs = r['steps'].get('beliefs', {})
+          print(f'  Beliefs reset: {beliefs.get(\"reset\", [])}')
+          portfolios = r['steps'].get('portfolios', {})
+          print(f'  Portfolios equalized: {len(portfolios.get(\"equalized\", []))}')
+          compounders = r['steps'].get('compounders', {})
+          print(f'  Compounders reset: {len(compounders.get(\"results\", []))}')
+          "
+          else
+            echo "✗ Migration report NOT found — check logs above"
+            exit 1
+          fi
+
+      - name: Commit migration results
+        run: |
+          git config user.name "SILMARIL Migration"
+          git config user.email "actions@github.com"
+          git add docs/data/migration_alpha_2_2.json
+          git add docs/data/agent_beliefs.json || true
+          git add docs/data/agent_portfolios.json || true
+          git add docs/data/scrooge.json || true
+          git add docs/data/midas.json || true
+          git add docs/data/cryptobro.json || true
+          git add docs/data/jrr_token.json || true
+          git add docs/data/sports_bro.json || true
+          git diff --staged --quiet || git commit -m "Alpha 2.2 migration: reset corrupted posteriors, equalize agents to \$10K"
+
+      - name: Self-archive this workflow
+        run: |
+          mkdir -p .github/workflows.archive
+          cp .github/workflows/migrate_alpha_2_2.yml .github/workflows.archive/migrate_alpha_2_2.yml
+          rm .github/workflows/migrate_alpha_2_2.yml
+          git add .github/workflows.archive/migrate_alpha_2_2.yml
+          git rm .github/workflows/migrate_alpha_2_2.yml || true
+          git commit -m "Alpha 2.2 migration: self-archive migration workflow" || echo "Nothing to self-archive"
+
+      - name: Push
+        run: |
+          git push origin HEAD
