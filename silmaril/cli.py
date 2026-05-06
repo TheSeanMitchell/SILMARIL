@@ -1683,6 +1683,7 @@ def _load_or_init_scrooge(path: Path) -> ScroogeState:
             life_start_date=data.get("life_start_date", datetime.now(timezone.utc).date().isoformat()),
             history=data.get("history", []),
             deaths=data.get("deaths", []),
+            last_action_date=data.get("last_action_date", ""),
         )
     except Exception:
         return ScroogeState()
@@ -1702,6 +1703,7 @@ def _load_or_init_midas(path: Path) -> MidasState:
             life_start_date=data.get("life_start_date", datetime.now(timezone.utc).date().isoformat()),
             history=data.get("history", []),
             deaths=data.get("deaths", []),
+            last_action_date=data.get("last_action_date", ""),
         )
     except Exception:
         return MidasState()
