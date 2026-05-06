@@ -1,149 +1,150 @@
 """
-silmaril.portfolios.status_emitter — The single source of truth for
-agent status entries.
+silmaril.portfolios.status_emitter — Compounder cycle status emitter.
 
-Every compounder ($1 SCROOGE, $1 MIDAS, $1 CRYPTOBRO, $1 JRR_TOKEN,
-$1 SPORTS_BRO — soon all $10K) and every $10K career agent must route
-their status writes through emit_status() in this module.
+Every run, each compounder ($1 and $10K) emits a standardized status
+entry so the dashboard always has a fresh timestamp — even on cycles
+where no trade was placed. This is the architectural fix for the
+17:00 default-timestamp bug:
 
-Why one emitter:
-  - Every entry uses datetime.now(timezone.utc).isoformat(). No date-only
-    strings. No hardcoded hour fallbacks. The "17:00 default timestamp"
-    bug becomes mathematically impossible.
-  - Every agent emits a status entry every cycle, including when they
-    HOLD or are FROZEN. Stale-looking timelines (King Midas showing no
-    activity) become impossible because there is always an entry.
-  - Action types are enumerated. No drift between agent state machines.
+  Root cause: compounders only wrote to their history files when they
+  ACTED (BUY, SELL, HODL). On cycles where they were gated (already
+  acted today, or no signals), they wrote nothing. The dashboard
+  interpreted the last written timestamp as "now", which showed as
+  17:00 UTC (midnight UTC → 5pm Pacific fallback in the UI).
 
-Action types:
-  BUY     — opened a long position
-  SELL    — opened a short position
-  CLOSE   — closed an existing position
-  HOLD    — voted HOLD this cycle (no action taken, no position held)
-  MARK    — holding an open position, marked-to-market for the cycle
-  FROZEN  — agent is locked by AgentRiskState (drawdown trigger)
-  RESET   — agent reincarnated (compounders only, hits at -50% drawdown)
+  Fix: emit a lightweight MARK entry every cycle, regardless of action.
+  MARK = "I was alive this cycle, here's my current balance."
+
+Status types:
+  MARK    — alive, no new action, balance as-is
+  ACTIVE  — acted this cycle (BUY/SELL/HODL recorded in agent's own history)
+  FROZEN  — agent is in risk lockout
 """
 from __future__ import annotations
 
+import json
 from datetime import datetime, timezone
+from pathlib import Path
 from typing import Any, Dict, List, Optional
 
 
-VALID_ACTIONS = {"BUY", "SELL", "CLOSE", "HOLD", "MARK", "FROZEN", "RESET"}
+def _now() -> str:
+    return datetime.now(timezone.utc).isoformat()
 
 
-def emit_status(
-    *,
-    history: List[Dict[str, Any]],
-    action: str,
-    ticker: Optional[str] = None,
-    price: Optional[float] = None,
-    qty: Optional[float] = None,
-    pnl: Optional[float] = None,
-    pnl_pct: Optional[float] = None,
-    balance_before: Optional[float] = None,
-    balance_after: Optional[float] = None,
-    current_position: Optional[Dict[str, Any]] = None,
-    signal: Optional[str] = None,
-    reason: str = "",
-    ts: Optional[datetime] = None,
-) -> Dict[str, Any]:
+def _today() -> str:
+    return datetime.now(timezone.utc).date().isoformat()
+
+
+def emit_compounder_status(
+    compounder_states: Dict[str, Any],
+    out_path: Path,
+    cycle_date: Optional[str] = None,
+) -> None:
     """
-    Append one normalized status entry to history. Returns the entry.
-    Required: history list, action.
-    Always writes a full ISO timestamp via datetime.now(timezone.utc),
-    or `ts` if explicitly provided. Never writes a date-only string.
+    Write a fresh status snapshot for every compounder this cycle.
+
+    compounder_states: dict of {codename: state_dict} for
+        SCROOGE, MIDAS, CRYPTOBRO, JRR_TOKEN, SPORTS_BRO
+
+    out_path: where to write compounder_status.json (docs/data/)
     """
-    if action not in VALID_ACTIONS:
-        raise ValueError(
-            f"emit_status: invalid action {action!r}. "
-            f"Valid actions: {sorted(VALID_ACTIONS)}"
+    today = cycle_date or _today()
+    ts = _now()
+
+    statuses: List[Dict] = []
+    for codename, state in compounder_states.items():
+        if not isinstance(state, dict):
+            continue
+
+        balance = state.get("balance", 0.0)
+        history = state.get("history", [])
+
+        # Determine if this compounder already acted today
+        acted_today = any(
+            h.get("date") == today and h.get("action") not in ("MARK", "HOLD")
+            for h in history
         )
 
-    when = ts if ts is not None else datetime.now(timezone.utc)
-    entry: Dict[str, Any] = {
-        "timestamp": when.isoformat(),
-        "date": when.date().isoformat(),
-        "action": action,
+        status_type = "ACTIVE" if acted_today else "MARK"
+        current_position = state.get("current_position")
+        open_bets = state.get("open_bets")  # Sports Bro
+
+        entry = {
+            "codename": codename,
+            "status": status_type,
+            "date": today,
+            "timestamp": ts,
+            "balance": round(float(balance), 4),
+            "current_position": current_position,
+            "open_bets": open_bets,
+            "current_life": state.get("current_life", 1),
+            "lifetime_peak": round(float(state.get("lifetime_peak", balance)), 4),
+        }
+        statuses.append(entry)
+
+    snapshot = {
+        "cycle_date": today,
+        "generated_at": ts,
+        "compounders": {s["codename"]: s for s in statuses},
     }
 
-    if ticker is not None:
-        entry["ticker"] = ticker
-    if price is not None:
-        entry["price"] = price
-    if qty is not None:
-        entry["qty"] = qty
-    if pnl is not None:
-        entry["pnl"] = round(pnl, 4)
-    if pnl_pct is not None:
-        entry["pnl_pct"] = round(pnl_pct, 2)
-    if balance_before is not None:
-        entry["balance_before"] = round(balance_before, 4)
-    if balance_after is not None:
-        entry["balance_after"] = round(balance_after, 4)
-    if current_position is not None:
-        entry["current_position"] = current_position
-    if signal is not None:
-        entry["signal"] = signal
-    if reason:
-        entry["reason"] = reason
-
-    history.append(entry)
-    return entry
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    out_path.write_text(json.dumps(snapshot, indent=2, default=str))
 
 
-def emit_hold(
-    history: List[Dict[str, Any]],
-    balance: float,
-    reason: str = "No qualifying signal",
-) -> Dict[str, Any]:
-    """Convenience: agent voted HOLD this cycle, no action taken."""
-    return emit_status(
-        history=history, action="HOLD",
-        balance_before=balance, balance_after=balance, reason=reason,
-    )
-
-
-def emit_mark(
-    history: List[Dict[str, Any]],
-    balance: float,
-    current_position: Dict[str, Any],
-    reason: str = "Mark-to-market",
-) -> Dict[str, Any]:
-    """Convenience: agent is holding a position, mark-to-market for the cycle."""
-    return emit_status(
-        history=history, action="MARK",
-        balance_after=balance, current_position=current_position, reason=reason,
-    )
-
-
-def emit_frozen(
-    history: List[Dict[str, Any]],
-    balance: float,
-    reason: str,
-) -> Dict[str, Any]:
-    """Convenience: agent is locked by risk state."""
-    return emit_status(
-        history=history, action="FROZEN",
-        balance_before=balance, balance_after=balance, reason=reason,
-    )
-
-
-def latest_status(history: List[Dict[str, Any]]) -> Optional[Dict[str, Any]]:
-    """Return the most recent status entry, or None if history is empty."""
-    return history[-1] if history else None
-
-
-def cycles_since_last_action(history: List[Dict[str, Any]]) -> int:
+def emit_agent_portfolio_status(
+    portfolios: Dict[str, Any],
+    prices: Dict[str, float],
+    out_path: Path,
+    cycle_date: Optional[str] = None,
+) -> None:
     """
-    Count how many consecutive HOLD/MARK/FROZEN entries are at the tail.
-    Used by the dashboard to flag agents that haven't acted recently.
+    Write a cycle-level status snapshot for all $10K agent portfolios.
+    Ensures every agent has a fresh timestamp in the dashboard even on
+    non-trading cycles.
     """
-    count = 0
-    for entry in reversed(history):
-        if entry.get("action") in ("HOLD", "MARK", "FROZEN"):
-            count += 1
+    today = cycle_date or _today()
+    ts = _now()
+
+    statuses: Dict[str, Dict] = {}
+    for agent_name, portfolio in portfolios.items():
+        if hasattr(portfolio, "to_dict"):
+            state = portfolio.to_dict()
+        elif isinstance(portfolio, dict):
+            state = portfolio
         else:
-            break
-    return count
+            continue
+
+        cash = float(state.get("cash", 0))
+        pos = state.get("current_position")
+        mark_price = None
+        if pos and prices:
+            mark_price = prices.get(pos.get("ticker", ""))
+        equity = cash + (pos.get("qty", 0) * mark_price if pos and mark_price else 0)
+
+        history = state.get("history", [])
+        acted_today = any(
+            h.get("date") == today and h.get("action") not in ("MARK",)
+            for h in history
+        )
+
+        statuses[agent_name] = {
+            "agent": agent_name,
+            "status": "ACTIVE" if acted_today else "MARK",
+            "date": today,
+            "timestamp": ts,
+            "cash": round(cash, 2),
+            "equity": round(equity, 2),
+            "in_position": pos is not None,
+            "position_ticker": pos.get("ticker") if pos else None,
+        }
+
+    snapshot = {
+        "cycle_date": today,
+        "generated_at": ts,
+        "agents": statuses,
+    }
+
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    out_path.write_text(json.dumps(snapshot, indent=2, default=str))
