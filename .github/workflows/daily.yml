@@ -20,7 +20,12 @@ concurrency:
 jobs:
   run:
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    # Alpha 2.2: raised from 25 to 55 minutes.
+    # Root cause of previous timeouts: fetch_news_bulk runs sequentially
+    # across all 348 tickers at ~8s/ticker = ~46 min total.
+    # The cli.py news-cap patch limits this to 100 tickers (~13 min),
+    # but we keep 55 min as a safe ceiling for the full pipeline.
+    timeout-minutes: 55
     steps:
       - uses: actions/checkout@v4
         with:
@@ -40,18 +45,18 @@ jobs:
 
       - name: Run live mode
         env:
-          ALPHA_VANTAGE_API_KEY:  ${{ secrets.ALPHA_VANTAGE_API_KEY }}
-          BIRDEYE_API_KEY:        ${{ secrets.BIRDEYE_API_KEY }}
-          COINGECKO_API_KEY:      ${{ secrets.COINGECKO_API_KEY }}
-          EIA_API_KEY:            ${{ secrets.EIA_API_KEY }}
-          FINNHUB_API_KEY:        ${{ secrets.FINNHUB_API_KEY }}
-          FMP_API_KEY:            ${{ secrets.FMP_API_KEY }}
-          FRED_API_KEY:           ${{ secrets.FRED_API_KEY }}
+          ALPHA_VANTAGE_API_KEY:    ${{ secrets.ALPHA_VANTAGE_API_KEY }}
+          BIRDEYE_API_KEY:          ${{ secrets.BIRDEYE_API_KEY }}
+          COINGECKO_API_KEY:        ${{ secrets.COINGECKO_API_KEY }}
+          EIA_API_KEY:              ${{ secrets.EIA_API_KEY }}
+          FINNHUB_API_KEY:          ${{ secrets.FINNHUB_API_KEY }}
+          FMP_API_KEY:              ${{ secrets.FMP_API_KEY }}
+          FRED_API_KEY:             ${{ secrets.FRED_API_KEY }}
           OPENEXCHANGERATES_APP_ID: ${{ secrets.OPENEXCHANGERATES_APP_ID }}
-          POLYGON_API_KEY:        ${{ secrets.POLYGON_API_KEY }}
-          TIINGO_API_KEY:         ${{ secrets.TIINGO_API_KEY }}
-          ALPACA_API_KEY:         ${{ secrets.ALPACA_API_KEY }}
-          ALPACA_API_SECRET:      ${{ secrets.ALPACA_API_SECRET }}
+          POLYGON_API_KEY:          ${{ secrets.POLYGON_API_KEY }}
+          TIINGO_API_KEY:           ${{ secrets.TIINGO_API_KEY }}
+          ALPACA_API_KEY:           ${{ secrets.ALPACA_API_KEY }}
+          ALPACA_API_SECRET:        ${{ secrets.ALPACA_API_SECRET }}
         run: |
           python -m silmaril --live
 
