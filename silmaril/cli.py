@@ -1442,7 +1442,7 @@ Reply in 3-5 bullets, no preamble.
     # ── Main output ─────────────────────────────────────────────
     signals_output = {
         "meta": {
-            "version": "2.0.0",
+            "version": "2.2.0",
             "project": "SILMARIL",
             "run_type": mode,
             "generated_at": now.isoformat(),
