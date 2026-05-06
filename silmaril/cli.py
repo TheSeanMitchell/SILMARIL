@@ -232,9 +232,31 @@ def build_live_contexts() -> List[AssetContext]:
     log.info("Fetching earnings dates (best-effort)...")
     earnings = fetch_earnings_dates([t for t in tickers if t not in {"^VIX"}])
 
-    log.info("Fetching news for %d tickers (this takes a few minutes)...", len(tickers))
-    name_pairs = [(tkr, name) for tkr, name, _ in entries]
-    news_map = fetch_news_bulk(name_pairs, max_articles_per=5)
+    # Alpha 2.2 timeout fix: cap news to 100 tickers.
+    # At ~8s/ticker sequential, 348 → 46 min (timeout). 100 → ~13 min (safe).
+    # Priority: equities > ETFs > major crypto. Memecoins skipped (no feeds).
+    _NEWS_CAP = 100
+    _CRYPTO_SKIP_SUFFIXES = ("-USD",)
+    _MEMECOIN_SKIP = {
+        "PEPE-USD", "FLOKI-USD", "BONK-USD", "WIF-USD", "MOG-USD",
+        "TURBO-USD", "BRETT-USD", "POPCAT-USD", "MEW-USD", "PNUT-USD",
+        "ALT-USD", "SHIB-USD", "DOGE-USD",
+    }
+    # Build prioritised list: non-crypto first, then major crypto, skip memecoins
+    _news_equity = [(t, n) for t, n, _ in entries
+                    if not any(t.endswith(s) for s in _CRYPTO_SKIP_SUFFIXES)]
+    _news_crypto = [(t, n) for t, n, _ in entries
+                    if any(t.endswith(s) for s in _CRYPTO_SKIP_SUFFIXES)
+                    and t not in _MEMECOIN_SKIP]
+    name_pairs_capped = (_news_equity + _news_crypto)[:_NEWS_CAP]
+    log.info(
+        "Fetching news for %d/%d tickers (capped for timeout safety — "
+        "%d equities/ETFs, %d crypto)...",
+        len(name_pairs_capped), len(tickers),
+        len([p for p in name_pairs_capped if not p[0].endswith("-USD")]),
+        len([p for p in name_pairs_capped if p[0].endswith("-USD")]),
+    )
+    news_map = fetch_news_bulk(name_pairs_capped, max_articles_per=5)
 
     # Regime from SPY + VIX
     spy = price_snaps.get("SPY")
