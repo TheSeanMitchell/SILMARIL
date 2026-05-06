@@ -112,6 +112,7 @@ class JRRTokenState:
             "days_alive": self._days_alive(),
             "deaths": self.deaths,
             "trades_today": self.trades_today,
+            "last_action_date": self.last_action_date,
             "max_trades_per_day": MAX_TRADES_PER_DAY,
             "current_position": self._composite_position(),
             "history": self._merged_history(),
