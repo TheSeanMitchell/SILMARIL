@@ -1,7 +1,18 @@
 {
   "version": "6.0",
-  "generated_at": "2026-06-13T12:04:40.358450+00:00",
+  "generated_at": "2026-06-13T12:25:09.482297+00:00",
   "tickers": {
+    "BWA": {
+      "ticker": "BWA",
+      "use_limit_order": true,
+      "limit_buffer_bps": 50,
+      "defer_to_next_cycle": false,
+      "opening_volatility": 0.0433,
+      "liquidity_score": 0.4217,
+      "extension_warning": false,
+      "timing_window": null,
+      "rationale": "limit 50bps \u00b7 ATR/px 4.3% \u00b7 liq 0.42"
+    },
     "TON-USD": {
       "ticker": "TON-USD",
       "use_limit_order": true,
@@ -12,6 +23,17 @@
       "extension_warning": false,
       "timing_window": null,
       "rationale": "limit 42bps \u00b7 ATR/px 3.2% \u00b7 liq 0.10"
+    },
+    "MOH": {
+      "ticker": "MOH",
+      "use_limit_order": true,
+      "limit_buffer_bps": 47,
+      "defer_to_next_cycle": false,
+      "opening_volatility": 0.0392,
+      "liquidity_score": 1.0,
+      "extension_warning": false,
+      "timing_window": null,
+      "rationale": "limit 47bps \u00b7 ATR/px 3.9% \u00b7 liq 1.00"
     },
     "IWM": {
       "ticker": "IWM",
@@ -24,45 +46,34 @@
       "timing_window": null,
       "rationale": "clean entry \u00b7 ATR/px 2.1% \u00b7 liq 1.00"
     },
-    "JTO-USD": {
-      "ticker": "JTO-USD",
-      "use_limit_order": true,
-      "limit_buffer_bps": 104,
-      "defer_to_next_cycle": true,
-      "opening_volatility": 0.1214,
-      "liquidity_score": 0.4018,
-      "extension_warning": false,
-      "timing_window": null,
-      "rationale": "DEFER: ATR/price 12.1% \u2265 9% \u2014 untradeable"
-    },
-    "VLO": {
-      "ticker": "VLO",
-      "use_limit_order": true,
-      "limit_buffer_bps": 45,
+    "UNP": {
+      "ticker": "UNP",
+      "use_limit_order": false,
+      "limit_buffer_bps": 30,
       "defer_to_next_cycle": false,
-      "opening_volatility": 0.0362,
-      "liquidity_score": 0.628,
+      "opening_volatility": 0.0227,
+      "liquidity_score": 0.561,
       "extension_warning": false,
       "timing_window": null,
-      "rationale": "limit 45bps \u00b7 ATR/px 3.6% \u00b7 liq 0.63"
+      "rationale": "clean entry \u00b7 ATR/px 2.3% \u00b7 liq 0.56"
     },
-    "TRGP": {
-      "ticker": "TRGP",
-      "use_limit_order": true,
-      "limit_buffer_bps": 38,
+    "AIZ": {
+      "ticker": "AIZ",
+      "use_limit_order": false,
+      "limit_buffer_bps": 30,
       "defer_to_next_cycle": false,
-      "opening_volatility": 0.0261,
-      "liquidity_score": 0.8512,
+      "opening_volatility": 0.0209,
+      "liquidity_score": 0.4413,
       "extension_warning": false,
       "timing_window": null,
-      "rationale": "limit 38bps \u00b7 ATR/px 2.6% \u00b7 liq 0.85"
+      "rationale": "clean entry \u00b7 ATR/px 2.1% \u00b7 liq 0.44"
     }
   },
   "summary": {
-    "tickers": 5,
-    "deferred": 1,
-    "limit_recommended": 4,
-    "market_orders_ok": 0
+    "tickers": 6,
+    "deferred": 0,
+    "limit_recommended": 3,
+    "market_orders_ok": 3
   },
   "config": {
     "atr_defer_ratio": 0.05,
