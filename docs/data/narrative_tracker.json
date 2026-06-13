@@ -1,10 +1,10 @@
 {
   "version": "5.0",
-  "generated_at": "2026-06-13T10:03:27.489483+00:00",
+  "generated_at": "2026-06-13T10:25:12.084507+00:00",
   "cycles_observed": 60,
   "dominant_narrative": "risk_off",
   "regime_shift": "RISK_OFF",
-  "regime_shift_confidence": 0.5117,
+  "regime_shift_confidence": 0.4114,
   "narratives": {
     "risk_on": {
       "label": "Risk-on sentiment returning",
@@ -18,12 +18,20 @@
         "Consumer Staples",
         "Utilities"
       ],
-      "frequency": 0,
-      "persistence": 1,
-      "acceleration": 0.0,
-      "score": 0.0838,
-      "phrases": [],
-      "matched_articles": []
+      "frequency": 1,
+      "persistence": 2,
+      "acceleration": 1.0,
+      "score": 0.3625,
+      "phrases": [
+        "all-time high"
+      ],
+      "matched_articles": [
+        {
+          "ticker": "NUE",
+          "title": "Nucor Corp stock hits all-time high at 265.14 USD",
+          "source": "Investing.com"
+        }
+      ]
     },
     "risk_off": {
       "label": "Risk-off / safe-haven buying",
@@ -39,8 +47,8 @@
       ],
       "frequency": 1,
       "persistence": 60,
-      "acceleration": -0.5,
-      "score": 0.425,
+      "acceleration": 0.0,
+      "score": 0.465,
       "phrases": [
         "risk-off"
       ],
@@ -198,25 +206,19 @@
     }
   },
   "sector_pressure": {
-    "Technology": -0.3412,
+    "Technology": -0.1025,
     "Energy": 0.0,
     "Industrials": 0.04,
-    "Health Care": 0.465,
+    "Health Care": 0.505,
     "Financials": 0.04,
-    "Consumer Discretionary": -0.3412,
-    "Consumer Staples": 0.3412,
-    "Communication Services": 0.0838,
+    "Consumer Discretionary": -0.1025,
+    "Consumer Staples": 0.1025,
+    "Communication Services": 0.3625,
     "Real Estate": 0.0,
-    "Utilities": 0.3012,
+    "Utilities": 0.0625,
     "Materials": 0.0
   },
   "history": [
-    {
-      "cycle_ts": "2026-06-12T15:03:22.381741+00:00",
-      "dominant_narrative": "risk_off",
-      "regime_shift": "RISK_OFF",
-      "score": 0.54
-    },
     {
       "cycle_ts": "2026-06-12T15:27:10.170814+00:00",
       "dominant_narrative": "risk_off",
@@ -570,7 +572,13 @@
       "dominant_narrative": "risk_off",
       "regime_shift": "RISK_OFF",
       "score": 0.425
+    },
+    {
+      "cycle_ts": "2026-06-13T10:25:12.084507+00:00",
+      "dominant_narrative": "risk_off",
+      "regime_shift": "RISK_OFF",
+      "score": 0.465
     }
   ],
-  "headline_count": 310
+  "headline_count": 552
 }

@@ -1,11 +1,11 @@
 {
   "version": "wantgot-2.0",
-  "generated_at": "2026-06-13T10:03:34.712678+00:00",
+  "generated_at": "2026-06-13T10:25:19.830115+00:00",
   "accounts": {
     "LEGACY": {
       "account_id": "LEGACY",
       "mode": "consensus",
-      "cycle_at": "2026-06-13T10:03:25.686372+00:00",
+      "cycle_at": "2026-06-13T10:25:11.078291+00:00",
       "session_open": false,
       "composite_halt": false,
       "halt_reason": null,
@@ -14,7 +14,7 @@
         {
           "ticker": "VLO",
           "signal": "BUY",
-          "conviction": 0.8545,
+          "conviction": 0.7059,
           "originated": false,
           "intended_notional": 766.0,
           "submitted": false,
@@ -24,9 +24,21 @@
           "reason": "off-session run \u2014 the session hard-gate parks orders until the next open (the off-hours-incident law working as designed)"
         },
         {
+          "ticker": "NUE",
+          "signal": "BUY",
+          "conviction": 0.6781,
+          "originated": false,
+          "intended_notional": 766.0,
+          "submitted": false,
+          "order_status": null,
+          "held_market_value": 812.49,
+          "verdict": "BLOCKED:blocked_already_held",
+          "reason": "NUE already held"
+        },
+        {
           "ticker": "IWM",
           "signal": "BUY",
-          "conviction": 0.7065,
+          "conviction": 0.6731,
           "originated": false,
           "intended_notional": 766.0,
           "submitted": false,
@@ -59,13 +71,6 @@
           "note": "held from a prior cycle \u2014 no fresh BUY intent this cycle"
         },
         {
-          "ticker": "NUE",
-          "market_value": 812.49,
-          "unrealized_pl": -5.67,
-          "first_seen": "2026-06-12T15:27:01.890044+00:00",
-          "note": "held from a prior cycle \u2014 no fresh BUY intent this cycle"
-        },
-        {
           "ticker": "UNP",
           "market_value": 976.62,
           "unrealized_pl": 10.26,
@@ -74,27 +79,27 @@
         }
       ],
       "totals": {
-        "intended": 1532.0,
+        "intended": 2298.0,
         "submitted": 0.0,
         "held": 3773.48,
         "equity": 9575.04,
-        "deployment_gap": -2241.48
+        "deployment_gap": -1475.48
       },
-      "narrative": "wanted 2 name(s) ($1532): 0 filled+held, 0 pending, 0 gated, 2 deferred"
+      "narrative": "wanted 3 name(s) ($2298): 0 filled+held, 0 pending, 1 gated, 2 deferred"
     },
     "HARVEST_3": {
       "account_id": "HARVEST_3",
       "mode": "consensus",
-      "cycle_at": "2026-06-13T10:03:26.158028+00:00",
+      "cycle_at": "2026-06-13T10:25:11.551083+00:00",
       "session_open": false,
       "composite_halt": false,
       "halt_reason": null,
       "has_cycle_intents": true,
       "rows": [
         {
-          "ticker": "TRGP",
+          "ticker": "PGR",
           "signal": "BUY",
-          "conviction": 0.8545,
+          "conviction": 0.9429,
           "originated": false,
           "intended_notional": 958.79,
           "submitted": false,
@@ -106,7 +111,7 @@
         {
           "ticker": "TON-USD",
           "signal": "BUY",
-          "conviction": 0.5557,
+          "conviction": 0.5904,
           "originated": false,
           "intended_notional": 958.79,
           "submitted": false,
@@ -129,16 +134,16 @@
     "HARVEST_5": {
       "account_id": "HARVEST_5",
       "mode": "wordsmith",
-      "cycle_at": "2026-06-13T10:03:26.748693+00:00",
+      "cycle_at": "2026-06-13T10:25:11.775085+00:00",
       "session_open": false,
       "composite_halt": false,
       "halt_reason": null,
       "has_cycle_intents": true,
       "rows": [
         {
-          "ticker": "XLM-USD",
+          "ticker": "VLO",
           "signal": "BUY",
-          "conviction": 0.7328,
+          "conviction": 0.8895,
           "originated": true,
           "intended_notional": 1159.36,
           "submitted": false,
@@ -148,9 +153,9 @@
           "reason": "signal HOLD is not SELL/STRONG_SELL"
         },
         {
-          "ticker": "LDO-USD",
-          "signal": "BUY",
-          "conviction": 0.7328,
+          "ticker": "NUE",
+          "signal": "STRONG_BUY",
+          "conviction": 0.9126,
           "originated": true,
           "intended_notional": 1159.36,
           "submitted": false,
@@ -160,9 +165,9 @@
           "reason": "signal HOLD is not SELL/STRONG_SELL"
         },
         {
-          "ticker": "INJ-USD",
+          "ticker": "GE",
           "signal": "BUY",
-          "conviction": 0.6449,
+          "conviction": 0.9703,
           "originated": true,
           "intended_notional": 1159.36,
           "submitted": false,
@@ -172,9 +177,9 @@
           "reason": "signal HOLD is not SELL/STRONG_SELL"
         },
         {
-          "ticker": "STRK-USD",
+          "ticker": "SPGI",
           "signal": "BUY",
-          "conviction": 0.6449,
+          "conviction": 0.9703,
           "originated": true,
           "intended_notional": 1159.36,
           "submitted": false,
@@ -184,9 +189,9 @@
           "reason": "signal HOLD is not SELL/STRONG_SELL"
         },
         {
-          "ticker": "PYTH-USD",
+          "ticker": "CL",
           "signal": "BUY",
-          "conviction": 0.557,
+          "conviction": 0.9241,
           "originated": true,
           "intended_notional": 1159.36,
           "submitted": false,
