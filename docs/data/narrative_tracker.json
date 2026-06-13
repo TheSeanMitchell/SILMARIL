@@ -1,10 +1,10 @@
 {
   "version": "5.0",
-  "generated_at": "2026-06-13T08:03:49.652615+00:00",
+  "generated_at": "2026-06-13T08:25:06.362276+00:00",
   "cycles_observed": 60,
   "dominant_narrative": "risk_off",
   "regime_shift": "RISK_OFF",
-  "regime_shift_confidence": 0.4874,
+  "regime_shift_confidence": 0.4774,
   "narratives": {
     "risk_on": {
       "label": "Risk-on sentiment returning",
@@ -18,12 +18,25 @@
         "Consumer Staples",
         "Utilities"
       ],
-      "frequency": 0,
-      "persistence": 3,
-      "acceleration": 0.0,
-      "score": 0.1712,
-      "phrases": [],
-      "matched_articles": []
+      "frequency": 1,
+      "persistence": 4,
+      "acceleration": 1.0,
+      "score": 0.45,
+      "phrases": [
+        "all-time high"
+      ],
+      "matched_articles": [
+        {
+          "ticker": "NUE",
+          "title": "Nucor Corp stock hits all-time high at 265.14 USD",
+          "source": "Investing.com"
+        },
+        {
+          "ticker": "STLD",
+          "title": "Steel Dynamics stock hits all-time high at $280.56",
+          "source": "Investing.com"
+        }
+      ]
     },
     "risk_off": {
       "label": "Risk-off / safe-haven buying",
@@ -37,14 +50,20 @@
         "Technology",
         "Consumer Discretionary"
       ],
-      "frequency": 1,
+      "frequency": 2,
       "persistence": 60,
-      "acceleration": 0.0,
-      "score": 0.465,
+      "acceleration": 1.0,
+      "score": 0.7,
       "phrases": [
+        "risk off",
         "risk-off"
       ],
       "matched_articles": [
+        {
+          "ticker": "DOT-USD",
+          "title": "Polkadot (DOT) Volatility Explained: Broad Risk Off, Technical Selling",
+          "source": "CoinMarketCap"
+        },
         {
           "ticker": "CRO-USD",
           "title": "Cronos (CRO) Declines 3.5% Amid Broad Crypto Risk-Off Phase",
@@ -198,25 +217,19 @@
     }
   },
   "sector_pressure": {
-    "Technology": -0.2938,
+    "Technology": -0.25,
     "Energy": 0.0,
     "Industrials": 0.04,
-    "Health Care": 0.505,
+    "Health Care": 0.74,
     "Financials": 0.04,
-    "Consumer Discretionary": -0.2938,
-    "Consumer Staples": 0.2938,
-    "Communication Services": 0.1712,
+    "Consumer Discretionary": -0.25,
+    "Consumer Staples": 0.25,
+    "Communication Services": 0.45,
     "Real Estate": 0.0,
-    "Utilities": 0.2538,
+    "Utilities": 0.21,
     "Materials": 0.0
   },
   "history": [
-    {
-      "cycle_ts": "2026-06-12T13:06:21.879105+00:00",
-      "dominant_narrative": "risk_off",
-      "regime_shift": "ROTATION",
-      "score": 0.54
-    },
     {
       "cycle_ts": "2026-06-12T13:27:10.940501+00:00",
       "dominant_narrative": "risk_off",
@@ -570,7 +583,13 @@
       "dominant_narrative": "risk_off",
       "regime_shift": "RISK_OFF",
       "score": 0.465
+    },
+    {
+      "cycle_ts": "2026-06-13T08:25:06.362276+00:00",
+      "dominant_narrative": "risk_off",
+      "regime_shift": "RISK_OFF",
+      "score": 0.7
     }
   ],
-  "headline_count": 310
+  "headline_count": 513
 }
