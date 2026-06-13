@@ -1,20 +1,26 @@
 {
   "version": "5.1",
-  "generated_at": "2026-06-13T11:44:06.002412+00:00",
+  "generated_at": "2026-06-13T12:04:45.121336+00:00",
   "current_regimes": [
     {
       "key": "narrow_leadership",
       "label": "Narrow Leadership",
       "confidence": 1.0,
       "persistence_cycles": 90
+    },
+    {
+      "key": "rotational_bull",
+      "label": "Rotational Bull",
+      "confidence": 0.4076,
+      "persistence_cycles": 1
     }
   ],
   "regime_states": {
     "rotational_bull": {
       "label": "Rotational Bull",
-      "active": false,
-      "confidence": 0.3699,
-      "persistence": 0
+      "active": true,
+      "confidence": 0.4076,
+      "persistence": 1
     },
     "narrow_leadership": {
       "label": "Narrow Leadership",
@@ -31,7 +37,7 @@
     "recession_fear": {
       "label": "Recession Fear",
       "active": false,
-      "confidence": 0.35,
+      "confidence": 0.27,
       "persistence": 0
     },
     "inflation_fear": {
@@ -49,7 +55,7 @@
     "ai_bubble_expansion": {
       "label": "AI Bubble Expansion",
       "active": false,
-      "confidence": 0.0,
+      "confidence": 0.022,
       "persistence": 0
     },
     "ai_unwind": {
@@ -67,7 +73,7 @@
     "defensive_flight": {
       "label": "Defensive Flight",
       "active": false,
-      "confidence": 0.3208,
+      "confidence": 0.2294,
       "persistence": 0
     },
     "commodity_inflation": {
@@ -96,18 +102,12 @@
     }
   },
   "summary": {
-    "active_regimes": 1,
+    "active_regimes": 2,
     "dominant_regime": "narrow_leadership",
     "stability_score": 0.5,
     "transition_pressure": 0.5
   },
   "history": [
-    {
-      "cycle_ts": "2026-06-12T07:05:54.095019+00:00",
-      "dominant_regime": "narrow_leadership",
-      "active_count": 3,
-      "stability": 0.6667
-    },
     {
       "cycle_ts": "2026-06-12T07:24:16.805421+00:00",
       "dominant_regime": "narrow_leadership",
@@ -640,6 +640,12 @@
       "cycle_ts": "2026-06-13T11:44:06.002412+00:00",
       "dominant_regime": "narrow_leadership",
       "active_count": 1,
+      "stability": 0.5
+    },
+    {
+      "cycle_ts": "2026-06-13T12:04:45.121336+00:00",
+      "dominant_regime": "narrow_leadership",
+      "active_count": 2,
       "stability": 0.5
     }
   ]
