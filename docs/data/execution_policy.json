@@ -1,6 +1,6 @@
 {
   "version": "4.0",
-  "generated_at": "2026-06-13T13:04:49.835143+00:00",
+  "generated_at": "2026-06-13T13:25:10.202351+00:00",
   "market_mode": "ATTACK",
   "winner_engine": "default",
   "winner_action": "NORMAL",
@@ -69,9 +69,7 @@
   "urgency_priority_order": [
     "TRGP",
     "TON-USD",
-    "VLO",
-    "INJ-USD",
-    "IWM"
+    "MAS"
   ],
   "urgency_by_ticker": {
     "TON-USD": {
@@ -92,36 +90,18 @@
       "empirical_lift": 1.0,
       "rationale": "acceleration 1.00; 5 sources"
     },
-    "IWM": {
-      "ticker": "IWM",
-      "score": 0.1158,
+    "MAS": {
+      "ticker": "MAS",
+      "score": 0.139,
       "urgent": false,
       "threshold": 0.65,
       "components": {
         "momentum_acceleration": 0.0,
-        "breakout_velocity": 0.063,
+        "breakout_velocity": 0.0759,
         "fresh_catalyst": 0.0,
         "fresh_catalyst_raw": 0.0,
         "intraday_thrust": 1.0,
-        "source_credibility": 0.0,
-        "narrative_persistence": 0.0
-      },
-      "decay_factor": 1.0,
-      "empirical_lift": 1.0,
-      "rationale": "intraday thrust 1.00"
-    },
-    "VLO": {
-      "ticker": "VLO",
-      "score": 0.23,
-      "urgent": false,
-      "threshold": 0.65,
-      "components": {
-        "momentum_acceleration": 0.4333,
-        "breakout_velocity": 0.0,
-        "fresh_catalyst": 0.0,
-        "fresh_catalyst_raw": 0.0,
-        "intraday_thrust": 1.0,
-        "source_credibility": 0.0,
+        "source_credibility": 0.4,
         "narrative_persistence": 0.0
       },
       "decay_factor": 1.0,
@@ -130,29 +110,11 @@
     },
     "TRGP": {
       "ticker": "TRGP",
-      "score": 0.4,
+      "score": 0.45,
       "urgent": false,
       "threshold": 0.65,
       "components": {
         "momentum_acceleration": 1.0,
-        "breakout_velocity": 0.0,
-        "fresh_catalyst": 0.0,
-        "fresh_catalyst_raw": 0.0,
-        "intraday_thrust": 1.0,
-        "source_credibility": 0.0,
-        "narrative_persistence": 0.0
-      },
-      "decay_factor": 1.0,
-      "empirical_lift": 1.0,
-      "rationale": "acceleration 1.00; intraday thrust 1.00"
-    },
-    "INJ-USD": {
-      "ticker": "INJ-USD",
-      "score": 0.15,
-      "urgent": false,
-      "threshold": 0.65,
-      "components": {
-        "momentum_acceleration": 0.0,
         "breakout_velocity": 0.0,
         "fresh_catalyst": 0.0,
         "fresh_catalyst_raw": 0.0,
@@ -162,28 +124,22 @@
       },
       "decay_factor": 1.0,
       "empirical_lift": 1.0,
-      "rationale": "intraday thrust 1.00; 5 sources"
+      "rationale": "acceleration 1.00; intraday thrust 1.00; 5 sources"
     }
   },
   "narrative": {
     "dominant": "risk_off",
     "regime_shift": "RISK_OFF",
-    "confidence": 0.4514
+    "confidence": 0.4128
   },
   "sector_rotation": {
-    "rationale": "Token (strengthening) vs Technology (weakening)",
+    "rationale": "Token (strengthening) vs Commodities (weakening)",
     "top_pairs": [
       {
-        "from": "Technology",
-        "to": "Token",
-        "strength": 0.7517,
-        "rationale": "Technology -0.40 \u2192 Token +0.35"
-      },
-      {
-        "from": "Communications",
+        "from": "Commodities",
         "to": "Token",
         "strength": 0.7,
-        "rationale": "Communications -0.35 \u2192 Token +0.35"
+        "rationale": "Commodities -0.35 \u2192 Token +0.35"
       },
       {
         "from": "Software",
@@ -192,73 +148,79 @@
         "rationale": "Software -0.35 \u2192 Token +0.35"
       },
       {
-        "from": "Technology",
-        "to": "Health Care",
-        "strength": 0.6627,
-        "rationale": "Technology -0.40 \u2192 Health Care +0.26"
+        "from": "Energy",
+        "to": "Token",
+        "strength": 0.7,
+        "rationale": "Energy -0.35 \u2192 Token +0.35"
       },
       {
-        "from": "Communications",
+        "from": "Commodities",
         "to": "Health Care",
         "strength": 0.611,
-        "rationale": "Communications -0.35 \u2192 Health Care +0.26"
+        "rationale": "Commodities -0.35 \u2192 Health Care +0.26"
+      },
+      {
+        "from": "Software",
+        "to": "Health Care",
+        "strength": 0.611,
+        "rationale": "Software -0.35 \u2192 Health Care +0.26"
       }
     ],
     "sector_lift": {
-      "Communication Services": 1.0574,
-      "FX": 0.9243,
-      "Healthcare": 0.979,
-      "Communications": 0.9125,
-      "Semiconductors": 1.0069,
-      "Rates": 0.9415,
-      "Industrials": 0.9786,
-      "Consumer Staples": 1.0155,
-      "Software": 0.9125,
-      "Innovation": 0.9125,
-      "Discretionary": 0.9969,
-      "Technology": 0.8996,
-      "Financials": 0.9809,
-      "Token": 1.105,
-      "Communication": 0.9235,
-      "Staples": 0.9815,
-      "Energy": 0.9125,
-      "Utilities": 0.9546,
-      "Index": 0.9453,
-      "Crypto": 0.9125,
-      "Commodities": 0.9125,
+      "FX": 0.9208,
       "Consumer Discretionary": 0.9916,
-      "Materials": 0.9681,
+      "Healthcare": 0.9756,
+      "Commodities": 0.9125,
+      "Real Estate": 0.9801,
       "Health Care": 1.0783,
-      "Real Estate": 0.9835,
-      "Credit": 0.9408
+      "Financials": 0.9775,
+      "Consumer Staples": 1.0101,
+      "Materials": 0.9646,
+      "Semiconductors": 1.0028,
+      "Software": 0.9125,
+      "Communication Services": 1.0628,
+      "Energy": 0.9125,
+      "Rates": 0.9381,
+      "Technology": 0.9185,
+      "Utilities": 0.9466,
+      "Crypto": 0.9125,
+      "Token": 1.105,
+      "Communications": 0.9125,
+      "Communication": 0.92,
+      "Innovation": 0.9125,
+      "Index": 0.9418,
+      "Credit": 0.9374,
+      "Industrials": 0.9797,
+      "Staples": 0.9781,
+      "Discretionary": 0.9934
     },
     "sector_tag": {
-      "Communication Services": "neutral",
       "FX": "weakening",
-      "Healthcare": "neutral",
-      "Communications": "weakening",
-      "Semiconductors": "neutral",
-      "Rates": "neutral",
-      "Industrials": "neutral",
-      "Consumer Staples": "neutral",
-      "Software": "weakening",
-      "Innovation": "weakening",
-      "Discretionary": "neutral",
-      "Technology": "weakening",
-      "Financials": "neutral",
-      "Token": "strengthening",
-      "Communication": "weakening",
-      "Staples": "neutral",
-      "Energy": "weakening",
-      "Utilities": "neutral",
-      "Index": "neutral",
-      "Crypto": "weakening",
-      "Commodities": "weakening",
       "Consumer Discretionary": "neutral",
-      "Materials": "neutral",
-      "Health Care": "strengthening",
+      "Healthcare": "neutral",
+      "Commodities": "weakening",
       "Real Estate": "neutral",
-      "Credit": "neutral"
+      "Health Care": "strengthening",
+      "Financials": "neutral",
+      "Consumer Staples": "neutral",
+      "Materials": "neutral",
+      "Semiconductors": "neutral",
+      "Software": "weakening",
+      "Communication Services": "neutral",
+      "Energy": "weakening",
+      "Rates": "neutral",
+      "Technology": "weakening",
+      "Utilities": "neutral",
+      "Crypto": "weakening",
+      "Token": "strengthening",
+      "Communications": "weakening",
+      "Communication": "weakening",
+      "Innovation": "weakening",
+      "Index": "neutral",
+      "Credit": "weakening",
+      "Industrials": "neutral",
+      "Staples": "neutral",
+      "Discretionary": "neutral"
     }
   },
   "deployment_floor": {
@@ -316,15 +278,15 @@
         "archetype": "GENERIC",
         "setup_lift": 1.0
       },
-      "XLM-USD": {
-        "archetype": "GENERIC",
-        "setup_lift": 1.0
-      },
       "VLO": {
         "archetype": "GENERIC",
         "setup_lift": 1.0
       },
       "TRGP": {
+        "archetype": "GENERIC",
+        "setup_lift": 1.0
+      },
+      "INJ-USD": {
         "archetype": "GENERIC",
         "setup_lift": 1.0
       }

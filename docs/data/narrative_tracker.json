@@ -1,10 +1,10 @@
 {
   "version": "5.0",
-  "generated_at": "2026-06-13T13:04:53.981989+00:00",
+  "generated_at": "2026-06-13T13:25:12.205902+00:00",
   "cycles_observed": 60,
-  "dominant_narrative": "risk_off",
-  "regime_shift": "RISK_OFF",
-  "regime_shift_confidence": 0.4128,
+  "dominant_narrative": "risk_on",
+  "regime_shift": "RISK_ON",
+  "regime_shift_confidence": 0.4289,
   "narratives": {
     "risk_on": {
       "label": "Risk-on sentiment returning",
@@ -18,14 +18,30 @@
         "Consumer Staples",
         "Utilities"
       ],
-      "frequency": 1,
-      "persistence": 10,
-      "acceleration": 0.0,
-      "score": 0.465,
+      "frequency": 3,
+      "persistence": 11,
+      "acceleration": 1.0,
+      "score": 0.775,
       "phrases": [
+        "all-time high",
         "buying the dip"
       ],
       "matched_articles": [
+        {
+          "ticker": "NUE",
+          "title": "Nucor Corp stock hits all-time high at 265.14 USD",
+          "source": "Investing.com"
+        },
+        {
+          "ticker": "STLD",
+          "title": "Steel Dynamics stock hits all-time high at $280.56",
+          "source": "Investing.com"
+        },
+        {
+          "ticker": "EXPD",
+          "title": "Expeditors International stock hits all-time high at 167.38 USD",
+          "source": "Investing.com"
+        },
         {
           "ticker": "LTC-USD",
           "title": "Litecoin Whales Are Buying the Dip \u2014 Can LTC Price Reclaim $60?",
@@ -129,12 +145,20 @@
         "Industrials"
       ],
       "sectors_out": [],
-      "frequency": 0,
-      "persistence": 0,
-      "acceleration": 0.0,
-      "score": 0.04,
-      "phrases": [],
-      "matched_articles": []
+      "frequency": 1,
+      "persistence": 1,
+      "acceleration": 1.0,
+      "score": 0.3187,
+      "phrases": [
+        "geopolitical tension"
+      ],
+      "matched_articles": [
+        {
+          "ticker": "KR",
+          "title": "Here\u2019s Why The Kroger Co. (KR) is a Defensive Stock to Buy Amid Geopolitical Tensions",
+          "source": "Yahoo Finance"
+        }
+      ]
     },
     "biotech_breakout": {
       "label": "Biotech / pharma breakout",
@@ -212,25 +236,19 @@
     }
   },
   "sector_pressure": {
-    "Technology": -0.075,
+    "Technology": 0.235,
     "Energy": 0.0,
-    "Industrials": 0.04,
+    "Industrials": 0.3187,
     "Health Care": 0.58,
     "Financials": 0.04,
-    "Consumer Discretionary": -0.075,
-    "Consumer Staples": 0.075,
-    "Communication Services": 0.465,
+    "Consumer Discretionary": 0.235,
+    "Consumer Staples": -0.235,
+    "Communication Services": 0.775,
     "Real Estate": 0.0,
-    "Utilities": 0.035,
+    "Utilities": -0.275,
     "Materials": 0.0
   },
   "history": [
-    {
-      "cycle_ts": "2026-06-12T18:06:43.396330+00:00",
-      "dominant_narrative": "risk_off",
-      "regime_shift": "RISK_OFF",
-      "score": 0.54
-    },
     {
       "cycle_ts": "2026-06-12T18:27:18.852213+00:00",
       "dominant_narrative": "risk_off",
@@ -584,7 +602,13 @@
       "dominant_narrative": "risk_off",
       "regime_shift": "RISK_OFF",
       "score": 0.54
+    },
+    {
+      "cycle_ts": "2026-06-13T13:25:12.205902+00:00",
+      "dominant_narrative": "risk_on",
+      "regime_shift": "RISK_ON",
+      "score": 0.775
     }
   ],
-  "headline_count": 312
+  "headline_count": 603
 }
