@@ -1,46 +1,90 @@
 {
   "version": "6.0",
-  "generated_at": "2026-06-13T17:03:47.060074+00:00",
+  "generated_at": "2026-06-13T17:26:11.137950+00:00",
   "tickers": {
-    "IWM": {
-      "ticker": "IWM",
+    "TEL": {
+      "ticker": "TEL",
+      "use_limit_order": true,
+      "limit_buffer_bps": 46,
+      "defer_to_next_cycle": false,
+      "opening_volatility": 0.0385,
+      "liquidity_score": 0.5817,
+      "extension_warning": false,
+      "timing_window": "now is TEL's typical daily-LOW window (13:00 ET) \u2014 historically favorable entry",
+      "rationale": "limit 46bps \u00b7 ATR/px 3.8% \u00b7 liq 0.58 \u00b7 now is TEL's typical daily-LOW window (13:00 ET) \u2014 historically favorable entry"
+    },
+    "NTAP": {
+      "ticker": "NTAP",
+      "use_limit_order": true,
+      "limit_buffer_bps": 150,
+      "defer_to_next_cycle": false,
+      "opening_volatility": 0.0501,
+      "liquidity_score": 0.4113,
+      "extension_warning": false,
+      "timing_window": "resting toward NTAP's ~118.1 floor (his low window is 09:30 ET) \u2014 limit 150bps below",
+      "rationale": "limit 150bps \u00b7 ATR/px 5.0% \u00b7 liq 0.41 \u00b7 resting toward NTAP's ~118.1 floor (his low window is 09:30 ET) \u2014 limit 150bps below"
+    },
+    "NDAQ": {
+      "ticker": "NDAQ",
+      "use_limit_order": false,
+      "limit_buffer_bps": 30,
+      "defer_to_next_cycle": false,
+      "opening_volatility": 0.0238,
+      "liquidity_score": 0.7498,
+      "extension_warning": false,
+      "timing_window": null,
+      "rationale": "clean entry \u00b7 ATR/px 2.4% \u00b7 liq 0.75"
+    },
+    "AJG": {
+      "ticker": "AJG",
+      "use_limit_order": true,
+      "limit_buffer_bps": 150,
+      "defer_to_next_cycle": false,
+      "opening_volatility": 0.0286,
+      "liquidity_score": 0.7935,
+      "extension_warning": false,
+      "timing_window": "resting toward AJG's ~196.66 floor (his low window is 15:00 ET) \u2014 limit 150bps below",
+      "rationale": "limit 150bps \u00b7 ATR/px 2.9% \u00b7 liq 0.79 \u00b7 resting toward AJG's ~196.66 floor (his low window is 15:00 ET) \u2014 limit 150bps below"
+    },
+    "TON-USD": {
+      "ticker": "TON-USD",
+      "use_limit_order": true,
+      "limit_buffer_bps": 42,
+      "defer_to_next_cycle": false,
+      "opening_volatility": 0.0319,
+      "liquidity_score": 0.0976,
+      "extension_warning": false,
+      "timing_window": null,
+      "rationale": "limit 42bps \u00b7 ATR/px 3.2% \u00b7 liq 0.10"
+    },
+    "UNP": {
+      "ticker": "UNP",
+      "use_limit_order": true,
+      "limit_buffer_bps": 150,
+      "defer_to_next_cycle": false,
+      "opening_volatility": 0.0227,
+      "liquidity_score": 0.561,
+      "extension_warning": false,
+      "timing_window": "resting toward UNP's ~264.96 floor (his low window is 10:00 ET) \u2014 limit 150bps below",
+      "rationale": "limit 150bps \u00b7 ATR/px 2.3% \u00b7 liq 0.56 \u00b7 resting toward UNP's ~264.96 floor (his low window is 10:00 ET) \u2014 limit 150bps below"
+    },
+    "AIZ": {
+      "ticker": "AIZ",
       "use_limit_order": true,
       "limit_buffer_bps": 150,
       "defer_to_next_cycle": false,
       "opening_volatility": 0.0209,
-      "liquidity_score": 1.0,
+      "liquidity_score": 0.4413,
       "extension_warning": false,
-      "timing_window": "resting toward IWM's ~281.8 floor (his low window is 11:30 ET) \u2014 limit 150bps below",
-      "rationale": "limit 150bps \u00b7 ATR/px 2.1% \u00b7 liq 1.00 \u00b7 resting toward IWM's ~281.8 floor (his low window is 11:30 ET) \u2014 limit 150bps below"
-    },
-    "JTO-USD": {
-      "ticker": "JTO-USD",
-      "use_limit_order": true,
-      "limit_buffer_bps": 106,
-      "defer_to_next_cycle": true,
-      "opening_volatility": 0.1234,
-      "liquidity_score": 0.4532,
-      "extension_warning": false,
-      "timing_window": null,
-      "rationale": "DEFER: ATR/price 12.3% \u2265 9% \u2014 untradeable"
-    },
-    "VLO": {
-      "ticker": "VLO",
-      "use_limit_order": true,
-      "limit_buffer_bps": 150,
-      "defer_to_next_cycle": false,
-      "opening_volatility": 0.0362,
-      "liquidity_score": 0.628,
-      "extension_warning": false,
-      "timing_window": "resting toward VLO's ~248.93 floor (his low window is 09:30 ET) \u2014 limit 150bps below",
-      "rationale": "limit 150bps \u00b7 ATR/px 3.6% \u00b7 liq 0.63 \u00b7 resting toward VLO's ~248.93 floor (his low window is 09:30 ET) \u2014 limit 150bps below"
+      "timing_window": "resting toward AIZ's ~246.63 floor (his low window is 09:30 ET) \u2014 limit 150bps below",
+      "rationale": "limit 150bps \u00b7 ATR/px 2.1% \u00b7 liq 0.44 \u00b7 resting toward AIZ's ~246.63 floor (his low window is 09:30 ET) \u2014 limit 150bps below"
     }
   },
   "summary": {
-    "tickers": 3,
-    "deferred": 1,
-    "limit_recommended": 3,
-    "market_orders_ok": -1
+    "tickers": 7,
+    "deferred": 0,
+    "limit_recommended": 6,
+    "market_orders_ok": 1
   },
   "config": {
     "atr_defer_ratio": 0.05,

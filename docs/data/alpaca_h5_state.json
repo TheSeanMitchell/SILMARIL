@@ -424,14 +424,14 @@
     "primary_symbol": null,
     "primary_qty": 0.0,
     "primary_market_value": 0.0,
-    "checked_at": "2026-06-13T17:03:48.528702+00:00"
+    "checked_at": "2026-06-13T17:26:14.194449+00:00"
   },
   "reason": "Live \u2014 configured; last run 2026-06-09T09:17:06",
   "seeded_at": "2026-05-11T05:00:26.087739+00:00",
   "genesis_at": "2026-05-11T05:08:53.396920+00:00",
   "last_cycle_summary": {
-    "time": "2026-06-13T17:03:48.720009+00:00",
-    "timestamp": "2026-06-13T17:03:48.720027+00:00",
+    "time": "2026-06-13T17:26:14.406446+00:00",
+    "timestamp": "2026-06-13T17:26:14.406466+00:00",
     "closed": 0,
     "opened": 0,
     "open_after": 0,
@@ -449,7 +449,7 @@
     "session": "closed",
     "is_extended": false
   },
-  "last_run": "2026-06-13T17:03:48.720098+00:00",
+  "last_run": "2026-06-13T17:26:14.406534+00:00",
   "sgov_sweep_last_cycle": {
     "attempted": false,
     "reason": "below min sweep $5.00",
@@ -460,7 +460,7 @@
   ],
   "sweep_protection": {
     "version": "4.0",
-    "checked_at": "2026-06-13T17:03:49.120328+00:00",
+    "checked_at": "2026-06-13T17:26:15.226956+00:00",
     "market_mode": "ATTACK",
     "force_sweep_floor_resolved": 10500.0,
     "stale_close_age_days": 5,
@@ -537,148 +537,43 @@
   "wordsmith": {
     "candidates": [
       {
-        "ticker": "LDO-USD",
-        "signal": "BUY",
-        "conviction": 0.8412124328638063,
-        "why": "words +0.68 (4 arts).",
-        "originated": true
-      },
-      {
-        "ticker": "XLM-USD",
-        "signal": "BUY",
-        "conviction": 0.8193627592829282,
-        "why": "words +0.64 (4 arts).",
-        "originated": true
-      },
-      {
-        "ticker": "NEAR-USD",
-        "signal": "BUY",
-        "conviction": 0.7210392281689769,
-        "why": "words +0.51 (4 arts).",
-        "originated": true
-      },
-      {
-        "ticker": "INJ-USD",
-        "signal": "BUY",
-        "conviction": 0.7210392281689769,
-        "why": "words +0.51 (5 arts).",
-        "originated": true
-      },
-      {
-        "ticker": "STRK-USD",
-        "signal": "BUY",
-        "conviction": 0.7210392281689769,
-        "why": "words +0.51 (5 arts).",
-        "originated": true
+        "ticker": "NTAP",
+        "signal": "STRONG_BUY",
+        "conviction": 0.7224492103984882,
+        "why": "words +0.61 (5 arts); catalyst: analyst upgrade."
       }
     ],
     "fed_debate_rows": 593,
     "note": "headlines-only book: entries require a FABLEBOY_5 BUY/STRONG_BUY; all safety rails unchanged"
   },
   "cycle_intents": {
-    "at": "2026-06-13T17:03:48.720070+00:00",
+    "at": "2026-06-13T17:26:14.406499+00:00",
     "session": "closed",
     "session_open": false,
     "composite_halt": false,
     "halt_reason": null,
-    "plans_offered": 5,
+    "plans_offered": 1,
     "buy_intents": [
       {
-        "ticker": "LDO-USD",
-        "signal": "BUY",
-        "conviction": 0.8412,
-        "originated": true,
-        "outcome": "blocked_signal_not_sell",
+        "ticker": "NTAP",
+        "signal": "STRONG_BUY",
+        "conviction": 0.6815,
+        "originated": false,
+        "outcome": "blocked_no_session_match",
         "intended_notional": 1159.36,
-        "reason": "signal HOLD is not SELL/STRONG_SELL"
-      },
-      {
-        "ticker": "XLM-USD",
-        "signal": "BUY",
-        "conviction": 0.8194,
-        "originated": true,
-        "outcome": "blocked_signal_not_sell",
-        "intended_notional": 1159.36,
-        "reason": "signal HOLD is not SELL/STRONG_SELL"
-      },
-      {
-        "ticker": "NEAR-USD",
-        "signal": "BUY",
-        "conviction": 0.721,
-        "originated": true,
-        "outcome": "blocked_signal_not_sell",
-        "intended_notional": 1159.36,
-        "reason": "signal HOLD is not SELL/STRONG_SELL"
-      },
-      {
-        "ticker": "INJ-USD",
-        "signal": "BUY",
-        "conviction": 0.721,
-        "originated": true,
-        "outcome": "blocked_signal_not_sell",
-        "intended_notional": 1159.36,
-        "reason": "signal HOLD is not SELL/STRONG_SELL"
-      },
-      {
-        "ticker": "STRK-USD",
-        "signal": "BUY",
-        "conviction": 0.721,
-        "originated": true,
-        "outcome": "blocked_signal_not_sell",
-        "intended_notional": 1159.36,
-        "reason": "signal HOLD is not SELL/STRONG_SELL"
+        "reason": "no usable session for order"
       }
     ],
     "decisions_this_cycle": [
       {
-        "ticker": "LDO-USD",
-        "category": "blocked_signal_not_buy",
-        "reason": "signal HOLD is not BUY/STRONG_BUY"
+        "ticker": "NTAP",
+        "category": "blocked_no_session_match",
+        "reason": "no usable session for order"
       },
       {
-        "ticker": "XLM-USD",
-        "category": "blocked_signal_not_buy",
-        "reason": "signal HOLD is not BUY/STRONG_BUY"
-      },
-      {
-        "ticker": "NEAR-USD",
-        "category": "blocked_signal_not_buy",
-        "reason": "signal HOLD is not BUY/STRONG_BUY"
-      },
-      {
-        "ticker": "INJ-USD",
-        "category": "blocked_signal_not_buy",
-        "reason": "signal HOLD is not BUY/STRONG_BUY"
-      },
-      {
-        "ticker": "STRK-USD",
-        "category": "blocked_signal_not_buy",
-        "reason": "signal HOLD is not BUY/STRONG_BUY"
-      },
-      {
-        "ticker": "LDO-USD",
+        "ticker": "NTAP",
         "category": "blocked_signal_not_sell",
-        "reason": "signal HOLD is not SELL/STRONG_SELL"
-      },
-      {
-        "ticker": "XLM-USD",
-        "category": "blocked_signal_not_sell",
-        "reason": "signal HOLD is not SELL/STRONG_SELL"
-      },
-      {
-        "ticker": "NEAR-USD",
-        "category": "blocked_signal_not_sell",
-        "reason": "signal HOLD is not SELL/STRONG_SELL"
-      },
-      {
-        "ticker": "INJ-USD",
-        "category": "blocked_signal_not_sell",
-        "reason": "signal HOLD is not SELL/STRONG_SELL"
-      },
-      {
-        "ticker": "STRK-USD",
-        "category": "blocked_signal_not_sell",
-        "reason": "signal HOLD is not SELL/STRONG_SELL"
+        "reason": "signal STRONG_BUY is not SELL/STRONG_SELL"
       }
     ]
   }

@@ -1,42 +1,77 @@
 {
   "version": "4.0",
-  "generated_at": "2026-06-13T17:03:47.053688+00:00",
+  "generated_at": "2026-06-13T17:26:11.128932+00:00",
   "assignments": [
     {
-      "ticker": "VLO",
+      "ticker": "AIZ",
       "account": "HARVEST_3",
-      "score": 0.8457,
+      "score": 0.6975,
       "is_elite": false,
       "is_urgent": false,
-      "rationale": "BUY conv 0.85 \u2192 best fit HARVEST_3 (score 0.85) [cap\u00d71.00]"
+      "rationale": "BUY conv 0.70 \u2192 best fit HARVEST_3 (score 0.70) [cap\u00d71.00]"
     },
     {
-      "ticker": "IWM",
+      "ticker": "TON-USD",
       "account": "HARVEST_3",
-      "score": 0.6816,
+      "score": 0.7129,
       "is_elite": false,
       "is_urgent": false,
-      "rationale": "BUY conv 0.68 \u2192 best fit HARVEST_3 (score 0.68) [cap\u00d71.00]"
+      "rationale": "BUY conv 0.71 \u2192 best fit HARVEST_3 (score 0.71) [cap\u00d71.00]"
     },
     {
-      "ticker": "JTO-USD",
+      "ticker": "UNP",
       "account": "LEGACY",
-      "score": 0.7752,
+      "score": 0.7019,
       "is_elite": false,
       "is_urgent": false,
-      "rationale": "BUY conv 0.78 \u2192 best fit LEGACY (score 0.78) [cap\u00d71.00]"
+      "rationale": "BUY conv 0.70 \u2192 best fit LEGACY (score 0.70) [cap\u00d71.00]"
+    },
+    {
+      "ticker": "AJG",
+      "account": "LEGACY",
+      "score": 0.9378,
+      "is_elite": false,
+      "is_urgent": false,
+      "rationale": "BUY conv 0.94 \u2192 best fit LEGACY (score 0.94) [cap\u00d71.00]"
+    },
+    {
+      "ticker": "NDAQ",
+      "account": "LEGACY",
+      "score": 0.8097,
+      "is_elite": false,
+      "is_urgent": false,
+      "rationale": "BUY conv 0.81 \u2192 best fit LEGACY (score 0.81) [cap\u00d71.00]"
+    },
+    {
+      "ticker": "NTAP",
+      "account": "HARVEST_5",
+      "score": 0.6815,
+      "is_elite": false,
+      "is_urgent": false,
+      "rationale": "STRONG_BUY conv 0.68 \u2192 best fit HARVEST_5 (score 0.68) [cap\u00d71.00]"
     }
   ],
-  "unassigned": [],
+  "unassigned": [
+    {
+      "ticker": "TEL",
+      "reason": "no enabled account meets fitness for this plan",
+      "plan_signal": "STRONG_BUY",
+      "plan_conviction": 1.2785
+    }
+  ],
   "by_account_tickers": {
     "LEGACY": [
-      "JTO-USD"
+      "UNP",
+      "AJG",
+      "NDAQ"
     ],
     "HARVEST_3": [
-      "VLO",
-      "IWM"
+      "AIZ",
+      "TON-USD"
     ],
-    "HARVEST_5": []
+    "HARVEST_5": [
+      "NTAP"
+    ]
   },
   "caps": {
     "LEGACY": 3,
@@ -44,9 +79,9 @@
     "HARVEST_5": 1
   },
   "used": {
-    "LEGACY": 1,
+    "LEGACY": 3,
     "HARVEST_3": 2,
-    "HARVEST_5": 0
+    "HARVEST_5": 1
   },
   "cap_multiplier": 1.0,
   "market_mode": "BALANCED",
