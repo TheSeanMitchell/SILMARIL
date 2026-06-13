@@ -1,6 +1,6 @@
 {
   "version": "6.0",
-  "generated_at": "2026-06-13T15:43:59.472134+00:00",
+  "generated_at": "2026-06-13T16:04:41.687490+00:00",
   "tickers": {
     "TON-USD": {
       "ticker": "TON-USD",
@@ -15,25 +15,14 @@
     },
     "IWM": {
       "ticker": "IWM",
-      "use_limit_order": false,
-      "limit_buffer_bps": 30,
+      "use_limit_order": true,
+      "limit_buffer_bps": 150,
       "defer_to_next_cycle": false,
       "opening_volatility": 0.0209,
       "liquidity_score": 1.0,
       "extension_warning": false,
-      "timing_window": "now is IWM's typical daily-LOW window (11:30 ET) \u2014 historically favorable entry",
-      "rationale": "now is IWM's typical daily-LOW window (11:30 ET) \u2014 historically favorable entry"
-    },
-    "INJ-USD": {
-      "ticker": "INJ-USD",
-      "use_limit_order": true,
-      "limit_buffer_bps": 93,
-      "defer_to_next_cycle": true,
-      "opening_volatility": 0.1053,
-      "liquidity_score": 0.5653,
-      "extension_warning": false,
-      "timing_window": null,
-      "rationale": "DEFER: ATR/price 10.5% \u2265 9% \u2014 untradeable"
+      "timing_window": "resting toward IWM's ~281.8 floor (his low window is 11:30 ET) \u2014 limit 150bps below",
+      "rationale": "limit 150bps \u00b7 ATR/px 2.1% \u00b7 liq 1.00 \u00b7 resting toward IWM's ~281.8 floor (his low window is 11:30 ET) \u2014 limit 150bps below"
     },
     "VLO": {
       "ticker": "VLO",
@@ -48,8 +37,8 @@
     }
   },
   "summary": {
-    "tickers": 4,
-    "deferred": 1,
+    "tickers": 3,
+    "deferred": 0,
     "limit_recommended": 3,
     "market_orders_ok": 0
   },
