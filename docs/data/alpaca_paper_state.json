@@ -17,10 +17,6 @@
       "qty": 3.581294738,
       "snapshots_30m": [
         {
-          "ts": "2026-06-13T17:03:47.574763+00:00",
-          "price": 272.7
-        },
-        {
           "ts": "2026-06-13T17:44:45.607816+00:00",
           "price": 272.7
         },
@@ -47,6 +43,10 @@
         {
           "ts": "2026-06-13T21:43:57.291536+00:00",
           "price": 272.7
+        },
+        {
+          "ts": "2026-06-13T22:25:32.712759+00:00",
+          "price": 272.7
         }
       ]
     },
@@ -56,10 +56,6 @@
       "first_seen": "2026-06-12T14:26:13.732701+00:00",
       "qty": 7.93696,
       "snapshots_30m": [
-        {
-          "ts": "2026-06-13T17:03:47.574524+00:00",
-          "price": 62.99
-        },
         {
           "ts": "2026-06-13T17:44:45.607466+00:00",
           "price": 62.99
@@ -86,6 +82,10 @@
         },
         {
           "ts": "2026-06-13T21:43:57.291177+00:00",
+          "price": 62.99
+        },
+        {
+          "ts": "2026-06-13T22:25:32.712352+00:00",
           "price": 62.99
         }
       ]
@@ -4251,8 +4251,8 @@
     }
   ],
   "last_cycle_summary": {
-    "time": "2026-06-13T22:04:13.623720+00:00",
-    "timestamp": "2026-06-13T22:04:13.623730+00:00",
+    "time": "2026-06-13T22:25:33.122596+00:00",
+    "timestamp": "2026-06-13T22:25:33.122609+00:00",
     "closed": 0,
     "opened": 0,
     "open_after": 6,
@@ -4278,7 +4278,7 @@
     "session": "closed",
     "is_extended": false
   },
-  "last_run": "2026-06-13T22:04:13.623995+00:00",
+  "last_run": "2026-06-13T22:25:33.122861+00:00",
   "grocery_pending_harvest": 2398.051499999999,
   "trading_capital": 9575.02,
   "realized_savings": 0.02,
@@ -4299,7 +4299,7 @@
     "primary_symbol": "SGOV",
     "primary_qty": 0.00016,
     "primary_market_value": 0.0161,
-    "checked_at": "2026-06-13T22:04:13.536496+00:00"
+    "checked_at": "2026-06-13T22:25:32.706951+00:00"
   },
   "sgov_sweep_last_cycle": {
     "attempted": false,
@@ -4342,7 +4342,7 @@
   ],
   "sweep_protection": {
     "version": "4.0",
-    "checked_at": "2026-06-13T22:04:14.169558+00:00",
+    "checked_at": "2026-06-13T22:25:35.885508+00:00",
     "market_mode": "ATTACK",
     "force_sweep_floor_resolved": 10500.0,
     "stale_close_age_days": 5,
@@ -4606,7 +4606,7 @@
     "open_seen": 5
   },
   "cycle_intents": {
-    "at": "2026-06-13T22:04:13.623762+00:00",
+    "at": "2026-06-13T22:25:33.122639+00:00",
     "session": "closed",
     "session_open": false,
     "composite_halt": false,
@@ -4614,18 +4614,18 @@
     "plans_offered": 2,
     "buy_intents": [
       {
-        "ticker": "VLO",
-        "signal": "BUY",
-        "conviction": 0.9089,
+        "ticker": "TEL",
+        "signal": "STRONG_BUY",
+        "conviction": 1.3056,
         "originated": false,
         "outcome": "blocked_no_session_match",
         "intended_notional": 766.0,
         "reason": "no usable session for order"
       },
       {
-        "ticker": "IWM",
+        "ticker": "NDAQ",
         "signal": "BUY",
-        "conviction": 0.7559,
+        "conviction": 0.8648,
         "originated": false,
         "outcome": "blocked_no_session_match",
         "intended_notional": 766.0,
@@ -4634,22 +4634,22 @@
     ],
     "decisions_this_cycle": [
       {
-        "ticker": "VLO",
+        "ticker": "TEL",
         "category": "blocked_no_session_match",
         "reason": "no usable session for order"
       },
       {
-        "ticker": "IWM",
+        "ticker": "NDAQ",
         "category": "blocked_no_session_match",
         "reason": "no usable session for order"
       },
       {
-        "ticker": "VLO",
+        "ticker": "TEL",
         "category": "blocked_signal_not_sell",
-        "reason": "signal BUY is not SELL/STRONG_SELL"
+        "reason": "signal STRONG_BUY is not SELL/STRONG_SELL"
       },
       {
-        "ticker": "IWM",
+        "ticker": "NDAQ",
         "category": "blocked_signal_not_sell",
         "reason": "signal BUY is not SELL/STRONG_SELL"
       }
