@@ -1,0 +1,78 @@
+name: Diagnose Alpaca Connection
+
+# Pings Alpaca's /v2/account endpoint with your stored secrets and prints
+# the result. No SILMARIL pipeline runs — pure connectivity test.
+#
+# Use this BEFORE blaming the keys when run_health says BROKEN. Possible
+# outcomes:
+#   ✓ HTTP 200 + account JSON     → keys are good, problem is elsewhere
+#   ✗ HTTP 401/403                → bad keys; regenerate in Alpaca dashboard
+#   ✗ HTTP 422                    → URL or payload malformed
+#   ✗ Timeout / connection error  → network issue at GitHub Actions side
+
+on:
+  workflow_dispatch:
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - name: Test ALPACA_API_KEY / ALPACA_API_SECRET against /v2/account
+        env:
+          ALPACA_API_KEY:    ${{ secrets.ALPACA_API_KEY }}
+          ALPACA_API_SECRET: ${{ secrets.ALPACA_API_SECRET }}
+        run: |
+          python3 << 'PYEOF'
+          import os, sys, urllib.request, urllib.error, json
+
+          KEY    = os.environ.get("ALPACA_API_KEY", "").strip()
+          SECRET = os.environ.get("ALPACA_API_SECRET", "").strip()
+          URL    = "https://paper-api.alpaca.markets/v2/account"
+
+          print(f"Key length:    {len(KEY)} chars  (expected ~20)")
+          print(f"Secret length: {len(SECRET)} chars  (expected ~40)")
+          if not KEY or not SECRET:
+              print("✗ FAIL: one or both secrets are empty after strip().")
+              print("  Re-paste in Settings → Secrets → Actions, no surrounding whitespace.")
+              sys.exit(1)
+          if " " in KEY or "\n" in KEY:
+              print("✗ FAIL: key contains whitespace/newline.")
+              sys.exit(1)
+          if " " in SECRET or "\n" in SECRET:
+              print("✗ FAIL: secret contains whitespace/newline.")
+              sys.exit(1)
+
+          req = urllib.request.Request(URL, headers={
+              "APCA-API-KEY-ID":     KEY,
+              "APCA-API-SECRET-KEY": SECRET,
+              "Content-Type":        "application/json",
+          })
+          try:
+              with urllib.request.urlopen(req, timeout=15) as r:
+                  body = json.loads(r.read())
+                  print(f"✓ HTTP 200 — keys work.")
+                  print(f"  account_number: {body.get('account_number')}")
+                  print(f"  status:         {body.get('status')}")
+                  print(f"  equity:         ${body.get('equity')}")
+                  print(f"  cash:           ${body.get('cash')}")
+                  print(f"  buying_power:   ${body.get('buying_power')}")
+                  print(f"  pattern_day_trader: {body.get('pattern_day_trader')}")
+                  print()
+                  print("If run_health still shows BROKEN after this passes, the issue")
+                  print("is in the cli.py wiring, NOT the credentials.")
+          except urllib.error.HTTPError as e:
+              body = e.read().decode("utf-8", errors="replace")
+              print(f"✗ HTTP {e.code} — {e.reason}")
+              print(f"  Response body: {body[:500]}")
+              if e.code in (401, 403):
+                  print()
+                  print("  → Keys are bad. Regenerate at https://app.alpaca.markets/")
+                  print("    Paper account → API Keys → 'Generate New Key'.")
+                  print("    Copy the SECRET immediately (only shown once).")
+                  print("    Repaste BOTH key and secret in GitHub Secrets.")
+              sys.exit(2)
+          except Exception as e:
+              print(f"✗ Connection error: {type(e).__name__}: {e}")
+              sys.exit(3)
+          PYEOF

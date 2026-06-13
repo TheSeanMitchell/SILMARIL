@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>💎</text></svg>">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SILMARIL · Daily Briefing</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,900&family=Spline+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0e1217; --bg2:#141a22; --card:#181f29; --line:#262f3c;
+    --ink:#eef2f6; --dim:#9aa7b6; --faint:#6b7787;
+    --gold:#e0b15e; --gold2:#caa04e;
+    --up:#5bd6a0; --down:#f08a8a; --warn:#e7c46a; --viol:#b59cf0; --blue:#7fb0f0;
+    --shadow:0 14px 40px rgba(0,0,0,.45);
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{
+    background:
+      radial-gradient(1200px 600px at 80% -10%, rgba(224,177,94,.07), transparent 60%),
+      radial-gradient(900px 500px at -10% 10%, rgba(127,176,240,.05), transparent 55%),
+      var(--bg);
+    color:var(--ink); font-family:"Spline Sans",system-ui,sans-serif;
+    line-height:1.55; -webkit-font-smoothing:antialiased; padding:0 0 64px;
+  }
+  .wrap{max-width:920px;margin:0 auto;padding:0 20px}
+  a{color:var(--gold);text-decoration:none}
+
+  /* header */
+  header{padding:42px 0 18px;border-bottom:1px solid var(--line);margin-bottom:26px}
+  .brand{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
+  .brand h1{font-family:"Fraunces",serif;font-weight:900;font-size:clamp(30px,6vw,46px);letter-spacing:-.5px;margin:0;background:linear-gradient(180deg,#fff,#d8c39a);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .brand .tag{font-size:12px;letter-spacing:.22em;text-transform:uppercase;color:var(--faint)}
+  .date{margin-top:6px;color:var(--dim);font-size:14px}
+  .lede{font-family:"Fraunces",serif;font-size:clamp(19px,3.4vw,26px);line-height:1.35;margin:20px 0 2px;color:#f4ead2;font-weight:500}
+  .lede b{color:var(--gold);font-weight:600}
+
+  /* layout */
+  section{margin:30px 0}
+  .sec-h{display:flex;align-items:center;gap:10px;margin:0 0 14px}
+  .sec-h .k{font-family:"Fraunces",serif;font-size:13px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);font-weight:600}
+  .sec-h .rule{flex:1;height:1px;background:linear-gradient(90deg,var(--line),transparent)}
+  .card{background:linear-gradient(180deg,var(--card),var(--bg2));border:1px solid var(--line);border-radius:16px;padding:20px 22px;box-shadow:var(--shadow)}
+  .grid{display:grid;gap:14px}
+  .g3{grid-template-columns:repeat(3,1fr)}
+  @media(max-width:720px){.g3{grid-template-columns:1fr}}
+  .muted{color:var(--dim);font-size:14.5px}
+  .plain{font-size:16px;color:#dde5ee}
+
+  /* the week / countdown */
+  .week{display:flex;gap:22px;align-items:center;flex-wrap:wrap}
+  .cd{flex:0 0 auto;text-align:center;padding:6px 4px}
+  .cd .n{font-family:"Fraunces",serif;font-weight:900;font-size:64px;line-height:.9;color:var(--gold)}
+  .cd .l{font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--dim);margin-top:6px}
+  .week .body{flex:1;min-width:240px}
+  .week .body h3{font-family:"Fraunces",serif;margin:0 0 4px;font-size:22px}
+  .timeline{display:flex;gap:0;margin:16px 0 2px;overflow-x:auto;padding-bottom:6px}
+  .ev{flex:1;min-width:96px;text-align:center;position:relative;padding-top:20px}
+  .ev:before{content:"";position:absolute;top:7px;left:0;right:0;height:2px;background:var(--line)}
+  .ev .dot{position:absolute;top:2px;left:50%;transform:translateX(-50%);width:12px;height:12px;border-radius:50%;background:var(--faint);border:2px solid var(--bg)}
+  .ev.vh .dot{background:var(--down)} .ev.ipo .dot{background:var(--gold);box-shadow:0 0 0 4px rgba(224,177,94,.18)}
+  .ev .d{font-size:11px;color:var(--faint)} .ev .t{font-size:12.5px;color:var(--ink);font-weight:500;margin-top:2px}
+  .ev .rel{font-size:10.5px;color:var(--dim);margin-top:1px}
+
+  /* accounts */
+  .acct h4{margin:0;font-size:15px;color:var(--dim);font-weight:600;letter-spacing:.02em}
+  .acct .eq{font-family:"Fraunces",serif;font-size:30px;font-weight:600;margin:4px 0 2px}
+  .acct .chg{font-size:14px;font-weight:600}
+  .bar{height:7px;border-radius:5px;background:#222b37;margin-top:12px;overflow:hidden}
+  .bar > i{display:block;height:100%;border-radius:5px}
+  .combined{margin-top:14px;text-align:center;color:var(--dim);font-size:14.5px}
+  .combined b{color:var(--ink);font-family:"Fraunces",serif;font-size:18px}
+
+  /* insights */
+  .insight{display:flex;gap:14px;align-items:flex-start;padding:16px 0;border-bottom:1px solid var(--line)}
+  .insight:last-child{border-bottom:0}
+  .ic{flex:0 0 auto;width:38px;height:38px;border-radius:10px;display:grid;place-items:center;font-size:19px;background:#1d2632;border:1px solid var(--line)}
+  .insight .h{font-weight:600;margin:0 0 2px;font-size:16px}
+  .insight .p{color:var(--dim);font-size:14.5px;margin:0}
+
+  /* trades */
+  .trade{display:grid;grid-template-columns:auto 1fr auto;gap:10px 14px;align-items:center;padding:12px 0;border-bottom:1px solid var(--line)}
+  .trade:last-child{border-bottom:0}
+  .pill{font-size:11px;font-weight:600;padding:3px 9px;border-radius:999px;letter-spacing:.04em}
+  .pill.buy{background:rgba(91,214,160,.13);color:var(--up)} .pill.sell{background:rgba(240,138,138,.13);color:var(--down)}
+  .trade .tk{font-weight:600;font-family:"Fraunces",serif;font-size:16px}
+  .trade .why{color:var(--dim);font-size:13.5px;grid-column:2/4}
+  @media(min-width:560px){.trade .why{grid-column:auto}}
+  .res{font-size:13px;font-weight:600;text-align:right;white-space:nowrap}
+
+  /* health */
+  .hbar{display:flex;height:30px;border-radius:9px;overflow:hidden;margin:6px 0 12px;border:1px solid var(--line)}
+  .hbar > div{display:grid;place-items:center;font-size:12px;font-weight:600;color:#0e1217}
+  .legend{display:flex;gap:18px;flex-wrap:wrap;color:var(--dim);font-size:13.5px}
+  .legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;vertical-align:middle}
+
+  footer{margin-top:42px;padding-top:20px;border-top:1px solid var(--line);color:var(--faint);font-size:13px;text-align:center}
+  .reveal{opacity:0;transform:translateY(10px);animation:rise .7s cubic-bezier(.2,.7,.3,1) forwards}
+  @keyframes rise{to{opacity:1;transform:none}}
+  .err{color:var(--down);font-size:14px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="reveal">
+    <div class="brand"><h1>SILMARIL</h1><span class="tag">Daily Briefing</span></div>
+    <div class="date" id="date">—</div>
+    <div class="lede" id="lede">Loading today’s picture…</div>
+  </header>
+
+  <section class="reveal" style="animation-delay:.05s">
+    <div class="sec-h"><span class="k">The week ahead</span><span class="rule"></span></div>
+    <div class="card" id="week"><div class="muted">Loading…</div></div>
+  </section>
+
+  <section class="reveal" style="animation-delay:.08s">
+    <div class="sec-h"><span class="k">What the news is saying</span><span class="rule"></span></div>
+    <div class="card" id="narrative"><div class="muted">Loading…</div></div>
+  </section>
+
+  <section class="reveal" style="animation-delay:.1s">
+    <div class="sec-h"><span class="k">How the news moved decisions</span><span class="rule"></span></div>
+    <div class="card" id="newsdecisions"><div class="muted">Loading…</div></div>
+  </section>
+
+  <section class="reveal" style="animation-delay:.1s">
+    <div class="sec-h"><span class="k">The money</span><span class="rule"></span></div>
+    <div class="grid g3" id="accts"></div>
+    <div class="combined" id="combined"></div>
+  </section>
+
+  <section class="reveal" style="animation-delay:.15s">
+    <div class="sec-h"><span class="k">What the system is learning</span><span class="rule"></span></div>
+    <div class="card" id="insights"><div class="muted">Loading…</div></div>
+  </section>
+
+  <section class="reveal" style="animation-delay:.17s">
+    <div class="sec-h"><span class="k" id="readiness-h">Going into the next session</span><span class="rule"></span></div>
+    <div class="card" id="readiness"><div class="muted">Loading…</div></div>
+  </section>
+
+  <section class="reveal" style="animation-delay:.2s">
+    <div class="sec-h"><span class="k">What it traded — and why</span><span class="rule"></span></div>
+    <div class="card" id="trades"><div class="muted">Loading…</div></div>
+  </section>
+
+  <section class="reveal" style="animation-delay:.25s">
+    <div class="sec-h"><span class="k">Is the data healthy?</span><span class="rule"></span></div>
+    <div class="card" id="health"><div class="muted">Loading…</div></div>
+  </section>
+
+  <footer class="reveal" style="animation-delay:.3s">
+    Read-only · paper trading (no real money) · numbers update each run.<br>
+    Want the full detail? Open the <a href="cockpit.html">Operator Cockpit</a> or the <a href="index.html">full dashboard</a>.
+  </footer>
+</div>
+
+<script>
+const $=id=>document.getElementById(id);
+const J=async f=>{try{const r=await fetch("data/"+f+"?t="+Date.now());if(!r.ok)return null;return await r.json();}catch(e){return null;}};
+const money=n=>n==null?"—":"$"+Number(n).toLocaleString(undefined,{maximumFractionDigits:0});
+const pct=n=>(n>0?"+":"")+Number(n).toFixed(1)+"%";
+const esc=t=>String(t==null?"":t).replace(/[<>]/g,"");
+const acctEq=s=>{const a=(s&&s.account)||{};return a.equity??a.portfolio_value??a.last_equity??(s&&s.trading_capital)??null;};
+
+(async function(){
+  const [scoring,leg,h3,h5,ipo,cat,deals,bench,edge,narr,sentinel,signals]=await Promise.all([
+    J("scoring.json"),J("alpaca_paper_state.json"),J("alpaca_h3_state.json"),J("alpaca_h5_state.json"),
+    J("ipo_intelligence.json"),J("catalyst_learning.json"),J("deal_journal.json"),J("benchmarking.json"),J("edge_study.json"),J("narrative_tracker.json"),J("drift_sentinel.json"),J("signals.json")
+  ]);
+
+  // ---------- header ----------
+  const active=(ipo&&ipo.active)||null;
+  const days=active?active.days_until:null;
+  const gen=(deals&&deals.generated_at)||(scoring&&scoring.generated_at)||(cat&&cat.generated_at);
+  $("date").textContent = gen ? new Date(gen).toLocaleString(undefined,{weekday:"long",month:"long",day:"numeric",hour:"numeric",minute:"2-digit"}) : "";
+
+  // accounts for the lede
+  const accs=[["LEGACY",leg],["HARVEST_3",h3],["HARVEST_5",h5]];
+  const eqs=accs.map(([n,s])=>acctEq(s)).filter(v=>typeof v==="number");
+  const principal=(leg&&leg.principal_target)||10000;
+  const combinedEq=eqs.reduce((a,b)=>a+b,0);
+  const avgChg=eqs.length?((combinedEq-principal*eqs.length)/(principal*eqs.length)*100):null;
+
+  // market move (week)
+  const wk=(bench&&bench.windows&&bench.windows["1w"])||{};
+  const qqqW=wk.qqq_return!=null?(wk.qqq_return*100):null;
+
+  let lede=`<b>${active?active.company:"The IPO"}</b> lists ${days!=null?(days<=0?"today":days===1?"tomorrow":"in "+days+" days"):"soon"}`;
+  lede += avgChg!=null ? `, and the three paper accounts are ${avgChg<0?"down":"up"} <b>${pct(avgChg)}</b> on average` : "";
+  lede += qqqW!=null && qqqW<-1 ? ` as the market pulls back into a heavy week.` : `.`;
+  $("lede").innerHTML=lede;
+
+  // ---------- the week ahead ----------
+  if(active){
+    const g=(cat&&cat.ipo_proximity&&cat.ipo_proximity.gauntlet)||[];
+    // plain summary of the gauntlet
+    const before=g.filter(e=>e.rel_to_ipo<0), after=g.filter(e=>e.rel_to_ipo>0);
+    const names=t=>t.map(e=>esc(e.label.replace(/MARKET /,"").replace(/_/g," "))).join(", ");
+    let txt = `The largest IPO in history${active.valuation_usd?` (about $${(active.valuation_usd/1e12).toFixed(1)} trillion)`:""} `+
+              `${days<=0?"is listing":"lists Friday"}. The system expects a bumpy week around it`+
+              (cat&&cat.clustering&&cat.clustering.elevated_ahead?` — several high-impact events cluster together.`:`.`);
+    let tl="";
+    if(g.length){
+      tl='<div class="timeline">'+g.map(e=>{
+        const cls=e.rel_to_ipo===0?"ipo":(e.magnitude==="very_high"?"vh":"");
+        const rel=e.rel_to_ipo===0?"IPO day":(Math.abs(e.rel_to_ipo)+"d "+(e.rel_to_ipo<0?"before":"after"));
+        const nm=e.rel_to_ipo===0?(active.ticker||"IPO"):esc(e.label.replace(/MARKET /,"").replace(/_/g," "));
+        return `<div class="ev ${cls}"><span class="dot"></span><div class="d">${esc((e.date||"").slice(5))}</div><div class="t">${nm}</div><div class="rel">${rel}</div></div>`;
+      }).join("")+'</div>';
+    }
+    $("week").innerHTML=`<div class="week"><div class="cd"><div class="n">${days!=null?(days<0?"•":days):"•"}</div><div class="l">${days===1?"day to go":"days to go"}</div></div>`+
+      `<div class="body"><h3>${esc(active.company)} · ${esc(active.ticker||"")}</h3><div class="plain">${txt}</div></div></div>`+tl+
+      (before.length||after.length?`<div class="muted" style="margin-top:10px">Before the debut: ${names(before)||"—"}. After: ${names(after)||"—"}.</div>`:"");
+  } else {
+    $("week").innerHTML='<div class="muted">No IPO is currently being tracked. The watch list rotates to the next one automatically when a date is set.</div>';
+  }
+
+  // ---------- what the news is saying (narrative engine) ----------
+  (function(){
+    const el=$("narrative"); if(!el) return;
+    if(!narr){el.innerHTML='<div class="muted">News read not available yet.</div>';return;}
+    const NL={ai_rally:"an AI rally",ai_cooldown:"an AI cooldown",risk_on:"risk-on appetite",risk_off:"a risk-off, defensive mood",
+      oil_rally:"an oil rally",oil_weakness:"oil weakness",defense_strength:"defense strength",biotech_breakout:"a biotech breakout",
+      retail_weakness:"retail weakness",fed_hawkish:"a hawkish Fed",fed_dovish:"a dovish Fed",rotation_explicit:"explicit sector rotation"};
+    const SH={RISK_ON:"leaning risk-on",RISK_OFF:"turning defensive",ROTATION:"rotating between sectors",NEUTRAL:"mixed / no clear tilt"};
+    const dom=narr.dominant_narrative, hc=narr.headline_count||0;
+    const sp=narr.sector_pressure||{};
+    const ents=Object.entries(sp).filter(([k,v])=>Math.abs(v)>0.001).sort((a,b)=>b[1]-a[1]);
+    const lead=ents.slice(0,2).filter(([k,v])=>v>0), fade=ents.slice(-2).filter(([k,v])=>v<0).reverse();
+    let txt=`Across <b>${hc.toLocaleString()} headlines</b>, the loudest story right now is <b>${NL[dom]||esc(String(dom||"no clear narrative").replace(/_/g," "))}</b>`;
+    txt+=narr.regime_shift?`, and the tape is <b>${SH[narr.regime_shift]||esc(narr.regime_shift)}</b>`:"";
+    txt+=".";
+    let flow="";
+    if(lead.length||fade.length){
+      flow=`<div class="muted" style="font-size:14.5px;margin-top:8px">News flow is pushing capital toward `+
+        (lead.map(([k,v])=>`<b style="color:var(--up)">${esc(k)}</b>`).join(", ")||"—")+
+        (fade.length?` and away from ${fade.map(([k,v])=>`<b style="color:var(--down)">${esc(k)}</b>`).join(", ")}`:"")+`.</div>`;
+    }
+    // active narratives with momentum
+    const nar=narr.narratives||{};
+    const active=Object.entries(nar).filter(([k,v])=>v&&(v.frequency||0)>0)
+      .sort((a,b)=>(b[1].frequency||0)-(a[1].frequency||0));
+    let chips="";
+    if(active.length){
+      chips='<div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:12px">'+active.slice(0,6).map(([k,v])=>{
+        const tag=(v.acceleration||0)>1?"gaining":(v.persistence||0)>2?"persistent":"emerging";
+        const col=tag==="gaining"?"var(--up)":tag==="persistent"?"var(--gold)":"var(--dim)";
+        return `<span style="font-size:12px;padding:4px 10px;border:1px solid var(--line);border-radius:999px"><b>${esc(String(k).replace(/_/g," "))}</b> <span style="color:${col}">· ${tag}</span></span>`;
+      }).join("")+'</div>';
+    }
+    el.innerHTML=`<div class="plain">${txt}</div>${flow}${chips}`+
+      `<div class="muted" style="font-size:12.5px;margin-top:12px">This read is computed from real headlines each cycle and feeds the system's positioning — sectors with fading news get trimmed, rising ones get room. It’s the "edge in words" working in the background.</div>`;
+  })();
+
+  // ---------- how the news moved decisions (headline -> sentiment -> vote) ----------
+  (function(){
+    const el=$("newsdecisions"); if(!el) return;
+    const debs=((signals&&signals.debates)||[]).filter(d=>typeof d.sentiment_score==="number");
+    if(!debs.length){el.innerHTML='<div class="muted">No per-ticker sentiment yet — populates as the live cycle runs.</div>';return;}
+    const sigOf=d=>((d.consensus&&d.consensus.signal)||d.signal||"—");
+    const col=s=>/BUY/.test(s)?"var(--up)":/SELL/.test(s)?"var(--down)":"var(--faint)";
+    const isBuy=s=>/BUY/.test(String(s)), isSell=s=>/SELL/.test(String(s));
+    const split=d=>{let b=0,s=0,h=0;((d.verdicts)||[]).forEach(v=>{const sg=String(v.signal||"").toUpperCase();if(/BUY/.test(sg))b++;else if(/SELL/.test(sg))s++;else h++;});return {b,s,h,n:b+s+h};};
+    const headline=d=>{const h=((d.recent_headlines)||[])[0];return (h&&h.title)?esc(String(h.title)).slice(0,96):"";};
+    const classify=d=>{const s=sigOf(d),sc=d.sentiment_score;
+      if(sc>=0.15&&isBuy(s))return "aligned_up";
+      if(sc<=-0.1&&isSell(s))return "aligned_down";
+      if(sc>=0.5&&!isBuy(s))return "diverge";
+      if(sc<=-0.5&&isBuy(s))return "diverge";
+      return "mixed";};
+
+    const withNews=debs.filter(d=>(d.article_count||0)>0).length;
+    const npos=debs.filter(d=>d.sentiment_score>0.15).length;
+    const nneg=debs.filter(d=>d.sentiment_score<-0.1).length;
+    const nneu=debs.length-npos-nneg;
+    const avg=debs.reduce((a,d)=>a+d.sentiment_score,0)/debs.length;
+    const totArt=debs.reduce((a,d)=>a+(d.article_count||0),0);
+    const moodWord=avg>0.12?"risk-on":avg<-0.08?"risk-off":"mixed";
+    const moodCol=avg>0.12?"var(--up)":avg<-0.08?"var(--down)":"var(--warn)";
+
+    const sec={};
+    debs.forEach(d=>{const k=d.sector||"—";if(k==="—")return;if(!sec[k])sec[k]={sum:0,n:0,art:0};sec[k].sum+=d.sentiment_score;sec[k].n++;sec[k].art+=(d.article_count||0);});
+    const secRows=Object.entries(sec).map(([k,v])=>({k,avg:v.sum/v.n,n:v.n,art:v.art})).filter(x=>x.n>=2).sort((a,b)=>b.avg-a.avg);
+    const secUp=secRows.filter(x=>x.avg>0.05).slice(0,4), secDown=secRows.filter(x=>x.avg<-0.05).slice(-3);
+
+    const sorted=[...debs].sort((a,b)=>Math.abs(b.sentiment_score)-Math.abs(a.sentiment_score));
+    const strongPos=sorted.filter(d=>d.sentiment_score>=0.5).slice(0,8);
+    const mildPos=sorted.filter(d=>d.sentiment_score>0.15&&d.sentiment_score<0.5).slice(0,5);
+    const neg=sorted.filter(d=>d.sentiment_score<=-0.1).slice(0,6);
+    const diverged=sorted.filter(d=>classify(d)==="diverge").slice(0,6);
+
+    const chip=(txt,c)=>`<span style="font-size:10.5px;padding:1px 6px;border-radius:9px;border:1px solid ${c};color:${c};margin-left:6px;white-space:nowrap">${txt}</span>`;
+    const evLabel={earnings:"earnings",guidance:"guidance",analyst:"analyst",m_and_a:"M&A",legal_reg:"legal",product:"product",leadership:"exec",capital:"capital",clinical:"FDA/trial",macro:"macro",insider:"insider",index:"index",short_report:"short attack",security:"cyber",ipo:"IPO"};
+    const evChips=d=>{const c={};((d.recent_headlines)||[]).forEach(h=>((h&&h.events)||[]).forEach(e=>{c[e]=(c[e]||0)+1;}));return Object.entries(c).sort((a,b)=>b[1]-a[1]).slice(0,2).map(([e])=>`<span style="font-size:10px;padding:1px 6px;border-radius:9px;background:var(--bg2);border:1px solid var(--line);color:var(--dim);margin-left:5px">${evLabel[e]||e}</span>`).join("");};
+    const HI_SIGNAL=new Set(["analyst","guidance","m_and_a","clinical","capital","legal_reg"]);
+    const catMark=d=>{const _l=d.news_catalyst_label;if(_l){const _c=(d.news_catalyst||0)>=0?"var(--up)":"var(--down)";return `<span title="decisive directional event — sharpened the vote" style="font-size:10px;padding:1px 7px;border-radius:9px;border:1px solid ${_c};color:${_c};margin-left:6px">\u26a1 ${esc(_l)}</span>`;}const sc=d.sentiment_score||0;if(Math.abs(sc)<0.5)return "";const has=((d.recent_headlines)||[]).some(h=>((h&&h.events)||[]).some(e=>HI_SIGNAL.has(e)));if(!has)return "";const c=sc>0?"var(--up)":"var(--down)";return `<span title="decisive directional event — sharpened the vote" style="font-size:10px;padding:1px 7px;border-radius:9px;border:1px solid ${c};color:${c};margin-left:6px">⚡ catalyst</span>`;};
+    const row=d=>{const s=sigOf(d),sc=d.sentiment_score,sp=split(d),cl=classify(d);
+      const hl=headline(d);
+      const divChip=cl==="diverge"?chip(sc>0?"bought weak / ignored good news":"agents went against it","var(--viol)"):"";
+      const voteStr=sp.n?`${sp.b} buy · ${sp.h} hold · ${sp.s} sell`:"";
+      return `<div style="padding:9px 0;border-bottom:1px solid var(--line)">`+
+        `<div style="display:grid;grid-template-columns:auto 1fr auto;gap:8px 12px;align-items:center">`+
+          `<span style="font-family:'Fraunces',serif;font-weight:600;font-size:15px">${esc(d.ticker)}${catMark(d)}</span>`+
+          `<span class="muted" style="font-size:13px"><span style="color:${sc>=0?'var(--up)':'var(--down)'}">${(sc>0?'+':'')+sc.toFixed(2)}</span> · ${d.article_count||0} art${d.article_count===1?'':'s'}${d.sector?' · '+esc(d.sector):''}${evChips(d)}</span>`+
+          `<span style="font-weight:600;font-size:13px;color:${col(s)};text-align:right">→ ${esc(s)}${divChip}</span>`+
+        `</div>`+
+        (hl?`<div class="muted" style="font-size:12px;margin-top:3px;opacity:.85">“${hl}”</div>`:"")+
+        (voteStr?`<div class="muted" style="font-size:11.5px;margin-top:2px;color:var(--faint)">${voteStr}</div>`:"")+
+      `</div>`;};
+
+    const grp=(label,c,arr)=>arr.length?`<div class="muted" style="font-size:12px;text-transform:uppercase;letter-spacing:.1em;margin:14px 0 2px;color:${c}">${label}</div>`+arr.map(row).join(""):"";
+
+    el.innerHTML=
+      `<div class="plain" style="margin-bottom:8px">This is the chain working in the open: real headlines → a per-name sentiment score → the agents' vote, with the vote split shown so you can see how strongly the desk leaned. Numbers validate later; the words move first.</div>`+
+      `<div style="display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 4px">`+
+        `<span style="background:var(--bg2);border:1px solid var(--line);border-radius:6px;padding:6px 10px;font-size:12px">tape mood <b style="color:${moodCol}">${moodWord}</b> · avg <b style="color:${moodCol}">${(avg>0?'+':'')+avg.toFixed(2)}</b></span>`+
+        `<span style="background:var(--bg2);border:1px solid var(--line);border-radius:6px;padding:6px 10px;font-size:12px"><b style="color:var(--up)">${npos}</b> positive · <b style="color:var(--down)">${nneg}</b> negative · <b>${nneu}</b> neutral</span>`+
+        `<span style="background:var(--bg2);border:1px solid var(--line);border-radius:6px;padding:6px 10px;font-size:12px"><b>${totArt}</b> headlines across <b>${withNews}</b>/${debs.length} names</span>`+
+      `</div>`+
+      ((secUp.length||secDown.length)?`<div class="muted" style="font-size:12.5px;margin:8px 0 2px">News flow is pushing toward `+
+        secUp.map(x=>`<span style="color:var(--up)">${esc(x.k)}</span>`).join(", ")+
+        (secDown.length?` and away from `+secDown.map(x=>`<span style="color:var(--down)">${esc(x.k)}</span>`).join(", "):"")+`.</div>`:"")+
+      grp("Strong positive news → leaned in","var(--up)",strongPos)+
+      grp("Mildly positive","var(--up)",mildPos)+
+      grp("Negative news → stepped back","var(--down)",neg)+
+      (diverged.length?`<div class="muted" style="font-size:12px;text-transform:uppercase;letter-spacing:.1em;margin:16px 0 2px;color:var(--viol)">Where the desk disagreed with the news</div>`+
+        `<div class="muted" style="font-size:12px;margin-bottom:4px">These are the most informative cases — price, trend and risk overrode the headline. Watch whether the numbers later prove the agents or the news right.</div>`+
+        diverged.map(row).join(""):"")+
+      `<div class="muted" style="font-size:12.5px;margin-top:12px">14 of the agents weight sentiment directly, so a strong headline can flip a vote from hold to buy — but the vote also weighs price, trend and risk, which is why some positive names still show caution and some negative names still get bought. Whether sentiment actually predicts the move is graded over time on the <a href="debug.html" style="color:var(--gold)">debug console → sentiment tab</a>.</div>`;
+  })();
+
+  // ---------- accounts ----------
+  $("accts").innerHTML=accs.map(([name,s])=>{
+    const eq=acctEq(s); const chg=eq!=null?((eq-principal)/principal*100):null;
+    const up=chg!=null&&chg>=0; const col=up?"var(--up)":"var(--down)";
+    const w=eq!=null?Math.max(4,Math.min(100,eq/principal*100)):0;
+    return `<div class="card acct"><h4>${name}</h4><div class="eq">${money(eq)}</div>`+
+      `<div class="chg" style="color:${col}">${chg!=null?pct(chg):"—"} <span style="color:var(--faint);font-weight:400">vs $${(principal/1000)}k</span></div>`+
+      `<div class="bar"><i style="width:${w}%;background:${col}"></i></div></div>`;
+  }).join("");
+  $("combined").innerHTML=eqs.length?`Combined: <b>${money(combinedEq)}</b> across ${eqs.length} paper accounts · ${avgChg<0?"a small drawdown as markets fall":"holding up"}.`:"";
+
+  // ---------- insights (plain English, from real data) ----------
+  const ins=[];
+  // 1) volatility / catalysts
+  if(cat&&cat.clustering){
+    const pw=cat.clustering.peak_window||{};
+    ins.push(["⚡","Expect a volatile week",
+      cat.clustering.elevated_ahead
+        ? `High-impact events bunch up around the IPO${pw.high_impact?` (${pw.high_impact} of them in the busiest stretch)`:""} — CPI inflation, a Fed decision and triple-witching all land within days. More events together usually means bigger swings.`
+        : `No unusual cluster of market-moving events in the next two weeks.`]);
+  }
+  // 2) deal-journal IPO-complex finding
+  if(deals&&deals.by_catalyst_class){
+    const ipoCls=deals.by_catalyst_class.find(r=>r.catalyst_class==="ipo_related");
+    if(ipoCls&&ipoCls.win_rate!=null){
+      ins.push(["🛰️","The IPO-adjacent names have been weak",
+        `Trades on SpaceX-adjacent stocks (the AI names, the underwriters) have only won about ${Math.round(ipoCls.win_rate*100)}% of the time lately as the market de-risks into the launch. The system is flagging this rather than leaning in.`]);
+    }
+  }
+  // 3) edge study, plain
+  if(edge&&edge.overall){
+    const o=edge.overall; const e=o.mean_edge_pct??o.edge_pct??o.mean_return_pct??o.mean_return;
+    if(e!=null){
+      ins.push(["📈","Where the early edge is",
+        `On clean readings, the system’s calls average ${(e>0?"+":"")+Number(e).toFixed(2)}% per call${o.t_stat?` (t≈${Number(o.t_stat).toFixed(1)})`:""}${o.win_rate!=null?`, winning ${Math.round(o.win_rate*100)}% of the time`:""}. ${o.verdict?esc(String(o.verdict)).replace(/_/g," ")+". ":""}Small and early — and only as trustworthy as clean data, which starts this week.`]);
+    }
+  }
+  // 4) catalyst learning forward note
+  if(deals&&deals.deals_count!=null){
+    ins.push(["📓","It’s keeping a trade diary",
+      `Every order is now logged with the news and reason behind it and linked to how it turned out — ${deals.deals_count} trades so far, ${deals.linked_count||0} with a known result. Wins and losses are kept equally so the system can learn from both.`]);
+  }
+  $("insights").innerHTML = ins.length ? ins.map(([i,h,p])=>`<div class="insight"><div class="ic">${i}</div><div><p class="h">${h}</p><p class="p">${p}</p></div></div>`).join("") : '<div class="muted">No learning summary yet.</div>';
+
+  // ---------- trades ----------
+  const rec=((deals&&deals.recent)||[]).filter(d=>d.context_basis==="live").slice(0,8);
+  const recAny=((deals&&deals.recent)||[]).slice(0,8);
+  const show=rec.length?rec:recAny;
+  if(show.length){
+    $("trades").innerHTML=show.map(d=>{
+      const side=(d.side||"").toLowerCase();
+      const why=(d.headlines&&d.headlines[0])?esc(d.headlines[0]):(d.catalyst_class&&d.catalyst_class!=="unknown"?esc(d.catalyst_class.replace(/_/g," ")):"no headline on record — silent-tape entry");
+      const oc=d.outcome;
+      let res;
+      if(oc&&oc.return_pct!=null){const r=Number(oc.return_pct);res=`<span style="color:${r>=0?"var(--up)":"var(--down)"}">${(r>0?"+":"")+r.toFixed(1)}%</span>`;}
+      else res=`<span style="color:var(--faint)">open</span>`;
+      return `<div class="trade"><span class="pill ${side}">${esc(d.side||"")}</span><div><span class="tk">${esc(d.ticker)}</span> <span class="muted" style="font-size:12px">· ${esc(d.account)}</span><div class="why">${why}</div></div><div class="res">${res}</div></div>`;
+    }).join("");
+  } else $("trades").innerHTML='<div class="muted">No recent trades logged with context yet — the diary fills as new orders are placed.</div>';
+
+  // ---------- going into the next session (readiness; day-aware) ----------
+  try{
+    const etNow=new Date(new Date().toLocaleString("en-US",{timeZone:"America/New_York"}));
+    const d=new Date(etNow); const closed=etNow.getHours()>=16;
+    do{ d.setDate(d.getDate()+( (d.getDay()===etNow.getDay()&&!closed&&d.getDay()>=1&&d.getDay()<=5)?0:1)); }
+    while(d.getDay()===0||d.getDay()===6);
+    const same=d.toDateString()===etNow.toDateString();
+    const names=["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+    const rh=document.getElementById("readiness-h");
+    if(rh) rh.textContent= same? "Going into today's session" : `Going into ${names[d.getDay()]}`;
+  }catch(e){}
+  const IPOCOMPLEX=new Set(["NVDA","AMD","AVGO","TSM","MU","PLTR","MSFT","GOOGL","META","TSLA","BA","LMT","RTX","NOC","GD","GS","MS","BAC","C","JPM"]);
+  let rhtml="", anyStale=false, totalHeld=0, totalIpo=0;
+  accs.forEach(([name,s])=>{
+    const held=((s&&s.positions_snapshot)||[]).map(p=>(p.symbol||p.ticker||"")).filter(Boolean);
+    totalHeld+=held.length;
+    const ipoHeld=held.filter(t=>IPOCOMPLEX.has(t)); totalIpo+=ipoHeld.length;
+    const sc=s&&s.last_stale_cancel; if(sc&&sc.cancelled>0)anyStale=true;
+    rhtml+=`<div style="padding:12px 0;border-bottom:1px solid var(--line)"><div style="display:flex;justify-content:space-between;align-items:baseline"><b>${name}</b><span class="muted" style="font-size:13px">${held.length} position${held.length===1?"":"s"}${ipoHeld.length?` · <span style="color:var(--viol)">${ipoHeld.length} IPO-complex</span>`:""}</span></div>`+
+      `<div class="muted" style="font-size:13.5px;margin-top:4px">${held.length?held.map(t=>IPOCOMPLEX.has(t)?`<span style="color:var(--viol)">${t}</span>`:t).join(" · "):"flat — no open positions"}</div>`+
+      (sc?`<div class="muted" style="font-size:12px;margin-top:5px;color:${sc.cancelled?"var(--warn)":"var(--faint)"}">stale-order cleanup: ${sc.cancelled} cancelled of ${sc.open_seen} open (last run)</div>`:"")+`</div>`;
+  });
+  $("readiness").innerHTML=
+    `<div class="plain" style="margin-bottom:10px">Here’s what the three accounts are carrying into the open — <b>${totalHeld} positions</b> total${totalIpo?`, including <b style="color:var(--viol)">${totalIpo} names tied to the SpaceX complex</b> (highlighted), which is the part most exposed to the IPO week’s swings`:""}.</div>`+
+    rhtml+
+    `<div class="muted" style="font-size:13px;margin-top:12px">A pre-cycle cleanup now cancels any unfilled order left sitting longer than two hours, so stale orders aren’t carried into the open or doubled-up on. ${anyStale?"":"It reports here each session as cycles run."}</div>`;
+
+
+  if(scoring&&scoring.outcomes){
+    const out=scoring.outcomes; const stale=out.filter(o=>o.stale_price_suspected).length; const clean=out.length-stale;
+    const cw=Math.round(clean/out.length*100), sw=100-cw;
+    $("health").innerHTML=
+      `<div class="plain" style="margin-bottom:8px">Of ${out.length.toLocaleString()} readings, <b style="color:var(--up)">${clean.toLocaleString()} are clean</b> and <b style="color:var(--warn)">${stale.toLocaleString()} were flagged stale</b> and set aside so they can’t pollute what the system learns.</div>`+
+      `<div class="hbar"><div style="width:${cw}%;background:var(--up)">${cw}% clean</div><div style="width:${sw}%;background:var(--warn)">${sw}% set aside</div></div>`+
+      `<div class="muted">The stale readings come from a known price-feed quirk on quiet days; they’re quarantined, not deleted. <b style="color:var(--ink)">every clean session extends the reliable record</b> — the thing to watch is whether clean readings climb while the stale share does not.</div>`+
+      (sentinel?(()=>{const ov=sentinel.overall;const col=ov==="fail"?"var(--down)":ov==="warn"?"var(--warn)":"var(--up)";const ic=ov==="pass"?"✓":ov==="warn"?"!":"✕";const bad=(sentinel.invariants||[]).filter(c=>c.status!=="pass");return `<div style="margin-top:14px;padding-top:12px;border-top:1px solid var(--line)"><span style="color:${col};font-weight:600">System integrity: ${esc(sentinel.summary||"")} ${ic}</span>`+(bad.length?`<div class="muted" style="font-size:12.5px;margin-top:5px">${bad.map(c=>`${esc(c.name.replace(/_/g," "))}: ${esc(c.detail)}`).join("<br>")}</div>`:`<div class="muted" style="font-size:12.5px;margin-top:4px">Baseline locked at $10k · narrative engine fed · accounts active · order hygiene on. A sentinel checks these every cycle and logs any drift.</div>`)+`</div>`;})():"");
+  } else $("health").innerHTML='<div class="err">Scoring data not available.</div>';
+})();
+
+  // ---------- universal stock links (ported) ----------
+  setTimeout(async function(){
+    try{
+      const s=await (await fetch("data/signals.json")).json();
+      const set=new Set((s.debates||[]).map(d=>d.ticker));
+      if(!set.size||!document.createTreeWalker) return;
+      const walker=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT,null);
+      const nodes=[];
+      while(walker.nextNode()){const n=walker.currentNode;
+        if(n.nodeValue && /[A-Z]{2,5}/.test(n.nodeValue) && n.parentElement && !n.parentElement.closest("a,script,style")) nodes.push(n);}
+      nodes.forEach(n=>{
+        const html=n.nodeValue.replace(/\b[A-Z]{2,5}\b/g,m=>set.has(m)?`<a href="stock.html?t=${m}" style="color:inherit;text-decoration:underline dotted;text-underline-offset:2px">${m}</a>`:m);
+        if(html!==n.nodeValue){const sp=document.createElement("span");sp.innerHTML=html;n.parentNode.replaceChild(sp,n);}});
+    }catch(e){}
+  }, 1600);
+</script>
+</body>
+</html>

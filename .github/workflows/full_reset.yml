@@ -1,0 +1,210 @@
+name: Full Reset (wipe everything)
+
+# NUCLEAR OPTION — manually triggered from Actions tab.
+# Wipes ALL state: risk, portfolios, scoring, learning, history, signals.
+# The site will be at complete factory defaults after the next Daily Run.
+#
+# What gets wiped:
+#   risk_state.json          — all agents unfrozen, $10K equity
+#   agent_portfolios.json    — all agents at $10K, no positions
+#   agent_beliefs.json       — Bayesian beliefs reset
+#   agent_evolution_cards.json — XP/levels reset (cards still exist at L1)
+#   scoring.json             — all outcome history cleared
+#   history.json             — all debate history cleared
+#   counterfactuals.json     — counterfactual log cleared
+#   drift_state.json         — drift detection reset
+#   anomaly_state.json       — anomaly cache cleared
+#   alpaca_paper_state.json  — Alpaca state cleared (NOT Alpaca account itself)
+#   alpaca_equity_curve.json — equity curve reset
+#   signals.json             — will be regenerated on next run
+#   trade_plans.json         — cleared
+#   handoff_blocks.json      — cleared
+#
+# What does NOT get wiped:
+#   reflections.json         — operator notes preserved (they're yours)
+#   docs/_backups/           — weekly backups preserved
+#   All HTML pages            — dashboard intact
+#
+# Use this when: you want a completely clean slate with no historical baggage.
+# After running: trigger a fresh Daily Run to repopulate from live data.
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirm:
+        description: 'Type FULL_RESET to confirm (this cannot be undone)'
+        required: true
+        default: ''
+
+permissions:
+  contents: write
+
+jobs:
+  full_reset:
+    runs-on: ubuntu-latest
+    if: github.event.inputs.confirm == 'FULL_RESET'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Backup learning files before wipe
+        run: |
+          python3 << 'EOF'
+          import json, shutil
+          from datetime import datetime, timezone
+          from pathlib import Path
+
+          out_dir = Path("docs/data")
+          backup_dir = out_dir / "_backups" / f"pre_full_reset_{datetime.now(timezone.utc).strftime('%Y%m%d_%H%M%S')}"
+          backup_dir.mkdir(parents=True, exist_ok=True)
+
+          # Back up anything that exists before wiping
+          to_backup = [
+              "agent_beliefs.json", "agent_evolution_cards.json",
+              "scoring.json", "history.json", "counterfactuals.json",
+              "risk_state.json", "agent_portfolios.json",
+              "alpaca_equity_curve.json", "alpaca_paper_state.json",
+          ]
+          backed = []
+          for fname in to_backup:
+              src = out_dir / fname
+              if src.exists():
+                  shutil.copy2(src, backup_dir / fname)
+                  backed.append(fname)
+          print(f"Backed up {len(backed)} files to {backup_dir}")
+          EOF
+
+      - name: Write clean default state for all files
+        run: |
+          python3 << 'EOF'
+          import json
+          from datetime import datetime, timezone
+          from pathlib import Path
+
+          out_dir = Path("docs/data")
+          out_dir.mkdir(parents=True, exist_ok=True)
+          now = datetime.now(timezone.utc).isoformat()
+          today = datetime.now(timezone.utc).date().isoformat()
+
+          AGENTS = [
+              "AEGIS", "FORGE", "THUNDERHEAD", "JADE", "VEIL", "KESTREL",
+              "OBSIDIAN", "ZENITH", "WEAVER", "HEX", "SYNTH", "SPECK",
+              "VESPA", "MAGUS", "TALON", "ATLAS", "NIGHTSHADE", "CICADA",
+              "SHEPHERD", "NOMAD", "BARNACLE", "KESTREL+",
+              "BARON", "STEADFAST", "SPORTS_BRO", "CONTRARIAN", "SHORT_ALPHA",
+          ]
+
+          # ── risk_state.json ──────────────────────────────────────────
+          (out_dir / "risk_state.json").write_text(json.dumps({
+              "generated_at": now,
+              "_reset_note": "Full reset via workflow. All state cleared.",
+              "config": {
+                  "max_single_position_pct": 0.25,
+                  "min_cash_buffer_pct": 0.0,
+                  "daily_drawdown_freeze_pct": 0.08,
+                  "daily_drawdown_unfreeze_pct": 0.04,
+                  "kill_weight_threshold": 0.85,
+                  "kill_min_calls": 15,
+                  "cohort_dd_threshold": 0.05,
+                  "cohort_dd_min_runs": 5,
+                  "min_reward_risk": 1.5,
+                  "max_risk_per_plan_pct": 0.02,
+              },
+              "system": {
+                  "safe_mode": False, "safe_mode_reason": "",
+                  "safe_mode_since": None,
+                  "cohort_avg_return_pct": 0.0, "cohort_history": [],
+              },
+              "agents": {a: {"agent": a, "frozen": False, "frozen_reason": "",
+                  "frozen_since": "", "last_equity": 10000.0,
+                  "peak_equity": 10000.0, "drawdown_pct": 0.0} for a in AGENTS},
+              "summary": {"frozen_count": 0, "total_count": len(AGENTS), "safe_mode": False},
+          }, indent=2, default=str))
+
+          # ── agent_portfolios.json ────────────────────────────────────
+          (out_dir / "agent_portfolios.json").write_text(json.dumps({
+              a: {"agent": a, "starting_equity": 10000.0, "current_equity": 10000.0,
+                  "cash": 10000.0, "current_position": None, "history": [],
+                  "equity_curve": [], "inception_date": today}
+              for a in AGENTS
+          }, indent=2, default=str))
+
+          # ── agent_beliefs.json ───────────────────────────────────────
+          (out_dir / "agent_beliefs.json").write_text(json.dumps(
+              {"generated_at": now, "beliefs": {}}, indent=2))
+
+          # ── agent_evolution_cards.json ───────────────────────────────
+          # Cards exist at Level 1, XP=0, clean slate
+          (out_dir / "agent_evolution_cards.json").write_text(json.dumps(
+              {a: {"agent": a, "inception_date": today, "xp": 0,
+                   "lifetime_calls": 0, "lifetime_wins": 0,
+                   "lifetime_strong_wins": 0, "lifetime_dissent_wins": 0,
+                   "best_win_streak": 0, "longest_active_days": 0,
+                   "achievements_unlocked": [], "specialties_mastered": [],
+                   "current_win_streak": 0, "last_call_date": None,
+                   "last_call_won": None, "timeline": []} for a in AGENTS},
+              indent=2))
+
+          # ── scoring.json ─────────────────────────────────────────────
+          (out_dir / "scoring.json").write_text(json.dumps(
+              {"generated_at": now, "outcomes": [], "summary": {}}, indent=2))
+
+          # ── history.json ─────────────────────────────────────────────
+          (out_dir / "history.json").write_text(json.dumps(
+              {"generated_at": now, "runs": []}, indent=2))
+
+          # ── counterfactuals.json ─────────────────────────────────────
+          (out_dir / "counterfactuals.json").write_text(json.dumps(
+              {"generated_at": now, "counterfactuals": []}, indent=2))
+
+          # ── drift_state.json ─────────────────────────────────────────
+          (out_dir / "drift_state.json").write_text(json.dumps(
+              {"generated_at": now, "drifting_agents": {}}, indent=2))
+
+          # ── anomaly_state.json ───────────────────────────────────────
+          (out_dir / "anomaly_state.json").write_text(json.dumps(
+              {"generated_at": now, "anomalies": {}}, indent=2))
+
+          # ── alpaca_paper_state.json ──────────────────────────────────
+          (out_dir / "alpaca_paper_state.json").write_text(json.dumps(
+              {"generated_at": now, "enabled": False,
+               "reason": "Reset by full_reset workflow. Will re-enable on next run.",
+               "account": {}, "orders_placed": [], "positions": [], "errors": []},
+              indent=2))
+
+          # ── alpaca_equity_curve.json ─────────────────────────────────
+          (out_dir / "alpaca_equity_curve.json").write_text(json.dumps(
+              {"generated_at": now, "snapshots": []}, indent=2))
+
+          # ── trade_plans.json ─────────────────────────────────────────
+          plans_path = out_dir / "trade_plans.json"
+          if plans_path.exists():
+              (out_dir / "trade_plans.json").write_text(json.dumps(
+                  {"generated_at": now, "plans": []}, indent=2))
+
+          # ── handoff_blocks.json ──────────────────────────────────────
+          handoff_path = out_dir / "handoff_blocks.json"
+          if handoff_path.exists():
+              handoff_path.write_text(json.dumps(
+                  {"generated_at": now, "blocks": []}, indent=2))
+
+          print(f"Full reset complete. {len(AGENTS)} agents initialized.")
+          print("Backup saved to docs/data/_backups/")
+          print("Trigger a Daily Run to repopulate with live data.")
+          EOF
+
+      - name: Commit reset
+        run: |
+          git config user.name 'silmaril-bot'
+          git config user.email 'silmaril-bot@users.noreply.github.com'
+          git add docs/data/
+          git diff --staged --quiet || git commit -m "💥 full reset — all state cleared, factory defaults $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          git push
+          echo "Full reset committed. Run the Daily Run workflow to start fresh."

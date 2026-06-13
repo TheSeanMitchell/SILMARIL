@@ -1,0 +1,582 @@
+{
+  "version": "5.0",
+  "generated_at": "2026-06-13T02:04:02.169474+00:00",
+  "cycles_observed": 60,
+  "dominant_narrative": "risk_off",
+  "regime_shift": "RISK_OFF",
+  "regime_shift_confidence": 0.4361,
+  "narratives": {
+    "risk_on": {
+      "label": "Risk-on sentiment returning",
+      "regime_bias": "RISK_ON",
+      "sectors_into": [
+        "Technology",
+        "Consumer Discretionary",
+        "Communication Services"
+      ],
+      "sectors_out": [
+        "Consumer Staples",
+        "Utilities"
+      ],
+      "frequency": 0,
+      "persistence": 9,
+      "acceleration": 0.0,
+      "score": 0.39,
+      "phrases": [],
+      "matched_articles": []
+    },
+    "risk_off": {
+      "label": "Risk-off / safe-haven buying",
+      "regime_bias": "RISK_OFF",
+      "sectors_into": [
+        "Consumer Staples",
+        "Utilities",
+        "Health Care"
+      ],
+      "sectors_out": [
+        "Technology",
+        "Consumer Discretionary"
+      ],
+      "frequency": 2,
+      "persistence": 60,
+      "acceleration": 0.0,
+      "score": 0.54,
+      "phrases": [
+        "risk off",
+        "risk-off"
+      ],
+      "matched_articles": [
+        {
+          "ticker": "DOT-USD",
+          "title": "Polkadot (DOT) Volatility Explained: Broad Risk Off, Technical Selling",
+          "source": "CoinMarketCap"
+        },
+        {
+          "ticker": "CRO-USD",
+          "title": "Cronos (CRO) Declines 3.5% Amid Broad Crypto Risk-Off Phase",
+          "source": "CoinMarketCap"
+        }
+      ]
+    },
+    "ai_rally": {
+      "label": "AI / Tech rally accelerating",
+      "regime_bias": "RISK_ON",
+      "sectors_into": [
+        "Technology"
+      ],
+      "sectors_out": [],
+      "frequency": 0,
+      "persistence": 0,
+      "acceleration": 0.0,
+      "score": 0.04,
+      "phrases": [],
+      "matched_articles": []
+    },
+    "ai_cooldown": {
+      "label": "AI rally cooling / stretched valuations",
+      "regime_bias": "ROTATION",
+      "sectors_into": [],
+      "sectors_out": [
+        "Technology"
+      ],
+      "frequency": 0,
+      "persistence": 0,
+      "acceleration": 0.0,
+      "score": 0.04,
+      "phrases": [],
+      "matched_articles": []
+    },
+    "oil_rally": {
+      "label": "Oil & energy strengthening",
+      "regime_bias": "ROTATION",
+      "sectors_into": [
+        "Energy"
+      ],
+      "sectors_out": [],
+      "frequency": 0,
+      "persistence": 0,
+      "acceleration": 0.0,
+      "score": 0.04,
+      "phrases": [],
+      "matched_articles": []
+    },
+    "oil_weakness": {
+      "label": "Oil / energy weakening",
+      "regime_bias": "NEUTRAL",
+      "sectors_into": [],
+      "sectors_out": [
+        "Energy"
+      ],
+      "frequency": 0,
+      "persistence": 0,
+      "acceleration": 0.0,
+      "score": 0.04,
+      "phrases": [],
+      "matched_articles": []
+    },
+    "defense_strength": {
+      "label": "Defense / aerospace strengthening on geopolitical risk",
+      "regime_bias": "ROTATION",
+      "sectors_into": [
+        "Industrials"
+      ],
+      "sectors_out": [],
+      "frequency": 0,
+      "persistence": 0,
+      "acceleration": 0.0,
+      "score": 0.04,
+      "phrases": [],
+      "matched_articles": []
+    },
+    "biotech_breakout": {
+      "label": "Biotech / pharma breakout",
+      "regime_bias": "ROTATION",
+      "sectors_into": [
+        "Health Care"
+      ],
+      "sectors_out": [],
+      "frequency": 0,
+      "persistence": 0,
+      "acceleration": 0.0,
+      "score": 0.04,
+      "phrases": [],
+      "matched_articles": []
+    },
+    "retail_weakness": {
+      "label": "Retail / discretionary weakness",
+      "regime_bias": "ROTATION",
+      "sectors_into": [],
+      "sectors_out": [
+        "Consumer Discretionary"
+      ],
+      "frequency": 0,
+      "persistence": 0,
+      "acceleration": 0.0,
+      "score": 0.04,
+      "phrases": [],
+      "matched_articles": []
+    },
+    "fed_hawkish": {
+      "label": "Fed hawkish / rate-hike fears",
+      "regime_bias": "RISK_OFF",
+      "sectors_into": [
+        "Financials"
+      ],
+      "sectors_out": [
+        "Technology",
+        "Real Estate",
+        "Utilities"
+      ],
+      "frequency": 0,
+      "persistence": 0,
+      "acceleration": 0.0,
+      "score": 0.04,
+      "phrases": [],
+      "matched_articles": []
+    },
+    "fed_dovish": {
+      "label": "Fed dovish / rate-cut expectations",
+      "regime_bias": "RISK_ON",
+      "sectors_into": [
+        "Technology",
+        "Consumer Discretionary",
+        "Real Estate"
+      ],
+      "sectors_out": [],
+      "frequency": 0,
+      "persistence": 0,
+      "acceleration": 0.0,
+      "score": 0.04,
+      "phrases": [],
+      "matched_articles": []
+    },
+    "rotation_explicit": {
+      "label": "Explicit rotation language in headlines",
+      "regime_bias": "ROTATION",
+      "sectors_into": [],
+      "sectors_out": [],
+      "frequency": 0,
+      "persistence": 0,
+      "acceleration": 0.0,
+      "score": 0.04,
+      "phrases": [],
+      "matched_articles": []
+    }
+  },
+  "sector_pressure": {
+    "Technology": -0.15,
+    "Energy": 0.0,
+    "Industrials": 0.04,
+    "Health Care": 0.58,
+    "Financials": 0.04,
+    "Consumer Discretionary": -0.15,
+    "Consumer Staples": 0.15,
+    "Communication Services": 0.39,
+    "Real Estate": 0.0,
+    "Utilities": 0.11,
+    "Materials": 0.0
+  },
+  "history": [
+    {
+      "cycle_ts": "2026-06-12T07:24:16.754000+00:00",
+      "dominant_narrative": "risk_off",
+      "regime_shift": "RISK_OFF",
+      "score": 0.54
+    },
+    {
+      "cycle_ts": "2026-06-12T07:44:12.101671+00:00",
+      "dominant_narrative": "risk_off",
+      "regime_shift": "RISK_OFF",
+      "score": 0.54
+    },
+    {
+      "cycle_ts": "2026-06-12T08:05:08.274483+00:00",
+      "dominant_narrative": "risk_off",
+      "regime_shift": "RISK_OFF",
+      "score": 0.54
+    },
+    {
+      "cycle_ts": "2026-06-12T08:23:45.284906+00:00",
+      "dominant_narrative": "risk_off",
+      "regime_shift": "RISK_OFF",
+      "score": 0.425
+    },
+    {
+      "cycle_ts": "2026-06-12T08:30:22.296506+00:00",
+      "dominant_narrative": "risk_off",
+      "regime_shift": "RISK_OFF",
+      "score": 0.7
+    },
+    {
+      "cycle_ts": "2026-06-12T08:44:25.425432+00:00",
+      "dominant_narrative": "risk_off",
+      "regime_shift": "RISK_OFF",
+      "score": 0.54
+    },
+    {
+      "cycle_ts": "2026-06-12T09:05:17.829467+00:00",
+      "dominant_narrative": "risk_off",
+      "regime_shift": "RISK_OFF",
+      "score": 0.54
+    },
+    {
+      "cycle_ts": "2026-06-12T09:23:40.215940+00:00",
+      "dominant_narrative": "risk_off",
+      "regime_shift": "RISK_OFF",
+      "score": 0.54
+    },
+    {
+      "cycle_ts": "2026-06-12T09:43:56.368322+00:00",
+      "dominant_narrative": "risk_off",
+      "regime_shift": "RISK_OFF",
+      "score": 0.425
+    },
+    {
+      "cycle_ts": "2026-06-12T10:05:12.881191+00:00",
+      "dominant_narrative": "risk_off",
+      "regime_shift": "RISK_OFF",
+      "score": 0.7
+    },
+    {
+      "cycle_ts": "2026-06-12T10:23:49.667599+00:00",
+      "dominant_narrative": "risk_off",
+      "regime_shift": "RISK_OFF",
+      "score": 0.54
+    },
+    {
+      "cycle_ts": "2026-06-12T10:43:43.971981+00:00",
+      "dominant_narrative": "risk_off",
+      "regime_shift": "RISK_OFF",
+      "score": 0.54
+    },
+    {
+      "cycle_ts": "2026-06-12T11:05:19.421347+00:00",
+      "dominant_narrative": "risk_off",
+      "regime_shift": "RISK_OFF",
+      "score": 0.695
+    },
+    {
+      "cycle_ts": "2026-06-12T11:23:51.277204+00:00",
+      "dominant_narrative": "risk_off",
+      "regime_shift": "RISK_OFF",
+      "score": 0.5
+    },
+    {
+      "cycle_ts": "2026-06-12T11:44:13.525530+00:00",
+      "dominant_narrative": "risk_off",
+      "regime_shift": "RISK_OFF",
+      "score": 0.54
+    },
+    {
+      "cycle_ts": "2026-06-12T12:05:27.054604+00:00",
+      "dominant_narrative": "risk_off",
+      "regime_shift": "RISK_OFF",
+      "score": 0.54
+    },
+    {
+      "cycle_ts": "2026-06-12T12:23:59.639222+00:00",
+      "dominant_narrative": "risk_off",
+      "regime_shift": "RISK_OFF",
+      "score": 0.54
+    },
+    {
+      "cycle_ts": "2026-06-12T12:45:55.867910+00:00",
+      "dominant_narrative": "risk_off",
+      "regime_shift": "RISK_OFF",
+      "score": 0.54
+    },
+    {
+      "cycle_ts": "2026-06-12T13:06:21.879105+00:00",
+      "dominant_narrative": "risk_off",
+      "regime_shift": "ROTATION",
+      "score": 0.54
+    },
+    {
+      "cycle_ts": "2026-06-12T13:27:10.940501+00:00",
+      "dominant_narrative": "risk_off",
+      "regime_shift": "RISK_OFF",
+      "score": 0.54
+    },
+    {
+      "cycle_ts": "2026-06-12T13:46:37.226361+00:00",
+      "dominant_narrative": "risk_off",
+      "regime_shift": "RISK_ON",
+      "score": 0.54
+    },
+    {
+      "cycle_ts": "2026-06-12T14:08:04.236989+00:00",
+      "dominant_narrative": "risk_off",
+      "regime_shift": "RISK_OFF",
+      "score": 0.54
+    },
+    {
+      "cycle_ts": "2026-06-12T14:26:16.990709+00:00",
+      "dominant_narrative": "risk_off",
+      "regime_shift": "RISK_OFF",
+      "score": 0.54
+    },
+    {
+      "cycle_ts": "2026-06-12T14:47:05.785866+00:00",
+      "dominant_narrative": "risk_off",
+      "regime_shift": "ROTATION",
+      "score": 0.54
+    },
+    {
+      "cycle_ts": "2026-06-12T15:03:22.381741+00:00",
+      "dominant_narrative": "risk_off",
+      "regime_shift": "RISK_OFF",
+      "score": 0.54
+    },
+    {
+      "cycle_ts": "2026-06-12T15:27:10.170814+00:00",
+      "dominant_narrative": "risk_off",
+      "regime_shift": "RISK_OFF",
+      "score": 0.54
+    },
+    {
+      "cycle_ts": "2026-06-12T15:47:20.641645+00:00",
+      "dominant_narrative": "risk_off",
+      "regime_shift": "RISK_OFF",
+      "score": 0.695
+    },
+    {
+      "cycle_ts": "2026-06-12T16:06:43.249387+00:00",
+      "dominant_narrative": "risk_off",
+      "regime_shift": "RISK_OFF",
+      "score": 0.5
+    },
+    {
+      "cycle_ts": "2026-06-12T16:19:44.770511+00:00",
+      "dominant_narrative": "risk_off",
+      "regime_shift": "RISK_ON",
+      "score": 0.54
+    },
+    {
+      "cycle_ts": "2026-06-12T16:46:52.347221+00:00",
+      "dominant_narrative": "risk_off",
+      "regime_shift": "ROTATION",
+      "score": 0.425
+    },
+    {
+      "cycle_ts": "2026-06-12T17:07:39.077694+00:00",
+      "dominant_narrative": "risk_off",
+      "regime_shift": "RISK_OFF",
+      "score": 0.7
+    },
+    {
+      "cycle_ts": "2026-06-12T17:26:32.239878+00:00",
+      "dominant_narrative": "risk_off",
+      "regime_shift": "RISK_ON",
+      "score": 0.54
+    },
+    {
+      "cycle_ts": "2026-06-12T17:46:05.317767+00:00",
+      "dominant_narrative": "risk_off",
+      "regime_shift": "RISK_OFF",
+      "score": 0.54
+    },
+    {
+      "cycle_ts": "2026-06-12T18:06:43.396330+00:00",
+      "dominant_narrative": "risk_off",
+      "regime_shift": "RISK_OFF",
+      "score": 0.54
+    },
+    {
+      "cycle_ts": "2026-06-12T18:27:18.852213+00:00",
+      "dominant_narrative": "risk_off",
+      "regime_shift": "RISK_OFF",
+      "score": 0.54
+    },
+    {
+      "cycle_ts": "2026-06-12T18:46:05.029874+00:00",
+      "dominant_narrative": "risk_off",
+      "regime_shift": "RISK_OFF",
+      "score": 0.54
+    },
+    {
+      "cycle_ts": "2026-06-12T19:07:07.600183+00:00",
+      "dominant_narrative": "risk_off",
+      "regime_shift": "RISK_ON",
+      "score": 0.54
+    },
+    {
+      "cycle_ts": "2026-06-12T19:26:26.426238+00:00",
+      "dominant_narrative": "risk_off",
+      "regime_shift": "RISK_OFF",
+      "score": 0.54
+    },
+    {
+      "cycle_ts": "2026-06-12T19:46:43.245634+00:00",
+      "dominant_narrative": "risk_off",
+      "regime_shift": "RISK_OFF",
+      "score": 0.54
+    },
+    {
+      "cycle_ts": "2026-06-12T20:06:42.462134+00:00",
+      "dominant_narrative": "risk_off",
+      "regime_shift": "RISK_ON",
+      "score": 0.54
+    },
+    {
+      "cycle_ts": "2026-06-12T20:26:23.201987+00:00",
+      "dominant_narrative": "risk_off",
+      "regime_shift": "ROTATION",
+      "score": 0.54
+    },
+    {
+      "cycle_ts": "2026-06-12T20:38:04.216699+00:00",
+      "dominant_narrative": "risk_off",
+      "regime_shift": "RISK_OFF",
+      "score": 0.54
+    },
+    {
+      "cycle_ts": "2026-06-12T20:44:44.709524+00:00",
+      "dominant_narrative": "risk_off",
+      "regime_shift": "RISK_OFF",
+      "score": 0.54
+    },
+    {
+      "cycle_ts": "2026-06-12T21:04:46.304921+00:00",
+      "dominant_narrative": "risk_off",
+      "regime_shift": "RISK_OFF",
+      "score": 0.54
+    },
+    {
+      "cycle_ts": "2026-06-12T21:26:15.444464+00:00",
+      "dominant_narrative": "risk_on",
+      "regime_shift": "RISK_ON",
+      "score": 0.625
+    },
+    {
+      "cycle_ts": "2026-06-12T21:44:17.957437+00:00",
+      "dominant_narrative": "risk_off",
+      "regime_shift": "RISK_OFF",
+      "score": 0.54
+    },
+    {
+      "cycle_ts": "2026-06-12T22:04:02.168889+00:00",
+      "dominant_narrative": "risk_off",
+      "regime_shift": "RISK_OFF",
+      "score": 0.54
+    },
+    {
+      "cycle_ts": "2026-06-12T22:17:46.432831+00:00",
+      "dominant_narrative": "risk_off",
+      "regime_shift": "RISK_OFF",
+      "score": 0.54
+    },
+    {
+      "cycle_ts": "2026-06-12T22:25:29.857762+00:00",
+      "dominant_narrative": "risk_on",
+      "regime_shift": "RISK_ON",
+      "score": 0.625
+    },
+    {
+      "cycle_ts": "2026-06-12T22:44:08.014770+00:00",
+      "dominant_narrative": "risk_off",
+      "regime_shift": "RISK_OFF",
+      "score": 0.54
+    },
+    {
+      "cycle_ts": "2026-06-12T23:04:17.736944+00:00",
+      "dominant_narrative": "risk_off",
+      "regime_shift": "RISK_OFF",
+      "score": 0.54
+    },
+    {
+      "cycle_ts": "2026-06-12T23:25:45.318732+00:00",
+      "dominant_narrative": "risk_on",
+      "regime_shift": "RISK_ON",
+      "score": 0.625
+    },
+    {
+      "cycle_ts": "2026-06-12T23:43:49.698362+00:00",
+      "dominant_narrative": "risk_off",
+      "regime_shift": "RISK_OFF",
+      "score": 0.54
+    },
+    {
+      "cycle_ts": "2026-06-13T00:04:34.538563+00:00",
+      "dominant_narrative": "risk_off",
+      "regime_shift": "RISK_OFF",
+      "score": 0.54
+    },
+    {
+      "cycle_ts": "2026-06-13T00:25:39.256950+00:00",
+      "dominant_narrative": "risk_on",
+      "regime_shift": "RISK_ON",
+      "score": 0.625
+    },
+    {
+      "cycle_ts": "2026-06-13T00:44:06.231323+00:00",
+      "dominant_narrative": "risk_off",
+      "regime_shift": "RISK_OFF",
+      "score": 0.54
+    },
+    {
+      "cycle_ts": "2026-06-13T01:04:02.785339+00:00",
+      "dominant_narrative": "risk_off",
+      "regime_shift": "RISK_ON",
+      "score": 0.425
+    },
+    {
+      "cycle_ts": "2026-06-13T01:26:03.227111+00:00",
+      "dominant_narrative": "risk_off",
+      "regime_shift": "RISK_OFF",
+      "score": 0.7
+    },
+    {
+      "cycle_ts": "2026-06-13T01:44:04.321394+00:00",
+      "dominant_narrative": "risk_off",
+      "regime_shift": "RISK_OFF",
+      "score": 0.54
+    },
+    {
+      "cycle_ts": "2026-06-13T02:04:02.169474+00:00",
+      "dominant_narrative": "risk_off",
+      "regime_shift": "RISK_OFF",
+      "score": 0.54
+    }
+  ],
+  "headline_count": 311
+}

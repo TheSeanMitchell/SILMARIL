@@ -1,0 +1,70 @@
+{
+  "version": "fees-truth-1.0",
+  "generated_at": "2026-06-13T02:04:09.219321+00:00",
+  "model": {
+    "sec_fee_per_million_sold": 27.8,
+    "taf_per_share_sold": 0.000166,
+    "taf_cap_per_order": 8.3,
+    "slippage_bps_market_orders": 2.0,
+    "crypto_taker_bps_future_zone": 25.0,
+    "note": "ESTIMATES of real-account drag paper trading never charges; rates are config \u2014 verify quarterly"
+  },
+  "round_trip_cost_per_1k": {
+    "market_orders": 0.4295,
+    "limit_orders": 0.0295,
+    "law": "every harvest floor must clear this number \u2014 a 'win' smaller than the round trip is a real-world loss"
+  },
+  "accounts": {
+    "LEGACY": {
+      "orders_seen": 268,
+      "buys": 205,
+      "sells": 59,
+      "estimation_gaps": 26,
+      "gap_note": "26 sell row(s) lack price/notional \u2014 TAF exact from qty; SEC/slippage under-counted there",
+      "est_lifetime_fees": {
+        "sec": 1.95,
+        "taf": 0.06,
+        "slippage": 31.44,
+        "total": 33.45
+      },
+      "paper_equity": 9575.07,
+      "net_of_fees_equity_view": 9541.62,
+      "lifetime_realized_pnl": 18.0,
+      "fees_vs_realized_pct": 185.8
+    },
+    "HARVEST_3": {
+      "orders_seen": 346,
+      "buys": 235,
+      "sells": 59,
+      "estimation_gaps": 59,
+      "gap_note": "59 sell row(s) lack price/notional \u2014 TAF exact from qty; SEC/slippage under-counted there",
+      "est_lifetime_fees": {
+        "sec": 1.46,
+        "taf": 0.08,
+        "slippage": 36.41,
+        "total": 37.94
+      },
+      "paper_equity": 9587.92,
+      "net_of_fees_equity_view": 9549.98,
+      "lifetime_realized_pnl": -8.0,
+      "fees_vs_realized_pct": 474.2
+    },
+    "HARVEST_5": {
+      "orders_seen": 24,
+      "buys": 20,
+      "sells": 4,
+      "estimation_gaps": 0,
+      "gap_note": "full coverage",
+      "est_lifetime_fees": {
+        "sec": 0.45,
+        "taf": 0.01,
+        "slippage": 7.76,
+        "total": 8.22
+      },
+      "paper_equity": 9661.38,
+      "net_of_fees_equity_view": 9653.16,
+      "lifetime_realized_pnl": -2.0,
+      "fees_vs_realized_pct": 411.0
+    }
+  }
+}

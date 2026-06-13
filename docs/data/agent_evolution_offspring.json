@@ -1,0 +1,40 @@
+{
+  "version": "6.0",
+  "proposed_at": "2026-06-13T02:04:02.344658+00:00",
+  "status": "PENDING_REVIEW",
+  "lineage": {
+    "parent_a": {
+      "codename": "AEGIS",
+      "level": 11,
+      "win_rate": 0.8034,
+      "lifetime_calls": 14259
+    },
+    "parent_b": {
+      "codename": "KESTREL+",
+      "level": 10,
+      "win_rate": 0.8324,
+      "lifetime_calls": 6198
+    },
+    "compatibility_score": 0.6294,
+    "compatibility_reasons": [
+      "similar caliber"
+    ]
+  },
+  "offspring": {
+    "proposed_codename": "PHOENIX",
+    "specialty": "Hybrid specialist \u2014 inherits AEGIS's pacing and KESTREL+'s timing",
+    "temperament": "Patient on entries (from AEGIS), aggressive on profit-take (from KESTREL+)",
+    "asset_classes": [
+      "equity",
+      "etf"
+    ],
+    "inherited_lifts": {
+      "regimes": {},
+      "sectors": {},
+      "archetypes": {}
+    },
+    "starting_capital": 10000.0,
+    "rationale": "PARENT_A=AEGIS(L11,80%) \u00d7 PARENT_B=KESTREL+(L10,83%) \u2014 similar caliber; compatibility=0.63"
+  },
+  "next_steps": "Review the offspring spec. If approved, scaffold the agent at silmaril/agents/phoenix.py inheriting from Agent base, applying the inherited_lifts inside _judge(). Then add it to silmaril/senate/candidates.py CANDIDATE_REGISTRY."
+}

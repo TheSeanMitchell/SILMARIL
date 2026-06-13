@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Position Correlation Matrix — SILMARIL</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+  body { background: #0a0e14; color: #d8e0e8; font-family: 'Inter', -apple-system, system-ui, sans-serif; margin: 0; padding: 24px; }
+  .container { max-width: 1100px; margin: 0 auto; }
+  h1 { color: #ffd166; font-weight: 600; }
+  table { width: 100%; border-collapse: collapse; margin-top: 16px; font-size: 13px; }
+  th, td { padding: 8px 12px; border-bottom: 1px solid #1c2229; }
+  th { color: #95a4b3; font-weight: 500; text-transform: uppercase; letter-spacing: 0.05em; font-size: 11px; }
+  tr:hover td { background: #11161e; }
+  .num { text-align: right; font-variant-numeric: tabular-nums; }
+  .alert { padding: 14px 18px; border-radius: 8px; background: #3a3010; color: #ffd166; border: 1px solid #6e5a1f; margin: 8px 0; }
+  .alert.severe { background: #3b1212; color: #ff7a7a; border-color: #6e2222; }
+  .corr-high { color: #ff7a7a; font-weight: 600; }
+  .corr-mid { color: #ffd166; }
+  .corr-low { color: #95a4b3; }
+  .meta { color: #6c7886; font-size: 12px; margin-top: 32px; }
+  a { color: #79b8ff; }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>🔗 Position Correlation Matrix</h1>
+  <p style="color:#95a4b3;max-width:780px;line-height:1.6;">
+    When multiple agent portfolios independently take positions in highly-correlated
+    assets, the platform appears diversified but is actually concentrated. This page
+    surfaces those hidden risks. Updated nightly.
+  </p>
+  <div id="alerts"></div>
+  <h3 style="color:#95a4b3;font-weight:500;margin-top:32px;">Pairwise correlations</h3>
+  <div id="pairs"></div>
+  <p class="meta">
+    Loaded from <a href="data/correlation_history.json">data/correlation_history.json</a>.
+    Computed by <a href="https://github.com/TheSeanMitchell/SILMARIL/blob/main/silmaril/learning/correlation_matrix.py">correlation_matrix.py</a>.
+  </p>
+</div>
+<script>
+fetch('data/correlation_history.json').then(r => r.json()).then(d => {
+  const snaps = d.snapshots || [];
+  const latest = snaps[snaps.length - 1];
+  if (!latest) {
+    document.getElementById('alerts').innerHTML = '<p style="color:#6c7886;">No correlation snapshots yet.</p>';
+    return;
+  }
+  const $a = document.getElementById('alerts');
+  const alerts = latest.concentration_alerts || [];
+  if (alerts.length === 0) {
+    $a.innerHTML = '<div class="alert" style="background:#073b3a;color:#7cf5d9;border-color:#1d6e6b;">✓ No concentration alerts. Portfolios are properly diversified.</div>';
+  } else {
+    let h = '<h3 style="color:#95a4b3;font-weight:500;">⚠ Concentration alerts</h3>';
+    alerts.forEach(a => {
+      if (a.single_name_concentration) {
+        h += `<div class="alert severe">
+          <strong>${a.ticker}</strong> held by ${a.holders.length} agents: ${a.holders.join(', ')}
+        </div>`;
+      } else {
+        h += `<div class="alert">
+          <strong>${a.ticker_a} ↔ ${a.ticker_b}</strong> correlation ${a.correlation}
+          — ${a.total_agents_exposed.length} agents collectively exposed
+        </div>`;
+      }
+    });
+    $a.innerHTML = h;
+  }
+
+  const pairs = (latest.pairs || []).filter(p => Math.abs(p[2]) > 0.3);
+  pairs.sort((x, y) => Math.abs(y[2]) - Math.abs(x[2]));
+  let h = '<table><thead><tr><th>Asset A</th><th>Asset B</th><th class="num">Correlation</th></tr></thead><tbody>';
+  pairs.slice(0, 50).forEach(p => {
+    const cls = Math.abs(p[2]) > 0.7 ? 'corr-high' : Math.abs(p[2]) > 0.5 ? 'corr-mid' : 'corr-low';
+    h += `<tr><td>${p[0]}</td><td>${p[1]}</td><td class="num ${cls}">${p[2].toFixed(3)}</td></tr>`;
+  });
+  h += '</tbody></table>';
+  document.getElementById('pairs').innerHTML = h;
+}).catch(err => {
+  document.getElementById('alerts').innerHTML = '<p style="color:#6c7886;">No correlation data yet.</p>';
+});
+</script>
+</body>
+</html>

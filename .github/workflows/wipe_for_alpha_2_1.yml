@@ -1,0 +1,280 @@
+name: Wipe for Alpha 2.1 (fresh start)
+
+# Resets the SITE state to Alpha 2.1 baseline:
+#   - Wipes agent_portfolios.json    (all agents back to $10K, $0 savings)
+#   - Wipes alpaca_paper_state.json  (clean tracker — does NOT touch your
+#     actual Alpaca paper account; you reset that in Alpaca's dashboard)
+#   - Wipes scoring.json, history.json, drift_state.json, trade_plans.json
+#   - Wipes risk_state.json so all agents are unfrozen
+#   - Wipes anomaly_state.json so the catalyst feed starts fresh
+#   - Resets dollar compounders (Scrooge, Midas, Cryptobro, JRR, Sports Bro)
+#
+# What's PRESERVED (learning state — the entire reason we have a system):
+#   - agent_beliefs.json       (Bayesian winrate posteriors)
+#   - agent_evolution_cards.json (XP / level cards — only grow, never reset)
+#   - reflections.json         (your operator notes)
+#   - Anything in PROTECTED_LEARNING_FILES list
+#   - All HTML pages
+#   - docs/data/_backups/      (weekly backups)
+#
+# Use this to start the official Alpha 2.1 clock with clean numbers.
+# After running: also reset your Alpaca paper account in Alpaca's dashboard
+# (and rotate the keys), then trigger Daily Run.
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirm:
+        description: 'Type ALPHA_21 to confirm wipe (case-sensitive)'
+        required: true
+        default: ''
+
+permissions:
+  contents: write
+
+jobs:
+  wipe:
+    if: github.event.inputs.confirm == 'ALPHA_21'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: { fetch-depth: 0, token: '${{ secrets.GITHUB_TOKEN }}' }
+
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.11' }
+
+      - name: Snapshot learning state before wipe
+        run: |
+          python3 << 'PYEOF'
+          from pathlib import Path
+          try:
+              from silmaril.learning.persistence_guard import backup_learning_state
+              archive = backup_learning_state(
+                  Path('docs/data'),
+                  Path('docs/data/_backups'),
+                  label='pre_alpha21_wipe',
+              )
+              print(f"[wipe] Pre-wipe snapshot: {archive}")
+          except Exception as e:
+              print(f"[wipe] Snapshot failed (continuing anyway): {e}")
+          PYEOF
+
+      - name: Reset state files
+        run: |
+          python3 << 'PYEOF'
+          import json
+          from datetime import datetime, timezone
+          from pathlib import Path
+
+          out = Path('docs/data')
+          out.mkdir(parents=True, exist_ok=True)
+          now = datetime.now(timezone.utc)
+          today = now.date().isoformat()
+
+          AGENTS = [
+              "AEGIS", "FORGE", "THUNDERHEAD", "JADE", "VEIL", "KESTREL", "KESTREL+",
+              "OBSIDIAN", "ZENITH", "WEAVER", "HEX", "SYNTH", "SPECK", "VESPA",
+              "MAGUS", "TALON", "BARON", "STEADFAST", "CONTRARIAN", "SHORT_ALPHA",
+              "NOMAD", "BARNACLE", "ATLAS", "NIGHTSHADE", "CICADA", "SHEPHERD", "BIOS",
+          ]
+
+          # 1. agent_portfolios.json — all agents back to $10K, $0 savings
+          portfolios = {}
+          for a in AGENTS:
+              portfolios[a] = {
+                  "agent": a,
+                  "starting_equity": 10000.0,
+                  "current_equity": 10000.0,
+                  "cash": 10000.0,
+                  "savings": 0.0,
+                  "current_position": None,
+                  "history": [{
+                      "date": today,
+                      "timestamp": now.isoformat(),
+                      "action": "RESET",
+                      "reason": "Alpha 2.1 fresh start — clean baseline",
+                      "version": "2.1",
+                  }],
+                  "equity_curve": [],
+                  "inception_date": today,
+                  "lifetime_total": 10000.0,
+                  "principal_target": 10000.0,
+              }
+          portfolios["_summary"] = {
+              "total_savings_all_agents": 0.0,
+              "total_lifetime_value": 10000.0 * len(AGENTS),
+              "agent_count": len(AGENTS),
+              "generated_at": now.isoformat(),
+              "version": "2.1",
+          }
+          (out / "agent_portfolios.json").write_text(json.dumps(portfolios, indent=2, default=str))
+          print(f"[wipe] agent_portfolios.json: {len(AGENTS)} agents at $10K, $0 savings")
+
+          # 2. alpaca_paper_state.json — clean tracker
+          # NOTE: This does NOT reset your actual Alpaca account. Do that
+          # separately in your Alpaca dashboard (Reset Paper Account button).
+          alpaca = {
+              "version": "2.1",
+              "enabled": False,
+              "account": {},
+              "principal_target": 100000,
+              "savings": 0.0,
+              "lifetime_realized_wins": 0,
+              "lifetime_realized_losses": 0,
+              "position_meta": {},
+              "tickers_traded_this_cycle": [],
+              "recent_alpaca_tickers": [],
+              "orders": [],
+              "orders_placed": [],
+              "errors": [],
+              "last_run": None,
+              "_reset_at": now.isoformat(),
+              "_reset_note": "Alpha 2.1 fresh start. Reset your Alpaca paper account separately.",
+          }
+          (out / "alpaca_paper_state.json").write_text(json.dumps(alpaca, indent=2, default=str))
+          print("[wipe] alpaca_paper_state.json: cleared")
+
+          # 3. risk_state.json — all agents unfrozen
+          risk = {
+              "generated_at": now.isoformat(),
+              "agents": {a: {
+                  "agent": a, "frozen": False, "frozen_reason": "",
+                  "frozen_since": "", "last_equity": 10000.0,
+                  "peak_equity": 10000.0, "drawdown_pct": 0.0,
+              } for a in AGENTS},
+              "summary": {"frozen_count": 0, "total_count": len(AGENTS), "safe_mode": False},
+              "system": {"safe_mode": False, "safe_mode_reason": "",
+                         "safe_mode_since": "", "cohort_avg_return_pct": 0.0,
+                         "cohort_history": []},
+          }
+          (out / "risk_state.json").write_text(json.dumps(risk, indent=2, default=str))
+          print(f"[wipe] risk_state.json: {len(AGENTS)} agents unfrozen")
+
+          # 4. scoring.json — clean outcomes
+          (out / "scoring.json").write_text(json.dumps({
+              "generated_at": now.isoformat(),
+              "outcomes": [],
+              "summary": {},
+              "_note": f"Alpha 2.1 reset on {today}",
+          }, indent=2, default=str))
+          print("[wipe] scoring.json: cleared")
+
+          # 5. history.json — clean debate history
+          (out / "history.json").write_text(json.dumps({
+              "generated_at": now.isoformat(),
+              "runs": [],
+              "_note": f"Alpha 2.1 reset on {today}",
+          }, indent=2, default=str))
+          print("[wipe] history.json: cleared")
+
+          # 6. drift_state.json — clean drift detection
+          (out / "drift_state.json").write_text(json.dumps({
+              "generated_at": now.isoformat(),
+              "drifting_agents": {},
+              "_note": f"Alpha 2.1 reset on {today}",
+          }, indent=2, default=str))
+          print("[wipe] drift_state.json: cleared")
+
+          # 7. anomaly_state.json — clean
+          (out / "anomaly_state.json").write_text(json.dumps({
+              "generated_at": now.isoformat(),
+              "active_anomalies": [],
+              "_note": f"Alpha 2.1 reset on {today}",
+          }, indent=2, default=str))
+          print("[wipe] anomaly_state.json: cleared")
+
+          # 8. Dollar compounders — reset to seed capital
+          for codename, seed in [
+              ("scrooge", 1.0),
+              ("midas", 1.0),
+              ("cryptobro", 10.0),
+              ("jrr_token", 1.0),
+              ("sports_bro", 10.0),
+          ]:
+              path = out / f"{codename}.json"
+              base = {
+                  "codename": codename.upper(),
+                  "balance": seed,
+                  "lifetime_peak": seed,
+                  "current_life": 1,
+                  "life_start_date": today,
+                  "history": [{
+                      "date": today, "timestamp": now.isoformat(),
+                      "action": "RESET", "version": "2.1",
+                  }],
+                  "deaths": [],
+                  "actions_this_life": 1,
+                  "current_position": None,
+              }
+              if codename == "jrr_token":
+                  base["tiers"] = {
+                      "sub_100m": {"balance": seed/2, "current_position": None, "recent_history": []},
+                      "over_100m": {"balance": seed/2, "current_position": None, "recent_history": []},
+                  }
+              if codename == "sports_bro":
+                  base["open_bets"] = []
+                  base["trades_today"] = 0
+                  base["max_trades_per_day"] = 8
+              path.write_text(json.dumps(base, indent=2, default=str))
+              print(f"[wipe] {codename}.json: reset to ${seed}")
+
+          # 9. Trade plans + signals — let the next daily run regenerate
+          for f in ["trade_plans.json", "signals.json", "handoff_blocks.json"]:
+              p = out / f
+              if p.exists():
+                  p.unlink()
+                  print(f"[wipe] {f}: deleted (will regenerate)")
+
+          # 10. Catalysts — let the next daily run regenerate
+          for f in ["catalysts.json", "catalysts_diagnostic.json"]:
+              p = out / f
+              if p.exists():
+                  p.unlink()
+                  print(f"[wipe] {f}: deleted (will regenerate)")
+
+          # 11. Mark version
+          (out / "_version.json").write_text(json.dumps({
+              "version": "2.1",
+              "wiped_at": now.isoformat(),
+              "agent_count": len(AGENTS),
+          }, indent=2, default=str))
+          print()
+          print("[wipe] DONE — Alpha 2.1 clean baseline established.")
+          print("[wipe] NEXT STEPS:")
+          print("  1. Reset your Alpaca paper account in Alpaca dashboard")
+          print("  2. (Already rotated keys in GitHub Secrets, right?)")
+          print("  3. Trigger Daily Run to start fresh")
+          PYEOF
+
+      - name: Verify learning state preserved
+        run: |
+          python3 -c "
+          from pathlib import Path
+          try:
+              from silmaril.learning.persistence_guard import verify_persistence
+              report = verify_persistence(Path('docs/data'))
+              print('Protected learning files preserved:', len(report['present']), '/', report['total_protected'])
+              if report['missing']:
+                  print('Missing (will regenerate):', report['missing'][:5])
+          except Exception as e:
+              print(f'Verify check skipped: {e}')
+          "
+
+      - name: Commit Alpha 2.1 baseline
+        run: |
+          git config user.name 'silmaril-bot'
+          git config user.email 'silmaril-bot@users.noreply.github.com'
+          git add docs/data/ 2>/dev/null || true
+          git diff --staged --quiet && echo "Nothing to commit" || \
+            git commit -m "🔄 Alpha 2.1 baseline reset $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          git push
+          echo ""
+          echo "================================================"
+          echo "Alpha 2.1 baseline established."
+          echo ""
+          echo "FINAL STEPS (do these in order):"
+          echo "  1. Reset Alpaca paper account: https://app.alpaca.markets/paper/dashboard/overview"
+          echo "  2. Verify ALPACA_API_KEY/SECRET in GitHub secrets are the NEW rotated keys"
+          echo "  3. Verify FINNHUB_API_KEY is set"
+          echo "  4. Trigger Daily Run"
+          echo "================================================"

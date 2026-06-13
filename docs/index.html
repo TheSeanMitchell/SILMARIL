@@ -1,0 +1,910 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>💎</text></svg>">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SILMARIL · Daily Briefing</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,900&family=Spline+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0e1217; --bg2:#141a22; --card:#181f29; --line:#262f3c;
+    --ink:#eef2f6; --dim:#9aa7b6; --faint:#6b7787;
+    --gold:#e0b15e; --gold2:#caa04e;
+    --up:#5bd6a0; --down:#f08a8a; --warn:#e7c46a; --viol:#b59cf0; --blue:#7fb0f0;
+    --shadow:0 14px 40px rgba(0,0,0,.45);
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{
+    background:
+      radial-gradient(1200px 600px at 80% -10%, rgba(224,177,94,.07), transparent 60%),
+      radial-gradient(900px 500px at -10% 10%, rgba(127,176,240,.05), transparent 55%),
+      var(--bg);
+    color:var(--ink); font-family:"Spline Sans",system-ui,sans-serif;
+    line-height:1.55; -webkit-font-smoothing:antialiased; padding:0 0 64px;
+  }
+  .wrap{max-width:920px;margin:0 auto;padding:0 20px}
+  a{color:var(--gold);text-decoration:none}
+
+  /* header */
+  header{padding:42px 0 18px;border-bottom:1px solid var(--line);margin-bottom:26px}
+  .brand{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
+  .brand h1{font-family:"Fraunces",serif;font-weight:900;font-size:clamp(30px,6vw,46px);letter-spacing:-.5px;margin:0;background:linear-gradient(180deg,#fff,#d8c39a);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .brand .tag{font-size:12px;letter-spacing:.22em;text-transform:uppercase;color:var(--faint)}
+  .date{margin-top:6px;color:var(--dim);font-size:14px}
+  .lede{font-family:"Fraunces",serif;font-size:clamp(19px,3.4vw,26px);line-height:1.35;margin:20px 0 2px;color:#f4ead2;font-weight:500}
+  .lede b{color:var(--gold);font-weight:600}
+
+  /* layout */
+  section{margin:30px 0}
+  .sec-h{display:flex;align-items:center;gap:10px;margin:0 0 14px}
+  .sec-h .k{font-family:"Fraunces",serif;font-size:13px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);font-weight:600}
+  .sec-h .rule{flex:1;height:1px;background:linear-gradient(90deg,var(--line),transparent)}
+  .card{background:linear-gradient(180deg,var(--card),var(--bg2));border:1px solid var(--line);border-radius:16px;padding:20px 22px;box-shadow:var(--shadow)}
+  .grid{display:grid;gap:14px}
+  .g3{grid-template-columns:repeat(3,1fr)}
+  @media(max-width:720px){.g3{grid-template-columns:1fr}}
+  .muted{color:var(--dim);font-size:14.5px}
+  .plain{font-size:16px;color:#dde5ee}
+
+  /* the week / countdown */
+  .week{display:flex;gap:22px;align-items:center;flex-wrap:wrap}
+  .cd{flex:0 0 auto;text-align:center;padding:6px 4px}
+  .cd .n{font-family:"Fraunces",serif;font-weight:900;font-size:64px;line-height:.9;color:var(--gold)}
+  .cd .l{font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--dim);margin-top:6px}
+  .week .body{flex:1;min-width:240px}
+  .week .body h3{font-family:"Fraunces",serif;margin:0 0 4px;font-size:22px}
+  .timeline{display:flex;gap:0;margin:16px 0 2px;overflow-x:auto;padding-bottom:6px}
+  .ev{flex:1;min-width:96px;text-align:center;position:relative;padding-top:20px}
+  .ev:before{content:"";position:absolute;top:7px;left:0;right:0;height:2px;background:var(--line)}
+  .ev .dot{position:absolute;top:2px;left:50%;transform:translateX(-50%);width:12px;height:12px;border-radius:50%;background:var(--faint);border:2px solid var(--bg)}
+  .ev.vh .dot{background:var(--down)} .ev.ipo .dot{background:var(--gold);box-shadow:0 0 0 4px rgba(224,177,94,.18)}
+  .ev .d{font-size:11px;color:var(--faint)} .ev .t{font-size:12.5px;color:var(--ink);font-weight:500;margin-top:2px}
+  .ev .rel{font-size:10.5px;color:var(--dim);margin-top:1px}
+
+  /* accounts */
+  .acct h4{margin:0;font-size:15px;color:var(--dim);font-weight:600;letter-spacing:.02em}
+  .acct .eq{font-family:"Fraunces",serif;font-size:30px;font-weight:600;margin:4px 0 2px}
+  .acct .chg{font-size:14px;font-weight:600}
+  .bar{height:7px;border-radius:5px;background:#222b37;margin-top:12px;overflow:hidden}
+  .bar > i{display:block;height:100%;border-radius:5px}
+  .combined{margin-top:14px;text-align:center;color:var(--dim);font-size:14.5px}
+  .combined b{color:var(--ink);font-family:"Fraunces",serif;font-size:18px}
+
+  /* insights */
+  .insight{display:flex;gap:14px;align-items:flex-start;padding:16px 0;border-bottom:1px solid var(--line)}
+  .insight:last-child{border-bottom:0}
+  .ic{flex:0 0 auto;width:38px;height:38px;border-radius:10px;display:grid;place-items:center;font-size:19px;background:#1d2632;border:1px solid var(--line)}
+  .insight .h{font-weight:600;margin:0 0 2px;font-size:16px}
+  .insight .p{color:var(--dim);font-size:14.5px;margin:0}
+
+  /* trades */
+  .trade{display:grid;grid-template-columns:auto 1fr auto;gap:10px 14px;align-items:center;padding:12px 0;border-bottom:1px solid var(--line)}
+  .trade:last-child{border-bottom:0}
+  .pill{font-size:11px;font-weight:600;padding:3px 9px;border-radius:999px;letter-spacing:.04em}
+  .pill.buy{background:rgba(91,214,160,.13);color:var(--up)} .pill.sell{background:rgba(240,138,138,.13);color:var(--down)}
+  .trade .tk{font-weight:600;font-family:"Fraunces",serif;font-size:16px}
+  .trade .why{color:var(--dim);font-size:13.5px;grid-column:2/4}
+  @media(min-width:560px){.trade .why{grid-column:auto}}
+  .res{font-size:13px;font-weight:600;text-align:right;white-space:nowrap}
+
+  /* health */
+  .hbar{display:flex;height:30px;border-radius:9px;overflow:hidden;margin:6px 0 12px;border:1px solid var(--line)}
+  .hbar > div{display:grid;place-items:center;font-size:12px;font-weight:600;color:#0e1217}
+  .legend{display:flex;gap:18px;flex-wrap:wrap;color:var(--dim);font-size:13.5px}
+  .legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;vertical-align:middle}
+
+  footer{margin-top:42px;padding-top:20px;border-top:1px solid var(--line);color:var(--faint);font-size:13px;text-align:center}
+  .reveal{opacity:0;transform:translateY(10px);animation:rise .7s cubic-bezier(.2,.7,.3,1) forwards}
+  @keyframes rise{to{opacity:1;transform:none}}
+  .err{color:var(--down);font-size:14px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="reveal">
+    <div class="brand"><h1>SILMARIL</h1><span class="tag">Daily Briefing</span></div>
+    <div class="date" id="date">—</div>
+    <div class="lede" id="lede">Loading today’s picture…</div>
+  </header>
+
+  <section class="reveal" style="animation-delay:.05s">
+    <div class="sec-h"><span class="k">The week ahead</span><span class="rule"></span></div>
+    <div class="card" id="week"><div class="muted">Loading…</div></div>
+  </section>
+
+  <section class="reveal" style="animation-delay:.08s">
+    <div class="sec-h"><span class="k">What the news is saying</span><span class="rule"></span></div>
+    <div class="card" id="narrative"><div class="muted">Loading…</div></div>
+  </section>
+
+  <section class="reveal" style="animation-delay:.05s">
+    <div class="card" id="mktclock" style="padding:10px 14px"><div class="muted">Loading…</div></div>
+  </section>
+
+  <section class="reveal" style="animation-delay:.08s">
+    <div class="sec-h"><span class="k">SPCX debut console · Alpha 0.007</span><span class="rule"></span></div>
+    <div class="card" id="spcxc"><div class="muted">Loading…</div></div>
+    <div class="card" id="debutrot" style="margin-top:10px"><div class="muted">Debut rotation loads…</div></div>
+  </section>
+
+  <section class="reveal" style="animation-delay:.1s">
+    <div class="sec-h"><span class="k">How the news moved decisions</span><span class="rule"></span></div>
+    <div class="card" id="newsdecisions"><div class="muted">Loading…</div></div>
+  </section>
+
+  <section class="reveal" style="animation-delay:.12s">
+    <div class="sec-h"><span class="k">Each stock's clock</span><span class="rule"></span></div>
+    <div class="card" id="timing"><div class="muted">Loading…</div></div>
+  </section>
+
+  <section class="reveal" style="animation-delay:.13s">
+    <div class="sec-h"><span class="k">How each stock treats its news</span><span class="rule"></span></div>
+    <div class="card" id="newsfp"><div class="muted">Loading…</div></div>
+  </section>
+
+  <section class="reveal" style="animation-delay:.14s">
+    <div class="sec-h"><span class="k">What the engine wanted vs what the account holds</span><span class="rule"></span></div>
+    <div class="card" id="wantgot"><div class="muted">Loading…</div></div>
+  </section>
+
+  <section class="reveal" style="animation-delay:.15s">
+    <div class="sec-h"><span class="k">Are the feeds healthy?</span><span class="rule"></span></div>
+    <div class="card" id="apihealth"><div class="muted">Loading…</div></div>
+  </section>
+
+  <section class="reveal" style="animation-delay:.1s">
+    <div class="sec-h"><span class="k">The money</span><span class="rule"></span></div>
+    <div class="grid g3" id="accts"></div>
+    <div class="combined" id="combined"></div>
+  </section>
+
+  <section class="reveal" style="animation-delay:.14s">
+    <div class="sec-h"><span class="k">Dr. Strange — the shadow oracle</span><span class="rule"></span></div>
+    <div class="card" id="strange"><div class="muted">Loading…</div></div>
+  </section>
+
+  <section class="reveal" style="animation-delay:.14s">
+    <div class="sec-h"><span class="k">The duel — three books, one future live slot</span><span class="rule"></span></div>
+    <div class="card" id="duelboard"><div class="muted">Loading…</div></div>
+  </section>
+
+  <section class="reveal" style="animation-delay:.21s">
+    <div class="sec-h"><span class="k">Is the edge growing? — the vs-market judge</span><span class="rule"></span></div>
+    <div class="card" id="vsmarket"><div class="muted">Loading…</div></div>
+  </section>
+
+  <section class="reveal" style="animation-delay:.22s">
+    <div class="sec-h"><span class="k">The real-world fee bill</span><span class="rule"></span></div>
+    <div class="card" id="feebill"><div class="muted">Loading…</div></div>
+  </section>
+
+  <section class="reveal" style="animation-delay:.139s">
+    <div class="sec-h"><span class="k">Harvest — fill truth (synced is everything)</span><span class="rule"></span></div>
+    <div class="card" id="harvtruth"><div class="muted">Loading…</div></div>
+  </section>
+
+  <section class="reveal" style="animation-delay:.142s">
+    <div class="sec-h"><span class="k">Source leaderboard — judging the messengers</span><span class="rule"></span></div>
+    <div class="card" id="srcboard"><div class="muted">Loading…</div></div>
+  </section>
+
+  <section class="reveal" style="animation-delay:.145s">
+    <div class="sec-h"><span class="k">The report card — judgement, judged</span><span class="rule"></span></div>
+    <div class="card" id="rcard"><div class="muted">Loading…</div></div>
+  </section>
+
+  <section class="reveal" style="animation-delay:.15s">
+    <div class="sec-h"><span class="k">What the system is learning</span><span class="rule"></span></div>
+    <div class="card" id="insights"><div class="muted">Loading…</div></div>
+  </section>
+
+  <section class="reveal" style="animation-delay:.17s">
+    <div class="sec-h"><span class="k" id="readiness-h">Going into the next session</span><span class="rule"></span></div>
+    <div class="card" id="readiness"><div class="muted">Loading…</div></div>
+  </section>
+
+  <section class="reveal" style="animation-delay:.2s">
+    <div class="sec-h"><span class="k">What it traded — and why</span><span class="rule"></span></div>
+    <div class="card" id="trades"><div class="muted">Loading…</div></div>
+  </section>
+
+  <section class="reveal" style="animation-delay:.25s">
+    <div class="sec-h"><span class="k">Is the data healthy?</span><span class="rule"></span></div>
+    <div class="card" id="health"><div class="muted">Loading…</div></div>
+  </section>
+
+  <footer class="reveal" style="animation-delay:.3s">
+    Read-only · paper trading (no real money) · numbers update each run.<br>
+    Want the full detail? Open the <a href="cockpit.html">Operator Cockpit</a> or the <a href="index.html">full dashboard</a>.
+  </footer>
+</div>
+
+<script>
+const $=id=>document.getElementById(id);
+const J=async f=>{try{const r=await fetch("data/"+f+"?t="+Date.now());if(!r.ok)return null;return await r.json();}catch(e){return null;}};
+const money=n=>n==null?"—":"$"+Number(n).toLocaleString(undefined,{maximumFractionDigits:0});
+const pct=n=>(n>0?"+":"")+Number(n).toFixed(1)+"%";
+const esc=t=>String(t==null?"":t).replace(/[<>]/g,"");
+const acctEq=s=>{const a=(s&&s.account)||{};return a.equity??a.portfolio_value??a.last_equity??(s&&s.trading_capital)??null;};
+
+(async function(){
+  const [scoring,leg,h3,h5,ipo,cat,deals,bench,edge,narr,sentinel,signals,timing,newsfp,apih]=await Promise.all([
+    J("scoring.json"),J("alpaca_paper_state.json"),J("alpaca_h3_state.json"),J("alpaca_h5_state.json"),
+    J("ipo_intelligence.json"),J("catalyst_learning.json"),J("deal_journal.json"),J("benchmarking.json"),J("edge_study.json"),J("narrative_tracker.json"),J("drift_sentinel.json"),J("signals.json"),J("timing_fingerprint.json"),J("news_fingerprint.json"),J("api_health.json")
+  ]);
+
+  // ---------- market clock ribbon ----------
+  (function(){
+    const el=document.getElementById("mktclock"); if(!el) return;
+    const render=()=>{try{
+      const now=new Date();
+      const fmt=tz=>now.toLocaleTimeString("en-US",{timeZone:tz,hour:"2-digit",minute:"2-digit"});
+      const et=fmt("America/New_York"), pt=fmt("America/Los_Angeles");
+      const dET=new Date(now.toLocaleString("en-US",{timeZone:"America/New_York"}));
+      const mins=dET.getHours()*60+dET.getMinutes(), wd=dET.getDay();
+      let sess,col,gate;
+      if(wd===0||wd===6){sess="WEEKEND · closed";col="var(--down)";gate="no orders can be created";}
+      else if(mins>=570&&mins<960){sess="REGULAR SESSION · open";col="var(--up)";gate="market + limit orders allowed";}
+      else if(mins>=240&&mins<570){sess="PRE-MARKET";col="var(--gold)";gate="limit orders only";}
+      else if(mins>=960&&mins<1200){sess="AFTER-HOURS";col="var(--gold)";gate="limit orders only";}
+      else {sess="OVERNIGHT · closed";col="var(--down)";gate="no orders can be created";}
+      let next="";
+      if(wd>=1&&wd<=5&&mins<570)next=`opens in ${Math.floor((570-mins)/60)}h ${(570-mins)%60}m`;
+      else if(wd>=1&&wd<=5&&mins>=570&&mins<960)next=`closes in ${Math.floor((960-mins)/60)}h ${(960-mins)%60}m`;
+      el.innerHTML=`<div style="display:flex;gap:14px;flex-wrap:wrap;align-items:center;font-size:13px">`+
+        `<span style="border:1px solid ${col};color:${col};border-radius:6px;padding:3px 10px;font-weight:700;letter-spacing:.05em;font-size:12px">${sess}</span>`+
+        `<span class="muted">NY ${et} ET · Vegas ${pt} PT</span>`+
+        `<span class="muted" style="color:var(--faint)">regular 9:30–4:00 ET = 6:30am–1:00pm PT</span>`+
+        (next?`<span class="muted">${next}</span>`:"")+
+        `<span class="muted" style="color:var(--faint)">gate: ${gate}</span>`+
+      `</div>`;}catch(e){el.innerHTML="";}};
+    render(); setInterval(render,30000);
+  })();
+
+  // ---------- SPCX debut console ----------
+  (async function(){
+    const el=document.getElementById("spcxc"); if(!el) return;
+    try{
+      const d=await (await fetch("data/spcx_console.json")).json();
+      const s=d.status||{}, L=d.live||{};
+      let h=`<div style="font-size:13px;margin-bottom:5px"><b>${(s.phase||"?").replace("_"," ")}</b>`+
+        (s.days_to_debut!=null?` · debuts in ${s.days_to_debut}d (${s.date})`:"")+
+        ` · official pricing: <b style="color:${s.priced_official?"var(--up)":"var(--gold)"}">${s.priced_official?"FILED (424B)":"awaiting 424B"}</b></div>`;
+      if(s.retail_mentions_24h!=null) h+=`<div class="muted" style="font-size:12px">retail roar: ${s.retail_mentions_24h} mentions/24h`+(s.retail_velocity_x?` · ${s.retail_velocity_x}x velocity`:"")+(s.retail_word_score!=null?` · word score ${s.retail_word_score>=0?"+":""}${s.retail_word_score}`:"")+`</div>`;
+      if(L.price) h+=`<div style="font-size:12px;margin-top:3px">live ${L.price} (${L.vs_expected_issue_pct>=0?"+":""}${L.vs_expected_issue_pct}% vs $135 expected issue)</div>`;
+      h+=`<div class="muted" style="font-size:12px;margin-top:5px">thesis on record: `+(d.thesis||[]).map(t=>`${t.id} ${t.status}`).join(" · ")+`</div>`;
+      h+=`<div class="muted" style="font-size:11px;margin-top:6px;color:var(--faint)">${(d.rules_in_force||[]).slice(0,3).join(" · ")}</div>`;
+      el.innerHTML=h;
+    }catch(e){ el.innerHTML=`<div class="muted">Console arms when data lands.</div>`; }
+  })();
+
+  // ---------- Dr. Strange (shadow oracle) ----------
+  (async function(){
+    const el=document.getElementById("strange"); if(!el) return;
+    try{
+      const d=await (await fetch("data/dr_strange.json")).json();
+      const pct=v=>(v>=0?"+":"")+(v*100).toFixed(2)+"%";
+      let h="";
+      const p=d.pick;
+      if(p){
+        const up=p.direction==="UP", col=up?"var(--up)":"var(--down)";
+        h+=`<div style="font-size:15px;margin-bottom:6px"><b style="color:${col}">${p.ticker} ${up?"▲ UP":"▼ DOWN"}</b>`+
+           ` — <b>${Math.round(p.agreement*100)}%</b> of 1,000 simulated futures agree · median ${pct(p.median)} over 3d`+
+           ` <span class="muted">(p10 ${pct(p.p10)} … p90 ${pct(p.p90)} · ${p.basis})</span></div>`;
+        if(p.buy_window&&p.sell_window){h+=`<div class="muted" style="font-size:12px;margin-bottom:6px">the plan: buy near its ~$${p.pred_low} floor in the <b>${p.buy_window} ET</b> window · sell toward ~$${p.pred_high} in the <b>${p.sell_window} ET</b> window</div>`;}
+        const more=(d.qualified||[]).filter(q=>q.ticker!==p.ticker).slice(0,4);
+        if(more.length) h+=`<div class="muted" style="font-size:12px;margin-bottom:6px">also cleared the bar: `+
+          more.map(q=>`${q.ticker} ${q.direction==="UP"?"▲":"▼"} ${Math.round(q.agreement*100)}%`).join(" · ")+`</div>`;
+      } else {
+        h+=`<div class="muted">${d.note||"No qualified futures today."}</div>`;
+      }
+      const c=d.career||{};
+      if(c.resolved>0){
+        h+=`<div style="font-size:12px;margin-top:4px">career: ${c.hits}/${c.resolved} hits (${Math.round((c.hit_rate||0)*100)}%) · avg realized ${pct(c.avg_move||0)}</div>`;
+      } else if((c.picks||0)>0){
+        h+=`<div class="muted" style="font-size:12px;margin-top:4px">career: ${c.picks} pick(s) logged — grading against what happens next.</div>`;
+      }
+      h+=`<div class="muted" style="font-size:11px;margin-top:8px;color:var(--faint)">Per-stock empirical distributions from this system's own recorded word-days → 1,000 seeded Monte-Carlo paths → speaks only at ≥90% agreement, one pick a day. Shadow only — places no orders; earns trust by realized outcomes like every agent here.</div>`;
+      el.innerHTML=h;
+    }catch(e){ el.innerHTML=`<div class="muted">Oracle data not available yet.</div>`; }
+  })();
+
+  // ---------- all valuables, same judgement ----------
+  (async function(){
+    const host=document.getElementById("spcxc"); if(!host) return;
+    try{
+      const d=await (await fetch("data/valuables_pulse.json")).json();
+      const v=d.valuables||{}; const keys=Object.keys(v); if(!keys.length) return;
+      let h=`<div style="margin-top:9px;border-top:1px solid var(--line);padding-top:7px"><span class="k" style="font-size:11px">All valuables — same words, same judgement</span><div style="font-size:12px;margin-top:4px">`;
+      h+=keys.map(k=>{const x=v[k];const c=(x.chg_1d_pct||0)>=0?"var(--up)":"var(--down)";
+        return `<span style="display:inline-block;margin:2px 10px 2px 0"><b>${k}</b> <span style="color:${c}">${x.chg_1d_pct>0?"+":""}${x.chg_1d_pct}%</span>${x.sent?` · words ${x.sent>0?"+":""}${x.sent}`:""}${x.cat_label?` · ⚡${x.cat_label}`:""}</span>`}).join("");
+      h+=`</div></div>`;
+      host.insertAdjacentHTML("beforeend",h);
+    }catch(e){}
+  })();
+
+  // ---------- sentinel alarms ----------
+  (async function(){
+    try{
+      const d=await (await fetch("data/sentinel.json")).json();
+      if(d && d.alarms && d.alarms.length){
+        const b=document.createElement("div");
+        b.style.cssText="background:#7f1d1d;color:#fecaca;border:1px solid #b91c1c;border-radius:8px;padding:10px 14px;margin:0 0 14px;font-size:13px";
+        b.innerHTML="<b>SENTINEL:</b> "+d.alarms.map(a=>a.split(":")[0]).join(" · ")+`<div style="font-size:12px;margin-top:3px;opacity:.9">${d.alarms[0]}</div>`;
+        const main=document.querySelector(".wrap")||document.body;
+        main.insertBefore(b, main.firstChild);
+      }
+    }catch(e){}
+  })();
+
+  // ---------- the duel ----------
+  (async function(){
+    const el=document.getElementById("duelboard"); if(!el) return;
+    try{
+      const d=await (await fetch("data/duel.json")).json();
+      let h=(d.board||[]).map((b,i)=>`<div style="font-size:13px;padding:3px 0">${i===0?"👑 ":""}<b>${b.account}</b> <span class="muted">(${b.method})</span> — ${b.ret_pct>0?"+":""}${b.ret_pct}% · $${b.equity} · ${b.deployed_pct}% deployed · dd ${b.drawdown_from_peak_pct}%${b.pending_orders?` · ${b.pending_orders} pending`:""}</div>`).join("");
+      if(d.champion) h+=`<div class="muted" style="font-size:12px;margin-top:5px">${d.champion.handoff} — leading ${d.champion.lead_days}d</div>`;
+      el.innerHTML=h||`<div class="muted">Arms next run.</div>`;
+    }catch(e){ el.innerHTML=`<div class="muted">Arms next run.</div>`; }
+  })();
+
+  // ---------- harvest fill-truth ----------
+  (async function(){
+    const el=document.getElementById("harvtruth"); if(!el) return;
+    try{
+      const d=await (await fetch("data/harvest_truth.json")).json();
+      const c=d.combined||{};
+      let h=`<div style="font-size:13px;margin-bottom:6px">broker-confirmed: <b>$${c.confirmed_harvest_usd??0}</b> harvested · <b>$${c.confirmed_sgov_sweep_usd??0}</b> swept to SGOV · <b>$${c.sgov_held_now_usd??0}</b> in the vault now</div>`;
+      h+=`<div class="muted" style="font-size:12px">${d.verdict||""}</div>`;
+      if(c.symbolic_events) h+=`<div class="muted" style="font-size:11px;margin-top:4px;color:var(--faint)">${c.symbolic_events} historical intents have no broker confirmation — labeled SYMBOLIC, excluded from every total above. New law: clock-gated harvests, $25 min sweep, fills or it didn't happen.</div>`;
+      el.innerHTML=h;
+    }catch(e){ el.innerHTML=`<div class="muted">Arms on next run.</div>`; }
+  })();
+
+  // ---------- source leaderboard ----------
+  (async function(){
+    const el=document.getElementById("srcboard"); if(!el) return;
+    try{
+      const d=await (await fetch("data/source_rankings.json")).json();
+      let h=`<div class="muted" style="font-size:12px;margin-bottom:6px">${d.sources_tracked} outlets on permanent record · ${d.sources_graded} graded · verdicts unlock at n≥${(d.weighting||{}).min_n||30}</div>`;
+      const top=(d.board_top||[]).slice(0,6), bot=(d.board_bottom||[]).slice(0,3);
+      if(top.length){
+        h+=top.map(b=>`<div style="font-size:13px;padding:3px 0"><b>${b.source}</b> — ${Math.round((b.hit_rate||0)*100)}% directional (${b.n}) · avg ${(b.avg_dir_ret_pct>=0?"+":"")}${b.avg_dir_ret_pct}%/call · <span class="muted">${(b.verdict||"").split(" (")[0]} · ${b.weight}x</span></div>`).join("");
+        if(bot.length) h+=`<div class="muted" style="font-size:12px;margin-top:4px">tail: `+bot.map(b=>`${b.source} ${Math.round((b.hit_rate||0)*100)}% (${b.n})`).join(" · ")+`</div>`;
+      } else h+=`<div class="muted">Recording every outlet now — grading begins as next-day prices land.</div>`;
+      const c=d.calibration||{};
+      if(c.weighted_hit!=null) h+=`<div style="font-size:12px;margin-top:6px">judge-the-judge: weighted ${Math.round(c.weighted_hit*100)}% vs unweighted ${Math.round(c.unweighted_hit*100)}% — the weighting scheme is itself on trial</div>`;
+      h+=`<div class="muted" style="font-size:11px;margin-top:6px;color:var(--faint)">PROVEN sources speak 1.2x louder in every sentiment read; FADE-WORTHY outlets are damped to 0.8x — voice is earned, live, per cycle.</div>`;
+      el.innerHTML=h;
+    }catch(e){ el.innerHTML=`<div class="muted">Leaderboard arms after first graded day.</div>`; }
+  })();
+
+  // ---------- universal stock links ----------
+  setTimeout(async function(){
+    try{
+      const s=await (await fetch("data/signals.json")).json();
+      const set=new Set((s.debates||[]).map(d=>d.ticker));
+      if(!set.size||!document.createTreeWalker) return;
+      const walker=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT,null);
+      const nodes=[];
+      while(walker.nextNode()){const n=walker.currentNode;
+        if(n.nodeValue && /[A-Z]{2,5}/.test(n.nodeValue) && n.parentElement && !n.parentElement.closest("a,script,style")) nodes.push(n);}
+      nodes.forEach(n=>{
+        const html=n.nodeValue.replace(/\b[A-Z]{2,6}(?:-USD)?\b/g,m=>set.has(m)?`<a href="stock.html?t=${m}" style="color:inherit;text-decoration:underline dotted;text-underline-offset:2px">${m}</a>`:m);
+        if(html!==n.nodeValue){const sp=document.createElement("span");sp.innerHTML=html;n.parentNode.replaceChild(sp,n);}});
+    }catch(e){}
+  }, 1500);
+
+  // ---------- the report card ----------
+  (async function(){
+    const el=document.getElementById("rcard"); if(!el) return;
+    try{
+      const d=await (await fetch("data/report_card.json")).json();
+      const pct=v=>(v>=0?"+":"")+Number(v).toFixed(2)+"%";
+      let h="";
+      const graded=(d.snapshots||[]).filter(s=>s.cohort).slice(-3).reverse();
+      if(graded.length){
+        h+=graded.map(s=>`<div style="font-size:13px;margin-bottom:4px"><b>${s.date}</b> picks (${s.cohort.n}): avg <b style="color:${s.cohort.avg_ret_pct>=0?"var(--up)":"var(--down)"}">${pct(s.cohort.avg_ret_pct)}</b> · median ${pct(s.cohort.median_ret_pct)} · ${Math.round(s.cohort.hit_rate*100)}% green · day ${s.cohort.days_held}</div>`).join("");
+      } else { h+=`<div class="muted">First pick cohort snapshotted — grading begins next session.</div>`; }
+      const g0=graded[0];
+      if(g0&&g0.cohort){
+        const a=g0.cohort.avg_ret_pct, w=g0.cohort_wouldnt;
+        h+=`<div style="font-size:12px;margin-top:2px">would vs wouldn't: engine ${pct(a)} · pure-inverse ${pct(-a)}${w?` · the gates' bench ${pct(w.avg_ret_pct)} (${w.n} blocked)`:""}</div>`;
+      }
+      if(d.calibration&&d.calibration.verdict){ h+=`<div style="font-size:12px;margin-top:6px">judge, judged: <b>${d.calibration.verdict}</b> <span class="muted">(${d.calibration.clean_outcomes_used} clean outcomes)</span></div>`; }
+      if(d.headline_edge){const he=d.headline_edge;
+        h+=`<div style="font-size:12px;margin-top:4px">headline edge, on trial: news-backed ${Math.round(he.news_backed.win_rate*100)}% win (${he.news_backed.n}) vs silent ${Math.round(he.silent.win_rate*100)}% (${he.silent.n}), return gap ${pct(he.avg_return_gap_pp)} — <b>${he.verdict.split(":")[0]}</b></div>`;}
+      if(d.deployment_adjusted){const da=d.deployment_adjusted;
+        h+=`<div class="muted" style="font-size:12px;margin-top:2px">deployment truth: only ${Math.round(da.deployed_frac*100)}% invested — Δ-vs-SPY is mostly cash defense until selection alpha shows at full math (see report_card.json)</div>`;}
+      if(d.gate_bench&&Object.keys(d.gate_bench).length){
+        h+=`<div style="font-size:12px;margin-top:3px">the gates, judged: `+Object.entries(d.gate_bench).map(([g,v])=>`${g.replace(/^(blocked_|deferred_)/,"")} ${pct(v.avg_ret_pct)}/name (${v.n})`).join(" · ")+`</div>`;
+      }
+      const ac=d.agents_clean||[];
+      if(ac.length>=2){
+        const top=ac[0], bot=ac[ac.length-1];
+        h+=`<div class="muted" style="font-size:12px;margin-top:4px">clean-record board: best ${top.agent} ${pct(top.avg_dir_ret_pct)}/call (${top.clean_calls}) · worst ${bot.agent} ${pct(bot.avg_dir_ret_pct)}/call (${bot.clean_calls})</div>`;
+      }
+      h+=`<div class="muted" style="font-size:11px;margin-top:8px;color:var(--faint)">Every day's top picks are re-graded against live prices each run; the judge itself is graded by conviction calibration on clean outcomes; the full history is never deleted (docs/data/archive/).</div>`;
+      el.innerHTML=h;
+    }catch(e){ el.innerHTML=`<div class="muted">Report card not available yet.</div>`; }
+  })();
+
+  // ---------- news personalities ----------
+  (function(){
+    const el=document.getElementById("newsfp"); if(!el) return;
+    const fp=(newsfp&&newsfp.fingerprints)||{};
+    const names=Object.keys(fp);
+    const conf=names.filter(t=>!fp[t].learning);
+    if(!conf.length){
+      el.innerHTML='<div class="plain">The system is profiling each stock\u2019s news personality \u2014 does it FOLLOW its headlines (a buy-signal day starts a run), FADE them (the pop is sold by tomorrow), or ignore them \u2014 and over which horizon: a 1-day pop, a multi-day run, or a week-long grind. It needs \u2265'+((newsfp&&newsfp.min_signal_days)||6)+' signal days per stock before a profile is trusted. <span class="muted">Profiling now \u2014 '+names.length+' names accumulating; this fills in over the coming sessions.</span></div>';
+      return;
+    }
+    const pCol=p=>p==="news-follower"?"var(--up)":p==="news-fader"?"var(--down)":"var(--dim)";
+    const rows=conf.map(t=>({t,f:fp[t]}))
+      .sort((a,b)=>Math.abs(b.f.follow_score_pct||0)-Math.abs(a.f.follow_score_pct||0)).slice(0,10)
+      .map(({t,f})=>`<div style="padding:9px 0;border-bottom:1px solid var(--line)">`+
+        `<div style="display:grid;grid-template-columns:auto 1fr auto;gap:8px 12px;align-items:baseline">`+
+          `<span style="font-family:'Fraunces',serif;font-weight:600;font-size:15px">${esc(t)}</span>`+
+          `<span style="font-size:12.5px;color:${pCol(f.personality)};font-weight:600">${esc(f.personality)}</span>`+
+          `<span class="muted" style="font-size:12px;text-align:right">${esc(f.best_horizon||"")}</span>`+
+        `</div>`+
+        (f.note?`<div class="muted" style="font-size:12px;margin-top:3px;opacity:.85">${esc(f.note)} <span style="color:var(--faint)">(${f.n_signal_days} signal days)</span></div>`:"")+
+      `</div>`).join("");
+    el.innerHTML=`<div class="plain" style="margin-bottom:8px">Learned from each stock\u2019s own history: what it actually does after its news. Followers reward riding the signal over their horizon; faders punish chasing \u2014 the desk now pushes catalysts harder on confirmed followers and more gently on faders.</div>`+rows+
+      `<div class="muted" style="font-size:12px;margin-top:10px">${conf.length} of ${names.length} profiled names are confident; the rest are still accumulating signal days.</div>`;
+  })();
+
+  // ---------- engine wanted vs account holds ----------
+  (async function(){
+    const el=document.getElementById("wantgot"); if(!el) return;
+    // ALPHA 1.0: wantgot truth v2 — per-intent verdicts with the FIRST gate
+    // that stopped each name. Falls back to the legacy join if absent.
+    const wg=await J("wantgot.json");
+    if(wg&&wg.accounts){
+      const vcol=v=>v==="FILLED_AND_HELD"?"var(--up)":v==="SUBMITTED_PENDING"?"var(--gold)":v==="DEFERRED"?"var(--blue)":v.startsWith("BLOCKED")?"var(--down)":"var(--dim)";
+      const blocks=Object.entries(wg.accounts).map(([nm,a])=>{
+        const t=a.totals||{};
+        const rows=(a.rows||[]).slice(0,7).map(r=>
+          `<div style="display:grid;grid-template-columns:auto 1fr auto;gap:6px 10px;align-items:baseline;padding:5px 0;border-bottom:1px solid var(--line)">`+
+            `<span style="font-family:'Fraunces',serif;font-weight:600;font-size:14px">${esc(r.ticker)}${r.originated?' <span style="font-size:10px;color:var(--viol)">ORIGINATED</span>':""}</span>`+
+            `<span class="muted" style="font-size:12px">${esc(r.signal||"")} · conv ${(r.conviction??0).toFixed(2)} · wanted ${money(r.intended_notional)}</span>`+
+            `<span style="font-size:11.5px;color:${vcol(r.verdict)};text-align:right">${esc(r.verdict)}${r.reason?`<br><span style="color:var(--faint);font-weight:400">${esc(String(r.reason).slice(0,70))}</span>`:""}</span>`+
+          `</div>`).join("");
+        return `<div style="margin-bottom:14px">`+
+          `<div style="display:flex;gap:10px;align-items:baseline;flex-wrap:wrap"><b style="font-family:'Fraunces',serif">${esc(nm)}</b>`+
+          `<span class="muted" style="font-size:12px">wanted ${money(t.intended)} · submitted ${money(t.submitted)} · holds ${money(t.held)} · gap <b style="color:${(t.deployment_gap||0)>0?'var(--gold)':'var(--up)'}">${money(t.deployment_gap)}</b></span></div>`+
+          `<div class="muted" style="font-size:12px;margin:3px 0 5px">${esc(a.narrative||"")}</div>`+rows+
+        `</div>`;}).join("");
+      el.innerHTML=`<div class="plain" style="margin-bottom:8px">Wantgot truth v2: every BUY the engine wanted this cycle, what it got, what it holds — and for every gap, the <b>first gate</b> that stopped it (cash, caps, fee floor, market hours). Fills law: \u201cheld\u201d means broker truth, never order acceptance.</div>`+blocks;
+      return;
+    }
+    const _dl=((newsfp||{}).deltas)||{};
+    const dchip=t=>{const x=_dl[t];if(!x)return "";const p=[];if(x.pct_today!=null)p.push(`${x.pct_today>0?"+":""}${x.pct_today.toFixed(1)}% today`);if(x.pct_since_prev!=null)p.push(`${x.pct_since_prev>0?"+":""}${x.pct_since_prev.toFixed(1)}% vs prev read`);if(x.pct_wtd!=null)p.push(`${x.pct_wtd>0?"+":""}${x.pct_wtd.toFixed(1)}% wk`);if(!p.length)return "";const v=(x.pct_today!=null?x.pct_today:x.pct_since_prev)||0;return ` <span style="font-size:10.5px;color:${v>=0?'var(--up)':'var(--down)'};font-weight:600">${p.join(" · ")}</span>`;};
+    const accts=[["LEGACY",leg],["HARVEST_3",h3],["HARVEST_5",h5]];
+    const held={}, ordered={};
+    accts.forEach(([nm,s])=>{
+      (((s&&s.positions_snapshot)||[])).forEach(p=>{const t=String(p.symbol||p.ticker||"").toUpperCase();if(t)(held[t]=held[t]||[]).push(nm);});
+      (((s&&s.orders)||[])).forEach(o=>{const t=String(o.symbol||o.ticker||"").toUpperCase();if(!t)return;const st=String(o.status||"").toLowerCase();if(!(t in ordered)||st==="filled")ordered[t]={acct:nm,status:st||"submitted",side:String(o.side||"").toLowerCase()};});
+    });
+    const picks=((signals&&signals.debates)||[])
+      .filter(d=>String(((d.consensus)||{}).signal||"").includes("BUY"))
+      .sort((a,b)=>(((b.consensus)||{}).score||0)-(((a.consensus)||{}).score||0)).slice(0,8);
+    if(!picks.length){el.innerHTML='<div class="muted">No BUY-side consensus this cycle.</div>';return;}
+    const rows=picks.map(d=>{
+      const t=d.ticker, h=held[t], o=ordered[t];
+      let chip, col;
+      if(h){chip=`held · ${h.join(" + ")}`;col="var(--up)";}
+      else if(o&&o.status==="filled"){chip=`filled · ${o.acct}`;col="var(--up)";}
+      else if(o&&(o.status==="new"||o.status==="accepted"||o.status==="submitted")){chip=`order pending · ${o.acct}`;col="var(--gold)";}
+      else if(o&&o.status==="canceled"){chip=`order canceled · ${o.acct}`;col="var(--down)";}
+      else {chip="not taken — gates (conviction / caps / cash / order-quality)";col="var(--dim)";}
+      return `<div style="display:grid;grid-template-columns:auto 1fr auto;gap:8px 12px;align-items:baseline;padding:8px 0;border-bottom:1px solid var(--line)">`+
+        `<span style="font-family:'Fraunces',serif;font-weight:600;font-size:15px">${esc(t)}</span>`+
+        `<span class="muted" style="font-size:12.5px">${esc(String(((d.consensus)||{}).signal||""))} · score ${(((d.consensus)||{}).score||0).toFixed(2)}${dchip(t)}</span>`+
+        `<span style="font-size:12px;color:${col};text-align:right">${chip}</span>`+
+      `</div>`;}).join("");
+    el.innerHTML=`<div class="plain" style="margin-bottom:8px">The desk\u2019s top BUY-side names this cycle, against what actually sits in Alpaca. Every order the engine submits reaches Alpaca \u2014 a gap below means OUR gates held it back (conviction bar, position caps, available cash, order-quality deferral, market hours), the same discipline a real-money book would apply.</div>`+rows;
+  })();
+
+  // ---------- vs-market judge (ALPHA 1.0 #3) ----------
+  (async function(){
+    const el=document.getElementById("vsmarket"); if(!el) return;
+    const v=await J("vs_market.json");
+    if(!v){el.innerHTML='<div class="muted">The judge takes the bench on the next run.</div>';return;}
+    const map={"WARMING_UP":["var(--dim)","WARMING UP"],"EDGE-BUILDING":["var(--up)","EDGE-BUILDING"],"MIXED":["var(--gold)","MIXED"],"EDGE-DECAY":["var(--down)","EDGE-DECAY"]};
+    const [col,label]=map[v.verdict]||["var(--dim)",esc(v.verdict||"—")];
+    const t=v.trend||{}, jj=v.judge_judged||{};
+    const trend=(t.delta_spy!=null)?`Δ vs SPY <b style="color:${t.delta_spy>=0?'var(--up)':'var(--down)'}">${(t.delta_spy*100).toFixed(2)}pp</b> · Δ vs QQQ <b style="color:${t.delta_qqq>=0?'var(--up)':'var(--down)'}">${(t.delta_qqq*100).toFixed(2)}pp</b> <span class="muted">(${t.recent_n}v${t.prior_n} sessions)</span>`:"";
+    el.innerHTML=
+      `<div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:8px">`+
+        `<span style="background:var(--bg2);border:1px solid ${col};color:${col};border-radius:6px;padding:5px 10px;font-size:12.5px;font-weight:700;letter-spacing:.06em">${label}</span>`+
+        `<span class="muted" style="font-size:12.5px">Δ-series day <b>${v.series_days||0}</b>${trend?" · "+trend:""}</span>`+
+      `</div>`+
+      `<div class="plain" style="font-size:13px">${esc(v.detail||"")}</div>`+
+      (v.alarm?`<div style="margin-top:8px;font-size:12.5px;color:var(--down);font-weight:600">ALARM: ${esc(v.alarm.code)} — check the report card per-gate bench before adding risk.</div>`:"")+
+      `<div class="muted" style="font-size:11.5px;margin-top:8px;color:var(--faint)">Every judge gets judged: EDGE-DECAY calls are scored against the 3 sessions that follow${jj.decay_calls_graded?` — so far <b>${jj.decay_calls_correct}/${jj.decay_calls_graded}</b> correct`:" (none graded yet)"}. Alpha appends here every run, permanently.</div>`;
+  })();
+
+  // ---------- the real-world fee bill (ALPHA 1.0 H) ----------
+  (async function(){
+    const el=document.getElementById("feebill"); if(!el) return;
+    const f=await J("fees_truth.json");
+    if(!f){el.innerHTML='<div class="muted">The fee ledger writes on the next run.</div>';return;}
+    const rt=f.round_trip_cost_per_1k||{};
+    const rows=Object.entries(f.accounts||{}).map(([nm,a])=>{
+      const fees=(a.est_lifetime_fees||{}).total||0;
+      const ratio=a.fees_vs_realized_pct;
+      return `<div style="display:grid;grid-template-columns:auto 1fr auto;gap:8px 12px;align-items:baseline;padding:7px 0;border-bottom:1px solid var(--line)">`+
+        `<span style="font-family:'Fraunces',serif;font-weight:600">${esc(nm)}</span>`+
+        `<span class="muted" style="font-size:12.5px">est lifetime drag <b style="color:var(--down)">$${fees.toFixed(2)}</b> over ${a.sells||0} sells / ${a.buys||0} buys${a.estimation_gaps?` · <span style="color:var(--gold)">${a.estimation_gaps} rows partial</span>`:""}</span>`+
+        `<span style="font-size:12px;text-align:right">paper ${money(a.paper_equity)} → real-world <b>${money(a.net_of_fees_equity_view)}</b>${ratio!=null?`<br><span style="color:${ratio>100?'var(--down)':'var(--dim)'}">fees = ${ratio}% of realized P&L</span>`:""}</span>`+
+      `</div>`;}).join("");
+    el.innerHTML=
+      `<div class="plain" style="margin-bottom:8px">Paper fills charge nothing; a real account pays the SEC fee + FINRA TAF on every sell and the spread on every market order. This ledger estimates that drag across <b>every order ever placed</b> — and the harvest gate now refuses any "win" smaller than <b>2× the round trip</b>.</div>`+
+      `<div class="muted" style="font-size:12.5px;margin-bottom:8px">round trip per $1K: <b>$${(rt.market_orders??0).toFixed(2)} market</b> · <b style="color:var(--up)">$${(rt.limit_orders??0).toFixed(2)} limit</b> — limit orders are ~14× cheaper, so order-quality is a profit center.</div>`+
+      rows+
+      `<div class="muted" style="font-size:11.5px;margin-top:8px;color:var(--faint)">Rates are config (SEC $${((f.model||{}).sec_fee_per_million_sold)??"27.80"}/M sold, TAF capped $${((f.model||{}).taf_cap_per_order)??"8.30"}); blocked dust-wins log as harvest_below_fee_floor in the decision ledger.</div>`;
+  })();
+
+  // ---------- debut rotation (ALPHA 1.0 B) ----------
+  (async function(){
+    const el=document.getElementById("debutrot"); if(!el) return;
+    const d=await J("debut_watch.json");
+    if(!d){el.innerHTML='<div class="muted">The self-advancing debut watch arms on the next run.</div>';return;}
+    const c=d.current||{}; const q=(d.queue||[]).slice(0,3);
+    const ph=c.phase||"—";
+    const pcol=ph==="DEBUT_WINDOW"?"var(--gold)":ph==="WAITING"?"var(--blue)":ph==="IDLE"?"var(--dim)":"var(--up)";
+    el.innerHTML=
+      `<div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">`+
+        `<span class="muted" style="font-size:12px;text-transform:uppercase;letter-spacing:.08em">Debut watch</span>`+
+        `<span style="font-family:'Fraunces',serif;font-weight:700">${esc(c.symbol||"—")}</span>`+
+        `<span style="border:1px solid ${pcol};color:${pcol};border-radius:6px;padding:3px 8px;font-size:11.5px;font-weight:700">${esc(ph)}</span>`+
+        `<span class="muted" style="font-size:12px">${c.sessions_observed||0}/5 sessions observed</span>`+
+        (q.length?`<span class="muted" style="font-size:12px">· next up: ${q.map(x=>esc(x.symbol)).join(" → ")}</span>`:"")+
+      `</div>`+
+      `<div class="muted" style="font-size:11.5px;margin-top:6px;color:var(--faint)">Five live-price sessions complete a watch; the next calendar IPO snaps in automatically and the lineage archives forever — no human ever names the next debut.</div>`;
+  })();
+
+  // ---------- feed health ----------
+  (function(){
+    const el=document.getElementById("apihealth"); if(!el) return;
+    if(!apih){el.innerHTML='<div class="muted">Feed-health matrix builds on the next run.</div>';return;}
+    const oc=apih.overall==="healthy"?"var(--up)":apih.overall==="degraded"?"var(--gold)":"var(--down)";
+    const fr=apih.freshness||{}, nw=apih.news||{}, pr=apih.prices||{}, bk=apih.broker||{};
+    const stale=Object.entries((fr.files)||{}).filter(([,v])=>v.status!=="fresh").map(([k,v])=>`${k} (${v.status})`);
+    const srcs=Object.entries((nw.top_sources)||{}).slice(0,4).map(([s,n])=>`${esc(s)} ${n}`).join(" · ");
+    const acct=Object.entries(bk).map(([nm,a])=>`<span style="margin-right:14px">${nm}: <b style="color:${a.configured?'var(--up)':'var(--down)'}">${a.configured?'live':'flag off'}</b>${a.errors_logged?` · <span style="color:var(--gold)">${a.errors_logged} old err</span>`:""}</span>`).join("");
+    el.innerHTML=
+      `<div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:8px">`+
+        `<span style="background:var(--bg2);border:1px solid ${oc};color:${oc};border-radius:6px;padding:5px 10px;font-size:12.5px;font-weight:700;text-transform:uppercase;letter-spacing:.06em">${esc(apih.overall)}</span>`+
+        `<span class="muted" style="font-size:12.5px">files fresh <b>${fr.ok}/${fr.total}</b> · news sources <b>${nw.distinct_sources}</b> (${(nw.articles_in_cycle||0)} arts) · price coverage <b>${pr.coverage_pct}%</b></span>`+
+      `</div>`+
+      (srcs?`<div class="muted" style="font-size:12px;margin-bottom:6px">top sources: ${srcs}</div>`:"")+
+      `<div class="muted" style="font-size:12px;margin-bottom:6px">${acct}</div>`+
+      (stale.length?`<div style="font-size:12px;color:var(--gold)">stale: ${stale.map(esc).join(", ")}</div>`:`<div class="muted" style="font-size:12px;color:var(--up)">every product written on schedule \u2713</div>`)+
+      (function(){const st=apih.storage;if(!st)return "";const sc=st.status==="ok"?"var(--up)":st.status==="watch"?"var(--gold)":"var(--down)";return `<div style="font-size:12px;margin-top:8px">repo storage: <b style="color:${sc}">${st.repo_mb} MB</b> <span class="muted">(archive ${st.archive_mb} MB · ${st.archive_share_pct??"—"}% of data)</span> · <span style="color:${sc};font-weight:600">${esc(st.status)}</span> <span class="muted">— ${esc(st.note||"")}</span></div>`;})()+
+      (function(){const cp=apih.cron_pressure;if(!cp)return "";const wc=cp.overall==="headroom"?"var(--up)":cp.overall==="riding"?"var(--gold)":"var(--down)";const chips=Object.entries(cp.providers||{}).filter(([,v])=>v.pct_of_budget!=null).sort((a,b)=>b[1].pct_of_budget-a[1].pct_of_budget).slice(0,6).map(([k,v])=>`<span style="margin-right:10px">${esc(k)} <b style="color:${v.status==="headroom"?"var(--up)":v.status==="riding"?"var(--gold)":"var(--down)"}">${v.pct_of_budget}%</b></span>`).join("");return `<div style="font-size:12px;margin-top:6px">cron pressure (<b style="color:${wc}">${esc(cp.overall)}</b>, ${cp.runs_observed_today||0} runs today): ${chips}<span class="muted">— ride the limit, never cross it; estimates until per-provider counters land.</span></div>`;})()+
+      (function(){const dc=(apih.domain_clocks||{}).domains;if(!dc)return "";return `<div style="font-size:12px;margin-top:6px" class="muted">domain clocks: ${Object.entries(dc).map(([k,v])=>`${esc(k)} <b style="color:${v.open?"var(--up)":"var(--dim)"}">${v.open?"open":"closed"}</b>`).join(" · ")}</div>`;})()+
+      `<div class="muted" style="font-size:11.5px;margin-top:8px;color:var(--faint)">Providers don\u2019t publish remaining quota, so the honest meter is delivery: if a feed gets rate-limited or dies, its source count and coverage collapse here first.</div>`;
+  })();
+
+  // ---------- header ----------
+  const active=(ipo&&ipo.active)||null;
+  const days=active?active.days_until:null;
+  const gen=(deals&&deals.generated_at)||(scoring&&scoring.generated_at)||(cat&&cat.generated_at);
+  $("date").textContent = gen ? new Date(gen).toLocaleString(undefined,{weekday:"long",month:"long",day:"numeric",hour:"numeric",minute:"2-digit"}) : "";
+
+  // accounts for the lede
+  const accs=[["LEGACY",leg],["HARVEST_3",h3],["HARVEST_5",h5]];
+  const eqs=accs.map(([n,s])=>acctEq(s)).filter(v=>typeof v==="number");
+  const principal=(leg&&leg.principal_target)||10000;
+  const combinedEq=eqs.reduce((a,b)=>a+b,0);
+  const avgChg=eqs.length?((combinedEq-principal*eqs.length)/(principal*eqs.length)*100):null;
+
+  // market move (week)
+  const wk=(bench&&bench.windows&&bench.windows["1w"])||{};
+  const qqqW=wk.qqq_return!=null?(wk.qqq_return*100):null;
+
+  let lede=`<b>${active?active.company:"The IPO"}</b> lists ${days!=null?(days<=0?"today":days===1?"tomorrow":"in "+days+" days"):"soon"}`;
+  lede += avgChg!=null ? `, and the three paper accounts are ${avgChg<0?"down":"up"} <b>${pct(avgChg)}</b> on average` : "";
+  lede += qqqW!=null && qqqW<-1 ? ` as the market pulls back into a heavy week.` : `.`;
+  $("lede").innerHTML=lede;
+
+  // ---------- the week ahead ----------
+  if(active){
+    const g=(cat&&cat.ipo_proximity&&cat.ipo_proximity.gauntlet)||[];
+    // plain summary of the gauntlet
+    const before=g.filter(e=>e.rel_to_ipo<0), after=g.filter(e=>e.rel_to_ipo>0);
+    const names=t=>t.map(e=>esc(e.label.replace(/MARKET /,"").replace(/_/g," "))).join(", ");
+    let txt = `The largest IPO in history${active.valuation_usd?` (about $${(active.valuation_usd/1e12).toFixed(1)} trillion)`:""} `+
+              `${days<=0?"is listing":"lists Friday"}. The system expects a bumpy week around it`+
+              (cat&&cat.clustering&&cat.clustering.elevated_ahead?` — several high-impact events cluster together.`:`.`);
+    let tl="";
+    if(g.length){
+      tl='<div class="timeline">'+g.map(e=>{
+        const cls=e.rel_to_ipo===0?"ipo":(e.magnitude==="very_high"?"vh":"");
+        const rel=e.rel_to_ipo===0?"IPO day":(Math.abs(e.rel_to_ipo)+"d "+(e.rel_to_ipo<0?"before":"after"));
+        const nm=e.rel_to_ipo===0?(active.ticker||"IPO"):esc(e.label.replace(/MARKET /,"").replace(/_/g," "));
+        return `<div class="ev ${cls}"><span class="dot"></span><div class="d">${esc((e.date||"").slice(5))}</div><div class="t">${nm}</div><div class="rel">${rel}</div></div>`;
+      }).join("")+'</div>';
+    }
+    $("week").innerHTML=`<div class="week"><div class="cd"><div class="n">${days!=null?(days<0?"•":days):"•"}</div><div class="l">${days===1?"day to go":"days to go"}</div></div>`+
+      `<div class="body"><h3>${esc(active.company)} · ${esc(active.ticker||"")}</h3><div class="plain">${txt}</div></div></div>`+tl+
+      (before.length||after.length?`<div class="muted" style="margin-top:10px">Before the debut: ${names(before)||"—"}. After: ${names(after)||"—"}.</div>`:"");
+  } else {
+    $("week").innerHTML='<div class="muted">No IPO is currently being tracked. The watch list rotates to the next one automatically when a date is set.</div>';
+  }
+
+  // ---------- what the news is saying (narrative engine) ----------
+  (function(){
+    const el=$("narrative"); if(!el) return;
+    if(!narr){el.innerHTML='<div class="muted">News read not available yet.</div>';return;}
+    const NL={ai_rally:"an AI rally",ai_cooldown:"an AI cooldown",risk_on:"risk-on appetite",risk_off:"a risk-off, defensive mood",
+      oil_rally:"an oil rally",oil_weakness:"oil weakness",defense_strength:"defense strength",biotech_breakout:"a biotech breakout",
+      retail_weakness:"retail weakness",fed_hawkish:"a hawkish Fed",fed_dovish:"a dovish Fed",rotation_explicit:"explicit sector rotation"};
+    const SH={RISK_ON:"leaning risk-on",RISK_OFF:"turning defensive",ROTATION:"rotating between sectors",NEUTRAL:"mixed / no clear tilt"};
+    const dom=narr.dominant_narrative, hc=narr.headline_count||0;
+    const sp=narr.sector_pressure||{};
+    const ents=Object.entries(sp).filter(([k,v])=>Math.abs(v)>0.001).sort((a,b)=>b[1]-a[1]);
+    const lead=ents.slice(0,2).filter(([k,v])=>v>0), fade=ents.slice(-2).filter(([k,v])=>v<0).reverse();
+    let txt=`Across <b>${hc.toLocaleString()} headlines</b>, the loudest story right now is <b>${NL[dom]||esc(String(dom||"no clear narrative").replace(/_/g," "))}</b>`;
+    txt+=narr.regime_shift?`, and the tape is <b>${SH[narr.regime_shift]||esc(narr.regime_shift)}</b>`:"";
+    txt+=".";
+    let flow="";
+    if(lead.length||fade.length){
+      flow=`<div class="muted" style="font-size:14.5px;margin-top:8px">News flow is pushing capital toward `+
+        (lead.map(([k,v])=>`<b style="color:var(--up)">${esc(k)}</b>`).join(", ")||"—")+
+        (fade.length?` and away from ${fade.map(([k,v])=>`<b style="color:var(--down)">${esc(k)}</b>`).join(", ")}`:"")+`.</div>`;
+    }
+    // active narratives with momentum
+    const nar=narr.narratives||{};
+    const active=Object.entries(nar).filter(([k,v])=>v&&(v.frequency||0)>0)
+      .sort((a,b)=>(b[1].frequency||0)-(a[1].frequency||0));
+    let chips="";
+    if(active.length){
+      chips='<div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:12px">'+active.slice(0,6).map(([k,v])=>{
+        const tag=(v.acceleration||0)>1?"gaining":(v.persistence||0)>2?"persistent":"emerging";
+        const col=tag==="gaining"?"var(--up)":tag==="persistent"?"var(--gold)":"var(--dim)";
+        return `<span style="font-size:12px;padding:4px 10px;border:1px solid var(--line);border-radius:999px"><b>${esc(String(k).replace(/_/g," "))}</b> <span style="color:${col}">· ${tag}</span></span>`;
+      }).join("")+'</div>';
+    }
+    el.innerHTML=`<div class="plain">${txt}</div>${flow}${chips}`+
+      `<div class="muted" style="font-size:12.5px;margin-top:12px">This read is computed from real headlines each cycle and feeds the system's positioning — sectors with fading news get trimmed, rising ones get room. It’s the "edge in words" working in the background.</div>`;
+  })();
+
+  // ---------- how the news moved decisions (headline -> sentiment -> vote) ----------
+  (function(){
+    const el=$("newsdecisions"); if(!el) return;
+    const debs=((signals&&signals.debates)||[]).filter(d=>typeof d.sentiment_score==="number");
+    if(!debs.length){el.innerHTML='<div class="muted">No per-ticker sentiment yet — populates as the live cycle runs.</div>';return;}
+    const sigOf=d=>((d.consensus&&d.consensus.signal)||d.signal||"—");
+    const col=s=>/BUY/.test(s)?"var(--up)":/SELL/.test(s)?"var(--down)":"var(--faint)";
+    const isBuy=s=>/BUY/.test(String(s)), isSell=s=>/SELL/.test(String(s));
+    const split=d=>{let b=0,s=0,h=0;((d.verdicts)||[]).forEach(v=>{const sg=String(v.signal||"").toUpperCase();if(/BUY/.test(sg))b++;else if(/SELL/.test(sg))s++;else h++;});return {b,s,h,n:b+s+h};};
+    const headline=d=>{const h=((d.recent_headlines)||[])[0];return (h&&h.title)?esc(String(h.title)).slice(0,96):"";};
+    const classify=d=>{const s=sigOf(d),sc=d.sentiment_score;
+      if(sc>=0.15&&isBuy(s))return "aligned_up";
+      if(sc<=-0.1&&isSell(s))return "aligned_down";
+      if(sc>=0.5&&!isBuy(s))return "diverge";
+      if(sc<=-0.5&&isBuy(s))return "diverge";
+      return "mixed";};
+
+    const withNews=debs.filter(d=>(d.article_count||0)>0).length;
+    const npos=debs.filter(d=>d.sentiment_score>0.15).length;
+    const nneg=debs.filter(d=>d.sentiment_score<-0.1).length;
+    const nneu=debs.length-npos-nneg;
+    const avg=debs.reduce((a,d)=>a+d.sentiment_score,0)/debs.length;
+    const totArt=debs.reduce((a,d)=>a+(d.article_count||0),0);
+    const moodWord=avg>0.12?"risk-on":avg<-0.08?"risk-off":"mixed";
+    const moodCol=avg>0.12?"var(--up)":avg<-0.08?"var(--down)":"var(--warn)";
+
+    const sec={};
+    debs.forEach(d=>{const k=d.sector||"—";if(k==="—")return;if(!sec[k])sec[k]={sum:0,n:0,art:0};sec[k].sum+=d.sentiment_score;sec[k].n++;sec[k].art+=(d.article_count||0);});
+    const secRows=Object.entries(sec).map(([k,v])=>({k,avg:v.sum/v.n,n:v.n,art:v.art})).filter(x=>x.n>=2).sort((a,b)=>b.avg-a.avg);
+    const secUp=secRows.filter(x=>x.avg>0.05).slice(0,4), secDown=secRows.filter(x=>x.avg<-0.05).slice(-3);
+
+    // ── THE 50/50 LAW (operator, June 12): SILMARIL shows stocks and ALL
+    // valuables side by side — half and half whenever both have signal.
+    // Off-hours only crypto has fresh words, which used to make this list
+    // read all-token; now each class gets its own ranked half, and a thin
+    // class donates its unused seats to the other instead of going blank.
+    const isVal=d=>String(d.ticker||"").endsWith("-USD")||["crypto","token","commodity","commodities","fx","macro","bonds/rates"].includes(String(d.asset_class||"").toLowerCase());
+    const byHeat=(a,b)=>Math.abs(b.sentiment_score)-Math.abs(a.sentiment_score);
+    const eqs=debs.filter(d=>!isVal(d)).sort(byHeat);
+    const vals=debs.filter(isVal).sort(byHeat);
+    const interleave=(A,B)=>{const out=[];const n=Math.max(A.length,B.length);for(let i=0;i<n;i++){if(A[i])out.push(A[i]);if(B[i])out.push(B[i]);}return out;};
+    const sorted=interleave(eqs,vals);
+    const strongPos=sorted.filter(d=>d.sentiment_score>=0.5).slice(0,8);
+    const mildPos=sorted.filter(d=>d.sentiment_score>0.15&&d.sentiment_score<0.5).slice(0,5);
+    const neg=sorted.filter(d=>d.sentiment_score<=-0.1).slice(0,6);
+    const diverged=sorted.filter(d=>classify(d)==="diverge").slice(0,6);
+
+    const chip=(txt,c)=>`<span style="font-size:10.5px;padding:1px 6px;border-radius:9px;border:1px solid ${c};color:${c};margin-left:6px;white-space:nowrap">${txt}</span>`;
+    const evLabel={earnings:"earnings",guidance:"guidance",analyst:"analyst",m_and_a:"M&A",legal_reg:"legal",product:"product",leadership:"exec",capital:"capital",clinical:"FDA/trial",macro:"macro",insider:"insider",index:"index",short_report:"short attack",security:"cyber",ipo:"IPO"};
+    const _dlts=(newsfp&&newsfp.deltas)||{};
+    const dltChip=t=>{const x=_dlts[t];if(!x)return "";const p=[];if(x.pct_today!=null)p.push(`${x.pct_today>0?"+":""}${x.pct_today.toFixed(1)}% today`);if(x.pct_since_prev!=null)p.push(`${x.pct_since_prev>0?"+":""}${x.pct_since_prev.toFixed(1)}% vs prev read`);if(x.pct_wtd!=null)p.push(`${x.pct_wtd>0?"+":""}${x.pct_wtd.toFixed(1)}% wk`);if(!p.length)return "";const v=(x.pct_today!=null?x.pct_today:x.pct_since_prev)||0;return ` <span title="move since the earliest morning read · vs the previous day's read · week to date" style="font-size:10.5px;color:${v>=0?'var(--up)':'var(--down)'};font-weight:600">${p.join(" · ")}</span>`;};
+    const evChips=d=>{const c={};((d.recent_headlines)||[]).forEach(h=>((h&&h.events)||[]).forEach(e=>{c[e]=(c[e]||0)+1;}));return Object.entries(c).sort((a,b)=>b[1]-a[1]).slice(0,2).map(([e])=>`<span style="font-size:10px;padding:1px 6px;border-radius:9px;background:var(--bg2);border:1px solid var(--line);color:var(--dim);margin-left:5px">${evLabel[e]||e}</span>`).join("");};
+    const HI_SIGNAL=new Set(["analyst","guidance","m_and_a","clinical","capital","legal_reg"]);
+    const catMark=d=>{const _l=d.news_catalyst_label;if(_l){const _c=(d.news_catalyst||0)>=0?"var(--up)":"var(--down)";return `<span title="decisive directional event — sharpened the vote" style="font-size:10px;padding:1px 7px;border-radius:9px;border:1px solid ${_c};color:${_c};margin-left:6px">\u26a1 ${esc(_l)}</span>`;}const sc=d.sentiment_score||0;if(Math.abs(sc)<0.5)return "";const has=((d.recent_headlines)||[]).some(h=>((h&&h.events)||[]).some(e=>HI_SIGNAL.has(e)));if(!has)return "";const c=sc>0?"var(--up)":"var(--down)";return `<span title="decisive directional event — sharpened the vote" style="font-size:10px;padding:1px 7px;border-radius:9px;border:1px solid ${c};color:${c};margin-left:6px">\u26a1 catalyst</span>`;};
+    const row=d=>{const s=sigOf(d),sc=d.sentiment_score,sp=split(d),cl=classify(d);
+      const hl=headline(d);
+      const divChip=cl==="diverge"?chip(sc>0?"bought weak / ignored good news":"agents went against it","var(--viol)"):"";
+      const voteStr=sp.n?`${sp.b} buy · ${sp.h} hold · ${sp.s} sell`:"";
+      return `<div style="padding:9px 0;border-bottom:1px solid var(--line)">`+
+        `<div style="display:grid;grid-template-columns:auto 1fr auto;gap:8px 12px;align-items:center">`+
+          `<span style="font-family:'Fraunces',serif;font-weight:600;font-size:15px">${esc(d.ticker)}${catMark(d)}</span>`+
+          `<span class="muted" style="font-size:13px"><span style="color:${sc>=0?'var(--up)':'var(--down)'}">${(sc>0?'+':'')+sc.toFixed(2)}</span> · ${d.article_count||0} art${d.article_count===1?'':'s'}${d.sector?' · '+esc(d.sector):''}${evChips(d)}${dltChip(d.ticker)}</span>`+
+          `<span style="font-weight:600;font-size:13px;color:${col(s)};text-align:right">→ ${esc(s)}${divChip}</span>`+
+        `</div>`+
+        (hl?`<div class="muted" style="font-size:12px;margin-top:3px;opacity:.85">“${hl}”</div>`:"")+
+        (voteStr?`<div class="muted" style="font-size:11.5px;margin-top:2px;color:var(--faint)">${voteStr}</div>`:"")+
+      `</div>`;};
+
+    const grp=(label,c,arr)=>arr.length?`<div class="muted" style="font-size:12px;text-transform:uppercase;letter-spacing:.1em;margin:14px 0 2px;color:${c}">${label}</div>`+arr.map(row).join(""):"";
+
+    el.innerHTML=
+      `<div class="plain" style="margin-bottom:8px">This is the chain working in the open: real headlines → a per-name sentiment score → the agents' vote, with the vote split shown so you can see how strongly the desk leaned. Numbers validate later; the words move first.</div>`+
+      `<div style="display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 4px">`+
+        `<span style="background:var(--bg2);border:1px solid var(--line);border-radius:6px;padding:6px 10px;font-size:12px">tape mood <b style="color:${moodCol}">${moodWord}</b> · avg <b style="color:${moodCol}">${(avg>0?'+':'')+avg.toFixed(2)}</b></span>`+
+        `<span style="background:var(--bg2);border:1px solid var(--line);border-radius:6px;padding:6px 10px;font-size:12px"><b style="color:var(--up)">${npos}</b> positive · <b style="color:var(--down)">${nneg}</b> negative · <b>${nneu}</b> neutral</span>`+
+        `<span style="background:var(--bg2);border:1px solid var(--line);border-radius:6px;padding:6px 10px;font-size:12px"><b>${totArt}</b> headlines across <b>${withNews}</b>/${debs.length} names</span>`+
+      `</div>`+
+      ((secUp.length||secDown.length)?`<div class="muted" style="font-size:12.5px;margin:8px 0 2px">News flow is pushing toward `+
+        secUp.map(x=>`<span style="color:var(--up)">${esc(x.k)}</span>`).join(", ")+
+        (secDown.length?` and away from `+secDown.map(x=>`<span style="color:var(--down)">${esc(x.k)}</span>`).join(", "):"")+`.</div>`:"")+
+      grp("Strong positive news → leaned in","var(--up)",strongPos)+
+      grp("Mildly positive","var(--up)",mildPos)+
+      grp("Negative news → stepped back","var(--down)",neg)+
+      (diverged.length?`<div class="muted" style="font-size:12px;text-transform:uppercase;letter-spacing:.1em;margin:16px 0 2px;color:var(--viol)">Where the desk disagreed with the news</div>`+
+        `<div class="muted" style="font-size:12px;margin-bottom:4px">These are the most informative cases — price, trend and risk overrode the headline. Watch whether the numbers later prove the agents or the news right.</div>`+
+        diverged.map(row).join(""):"")+
+      `<div class="muted" style="font-size:12.5px;margin-top:12px">14 of the agents weight sentiment directly, so a strong headline can flip a vote from hold to buy — but the vote also weighs price, trend and risk, which is why some positive names still show caution and some negative names still get bought. Whether sentiment actually predicts the move is graded over time on the <a href="debug.html" style="color:var(--gold)">debug console → sentiment tab</a>.</div>`;
+  })();
+
+  // ---------- accounts ----------
+  $("accts").innerHTML=accs.map(([name,s])=>{
+    const eq=acctEq(s); const chg=eq!=null?((eq-principal)/principal*100):null;
+    const up=chg!=null&&chg>=0; const col=up?"var(--up)":"var(--down)";
+    const w=eq!=null?Math.max(4,Math.min(100,eq/principal*100)):0;
+    return `<div class="card acct"><h4>${name}</h4><div class="eq">${money(eq)}</div>`+
+      `<div class="chg" style="color:${col}">${chg!=null?pct(chg):"—"} <span style="color:var(--faint);font-weight:400">vs $${(principal/1000)}k</span></div>`+
+      `<div class="bar"><i style="width:${w}%;background:${col}"></i></div></div>`;
+  }).join("");
+  $("combined").innerHTML=eqs.length?`Combined: <b>${money(combinedEq)}</b> across ${eqs.length} paper accounts · ${avgChg<0?"a small drawdown as markets fall":"holding up"}.`:"";
+
+  // ---------- insights (plain English, from real data) ----------
+  const ins=[];
+  // 1) volatility / catalysts
+  if(cat&&cat.clustering){
+    const pw=cat.clustering.peak_window||{};
+    ins.push(["⚡","Expect a volatile week",
+      cat.clustering.elevated_ahead
+        ? `High-impact events bunch up around the IPO${pw.high_impact?` (${pw.high_impact} of them in the busiest stretch)`:""} — CPI inflation, a Fed decision and triple-witching all land within days. More events together usually means bigger swings.`
+        : `No unusual cluster of market-moving events in the next two weeks.`]);
+  }
+  // 2) deal-journal IPO-complex finding
+  if(deals&&deals.by_catalyst_class){
+    const ipoCls=deals.by_catalyst_class.find(r=>r.catalyst_class==="ipo_related");
+    if(ipoCls&&ipoCls.win_rate!=null){
+      ins.push(["🛰️","The IPO-adjacent names have been weak",
+        `Trades on SpaceX-adjacent stocks (the AI names, the underwriters) have only won about ${Math.round(ipoCls.win_rate*100)}% of the time lately as the market de-risks into the launch. The system is flagging this rather than leaning in.`]);
+    }
+  }
+  // 3) edge study, plain
+  if(edge&&edge.overall){
+    const o=edge.overall; const e=o.mean_edge_pct??o.edge_pct??o.mean_return_pct??o.mean_return;
+    if(e!=null){
+      ins.push(["📈","Where the early edge is",
+        `On clean readings, the system’s calls average ${(e>0?"+":"")+Number(e).toFixed(2)}% per call${o.t_stat?` (t≈${Number(o.t_stat).toFixed(1)})`:""}${o.win_rate!=null?`, winning ${Math.round(o.win_rate*100)}% of the time`:""}. ${o.verdict?esc(String(o.verdict)).replace(/_/g," ")+". ":""}Small and early — and only as trustworthy as clean data, which starts this week.`]);
+    }
+  }
+  // 4) catalyst learning forward note
+  if(deals&&deals.deals_count!=null){
+    ins.push(["📓","It’s keeping a trade diary",
+      `Every order is now logged with the news and reason behind it and linked to how it turned out — ${deals.deals_count} trades so far, ${deals.linked_count||0} with a known result. Wins and losses are kept equally so the system can learn from both.`]);
+  }
+  $("insights").innerHTML = ins.length ? ins.map(([i,h,p])=>`<div class="insight"><div class="ic">${i}</div><div><p class="h">${h}</p><p class="p">${p}</p></div></div>`).join("") : '<div class="muted">No learning summary yet.</div>';
+
+  // ---------- timing fingerprints ----------
+  (function(){
+    const el=$("timing"); if(!el) return;
+    const fps=(timing&&timing.fingerprints)||{};
+    const heldSet=new Set();
+    [leg,h3,h5].forEach(s=>(((s&&s.positions_snapshot)||[]).forEach(p=>{const t=String(p.symbol||p.ticker||"").toUpperCase();if(t)heldSet.add(t);})));
+    const names=Object.keys(fps);
+    if(!names.length){
+      el.innerHTML='<div class="plain">The system is learning each stock\u2019s own intraday clock \u2014 when it tends to bottom and top through the day, and where its floor and ceiling sit. It records a price every cycle during the session and needs a few trading days before a stock\u2019s pattern is trustworthy. <span class="muted">Building now \u2014 this fills in over the next few sessions.</span></div>';
+      return;
+    }
+    const ranked=names.map(t=>({t,fp:fps[t]}))
+      .sort((a,b)=>(Number(heldSet.has(b.t))-Number(heldSet.has(a.t)))||(Number(!a.fp.learning)-Number(!b.fp.learning))||((b.fp.n_obs||0)-(a.fp.n_obs||0)))
+      .slice(0,10);
+    const fmt=v=>v==null?"\u2014":v;
+    const pct=v=>v==null?"\u2014":Math.round(v*100)+"%";
+    const rows=ranked.map(({t,fp})=>{
+      const held=heldSet.has(t)?`<span style="font-size:10px;padding:1px 6px;border-radius:9px;border:1px solid var(--up);color:var(--up);margin-left:6px">held</span>`:"";
+      if(fp.learning){
+        return `<div style="padding:9px 0;border-bottom:1px solid var(--line)"><span style="font-family:'Fraunces',serif;font-weight:600;font-size:15px">${esc(t)}</span>${held} <span class="muted" style="font-size:12px">\u00b7 learning (${fp.n_days||0} day${fp.n_days===1?'':'s'} so far)</span></div>`;
+      }
+      return `<div style="padding:9px 0;border-bottom:1px solid var(--line)">`+
+        `<div style="display:grid;grid-template-columns:auto 1fr;gap:8px 12px;align-items:baseline">`+
+          `<span style="font-family:'Fraunces',serif;font-weight:600;font-size:15px">${esc(t)}${held}</span>`+
+          `<span class="muted" style="font-size:12.5px">typical low <b style="color:var(--up)">${fmt(fp.best_buy_window)}</b> ET \u00b7 typical high <b style="color:var(--down)">${fmt(fp.best_sell_window)}</b> ET${fp.floor!=null?` \u00b7 band $${fp.floor}\u2013$${fp.ceiling}`:""}</span>`+
+        `</div>`+
+        (fp.note?`<div class="muted" style="font-size:11.5px;margin-top:2px;color:var(--faint)">now: ${esc(fp.note)}${fp.today_pos_in_range!=null?` (${pct(fp.today_pos_in_range)} up today\u2019s range)`:""}</div>`:"")+
+      `</div>`;
+    }).join("");
+    el.innerHTML=`<div class="plain" style="margin-bottom:8px">Every stock has its own rhythm, so the system learns each one from its own price history rather than assuming a single clock: the time of day a name tends to sit cheapest (buy window) and richest (sell window), plus its recent floor and ceiling. Times are ET; patterns firm up over a few sessions.</div>`+rows+
+      `<div class="muted" style="font-size:12px;margin-top:10px">${timing.tickers_confident||0} of ${timing.tickers_tracked||0} tracked names have enough days to read confidently; the rest are still learning.</div>`;
+  })();
+
+  // ---------- trades ----------
+  const heldSet=new Set();
+  [leg,h3,h5].forEach(s=>(((s&&s.positions_snapshot)||[]).forEach(p=>{const t=String(p.symbol||p.ticker||"").toUpperCase();if(t)heldSet.add(t);})));
+  const rec=((deals&&deals.recent)||[]).filter(d=>d.context_basis==="live").slice(0,10);
+  const recAny=((deals&&deals.recent)||[]).slice(0,10);
+  const show=rec.length?rec:recAny;
+  if(show.length){
+    $("trades").innerHTML=
+      `<div class="plain" style="margin-bottom:8px">Recent orders the system placed, with the reason and how they turned out. The tag shows whether each name is <b>confirmed held in Alpaca right now</b> — so you can see which choices actually became positions and which were closed or never filled.</div>`+
+      show.map(d=>{
+        const side=(d.side||"").toLowerCase();
+        const why=(d.headlines&&d.headlines[0])?esc(d.headlines[0]):(d.catalyst_class&&d.catalyst_class!=="unknown"?esc(d.catalyst_class.replace(/_/g," ")):"no headline on record — silent-tape entry");
+        const oc=d.outcome;
+        let res;
+        if(oc&&oc.return_pct!=null){const r=Number(oc.return_pct);res=`<span style="color:${r>=0?"var(--up)":"var(--down)"}">${(r>0?"+":"")+r.toFixed(1)}%</span>`;}
+        else res=`<span style="color:var(--faint)">open</span>`;
+        const isHeld=heldSet.has(String(d.ticker||"").toUpperCase());
+        const hchip=isHeld
+          ?`<span style="font-size:10px;padding:1px 6px;border-radius:9px;border:1px solid var(--up);color:var(--up);margin-left:6px;white-space:nowrap">in Alpaca</span>`
+          :`<span style="font-size:10px;padding:1px 6px;border-radius:9px;border:1px solid var(--faint);color:var(--faint);margin-left:6px;white-space:nowrap">not held</span>`;
+        return `<div class="trade"><span class="pill ${side}">${esc(d.side||"")}</span><div><span class="tk">${esc(d.ticker)}</span> <span class="muted" style="font-size:12px">· ${esc(d.account)}</span>${hchip}<div class="why">${why}</div></div><div class="res">${res}</div></div>`;
+      }).join("");
+  } else $("trades").innerHTML='<div class="muted">No recent trades logged with context yet — the diary fills as new orders are placed.</div>';
+
+  // ---------- going into the next session (readiness; day-aware) ----------
+  try{
+    // Next US session day, computed in ET so late-evening UTC doesn't skip a day.
+    const etNow=new Date(new Date().toLocaleString("en-US",{timeZone:"America/New_York"}));
+    const d=new Date(etNow); const closed=etNow.getHours()>=16;
+    do{ d.setDate(d.getDate()+( (d.getDay()===etNow.getDay()&&!closed&&d.getDay()>=1&&d.getDay()<=5)?0:1)); }
+    while(d.getDay()===0||d.getDay()===6);
+    const same=d.toDateString()===etNow.toDateString();
+    const names=["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+    const rh=document.getElementById("readiness-h");
+    if(rh) rh.textContent= same? "Going into today's session" : `Going into ${names[d.getDay()]}`;
+  }catch(e){}
+  const IPOCOMPLEX=new Set(["NVDA","AMD","AVGO","TSM","MU","PLTR","MSFT","GOOGL","META","TSLA","BA","LMT","RTX","NOC","GD","GS","MS","BAC","C","JPM"]);
+  let rhtml="", anyStale=false, totalHeld=0, totalIpo=0;
+  accs.forEach(([name,s])=>{
+    const held=((s&&s.positions_snapshot)||[]).map(p=>(p.symbol||p.ticker||"")).filter(Boolean);
+    totalHeld+=held.length;
+    const ipoHeld=held.filter(t=>IPOCOMPLEX.has(t)); totalIpo+=ipoHeld.length;
+    const sc=s&&s.last_stale_cancel; if(sc&&sc.cancelled>0)anyStale=true;
+    rhtml+=`<div style="padding:12px 0;border-bottom:1px solid var(--line)"><div style="display:flex;justify-content:space-between;align-items:baseline"><b>${name}</b><span class="muted" style="font-size:13px">${held.length} position${held.length===1?"":"s"}${ipoHeld.length?` · <span style="color:var(--viol)">${ipoHeld.length} IPO-complex</span>`:""}</span></div>`+
+      `<div class="muted" style="font-size:13.5px;margin-top:4px">${held.length?held.map(t=>IPOCOMPLEX.has(t)?`<span style="color:var(--viol)">${t}</span>`:t).join(" · "):"flat — no open positions"}</div>`+
+      (sc?`<div class="muted" style="font-size:12px;margin-top:5px;color:${sc.cancelled?"var(--warn)":"var(--faint)"}">stale-order cleanup: ${sc.cancelled} cancelled of ${sc.open_seen} open (last run)</div>`:"")+`</div>`;
+  });
+  $("readiness").innerHTML=
+    `<div class="plain" style="margin-bottom:10px">Here’s what the three accounts are carrying into the open — <b>${totalHeld} positions</b> total${totalIpo?`, including <b style="color:var(--viol)">${totalIpo} names tied to the SpaceX complex</b> (highlighted), which is the part most exposed to the IPO week’s swings`:""}.</div>`+
+    rhtml+
+    `<div class="muted" style="font-size:13px;margin-top:12px">A pre-cycle cleanup now cancels any unfilled order left sitting longer than two hours, so stale orders aren’t carried into the open or doubled-up on. ${anyStale?"":"It reports here each session as cycles run."}</div>`;
+
+
+  if(scoring&&scoring.outcomes){
+    const out=scoring.outcomes; const stale=out.filter(o=>o.stale_price_suspected).length; const clean=out.length-stale;
+    const cw=Math.round(clean/out.length*100), sw=100-cw;
+    $("health").innerHTML=
+      `<div class="plain" style="margin-bottom:8px">Of ${out.length.toLocaleString()} readings, <b style="color:var(--up)">${clean.toLocaleString()} are clean</b> and <b style="color:var(--warn)">${stale.toLocaleString()} were flagged stale</b> and set aside so they can’t pollute what the system learns.</div>`+
+      `<div class="hbar"><div style="width:${cw}%;background:var(--up)">${cw}% clean</div><div style="width:${sw}%;background:var(--warn)">${sw}% set aside</div></div>`+
+      `<div class="muted">The stale readings come from a known price-feed quirk on quiet days; they’re quarantined, not deleted. <b style="color:var(--ink)">every clean session extends the reliable record</b> — the thing to watch is whether clean readings climb while the stale share does not.</div>`+
+      (sentinel?(()=>{const ov=sentinel.overall;const col=ov==="fail"?"var(--down)":ov==="warn"?"var(--warn)":"var(--up)";const ic=ov==="pass"?"✓":ov==="warn"?"!":"✕";const bad=(sentinel.invariants||[]).filter(c=>c.status!=="pass");return `<div style="margin-top:14px;padding-top:12px;border-top:1px solid var(--line)"><span style="color:${col};font-weight:600">System integrity: ${esc(sentinel.summary||"")} ${ic}</span>`+(bad.length?`<div class="muted" style="font-size:12.5px;margin-top:5px">${bad.map(c=>`${esc(c.name.replace(/_/g," "))}: ${esc(c.detail)}`).join("<br>")}</div>`:`<div class="muted" style="font-size:12.5px;margin-top:4px">Baseline locked at $10k · narrative engine fed · accounts active · order hygiene on. A sentinel checks these every cycle and logs any drift.</div>`)+`</div>`;})():"");
+  } else $("health").innerHTML='<div class="err">Scoring data not available.</div>';
+})();
+</script>
+</body>
+</html>

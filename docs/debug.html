@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>💎</text></svg>">
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>SILMARIL · Debug Stream</title>
+<!--
+  READ-ONLY debug console. Reads docs/data/*.json written by the analytics suite
+  (debug_stream, agent_scorecard, sentiment_calibration, broker_reconciliation).
+  No writes, no persistence, no CDN. A code-debugger view of everything the system
+  takes in and does, refreshed live.
+-->
+<style>
+  :root{
+    --bg:#080b11; --panel:#0e141d; --panel2:#0b1018; --line:#1b2532;
+    --ink:#cdd7e3; --dim:#6c7a8c; --faint:#3f4a5a;
+    --gold:#d8be86; --green:#62d784; --cyan:#5bd4e6; --amber:#f3b53f;
+    --red:#ff5d6e; --violet:#c79bf0; --sky:#7fcdff; --teal:#54d2c4; --slate:#9aa7b6;
+    --mono: "JetBrains Mono","SFMono-Regular",ui-monospace,"Cascadia Code","Roboto Mono",Menlo,Consolas,monospace;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--mono);font-size:13px;line-height:1.5}
+  body{
+    background-image:
+      radial-gradient(1200px 600px at 80% -10%, rgba(90,120,160,.07), transparent 60%),
+      repeating-linear-gradient(0deg, rgba(255,255,255,.012) 0 1px, transparent 1px 3px);
+    min-height:100vh; padding:0 0 60px;
+  }
+  .wrap{max-width:1180px;margin:0 auto;padding:0 18px}
+  header{padding:22px 0 10px;border-bottom:1px solid var(--line)}
+  .brand{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
+  .brand h1{margin:0;font-size:20px;letter-spacing:3px;color:var(--gold);font-weight:700}
+  .brand .tag{color:var(--dim);letter-spacing:2px;font-size:11px;text-transform:uppercase}
+  .sub{color:var(--dim);font-size:11.5px;margin-top:6px}
+  .blink{display:inline-block;width:8px;height:14px;background:var(--green);margin-left:2px;animation:bl 1.05s steps(2) infinite;vertical-align:-2px}
+  @keyframes bl{0%,50%{opacity:1}50.01%,100%{opacity:0}}
+
+  .bar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:14px 0}
+  .stat{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:7px 11px;font-size:11.5px}
+  .stat b{color:var(--gold)} .stat .k{color:var(--dim)}
+  .spacer{flex:1}
+  button,.chip{font-family:var(--mono);font-size:11.5px;color:var(--ink);background:var(--panel);border:1px solid var(--line);
+    border-radius:5px;padding:6px 10px;cursor:pointer;transition:.12s}
+  button:hover,.chip:hover{border-color:#2c3a4c;background:#121a25}
+  .chip.on{border-color:var(--gold);color:var(--gold);background:#161208}
+  .chip.lv-on{border-color:currentColor}
+  input.search{font-family:var(--mono);font-size:12px;background:var(--panel2);border:1px solid var(--line);
+    border-radius:5px;color:var(--ink);padding:7px 10px;min-width:200px}
+  input.search:focus{outline:none;border-color:var(--gold)}
+
+  .tabs{display:flex;gap:4px;margin:8px 0 14px;border-bottom:1px solid var(--line)}
+  .tab{padding:9px 16px;cursor:pointer;color:var(--dim);border-bottom:2px solid transparent;letter-spacing:1px;font-size:12px;text-transform:uppercase}
+  .tab.on{color:var(--gold);border-bottom-color:var(--gold)}
+  .view{display:none} .view.on{display:block}
+
+  /* stream */
+  .console{background:var(--panel2);border:1px solid var(--line);border-radius:8px;max-height:64vh;overflow:auto;padding:6px 0}
+  .row{display:grid;grid-template-columns:64px 78px 70px 1fr;gap:10px;padding:3px 14px;border-left:3px solid transparent;white-space:nowrap}
+  .row:hover{background:#0c1219}
+  .row .t{color:var(--faint)} .row .ch{font-weight:700;letter-spacing:.5px}
+  .row .tk{color:var(--sky)} .row .m{color:var(--ink);white-space:normal;word-break:break-word}
+  .row.l-ERROR{border-left-color:var(--red)} .row.l-ERROR .m{color:#ffb3bb}
+  .row.l-WARN{border-left-color:var(--amber)} .row.l-WARN .m{color:#f7d79a}
+  .row.l-INFO{border-left-color:var(--green)}
+  .row.l-DEBUG{border-left-color:#243140} .row.l-DEBUG .m{color:var(--dim)}
+  .ch-AGENT{color:var(--violet)} .ch-NEWS{color:var(--sky)} .ch-EXEC{color:var(--amber)}
+  .ch-SCORE{color:var(--green)} .ch-ORDER{color:var(--teal)} .ch-ERROR{color:var(--red)}
+  .ch-HARVEST{color:var(--gold)} .ch-DRIFT{color:var(--slate)}
+
+  /* cards */
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:14px 16px;margin:10px 0}
+  .card h3{margin:0 0 8px;font-size:13px;letter-spacing:1px;color:var(--gold);text-transform:uppercase}
+  .muted{color:var(--dim)} .small{font-size:11.5px}
+  .pill{display:inline-block;padding:1px 8px;border-radius:10px;font-weight:700;font-size:11px;border:1px solid}
+  .g-A{color:#0a0e14;background:var(--green);border-color:var(--green)}
+  .g-B{color:var(--green);border-color:var(--green)}
+  .g-C{color:var(--slate);border-color:var(--slate)}
+  .g-D{color:var(--amber);border-color:var(--amber)}
+  .g-F{color:var(--red);border-color:var(--red)}
+  .g-I{color:var(--faint);border-color:var(--faint)}
+  .agent-row{display:grid;grid-template-columns:46px 130px 1fr;gap:12px;align-items:start;padding:10px 0;border-top:1px solid var(--line)}
+  .agent-row:first-child{border-top:none}
+  .agent-row .nm{color:var(--ink);font-weight:700}
+  .kv{color:var(--dim);font-size:11.5px} .kv b{color:var(--ink)}
+  .cav{color:#f7d79a;font-size:11.5px;margin-top:4px;border-left:2px solid var(--amber);padding-left:8px}
+  table{width:100%;border-collapse:collapse;font-size:12px} td,th{padding:5px 8px;text-align:left;border-bottom:1px solid var(--line)}
+  th{color:var(--dim);font-weight:600;text-transform:uppercase;font-size:10.5px;letter-spacing:.5px}
+  .pos{color:var(--green)} .neg{color:var(--red)}
+  .barline{height:7px;border-radius:4px;background:#16202c;overflow:hidden;display:inline-block;width:120px;vertical-align:middle}
+  .barline > i{display:block;height:100%}
+  .note{color:var(--dim);font-size:11.5px;padding:3px 0;border-left:2px solid var(--faint);padding-left:9px;margin:3px 0}
+  .err{color:var(--red)}
+  a{color:var(--gold)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="brand">
+      <h1>SILMARIL</h1><span class="tag">debug stream<span class="blink"></span></span>
+    </div>
+    <div class="sub" id="sub">loading…</div>
+    <div class="bar" id="statbar"></div>
+    <div class="bar">
+      <label class="muted small"><input type="checkbox" id="auto" checked/> auto-refresh</label>
+      <select id="ivl" class="search" style="min-width:auto;padding:6px 8px">
+        <option value="15">15s</option><option value="30" selected>30s</option><option value="60">60s</option>
+      </select>
+      <button id="refresh">↻ refresh now</button>
+      <span class="spacer"></span>
+      <a href="index.html">briefing</a> · <a href="cockpit.html">cockpit</a>
+    </div>
+  </header>
+
+  <div class="tabs">
+    <div class="tab on" data-v="stream">stream</div>
+    <div class="tab" data-v="scorecard">scorecard</div>
+    <div class="tab" data-v="sentiment">sentiment</div>
+    <div class="tab" data-v="sync">broker sync</div>
+  </div>
+
+  <!-- STREAM -->
+  <section class="view on" id="v-stream">
+    <div class="bar" id="chchips"></div>
+    <div class="bar">
+      <span id="lvchips"></span>
+      <span class="spacer"></span>
+      <input class="search" id="q" placeholder="filter text / ticker…"/>
+    </div>
+    <div class="console" id="console"></div>
+  </section>
+
+  <!-- SCORECARD -->
+  <section class="view" id="v-scorecard"></section>
+
+  <!-- SENTIMENT -->
+  <section class="view" id="v-sentiment"></section>
+
+  <!-- SYNC -->
+  <section class="view" id="v-sync"></section>
+</div>
+
+<script>
+const J = async f => { try{ const r = await fetch("data/"+f+"?t="+Date.now()); if(!r.ok) return null; return await r.json(); }catch(e){ return null; } };
+const E = (s)=>String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const num = (x,d=2)=> (x==null||isNaN(x))? "—" : Number(x).toFixed(d);
+const pct = (x,d=2)=> (x==null||isNaN(x))? "—" : (Number(x)>=0?"+":"")+Number(x).toFixed(d)+"%";
+const hhmm = ts => { if(!ts) return ""; const m=String(ts).match(/(\d{2}:\d{2})/); if(m) return m[1]; return String(ts).slice(5,10); };
+const dt = ts => { if(!ts) return ""; return String(ts).slice(5,16).replace("T"," "); };
+
+let STREAM=null, chFilter="ALL", lvFilter=new Set(["ERROR","WARN","INFO","DEBUG"]), q="";
+const CH=["ALL","AGENT","NEWS","EXEC","SCORE","ORDER","HARVEST","DRIFT","ERROR"];
+const LV=["ERROR","WARN","INFO","DEBUG"];
+
+function renderStatbar(s){
+  const c=s.channels||{}, l=s.levels||{};
+  const chBits = Object.keys(c).sort().map(k=>`<span class="ch-${k}">${k} ${c[k]}</span>`).join(" · ");
+  document.getElementById("statbar").innerHTML =
+    `<span class="stat"><span class="k">events</span> <b>${s.count||0}</b></span>`+
+    `<span class="stat"><span class="k">err</span> <b style="color:var(--red)">${l.ERROR||0}</b> · <span class="k">warn</span> <b style="color:var(--amber)">${l.WARN||0}</b></span>`+
+    `<span class="stat small">${chBits}</span>`;
+}
+function renderChips(){
+  document.getElementById("chchips").innerHTML = CH.map(k=>`<span class="chip ${chFilter===k?'on':''}" data-ch="${k}">${k}</span>`).join("");
+  document.getElementById("lvchips").innerHTML = LV.map(k=>{
+    const col={ERROR:'var(--red)',WARN:'var(--amber)',INFO:'var(--green)',DEBUG:'var(--slate)'}[k];
+    return `<span class="chip ${lvFilter.has(k)?'on lv-on':''}" data-lv="${k}" style="color:${lvFilter.has(k)?col:'var(--dim)'}">${k}</span>`;
+  }).join(" ");
+  document.querySelectorAll("[data-ch]").forEach(el=>el.onclick=()=>{chFilter=el.dataset.ch;renderChips();paintConsole();});
+  document.querySelectorAll("[data-lv]").forEach(el=>el.onclick=()=>{const k=el.dataset.lv; lvFilter.has(k)?lvFilter.delete(k):lvFilter.add(k); renderChips();paintConsole();});
+}
+function paintConsole(){
+  if(!STREAM){document.getElementById("console").innerHTML='<div class="row"><span></span><span></span><span></span><span class="m muted">debug_stream.json not found — run the analytics suite.</span></div>';return;}
+  const ev=(STREAM.events||[]).filter(e=>
+    (chFilter==="ALL"||e.channel===chFilter) && lvFilter.has(e.level) &&
+    (!q || (e.msg||"").toLowerCase().includes(q) || (e.ticker||"").toLowerCase().includes(q))
+  ).slice(0,1200);
+  document.getElementById("console").innerHTML = ev.map(e=>
+    `<div class="row l-${e.level}"><span class="t">${E(hhmm(e.ts))}</span>`+
+    `<span class="ch ch-${e.channel}">${E(e.channel)}</span>`+
+    `<span class="tk">${E(e.ticker||e.account||"")}</span>`+
+    `<span class="m">${E(e.msg)}</span></div>`
+  ).join("") || '<div class="row"><span></span><span></span><span></span><span class="m muted">no events match the filter.</span></div>';
+}
+
+/* ---------- scorecard ---------- */
+function gradeNote(c){
+  const sp=c.clean_performance||{}, s=c.samples||{};
+  const wr=(sp.win_rate!=null)?(sp.win_rate*100).toFixed(0)+"%":"—";
+  const mix=Object.entries(c.action_mix||{}).map(([k,v])=>`${k}:${v}`).join(" ");
+  const months=(c.by_period&&c.by_period.monthly||[]).map(m=>`${m.period} n${m.n} ${pct(m.mean_return)} (${(m.win_rate*100).toFixed(0)}%)`).join("  ·  ");
+  const cav=(c.caveats||[]).map(x=>`<div class="cav">⚠ ${E(x)}</div>`).join("");
+  return `<div class="agent-row">
+    <div><span class="pill g-${c.grade}">${c.grade}</span></div>
+    <div><div class="nm">${E(c.agent)}</div><div class="kv">${E(c.verdict)}</div></div>
+    <div>
+      <div class="small">${E(c.why)}</div>
+      <div class="kv" style="margin-top:5px">
+        clean <b>${s.clean_directional||0}</b>/${s.total||0} dir · win <b>${wr}</b> ·
+        mean <b class="${(sp.mean_signed_return||0)>=0?'pos':'neg'}">${pct(sp.mean_signed_return)}</b> ·
+        sum <b class="${(sp.sum_signed_return||0)>=0?'pos':'neg'}">${pct(sp.sum_signed_return)}</b> ·
+        t=<b>${num(sp.t_stat)}</b> · dir-conc <b>${num((c.direction_concentration||0)*100,0)}%</b>
+      </div>
+      <div class="kv">actions: ${E(mix)} · instr: ${E(Object.entries(c.instrument_mix||{}).map(([k,v])=>k+":"+v).join(" "))}</div>
+      ${months?`<div class="kv">by month: ${E(months)}</div>`:""}
+      ${cav}
+    </div></div>`;
+}
+async function renderScorecard(){
+  const d=await J("agent_scorecard.json"); const el=document.getElementById("v-scorecard");
+  if(!d){el.innerHTML='<div class="card err">agent_scorecard.json not found — run the analytics suite.</div>';return;}
+  const gc=d.grade_counts||{};
+  el.innerHTML =
+   `<div class="card"><h3>Agent grades — clean, signed, honest</h3>
+     <div class="small muted">${d.agents_graded} agents · ${d.outcomes_clean}/${d.outcomes_total} clean outcomes (${(d.stale_pct*100).toFixed(0)}% stale, excluded) · grade needs ≥${d.min_clean_for_grade} clean directional samples.</div>
+     <div class="bar" style="margin-top:8px">
+       <span class="stat">A <b style="color:var(--green)">${gc.A||0}</b></span>
+       <span class="stat">B <b style="color:var(--green)">${gc.B||0}</b></span>
+       <span class="stat">C <b>${gc.C||0}</b></span>
+       <span class="stat">D <b style="color:var(--amber)">${gc.D||0}</b></span>
+       <span class="stat">F <b style="color:var(--red)">${gc.F||0}</b></span>
+       <span class="stat">Insufficient <b style="color:var(--dim)">${gc.I||0}</b></span>
+     </div>
+     ${(d.notes||[]).map(n=>`<div class="note">${E(n)}</div>`).join("")}
+   </div>
+   <div class="card">${(d.cards||[]).map(gradeNote).join("")}</div>`;
+}
+
+/* ---------- sentiment ---------- */
+async function renderSentiment(){
+  const d=await J("sentiment_calibration.json"); const el=document.getElementById("v-sentiment");
+  if(!d){el.innerHTML='<div class="card err">sentiment_calibration.json not found — run the analytics suite.</div>';return;}
+  const cal=d.calibration||{}, r=d.responsiveness_now||{}, oh=cal.overhype||{};
+  const binRows=(cal.by_bin||[]).map(b=>{
+    const w=Math.min(100,Math.abs(b.mean_return||0)*40);
+    const col=(b.mean_return||0)>=0?'var(--green)':'var(--red)';
+    return `<tr><td>${E(b.bin)}</td><td>${b.n}</td><td class="${(b.mean_return||0)>=0?'pos':'neg'}">${pct(b.mean_return)}</td>
+      <td>${b.n?((b.hit_rate*100).toFixed(0)+"%"):"—"}</td><td>${num(b.t_stat)}</td><td><span class="barline"><i style="width:${w}%;background:${col}"></i></span> <span class="muted small">${E(b.verdict)}</span></td></tr>`;
+  }).join("");
+  const hRows=(cal.by_realized_horizon||[]).map(h=>`<tr><td>${E(h.horizon)}</td><td>${h.n}</td><td class="${(h.mean_return||0)>=0?'pos':'neg'}">${pct(h.mean_return)}</td><td>${(h.hit_rate*100).toFixed(0)}%</td><td>${num(h.t_stat)}</td></tr>`).join("");
+  const proxy=d.deal_journal_proxy||{};
+  const cls=(proxy.by_catalyst_class||[]).map(c=>`<tr><td>${E(c.catalyst_class)}</td><td>${c.n}</td><td>${c.linked}</td><td class="${(c.avg_return||0)>=0?'pos':'neg'}">${pct(c.avg_return)}</td><td>${(c.win_rate*100).toFixed(0)}%</td></tr>`).join("");
+  el.innerHTML =
+   `<div class="card"><h3>Is the news legit, or overhype?</h3>
+     <div class="bar">
+       <span class="stat"><span class="k">ledger rows</span> <b>${d.ledger_rows}</b></span>
+       <span class="stat"><span class="k">graded clean</span> <b>${cal.graded_clean||0}</b></span>
+       <span class="stat"><span class="k">sentiment↔return r</span> <b>${num(cal.sentiment_return_correlation,3)}</b></span>
+       <span class="stat"><span class="k">recorded this cycle</span> <b>${d.recorded_this_cycle}</b></span>
+       <span class="stat"><span class="k">graded this cycle</span> <b>${d.graded_this_cycle}</b></span>
+     </div>
+     ${(d.notes||[]).map(n=>`<div class="note">${E(n)}</div>`).join("")}
+   </div>
+   <div class="card"><h3>Realized return by sentiment bin (clean)</h3>
+     <table><thead><tr><th>bin</th><th>n</th><th>mean ret</th><th>hit</th><th>t</th><th>signal</th></tr></thead><tbody>${binRows||'<tr><td colspan=6 class="muted">accumulating — no clean grades yet</td></tr>'}</tbody></table>
+     <div class="kv" style="margin-top:8px">Overhype check (strong-positive sentiment, n=${oh.strong_pos_n||0}): <b style="color:var(--red)">${oh.overhype_rate!=null?(oh.overhype_rate*100).toFixed(0)+"% fell":"—"}</b> vs <b style="color:var(--green)">${oh.legit_rate!=null?(oh.legit_rate*100).toFixed(0)+"% rose":"—"}</b>. Bad-news confirmed (strong-negative, n=${oh.strong_neg_n||0}): <b>${oh.bad_news_confirmed_rate!=null?(oh.bad_news_confirmed_rate*100).toFixed(0)+"%":"—"}</b>.</div>
+   </div>
+   <div class="card"><h3>Realized-horizon cuts</h3>
+     <table><thead><tr><th>horizon</th><th>n</th><th>mean ret</th><th>hit</th><th>t</th></tr></thead><tbody>${hRows||'<tr><td colspan=5 class="muted">accumulating</td></tr>'}</tbody></table>
+   </div>
+   <div class="card"><h3>Live responsiveness (today's signals)</h3>
+     <div class="kv">avg sentiment on BUY consensus: <b class="pos">${num(r.avg_sentiment_on_BUY_consensus)}</b> · on SELL: <b class="neg">${num(r.avg_sentiment_on_SELL_consensus)}</b> · on HOLD/ABSTAIN: <b>${num(r.avg_sentiment_on_HOLD_ABSTAIN)}</b> · sentiment↔consensus-score r: <b>${num(r.sentiment_vs_consensus_score_corr,3)}</b> (${r.n_with_sentiment||0} names)</div>
+   </div>
+   <div class="card"><h3>Near-term realized proxy — deal journal</h3>
+     <div class="kv">${proxy.linked_count!=null?`${proxy.linked_count} of ${proxy.deals_count} deals have outcomes attached.`:"deal journal not found."}</div>
+     <table style="margin-top:6px"><thead><tr><th>catalyst class</th><th>n</th><th>linked</th><th>avg ret</th><th>win</th></tr></thead><tbody>${cls||""}</tbody></table>
+   </div>`;
+}
+
+/* ---------- broker sync ---------- */
+async function renderSync(){
+  const d=await J("broker_reconciliation.json"); const el=document.getElementById("v-sync");
+  if(!d){el.innerHTML='<div class="card err">broker_reconciliation.json not found — run the analytics suite.</div>';return;}
+  const s=d.summary||{};
+  const acc=(d.accounts||[]).map(a=>{
+    const c=a.counts||{};
+    const flags=(a.flags||[]).map(f=>`<div class="note" style="border-left-color:${f.level==='WARN'?'var(--amber)':'var(--faint)'}"><b style="color:${f.level==='WARN'?'var(--amber)':'var(--dim)'}">${f.code}</b> — ${E(f.detail)}</div>`).join("");
+    const phantom=(a.phantom_in_meta||[]).slice(0,18).join(", ");
+    return `<div class="card"><h3>${E(a.account_id)} ${a.in_sync?'<span class="pill g-A">IN SYNC</span>':'<span class="pill g-D">DRIFT</span>'}</h3>
+      <div class="kv">cap <b>$${num(a.trading_capital,0)}</b> · drawdown <b class="${(a.drawdown_pct||0)>=0?'pos':'neg'}">${num(a.drawdown_pct)}%</b> · configured <b style="color:${a.configured?'var(--green)':'var(--red)'}">${a.configured}</b> · last order <b>${E((a.last_order_at||'').slice(0,10)||'—')}</b> · dormant <b>${a.dormant_days==null?'—':a.dormant_days+'d'}</b></div>
+      <div class="kv">meta <b>${c.meta||0}</b> · broker snapshot <b>${c.snapshot||0}</b> · matched <b>${c.matched||0}</b> · <b style="color:var(--red)">phantom ${c.phantom_in_meta||0}</b> · orders ${c.orders||0}</div>
+      ${phantom?`<div class="kv" style="margin-top:4px">phantom memo: ${E(phantom)}${(a.phantom_in_meta||[]).length>18?' …':''}</div>`:""}
+      ${flags}</div>`;
+  }).join("");
+  el.innerHTML =
+   `<div class="card"><h3>Our book vs the broker's book</h3>
+     <div class="bar">
+       <span class="stat"><span class="k">accounts live</span> <b>${s.accounts_live}/${s.accounts_total}</b></span>
+       <span class="stat"><span class="k">in sync</span> <b style="color:${s.in_sync?'var(--green)':'var(--red)'}">${s.in_sync}</b></span>
+       <span class="stat"><span class="k">phantom memo total</span> <b style="color:var(--red)">${s.total_phantom_meta}</b></span>
+     </div>
+     ${(d.notes||[]).map(n=>`<div class="note">${E(n)}</div>`).join("")}
+     ${(d.recommended_fixes||[]).map(f=>`<div class="note" style="border-left-color:var(--gold)"><b style="color:var(--gold)">${E(f.code)}</b> <span class="muted">[${E(f.track)}]</span> — ${E(f.detail)}</div>`).join("")}
+   </div>${acc}`;
+}
+
+/* ---------- orchestration ---------- */
+async function loadAll(){
+  STREAM = await J("debug_stream.json");
+  if(STREAM){ renderStatbar(STREAM); paintConsole(); }
+  document.getElementById("sub").innerHTML = STREAM
+    ? `last stream: ${E(dt(STREAM.generated_at))} UTC · ${STREAM.count} events merged from signals · decisions · scores · orders · errors · harvests · drift`
+    : 'debug_stream.json not found — run <code>python -m silmaril.analytics.suite</code> after a cycle.';
+  // active non-stream tab refresh
+  const active=document.querySelector(".tab.on").dataset.v;
+  if(active==="scorecard") renderScorecard();
+  if(active==="sentiment") renderSentiment();
+  if(active==="sync") renderSync();
+}
+
+document.querySelectorAll(".tab").forEach(t=>t.onclick=()=>{
+  document.querySelectorAll(".tab").forEach(x=>x.classList.remove("on"));
+  document.querySelectorAll(".view").forEach(x=>x.classList.remove("on"));
+  t.classList.add("on"); document.getElementById("v-"+t.dataset.v).classList.add("on");
+  if(t.dataset.v==="scorecard") renderScorecard();
+  if(t.dataset.v==="sentiment") renderSentiment();
+  if(t.dataset.v==="sync") renderSync();
+});
+document.getElementById("q").addEventListener("input",e=>{q=e.target.value.toLowerCase();paintConsole();});
+document.getElementById("refresh").onclick=loadAll;
+
+let timer=null;
+function arm(){ if(timer) clearInterval(timer);
+  if(document.getElementById("auto").checked){ timer=setInterval(loadAll, parseInt(document.getElementById("ivl").value,10)*1000); } }
+document.getElementById("auto").onchange=arm;
+document.getElementById("ivl").onchange=arm;
+
+renderChips(); loadAll(); arm();
+</script>
+</body>
+</html>

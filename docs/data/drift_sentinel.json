@@ -1,0 +1,129 @@
+{
+  "version": "drift-sentinel-1.0",
+  "generated_at": "2026-06-13T02:04:02.605645+00:00",
+  "overall": "pass",
+  "summary": "9/9 invariants holding",
+  "counts": {
+    "pass": 9,
+    "warn": 0,
+    "fail": 0,
+    "total": 9
+  },
+  "stale_pct": 0.0,
+  "headline_count": 311,
+  "invariants": [
+    {
+      "name": "principal_baseline",
+      "status": "pass",
+      "detail": "all accounts anchored to $10,000",
+      "value": 10000.0
+    },
+    {
+      "name": "no_legacy_100k",
+      "status": "pass",
+      "detail": "no legacy $100k base present",
+      "value": 0
+    },
+    {
+      "name": "narrative_fed",
+      "status": "pass",
+      "detail": "narrative engine fed by 311 headlines",
+      "value": 311
+    },
+    {
+      "name": "accounts_active",
+      "status": "pass",
+      "detail": "all accounts active within 2 days",
+      "value": null
+    },
+    {
+      "name": "stale_bounded",
+      "status": "pass",
+      "detail": "stale share 0.0% (was 0.0%, +0.0)",
+      "value": 0.0
+    },
+    {
+      "name": "frozen_bounded",
+      "status": "pass",
+      "detail": "0 agents frozen (expected \u22644 on stale-era scores)",
+      "value": 0
+    },
+    {
+      "name": "orphans_bounded",
+      "status": "pass",
+      "detail": "4 disconnected files (known)",
+      "value": 4
+    },
+    {
+      "name": "order_hygiene",
+      "status": "pass",
+      "detail": "stale-order cleanup active (LEGACY:0, HARVEST_3:3)",
+      "value": [
+        "LEGACY:0",
+        "HARVEST_3:3"
+      ]
+    },
+    {
+      "name": "deal_linking",
+      "status": "pass",
+      "detail": "181 trades linked to outcomes",
+      "value": 181
+    }
+  ],
+  "drift_log": [
+    {
+      "date": "2026-06-08",
+      "overall": "pass",
+      "pass": 9,
+      "warn": 0,
+      "fail": 0,
+      "stale_pct": 27.3,
+      "headline_count": 282
+    },
+    {
+      "date": "2026-06-09",
+      "overall": "pass",
+      "pass": 9,
+      "warn": 0,
+      "fail": 0,
+      "stale_pct": 26.6,
+      "headline_count": 285
+    },
+    {
+      "date": "2026-06-10",
+      "overall": "pass",
+      "pass": 9,
+      "warn": 0,
+      "fail": 0,
+      "stale_pct": 13.0,
+      "headline_count": 296
+    },
+    {
+      "date": "2026-06-11",
+      "overall": "pass",
+      "pass": 9,
+      "warn": 0,
+      "fail": 0,
+      "stale_pct": 0.0,
+      "headline_count": 294
+    },
+    {
+      "date": "2026-06-12",
+      "overall": "pass",
+      "pass": 9,
+      "warn": 0,
+      "fail": 0,
+      "stale_pct": 0.0,
+      "headline_count": 311
+    },
+    {
+      "date": "2026-06-13",
+      "overall": "pass",
+      "pass": 9,
+      "warn": 0,
+      "fail": 0,
+      "stale_pct": 0.0,
+      "headline_count": 311
+    }
+  ]
+}

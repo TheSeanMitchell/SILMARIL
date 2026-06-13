@@ -1,0 +1,43 @@
+name: Reset Alpaca grocery to truth
+
+# One-shot healer that anchors the ALPACA grocery ledger to real money:
+#   lifetime_harvested = max(0, alpaca.account.equity - principal_target)
+#
+# Run this once after deploying the trading-book cap fix to clear the
+# inflated bookkeeping counter (the +99,900%-style leaderboard artifact).
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  reset:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Run truth-anchor reset
+        run: python scripts/reset_alpaca_grocery_to_truth.py
+
+      - name: Commit
+        run: |
+          git config user.name 'silmaril-bot'
+          git config user.email 'silmaril-bot@users.noreply.github.com'
+          git add docs/data/grocery_*.json docs/data/grocery_leaderboard.json 2>/dev/null || true
+          if git diff --staged --quiet; then
+            echo "nothing to commit"
+            exit 0
+          fi
+          git commit -m "🩹 Anchor ALPACA grocery ledger to real Alpaca equity"
+          git push || echo "nothing to push"

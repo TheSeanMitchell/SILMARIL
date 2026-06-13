@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<!--
+  SILMARIL Alpha 6.3 — OPERATOR COCKPIT (Unit S4)
+  =================================================
+  Anomaly-first, tabbed, single truthful operator surface.
+  * Pairs with docs/silmaril-truth.js (the canonical primitive layer). Upload BOTH.
+  * Computes NOTHING itself — every metric/anomaly/visual comes from ST.* so there
+    is ONE source of truth (no drift). This file only loads data and wires the DOM.
+  * READ-ONLY: reads docs/data/*.json; no writes, no persistence, no CDN.
+  * Supersedes integrity.html + observability.html (retire them after parity check).
+  * Observational-only · continuity-safe · drag/drop deployable · rollback = delete.
+-->
+<html lang="en">
+<head>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>💎</text></svg>">
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>SILMARIL · Operator Cockpit</title>
+<style>
+  :root{--bg:#0a0e16;--panel:#0f1622;--card:#131c2b;--line:#232f42;--ink:#cdd6e4;--dim:#7c8aa5;
+    --faint:#5f6c84;--hi:#e7eefc;
+    --st-ok:#74d999;--st-warn:#f0b357;--st-bad:#f08a9b;--st-info:#7fb0e0;--st-viol:#b89bf0;
+    --st-critical:#f08a9b;}
+  *{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--ink);
+    font:13px/1.5 -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif}
+  header{padding:16px 20px;border-bottom:1px solid var(--line);background:var(--panel);position:sticky;top:0;z-index:5}
+  header h1{margin:0;font-size:15px;color:var(--hi)} header .sub{color:var(--dim);font-size:11px;margin-top:2px}
+  main{max-width:1180px;margin:0 auto;padding:16px 20px 60px}
+  /* truth strip */
+  .strip{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:14px 0}
+  .st-tile{background:var(--card);border:1px solid var(--line);border-left-width:3px;border-radius:8px;padding:10px 12px}
+  .st-tile-v{font-size:20px;font-weight:700;color:var(--hi);font-variant-numeric:tabular-nums}
+  .st-tile-k{font-size:10px;color:var(--dim);text-transform:uppercase;letter-spacing:.5px;margin-top:2px}
+  .st-tile-s{font-size:10px;color:var(--faint);margin-top:2px}
+  .st-tile.st-ok{border-left-color:var(--st-ok)} .st-tile.st-warn{border-left-color:var(--st-warn)}
+  .st-tile.st-bad,.st-tile.st-critical{border-left-color:var(--st-bad)} .st-tile.st-info{border-left-color:var(--st-info)}
+  /* tabs */
+  nav.tabs{display:flex;gap:4px;flex-wrap:wrap;border-bottom:1px solid var(--line);margin:8px 0 16px}
+  nav.tabs button{background:none;border:none;color:var(--dim);padding:9px 14px;font-size:12px;cursor:pointer;
+    border-bottom:2px solid transparent;font-weight:600}
+  nav.tabs button.active{color:var(--hi);border-bottom-color:var(--st-info)}
+  nav.tabs button .pill{background:var(--st-bad);color:#1a0d10;border-radius:9px;padding:0 6px;font-size:10px;margin-left:5px}
+  .tab{display:none} .tab.active{display:block}
+  h2{font-size:12px;color:var(--hi);text-transform:uppercase;letter-spacing:.5px;border-left:3px solid var(--st-info);padding-left:8px;margin:18px 0 10px}
+  .desc{color:var(--dim);font-size:11px;margin:-4px 0 12px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:12px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:9px;padding:13px 15px;margin-bottom:12px}
+  .card h3{margin:0 0 8px;font-size:13px;color:var(--hi);display:flex;justify-content:space-between;gap:8px}
+  .row{display:flex;justify-content:space-between;padding:2px 0;font-size:12px} .row .k{color:var(--dim)} .row .v{font-variant-numeric:tabular-nums}
+  /* shared primitive styles (referenced by ST.Render) */
+  .st-badge{display:inline-block;padding:1px 7px;border-radius:9px;font-size:10px;font-weight:600}
+  .st-info{background:#23303f;color:var(--st-info);border:1px solid #355169}
+  .st-ok{background:#16331f;color:var(--st-ok);border:1px solid #245a35}
+  .st-warn{background:#3a2a12;color:var(--st-warn);border:1px solid #6b4d1d}
+  .st-bad,.st-critical{background:#3a1820;color:var(--st-bad);border:1px solid #6b2535}
+  .st-viol{background:#2a2440;color:var(--st-viol);border:1px solid #463a6b}
+  .st-nm{color:var(--faint)}
+  .st-anom{background:var(--card);border:1px solid var(--line);border-left-width:4px;border-radius:8px;padding:11px 13px;margin-bottom:9px}
+  .st-anom.st-critical{border-left-color:var(--st-bad)} .st-anom.st-warn{border-left-color:var(--st-warn)} .st-anom.st-info{border-left-color:var(--st-info)}
+  .st-anom-h{font-size:13px;color:var(--hi)} .st-anom-d{font-size:11.5px;color:var(--dim);margin:4px 0} .st-anom-t{font-size:10px;color:var(--faint)}
+  .st-pb{margin:2px 0} .st-pb-row{display:flex;align-items:center;gap:6px;font-size:11px}
+  .st-pb-lab{width:34px;color:var(--dim)} .st-pb-track{flex:1;height:8px;background:#0c1320;border-radius:4px;overflow:hidden}
+  .st-pb-track > i{display:block;height:100%} .st-pb-val{width:46px;text-align:right;font-variant-numeric:tabular-nums}
+  .st-ci{display:inline-flex;align-items:center;gap:7px} .st-ci-bar{position:relative;width:90px;height:10px;background:#0c1320;border-radius:5px}
+  .st-ci-bar > i{position:absolute;top:2px;height:6px;border-radius:3px;opacity:.85} .st-ci-bar > u{position:absolute;top:0;width:2px;height:10px;background:var(--hi)}
+  .st-ci-txt{font-variant-numeric:tabular-nums} .st-ci-txt small{color:var(--faint)}
+  .st-spark,.st-bars{width:100%;height:auto;display:block} .st-axt{fill:var(--faint);font-size:9px}
+  .st-tl{position:relative;height:24px;background:#0c1320;border:1px solid var(--line);border-radius:5px;overflow:hidden}
+  .st-tl > i{position:absolute;top:0;height:100%;opacity:.7} .st-axis{display:flex;justify-content:space-between;color:var(--faint);font-size:9px;margin-top:2px}
+  .st-table-wrap{overflow:auto;border:1px solid var(--line);border-radius:9px;max-height:600px}
+  table.st-table{width:100%;border-collapse:collapse;font-size:12px}
+  .st-table th,.st-table td{padding:6px 9px;text-align:right;border-bottom:1px solid var(--line);white-space:nowrap;font-variant-numeric:tabular-nums}
+  .st-table th{color:var(--dim);font-weight:600;text-transform:uppercase;font-size:10px;position:sticky;top:0;background:var(--panel)}
+  .st-table td.st-l,.st-table th.st-l{text-align:left}
+  .st-table tr.frozen td{opacity:.55}
+  .note{color:var(--faint);font-size:11px;margin-top:10px}
+  details{margin:8px 0;border:1px solid var(--line);border-radius:8px;background:var(--card);padding:4px 10px}
+  details > summary{cursor:pointer;font-size:13px;color:var(--hi);padding:6px 2px;list-style:none}
+  details > summary::-webkit-details-marker{display:none}
+  details > summary::before{content:'\25B8 ';color:var(--dim)} details[open] > summary::before{content:'\25BE '}
+  /* ---- S5 cognition layer (display-only) ---- */
+  .situation{background:linear-gradient(180deg,#101a2b,#0e1622);border:1px solid var(--line);
+    border-left:3px solid var(--st-bad);border-radius:10px;padding:13px 16px;margin:14px 0}
+  .sit-head{font-size:11px;letter-spacing:.7px;color:var(--dim);text-transform:uppercase;margin-bottom:6px}
+  .sit-narr{font-size:14px;line-height:1.6;color:var(--ink)}
+  .sit-narr b{color:var(--hi)} .st-em-bad{color:var(--st-bad)!important}
+  .sit-gauges{display:grid;grid-template-columns:160px 1fr 1fr;gap:14px;margin-top:12px;align-items:center}
+  .sit-cap{font-size:10px;color:var(--dim);text-transform:uppercase;letter-spacing:.4px;margin-bottom:5px}
+  .st-gauge{text-align:center} .st-gauge svg{width:120px;height:70px}
+  .st-gauge-v{font-size:17px;font-weight:700} .st-gauge-l{font-size:10px;color:var(--dim);margin-top:1px}
+  .st-gauge-nm{color:var(--faint);font-size:12px;padding:18px 0}
+  .st-stack{display:flex;height:16px;border-radius:5px;overflow:hidden;background:#0c1320}
+  .st-stack > i{display:block;height:100%}
+  .st-legend{display:flex;flex-wrap:wrap;gap:10px;margin-top:6px;font-size:11px;color:var(--dim)}
+  .st-leg b{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:4px;vertical-align:middle}
+  .st-leg em{color:var(--ink);font-style:normal;font-weight:600}
+  .st-help{display:inline-flex;align-items:center;justify-content:center;width:14px;height:14px;border-radius:50%;
+    background:#23303f;color:var(--st-info);border:1px solid #355169;font-size:9px;font-weight:700;cursor:help;margin-left:4px;vertical-align:middle}
+  @media(max-width:720px){ .sit-gauges{grid-template-columns:1fr} }
+  /* responsive: tables collapse to cards on narrow screens (app-readiness) */
+  @media(max-width:720px){
+    .st-table thead{display:none}
+    .st-table,.st-table tbody,.st-table tr,.st-table td{display:block;width:100%}
+    .st-table tr{border:1px solid var(--line);border-radius:8px;margin:8px;padding:4px 8px;background:var(--card)}
+    .st-table td{text-align:right;border:none;border-bottom:1px solid var(--line);padding:5px 2px}
+    .st-table td:last-child{border-bottom:none}
+    .st-table td::before{content:attr(data-h);float:left;color:var(--dim);text-transform:uppercase;font-size:10px}
+    .st-table td.st-l{text-align:right}
+    header{position:static} nav.tabs button{padding:8px 10px}
+  }
+</style>
+</head>
+<body>
+<header>
+  <h1>SILMARIL · Operator Cockpit <span class="st-badge st-viol">READ-ONLY · OBSERVATIONAL · ALPHA 0.007</span></h1>
+  <div class="sub">One truthful surface · all metrics from <code>silmaril-truth.js</code> · supersedes integrity/observability · derived &amp; static values badged</div>
+</header>
+<main>
+  <div id="situation" class="situation"></div>
+  <div id="strip" class="strip"></div>
+  <nav class="tabs" id="tabs"></nav>
+  <div id="tab-anomalies" class="tab"></div>
+  <div id="tab-agents" class="tab"></div>
+  <div id="tab-accounts" class="tab"></div>
+  <div id="tab-continuity" class="tab"></div>
+  <div id="tab-orchestration" class="tab"></div>
+  <div id="tab-edge" class="tab"></div>
+  <div id="tab-intel" class="tab"></div>
+  <div id="tab-events" class="tab"></div>
+  <div id="tab-catalysts" class="tab"></div>
+  <div id="tab-deals" class="tab"></div>
+  <div class="note" id="foot"></div>
+</main>
+
+<script src="silmaril-truth.js"></script>
+<script>
+(function(){
+  if(!window.ST){ document.getElementById('strip').innerHTML='<div class="card st-bad">silmaril-truth.js failed to load — upload it next to cockpit.html in /docs.</div>'; return; }
+  const $=id=>document.getElementById(id), R=ST.Render, C=ST.Compute, U=ST.util;
+  const TABS=[['anomalies','Anomalies'],['agents','Agents'],['accounts','Accounts'],['continuity','Continuity'],['orchestration','Orchestration'],['edge','Edge'],['intel','Intelligence'],['events','IPO Watch'],['catalysts','Catalysts'],['deals','Deal Journal']];
+
+  ST.Data.loadAll().then(ctx=>{
+    if(!ctx.scoring){ $('strip').innerHTML='<div class="card st-bad">scoring.json unavailable.</div>'; return; }
+    const sc=ctx.scoring, out=sc.outcomes||[], today=U.dayKey(sc.generated_at);
+    const byAgent=C.staleByAgent(out), canon=C.canonLeaderboard(sc), anomalies=ST.Detect.anomalies(ctx);
+    const crit=anomalies.filter(a=>a.sev==='critical').length;
+
+    // ---- system-truth strip ----
+    const sbd=C.staleByDay(out); const last=sbd[sbd.length-1], first=sbd[0];
+    const arrow = (last&&first)?(last.rate>first.rate+0.01?'\u2191':(last.rate<first.rate-0.01?'\u2193':'\u2192')):'';
+    const accts=[['LEGACY',ctx.legacy,true],['HARVEST_3',ctx.h3,false],['HARVEST_5',ctx.h5,false]]
+      .map(([n,s,l])=>C.accountState(s,l,today));
+    const liveAccts=accts.filter(a=>a.present&&a.cls==='active').length;
+    const fz=C.frozen(ctx.risk); const rost=C.rosterSources(ctx.portfolios,ctx.risk,sc);
+    const ov=C.overlapHours();
+    // ---- Situation Room: plain-language truth + risk-first gauges (all from ST) ----
+    const summary=C.systemSummary(ctx, anomalies);
+    const cleanComp=R.stackedBar([
+      {label:'clean',value:summary.cleanCount,color:'var(--st-ok)'},
+      {label:'stale',value:summary.staleCount,color:'var(--st-bad)'}]);
+    const agentComp=R.stackedBar([
+      {label:'verified',value:summary.verified.length,color:'var(--st-ok)'},
+      {label:'artifact-risk',value:summary.artifactRisk,color:'var(--st-bad)'},
+      {label:'no-record',value:summary.noTrackRecord,color:'var(--st-info)'},
+      {label:'frozen',value:summary.frozen,color:'var(--st-viol)'}]);
+    $('situation').innerHTML=
+      '<div class="sit-head">SITUATION ROOM <span class="st-badge st-viol">read-only · derived</span></div>'
+      +'<div class="sit-narr">'+R.narrative(summary)+'</div>'
+      +'<div class="sit-gauges">'
+        +'<div class="sit-g">'+R.gauge(summary.staleRate,'scoring stale '+R.help('stale'))+'</div>'
+        +'<div class="sit-g sit-wide"><div class="sit-cap">outcomes: clean vs stale '+R.help('clean_n')+'</div>'+cleanComp+'</div>'
+        +'<div class="sit-g sit-wide"><div class="sit-cap">agent composition '+R.help('verified')+'</div>'+agentComp+'</div>'
+      +'</div>';
+
+    $('strip').innerHTML=[
+      R.tile('stale today', last?U.pct(last.rate,0):'—', last&&last.rate>=ST.Const.STALE_HI?'bad':'warn', '4-day '+arrow),
+      R.tile('accounts live', liveAccts+' / '+accts.filter(a=>a.present).length, liveAccts<accts.filter(a=>a.present).length?'warn':'ok','by recent orders'),
+      R.tile('agents frozen', fz.length, 'info', fz.length?('latest '+fz[fz.length-1].since):''),
+      R.tile('roster drift', rost.distinct>1?'YES':'no', rost.distinct>1?'warn':'ok', rost.distinct+' sources'),
+      R.tile('overlap', ov.length+'h/day', ov.length?'warn':'ok','daily/evening_prep'),
+      R.tile('critical anomalies', crit, crit?'bad':'ok', anomalies.length+' total')
+    ].join('');
+
+    // ---- tabs nav ----
+    $('tabs').innerHTML=TABS.map(([id,lab],i)=>`<button data-t="${id}" class="${i===0?'active':''}">${lab}`
+      +(id==='anomalies'&&crit?`<span class="pill">${crit}</span>`:'')+`</button>`).join('');
+    $('tabs').addEventListener('click',e=>{const b=e.target.closest('button'); if(!b)return;
+      document.querySelectorAll('nav.tabs button').forEach(x=>x.classList.remove('active'));
+      document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+      b.classList.add('active'); $('tab-'+b.dataset.t).classList.add('active');});
+
+    // ---- TAB: anomalies (default) ----
+    $('tab-anomalies').classList.add('active');
+    $('tab-anomalies').innerHTML='<h2>Anomalies &amp; contradictions ('+anomalies.length+')</h2>'
+      +'<div class="desc">Ranked by severity. Each shows evidence and the fix-scope track. Operator reads system health in seconds; truth is not buried.</div>'
+      +(anomalies.length?anomalies.map(R.anomalyCard).join(''):'<div class="card st-ok">No anomalies detected.</div>');
+
+    // ---- TAB: agents (grouped/quarantined; CI + paired raw/clean + true realized) ----
+    const groups=C.classifyAll(ctx);                       // canonical classification
+    const frozenSet=new Set(ST.Compute.frozen(ctx.risk).map(f=>f.agent));
+    function rowFor(a){
+      const d=byAgent[a]||{n:0,wins:0,stale:0,nsN:0,nsW:0,rets:[]}, c=canon[a]||{}, N=c.scored_calls||d.n;
+      const raw=C.rawWin(d,c), se=C.staleExclWin(d), staleR=C.staleRate(d), mr=C.meanRet(d);
+      const tr=C.trueRealized((ctx.portfolios||{})[a]); const frozen=frozenSet.has(a);
+      return {a,N,se,
+        _cls:frozen?'frozen':'',
+        agent:a+(frozen?' '+R.badge('frozen','info'):'')+(d.nsN>0&&d.nsN<ST.Const.LOW_N?' '+R.badge('low-N','warn'):''),
+        win:R.ciBar(C.wilson(d.wins,d.n)), rc:R.pairedBar(raw, se),
+        stale:staleR!=null?U.pct(staleR,0):R.nm(null),
+        ret:mr!=null?mr.toFixed(3):R.nm(null),
+        real:tr!=null?`<b style="color:${tr>0?'var(--st-ok)':(tr<0?'var(--st-bad)':'var(--ink)')}">${tr>=0?'+':''}${tr.toFixed(2)}</b>`:R.nm(null)};
+    }
+    const cols=[{h:'Agent',k:'agent',l:true},{h:'N',k:'N'},{h:'win% (95% CI)',k:'win',l:true},
+      {h:'raw vs clean',k:'rc',l:true},{h:'stale%',k:'stale'},{h:'mean ret%',k:'ret'},{h:'true realized',k:'real'}];
+    const mkRows=arr=>arr.map(rowFor).sort((x,y)=>((y.se??-1)-(x.se??-1))||(y.N-x.N));
+    const section=(title,cls,arr,open,note)=>{
+      if(!arr.length) return '';
+      const inner=R.table(cols,mkRows(arr));
+      return `<details ${open?'open':''}><summary><b>${title}</b> ${R.badge(arr.length,cls)}${note?' <span class="st-nm">'+note+'</span>':''}</summary>${inner}</details>`;
+    };
+    $('tab-agents').innerHTML='<h2>Agents — quarantine grouping (read-only)</h2>'
+      +'<div class="desc">Grouped by clean-evidence class via <code>ST.Compute.classifyAll</code> (no telemetry hidden or altered). '
+      +'Headline = <b>Verified</b> only (clean N \u2265 '+ST.Const.LOW_N+'). Artifact-risk / no-track-record / frozen are collapsed but expandable. '
+      +'Win% shown with 95% Wilson CI'+R.help('wilson')+'; “raw vs clean”'+R.help('raw_vs_clean')+' = canonical vs stale-excluded; “real”'+R.help('true_realized')+' = (equity\u2212start)+savings.</div>'
+      +'<div class="strip" style="margin:8px 0">'
+        +R.tile('verified', groups.verified.length, groups.verified.length?'ok':'warn','clean N \u2265 '+ST.Const.LOW_N)
+        +R.tile('artifact-risk', groups.artifact_risk.length, groups.artifact_risk.length?'bad':'ok','0 clean / \u226595% stale')
+        +R.tile('no track record', groups.no_track_record.length,'info','unscored')
+        +R.tile('frozen', groups.frozen.length,'info','risk-frozen')+'</div>'
+      +section('Verified','ok',groups.verified,true)
+      +section('Artifact-risk (quarantined — not headline)','bad',groups.artifact_risk,false,'zero clean evidence / stale-dominated')
+      +section('No track record','info',groups.no_track_record,false,'in portfolios, never scored')
+      +section('Frozen','info',groups.frozen,false,'risk-frozen; learning loop acting');
+
+    // ---- TAB: accounts ----
+    $('tab-accounts').innerHTML='<h2>Account integrity</h2>'
+      +'<div class="desc">Contradiction-aware (configured-vs-activity disagreements are flagged, never silently reconciled).</div><div class="grid">'
+      +[['LEGACY',accts[0]],['HARVEST_3',accts[1]],['HARVEST_5',accts[2]]].map(([n,st])=>{
+        if(!st.present) return `<div class="card"><h3>${n} ${R.badge('no state','bad')}</h3></div>`;
+        const cb={active:'ok',stale:'warn',contradiction:'warn',skipped:'bad'}[st.cls]||'info';
+        return `<div class="card"><h3>${n} ${R.badge(st.label,cb)}</h3>`
+          +`<div class="row"><span class="k">orders (hist)</span><span class="v">${st.ordersTotal}</span></div>`
+          +`<div class="row"><span class="k">active span</span><span class="v">${st.firstDay||'—'} → ${st.lastDay||'—'}</span></div>`
+          +`<div class="row"><span class="k">days since last order</span><span class="v">${st.daysSince==null?R.nm(null):st.daysSince}</span></div>`
+          +`<div class="row"><span class="k">trading capital</span><span class="v">${R.nm(U.money(st.tradingCapital))}</span></div>`
+          +`<div class="row"><span class="k">SGOV savings</span><span class="v">${R.nm(U.money(st.savings))}</span></div>`
+          +`<div class="row"><span class="k">realized W/L</span><span class="v">${R.nm(st.wins)} / ${R.nm(st.losses)}</span></div></div>`;
+      }).join('')+'</div>';
+
+    // ---- TAB: continuity ----
+    const staleBars=sbd.map(p=>({label:p.day.slice(5),value:p.rate,tag:(p.rate*100).toFixed(0)+'%',color:p.rate>=ST.Const.STALE_HI?'var(--st-bad)':(p.rate>=0.5?'var(--st-warn)':'var(--st-ok)')}));
+    const ch=((ctx.risk||{}).system||{}).cohort_history||[];
+    const eq=(ctx.equity||{}).snapshots||[];
+    const runs=(ctx.history||{}).runs||[];
+    const runCad=C.runCadence(ctx.history);
+    $('tab-continuity').innerHTML='<h2>Continuity &amp; longitudinal trends <span class="st-badge st-viol">derived</span></h2>'
+      +'<div class="desc">Derived from existing timestamps (no collector/writer = continuity-safe). Persistent accumulation = Track B.</div>'
+      +'<div class="card"><h3>Stale-rate by day</h3>'+(staleBars.length?R.bars(staleBars,{max:1}):'<span class="st-nm">no data</span>')
+        +'<div class="note">N/day: '+sbd.map(p=>p.day.slice(5)+'='+p.n).join(' · ')+'</div></div>'
+      +'<div class="grid"><div class="card"><h3>Frozen agents ('+fz.length+')</h3>'
+        +(fz.length?R.table([{h:'agent',k:'agent',l:true},{h:'since',k:'since',l:true}],fz.map(f=>({agent:f.agent,since:f.since}))):'<span class="st-nm">none</span>')+'</div>'
+      +'<div class="card"><h3>Tracked roster size over time</h3>'+R.sparkline(ch.map(c=>c.n_agents),'var(--st-viol)')
+        +'<div class="note">cohort avg return:</div>'+R.sparkline(ch.map(c=>c.cohort_avg_return_pct),'var(--st-ok)')+'</div></div>'
+      +'<div class="grid"><div class="card"><h3>Run cadence</h3>'+R.bars(runCad.map(r=>({label:r.day.slice(5),value:r.n,tag:String(r.n)})),{h:90})
+        +'<div class="note">'+runs.length+' runs</div></div>'
+      +'<div class="card"><h3>LEGACY equity curve</h3>'+R.sparkline(eq.map(s=>s.equity),'var(--st-ok)')
+        +'<div class="note">'+eq.length+' snapshots · note: Alpaca paper base differs from $10k principal_target</div></div></div>'
+      +'<div class="card"><h3>Roster-drift reconciliation</h3>'+R.table([{h:'source',k:'src',l:true},{h:'count',k:'n'}],
+          rost.map(r=>({src:r.label+(r.static?' '+R.badge('static','info'):''),n:r.n==null?R.nm(null):r.n})))
+        +'<div class="note">'+(rost.distinct>1?R.badge(rost.distinct+' distinct — DRIFT','warn'):'aligned')+'</div></div>';
+
+    // ---- TAB: orchestration (static) ----
+    $('tab-orchestration').innerHTML='<h2>Workflow overlap <span class="st-badge st-ok">resolved</span></h2>'
+      +'<div class="desc"><code>evening_prep.yml</code> was retired in Alpha 0.002 — <code>daily.yml</code> runs the full cycle (including protection) on a single slim schedule, so there is no longer an overlap or wasted price-API quota. The chart shows the daily schedule; the evening row is now empty.</div>'
+      +'<div class="card"><div class="row"><span class="k">daily.yml (full cycle)</span></div>'+R.timeline(ST.Const.DAILY_CRON_UTC,'var(--st-info)')
+      +'<div class="row" style="margin-top:10px"><span class="k">evening_prep.yml (protection)</span></div>'+R.timeline(ST.Const.EVENING_CRON_UTC,'var(--st-warn)')
+      +'<div class="row" style="margin-top:10px"><span class="k">CONCURRENT</span></div>'+R.timeline(ov.map(h=>[h,h+1]),'var(--st-bad)')
+      +'<div class="note">Overlap UTC hours: '+(ov.length?ov.map(h=>String(h).padStart(2,'0')).join(', '):'none')+'</div></div>';
+
+    // ---- TAB: edge (equities-only edge study + market benchmark) ----
+    $('tab-edge').innerHTML=R.edgePanel(ctx.edge, ctx.benchmark);
+    // ---- TAB: intel (news & event intelligence — calendar, baskets, momentum) ----
+    $('tab-intel').innerHTML=R.intelPanel(ctx.intel);
+    // ---- TAB: events (append-only event recorder — SpaceX IPO etc.) ----
+    $('tab-events').innerHTML=R.ipoWatchPanel(ctx.ipo);
+    // ---- TAB: catalysts (forward gauntlet + clustering->vol + IPO proximity + learning loop) ----
+    $('tab-catalysts').innerHTML=R.catalystPanel(ctx.catalysts);
+    // ---- TAB: deals (read-only trade journal: words -> actions -> numbers) ----
+    $('tab-deals').innerHTML=R.dealJournalPanel(ctx.deals);
+
+    $('foot').innerHTML='Snapshot: '+(sc.generated_at||'n/a')+' · primitives: silmaril-truth.js '+ST.VERSION
+      +' · all values read-only & derived in-browser; scoring/orchestration/persistence untouched; observational-only.';
+  });
+})();
+</script>
+</body>
+</html>
