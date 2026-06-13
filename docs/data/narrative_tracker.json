@@ -1,10 +1,10 @@
 {
   "version": "5.0",
-  "generated_at": "2026-06-13T09:03:45.503449+00:00",
+  "generated_at": "2026-06-13T09:25:10.835317+00:00",
   "cycles_observed": 60,
   "dominant_narrative": "risk_off",
-  "regime_shift": "RISK_OFF",
-  "regime_shift_confidence": 0.4882,
+  "regime_shift": "RISK_ON",
+  "regime_shift_confidence": 0.4285,
   "narratives": {
     "risk_on": {
       "label": "Risk-on sentiment returning",
@@ -18,12 +18,25 @@
         "Consumer Staples",
         "Utilities"
       ],
-      "frequency": 0,
-      "persistence": 2,
-      "acceleration": 0.0,
-      "score": 0.1275,
-      "phrases": [],
-      "matched_articles": []
+      "frequency": 1,
+      "persistence": 3,
+      "acceleration": 1.0,
+      "score": 0.4062,
+      "phrases": [
+        "all-time high"
+      ],
+      "matched_articles": [
+        {
+          "ticker": "LRCX",
+          "title": "Lam Research Has Hit All-Time Highs. Here\u2019s Why the Cycle May Just Be Getting Started",
+          "source": "TIKR.com"
+        },
+        {
+          "ticker": "NUE",
+          "title": "Nucor Corp stock hits all-time high at 265.14 USD",
+          "source": "Investing.com"
+        }
+      ]
     },
     "risk_off": {
       "label": "Risk-off / safe-haven buying",
@@ -37,14 +50,20 @@
         "Technology",
         "Consumer Discretionary"
       ],
-      "frequency": 1,
+      "frequency": 2,
       "persistence": 60,
-      "acceleration": -0.5,
-      "score": 0.425,
+      "acceleration": 1.0,
+      "score": 0.7,
       "phrases": [
+        "risk off",
         "risk-off"
       ],
       "matched_articles": [
+        {
+          "ticker": "DOT-USD",
+          "title": "Polkadot (DOT) Volatility Explained: Broad Risk Off, Technical Selling",
+          "source": "CoinMarketCap"
+        },
         {
           "ticker": "CRO-USD",
           "title": "Cronos (CRO) Declines 3.5% Amid Broad Crypto Risk-Off Phase",
@@ -59,12 +78,20 @@
         "Technology"
       ],
       "sectors_out": [],
-      "frequency": 0,
-      "persistence": 0,
-      "acceleration": 0.0,
-      "score": 0.04,
-      "phrases": [],
-      "matched_articles": []
+      "frequency": 1,
+      "persistence": 1,
+      "acceleration": 1.0,
+      "score": 0.3187,
+      "phrases": [
+        "chip demand"
+      ],
+      "matched_articles": [
+        {
+          "ticker": "TSM",
+          "title": "Taiwan Semiconductor (TSM) Sees AI Chip Demand Outpacing Supply",
+          "source": "Yahoo Finance"
+        }
+      ]
     },
     "ai_cooldown": {
       "label": "AI rally cooling / stretched valuations",
@@ -198,25 +225,19 @@
     }
   },
   "sector_pressure": {
-    "Technology": -0.2975,
+    "Technology": -0.0151,
     "Energy": 0.0,
     "Industrials": 0.04,
-    "Health Care": 0.465,
+    "Health Care": 0.74,
     "Financials": 0.04,
-    "Consumer Discretionary": -0.2975,
-    "Consumer Staples": 0.2975,
-    "Communication Services": 0.1275,
+    "Consumer Discretionary": -0.2938,
+    "Consumer Staples": 0.2938,
+    "Communication Services": 0.4062,
     "Real Estate": 0.0,
-    "Utilities": 0.2575,
+    "Utilities": 0.2538,
     "Materials": 0.0
   },
   "history": [
-    {
-      "cycle_ts": "2026-06-12T14:08:04.236989+00:00",
-      "dominant_narrative": "risk_off",
-      "regime_shift": "RISK_OFF",
-      "score": 0.54
-    },
     {
       "cycle_ts": "2026-06-12T14:26:16.990709+00:00",
       "dominant_narrative": "risk_off",
@@ -570,7 +591,13 @@
       "dominant_narrative": "risk_off",
       "regime_shift": "RISK_OFF",
       "score": 0.425
+    },
+    {
+      "cycle_ts": "2026-06-13T09:25:10.835317+00:00",
+      "dominant_narrative": "risk_off",
+      "regime_shift": "RISK_ON",
+      "score": 0.7
     }
   ],
-  "headline_count": 310
+  "headline_count": 546
 }

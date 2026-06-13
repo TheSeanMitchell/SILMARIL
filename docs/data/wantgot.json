@@ -1,20 +1,32 @@
 {
   "version": "wantgot-2.0",
-  "generated_at": "2026-06-13T09:03:52.975137+00:00",
+  "generated_at": "2026-06-13T09:25:21.672273+00:00",
   "accounts": {
     "LEGACY": {
       "account_id": "LEGACY",
       "mode": "consensus",
-      "cycle_at": "2026-06-13T09:03:43.015069+00:00",
+      "cycle_at": "2026-06-13T09:25:09.136036+00:00",
       "session_open": false,
       "composite_halt": false,
       "halt_reason": null,
       "has_cycle_intents": true,
       "rows": [
         {
-          "ticker": "VLO",
+          "ticker": "ANET",
           "signal": "BUY",
-          "conviction": 0.9387,
+          "conviction": 0.5529,
+          "originated": false,
+          "intended_notional": 766.0,
+          "submitted": false,
+          "order_status": null,
+          "held_market_value": 0.0,
+          "verdict": "DEFERRED",
+          "reason": "off-session run \u2014 the session hard-gate parks orders until the next open (the off-hours-incident law working as designed)"
+        },
+        {
+          "ticker": "TSM",
+          "signal": "BUY",
+          "conviction": 0.6803,
           "originated": false,
           "intended_notional": 766.0,
           "submitted": false,
@@ -26,7 +38,7 @@
         {
           "ticker": "IWM",
           "signal": "BUY",
-          "conviction": 0.6567,
+          "conviction": 0.7193,
           "originated": false,
           "intended_notional": 766.0,
           "submitted": false,
@@ -74,27 +86,27 @@
         }
       ],
       "totals": {
-        "intended": 1532.0,
+        "intended": 2298.0,
         "submitted": 0.0,
         "held": 3773.48,
         "equity": 9575.04,
-        "deployment_gap": -2241.48
+        "deployment_gap": -1475.48
       },
-      "narrative": "wanted 2 name(s) ($1532): 0 filled+held, 0 pending, 0 gated, 2 deferred"
+      "narrative": "wanted 3 name(s) ($2298): 0 filled+held, 0 pending, 0 gated, 3 deferred"
     },
     "HARVEST_3": {
       "account_id": "HARVEST_3",
       "mode": "consensus",
-      "cycle_at": "2026-06-13T09:03:44.058344+00:00",
+      "cycle_at": "2026-06-13T09:25:09.548483+00:00",
       "session_open": false,
       "composite_halt": false,
       "halt_reason": null,
       "has_cycle_intents": true,
       "rows": [
         {
-          "ticker": "TRGP",
-          "signal": "BUY",
-          "conviction": 0.9387,
+          "ticker": "INTC",
+          "signal": "STRONG_BUY",
+          "conviction": 0.7111,
           "originated": false,
           "intended_notional": 958.79,
           "submitted": false,
@@ -106,7 +118,7 @@
         {
           "ticker": "TON-USD",
           "signal": "BUY",
-          "conviction": 0.5934,
+          "conviction": 0.5825,
           "originated": false,
           "intended_notional": 958.79,
           "submitted": false,
@@ -129,16 +141,52 @@
     "HARVEST_5": {
       "account_id": "HARVEST_5",
       "mode": "wordsmith",
-      "cycle_at": "2026-06-13T09:03:44.924815+00:00",
+      "cycle_at": "2026-06-13T09:25:10.201023+00:00",
       "session_open": false,
       "composite_halt": false,
       "halt_reason": null,
       "has_cycle_intents": true,
       "rows": [
         {
+          "ticker": "INTC",
+          "signal": "STRONG_BUY",
+          "conviction": 0.7476,
+          "originated": true,
+          "intended_notional": 1159.36,
+          "submitted": false,
+          "order_status": null,
+          "held_market_value": 0.0,
+          "verdict": "BLOCKED:blocked_signal_not_sell",
+          "reason": "signal HOLD is not SELL/STRONG_SELL"
+        },
+        {
+          "ticker": "AVGO",
+          "signal": "STRONG_BUY",
+          "conviction": 0.7995,
+          "originated": true,
+          "intended_notional": 1159.36,
+          "submitted": false,
+          "order_status": null,
+          "held_market_value": 0.0,
+          "verdict": "BLOCKED:blocked_signal_not_sell",
+          "reason": "signal HOLD is not SELL/STRONG_SELL"
+        },
+        {
+          "ticker": "MPWR",
+          "signal": "BUY",
+          "conviction": 0.7787,
+          "originated": true,
+          "intended_notional": 1159.36,
+          "submitted": false,
+          "order_status": null,
+          "held_market_value": 0.0,
+          "verdict": "BLOCKED:blocked_signal_not_sell",
+          "reason": "signal HOLD is not SELL/STRONG_SELL"
+        },
+        {
           "ticker": "XLM-USD",
           "signal": "BUY",
-          "conviction": 0.7913,
+          "conviction": 0.7787,
           "originated": true,
           "intended_notional": 1159.36,
           "submitted": false,
@@ -148,45 +196,9 @@
           "reason": "signal HOLD is not SELL/STRONG_SELL"
         },
         {
-          "ticker": "LDO-USD",
+          "ticker": "ADBE",
           "signal": "BUY",
-          "conviction": 0.7913,
-          "originated": true,
-          "intended_notional": 1159.36,
-          "submitted": false,
-          "order_status": null,
-          "held_market_value": 0.0,
-          "verdict": "BLOCKED:blocked_signal_not_sell",
-          "reason": "signal HOLD is not SELL/STRONG_SELL"
-        },
-        {
-          "ticker": "NEAR-USD",
-          "signal": "BUY",
-          "conviction": 0.6964,
-          "originated": true,
-          "intended_notional": 1159.36,
-          "submitted": false,
-          "order_status": null,
-          "held_market_value": 0.0,
-          "verdict": "BLOCKED:blocked_signal_not_sell",
-          "reason": "signal HOLD is not SELL/STRONG_SELL"
-        },
-        {
-          "ticker": "INJ-USD",
-          "signal": "BUY",
-          "conviction": 0.6964,
-          "originated": true,
-          "intended_notional": 1159.36,
-          "submitted": false,
-          "order_status": null,
-          "held_market_value": 0.0,
-          "verdict": "BLOCKED:blocked_signal_not_sell",
-          "reason": "signal HOLD is not SELL/STRONG_SELL"
-        },
-        {
-          "ticker": "STRK-USD",
-          "signal": "BUY",
-          "conviction": 0.6964,
+          "conviction": 0.7268,
           "originated": true,
           "intended_notional": 1159.36,
           "submitted": false,
