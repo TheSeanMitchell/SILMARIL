@@ -1,52 +1,79 @@
 {
   "version": "4.0",
-  "generated_at": "2026-06-13T20:25:29.014422+00:00",
+  "generated_at": "2026-06-13T20:44:58.363202+00:00",
   "assignments": [
     {
-      "ticker": "INTC",
+      "ticker": "TRGP",
       "account": "HARVEST_3",
-      "score": 0.7121,
+      "score": 0.874,
       "is_elite": false,
       "is_urgent": false,
-      "rationale": "STRONG_BUY conv 0.71 \u2192 best fit HARVEST_3 (score 0.71) [cap\u00d71.00]"
+      "rationale": "BUY conv 0.87 \u2192 best fit HARVEST_3 (score 0.87) [cap\u00d71.00]"
     },
     {
-      "ticker": "NUE",
+      "ticker": "TON-USD",
       "account": "HARVEST_3",
-      "score": 0.671,
+      "score": 0.5761,
       "is_elite": false,
       "is_urgent": false,
-      "rationale": "BUY conv 0.67 \u2192 best fit HARVEST_3 (score 0.67) [cap\u00d71.00]"
+      "rationale": "BUY conv 0.58 \u2192 best fit HARVEST_3 (score 0.58) [cap\u00d71.00]"
     },
     {
-      "ticker": "TSM",
-      "account": "HARVEST_5",
-      "score": 0.7009,
-      "is_elite": false,
-      "is_urgent": false,
-      "rationale": "STRONG_BUY conv 0.70 \u2192 best fit HARVEST_5 (score 0.70) [cap\u00d71.00]"
-    },
-    {
-      "ticker": "IWM",
+      "ticker": "ATOM-USD",
       "account": "LEGACY",
-      "score": 0.7357,
+      "score": 0.7243,
       "is_elite": false,
       "is_urgent": false,
-      "rationale": "BUY conv 0.74 \u2192 best fit LEGACY (score 0.74) [cap\u00d71.00]"
+      "rationale": "BUY conv 0.72 \u2192 best fit LEGACY (score 0.72) [cap\u00d71.00]"
+    },
+    {
+      "ticker": "VLO",
+      "account": "LEGACY",
+      "score": 0.874,
+      "is_elite": false,
+      "is_urgent": false,
+      "rationale": "BUY conv 0.87 \u2192 best fit LEGACY (score 0.87) [cap\u00d71.00]"
+    },
+    {
+      "ticker": "INJ-USD",
+      "account": "LEGACY",
+      "score": 0.8687,
+      "is_elite": false,
+      "is_urgent": false,
+      "rationale": "BUY conv 0.87 \u2192 best fit LEGACY (score 0.87) [cap\u00d71.00]"
     }
   ],
-  "unassigned": [],
+  "unassigned": [
+    {
+      "ticker": "IWM",
+      "reason": "no enabled account meets fitness for this plan",
+      "plan_signal": "BUY",
+      "plan_conviction": 0.7643
+    },
+    {
+      "ticker": "JTO-USD",
+      "reason": "no enabled account meets fitness for this plan",
+      "plan_signal": "BUY",
+      "plan_conviction": 0.7243
+    },
+    {
+      "ticker": "XLM-USD",
+      "reason": "no enabled account meets fitness for this plan",
+      "plan_signal": "BUY",
+      "plan_conviction": 0.9171
+    }
+  ],
   "by_account_tickers": {
     "LEGACY": [
-      "IWM"
+      "ATOM-USD",
+      "VLO",
+      "INJ-USD"
     ],
     "HARVEST_3": [
-      "INTC",
-      "NUE"
+      "TRGP",
+      "TON-USD"
     ],
-    "HARVEST_5": [
-      "TSM"
-    ]
+    "HARVEST_5": []
   },
   "caps": {
     "LEGACY": 3,
@@ -54,9 +81,9 @@
     "HARVEST_5": 1
   },
   "used": {
-    "LEGACY": 1,
+    "LEGACY": 3,
     "HARVEST_3": 2,
-    "HARVEST_5": 1
+    "HARVEST_5": 0
   },
   "cap_multiplier": 1.0,
   "market_mode": "BALANCED",
