@@ -1,6 +1,6 @@
 {
   "version": "6.0",
-  "generated_at": "2026-06-13T15:26:13.635433+00:00",
+  "generated_at": "2026-06-13T15:43:59.472134+00:00",
   "tickers": {
     "TON-USD": {
       "ticker": "TON-USD",
@@ -13,55 +13,44 @@
       "timing_window": null,
       "rationale": "limit 42bps \u00b7 ATR/px 3.2% \u00b7 liq 0.10"
     },
-    "ANET": {
-      "ticker": "ANET",
-      "use_limit_order": true,
-      "limit_buffer_bps": 150,
-      "defer_to_next_cycle": false,
-      "opening_volatility": 0.0517,
-      "liquidity_score": 0.4369,
-      "extension_warning": false,
-      "timing_window": "resting toward ANET's ~149.24 floor (his low window is 11:30 ET) \u2014 limit 150bps below",
-      "rationale": "limit 150bps \u00b7 ATR/px 5.2% \u00b7 liq 0.44 \u00b7 resting toward ANET's ~149.24 floor (his low window is 11:30 ET) \u2014 limit 150bps below"
-    },
     "IWM": {
       "ticker": "IWM",
-      "use_limit_order": true,
-      "limit_buffer_bps": 45,
+      "use_limit_order": false,
+      "limit_buffer_bps": 30,
       "defer_to_next_cycle": false,
       "opening_volatility": 0.0209,
       "liquidity_score": 1.0,
       "extension_warning": false,
-      "timing_window": "now is IWM's typical daily-HIGH window (11:00 ET) \u2014 limit only, refusing to market-buy its top",
-      "rationale": "limit 45bps \u00b7 ATR/px 2.1% \u00b7 liq 1.00 \u00b7 now is IWM's typical daily-HIGH window (11:00 ET) \u2014 limit only, refusing to market-buy its top"
+      "timing_window": "now is IWM's typical daily-LOW window (11:30 ET) \u2014 historically favorable entry",
+      "rationale": "now is IWM's typical daily-LOW window (11:30 ET) \u2014 historically favorable entry"
     },
-    "MS": {
-      "ticker": "MS",
+    "INJ-USD": {
+      "ticker": "INJ-USD",
       "use_limit_order": true,
-      "limit_buffer_bps": 45,
-      "defer_to_next_cycle": false,
-      "opening_volatility": 0.0255,
-      "liquidity_score": 0.691,
+      "limit_buffer_bps": 93,
+      "defer_to_next_cycle": true,
+      "opening_volatility": 0.1053,
+      "liquidity_score": 0.5653,
       "extension_warning": false,
-      "timing_window": "now is MS's typical daily-HIGH window (11:00 ET) \u2014 limit only, refusing to market-buy its top",
-      "rationale": "limit 45bps \u00b7 ATR/px 2.5% \u00b7 liq 0.69 \u00b7 now is MS's typical daily-HIGH window (11:00 ET) \u2014 limit only, refusing to market-buy its top"
+      "timing_window": null,
+      "rationale": "DEFER: ATR/price 10.5% \u2265 9% \u2014 untradeable"
     },
-    "UNP": {
-      "ticker": "UNP",
+    "VLO": {
+      "ticker": "VLO",
       "use_limit_order": true,
       "limit_buffer_bps": 150,
       "defer_to_next_cycle": false,
-      "opening_volatility": 0.0227,
-      "liquidity_score": 0.561,
+      "opening_volatility": 0.0362,
+      "liquidity_score": 0.628,
       "extension_warning": false,
-      "timing_window": "resting toward UNP's ~264.96 floor (his low window is 10:00 ET) \u2014 limit 150bps below",
-      "rationale": "limit 150bps \u00b7 ATR/px 2.3% \u00b7 liq 0.56 \u00b7 resting toward UNP's ~264.96 floor (his low window is 10:00 ET) \u2014 limit 150bps below"
+      "timing_window": "resting toward VLO's ~248.93 floor (his low window is 09:30 ET) \u2014 limit 150bps below",
+      "rationale": "limit 150bps \u00b7 ATR/px 3.6% \u00b7 liq 0.63 \u00b7 resting toward VLO's ~248.93 floor (his low window is 09:30 ET) \u2014 limit 150bps below"
     }
   },
   "summary": {
-    "tickers": 5,
-    "deferred": 0,
-    "limit_recommended": 5,
+    "tickers": 4,
+    "deferred": 1,
+    "limit_recommended": 3,
     "market_orders_ok": 0
   },
   "config": {
