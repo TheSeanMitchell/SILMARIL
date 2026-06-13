@@ -1,20 +1,26 @@
 {
   "version": "5.1",
-  "generated_at": "2026-06-13T04:03:49.428149+00:00",
+  "generated_at": "2026-06-13T04:25:31.477324+00:00",
   "current_regimes": [
     {
       "key": "narrow_leadership",
       "label": "Narrow Leadership",
       "confidence": 1.0,
       "persistence_cycles": 90
+    },
+    {
+      "key": "rotational_bull",
+      "label": "Rotational Bull",
+      "confidence": 0.5993,
+      "persistence_cycles": 1
     }
   ],
   "regime_states": {
     "rotational_bull": {
       "label": "Rotational Bull",
-      "active": false,
-      "confidence": 0.3738,
-      "persistence": 0
+      "active": true,
+      "confidence": 0.5993,
+      "persistence": 1
     },
     "narrow_leadership": {
       "label": "Narrow Leadership",
@@ -67,7 +73,7 @@
     "defensive_flight": {
       "label": "Defensive Flight",
       "active": false,
-      "confidence": 0.2378,
+      "confidence": 0.216,
       "persistence": 0
     },
     "commodity_inflation": {
@@ -96,18 +102,12 @@
     }
   },
   "summary": {
-    "active_regimes": 1,
+    "active_regimes": 2,
     "dominant_regime": "narrow_leadership",
-    "stability_score": 1.0,
-    "transition_pressure": 0.0
+    "stability_score": 0.5,
+    "transition_pressure": 0.5
   },
   "history": [
-    {
-      "cycle_ts": "2026-06-11T16:54:14.671896+00:00",
-      "dominant_regime": "narrow_leadership",
-      "active_count": 1,
-      "stability": 1.0
-    },
     {
       "cycle_ts": "2026-06-11T17:21:38.552574+00:00",
       "dominant_regime": "narrow_leadership",
@@ -641,6 +641,12 @@
       "dominant_regime": "narrow_leadership",
       "active_count": 1,
       "stability": 1.0
+    },
+    {
+      "cycle_ts": "2026-06-13T04:25:31.477324+00:00",
+      "dominant_regime": "narrow_leadership",
+      "active_count": 2,
+      "stability": 0.5
     }
   ]
 }

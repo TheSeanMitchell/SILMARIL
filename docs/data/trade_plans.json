@@ -3,7 +3,7 @@
     "version": "2.2.0",
     "project": "SILMARIL",
     "run_type": "live",
-    "generated_at": "2026-06-13T04:01:29.044070+00:00",
+    "generated_at": "2026-06-13T04:21:34.574037+00:00",
     "alpha_2_0_features": {
       "learning_loop": true,
       "alpaca_paper": true,
@@ -15,7 +15,141 @@
   },
   "plans": [
     {
-      "plan_id": "plan_20260613_0403_TON-USD",
+      "plan_id": "plan_20260613_0425_UNP",
+      "ticker": "UNP",
+      "name": "UNP",
+      "direction": "LONG",
+      "entry": 272.7,
+      "stop": 264.52,
+      "target": 284.97,
+      "shares": 7.3341,
+      "position_value": 2000.0,
+      "risk_amount": 60.0,
+      "risk_pct_of_portfolio": 0.006,
+      "reward_risk_ratio": 1.5,
+      "invalidation": "Close below $264.52 invalidates the thesis. Re-evaluate if consensus agreement drops below 50%.",
+      "backers": [
+        {
+          "agent": "AEGIS",
+          "conviction": 0.51390581963743,
+          "rationale": "Cautious constructive: clean uptrend with calm volatility, sentiment supportive."
+        },
+        {
+          "agent": "ZENITH",
+          "conviction": 0.7188122041866539,
+          "rationale": "Perfect stack with 11.9% total separation, +12.7% 50d momentum \u2014 cosmic trend intact."
+        },
+        {
+          "agent": "SPECK",
+          "conviction": 0.5955470200973165,
+          "rationale": "Low coverage (5 articles) but sentiment +0.44 and price above SMA-50 \u2014 small edge before crowd arrives."
+        },
+        {
+          "agent": "FABLEBOY_5",
+          "conviction": 0.5254958562952453,
+          "rationale": "words +0.28 (5 arts)."
+        }
+      ],
+      "dissenters": [],
+      "consensus_signal": "BUY",
+      "portfolio_size": 10000.0,
+      "generated_at": "2026-06-13T04:25:01.651986+00:00",
+      "status": "ACTIVE",
+      "execution": {
+        "order_id": "SIM-20260613-042501-UNP-B",
+        "side": "BUY",
+        "ticker": "UNP",
+        "asset_class": "equity",
+        "exchange": "NYSE Arca",
+        "venue": "all-electronic ETF/options exchange",
+        "broker": "Interactive Brokers (simulated paper account)",
+        "order_type": "MARKET",
+        "time_in_force": "DAY",
+        "submitted_at_utc": "2026-06-13T04:25:01+00:00",
+        "filled_at_utc": "2026-06-13T04:25:03+00:00",
+        "settlement_date": "2026-06-15",
+        "account": {
+          "label": "EQUITY-CASH-SIM-001",
+          "type": "Cash Account",
+          "broker": "Interactive Brokers (simulated paper account)",
+          "funding_source": "ACH funding from simulated bank account (routed via broker cash sweep)",
+          "balance_before": 10000.0,
+          "balance_after": 7999.4
+        },
+        "fills": [
+          {
+            "shares": 7.334067,
+            "price": 272.7,
+            "timestamp": "2026-06-13T04:25:03+00:00",
+            "venue": "NYSE Arca"
+          }
+        ],
+        "avg_fill_price": 272.7,
+        "gross_notional": 2000.0,
+        "fees": {
+          "commission": 0.0,
+          "sec_section_31": 0.0,
+          "finra_taf": 0.0,
+          "spread_cost": 0.6,
+          "total": 0.6,
+          "notes": "Spread estimate: 3 bps. Zero commission (IBKR Lite/TD-class simulated)."
+        },
+        "net_cost": 2000.6,
+        "net_proceeds": null,
+        "disclaimer": "Simulated execution \u2014 no live orders were placed on any exchange. Fees modeled on US market structure: SEC Section 31 ($27.80/$1M of sale proceeds), FINRA Trading Activity Fee ($0.000166/share on sells, capped $9.30), Coinbase Advanced taker 0.40% for crypto. Spread cost estimated per ticker."
+      },
+      "three_month_return": 0.1307,
+      "three_month_signal": "uptrend",
+      "catalyst_strength": 0.414,
+      "catalyst_strength_label": "soft",
+      "catalyst_matched_keyword": null,
+      "override_applied": false,
+      "override_reason": "",
+      "regime_at_gate": "BALANCED",
+      "setup_archetype": "GENERIC",
+      "setup_lift": 1.0,
+      "setup_rationale": "no archetype match (signal=BUY)",
+      "brokers": [
+        {
+          "name": "Robinhood",
+          "url": "https://robinhood.com/stocks/UNP",
+          "fee_label": "$0 commission",
+          "key": "robinhood"
+        },
+        {
+          "name": "Fidelity",
+          "url": "https://digital.fidelity.com/prgw/digital/research/quote/dashboard/summary?symbol=UNP",
+          "fee_label": "$0 commission",
+          "key": "fidelity"
+        },
+        {
+          "name": "Schwab",
+          "url": "https://www.schwab.com/research/stocks/quotes?symbol=UNP",
+          "fee_label": "$0 commission",
+          "key": "schwab"
+        },
+        {
+          "name": "IBKR",
+          "url": "https://www.interactivebrokers.com/portal/?action=ACCT_MGMT_MAIN&symbol=UNP",
+          "fee_label": "$0\u20130.005/sh",
+          "key": "ibkr"
+        },
+        {
+          "name": "Webull",
+          "url": "https://www.webull.com/quote/UNP",
+          "fee_label": "$0 commission",
+          "key": "webull"
+        },
+        {
+          "name": "Alpaca",
+          "url": "https://app.alpaca.markets/",
+          "fee_label": "$0 commission",
+          "key": "alpaca"
+        }
+      ]
+    },
+    {
+      "plan_id": "plan_20260613_0425_TON-USD",
       "ticker": "TON-USD",
       "name": "TON-USD",
       "direction": "LONG",
@@ -31,32 +165,32 @@
       "backers": [
         {
           "agent": "AEGIS",
-          "conviction": 0.4904267970163382,
+          "conviction": 0.51390581963743,
           "rationale": "Cautious constructive: clean uptrend with calm volatility, sentiment supportive."
         },
         {
           "agent": "ZENITH",
-          "conviction": 0.7213742416013221,
+          "conviction": 0.7475511303654501,
           "rationale": "Perfect stack with 14.5% total separation, +42.7% 50d momentum \u2014 cosmic trend intact."
         },
         {
           "agent": "SPECK",
-          "conviction": 0.5014623273825134,
+          "conviction": 0.5845860319973659,
           "rationale": "Low coverage (5 articles) but sentiment +0.40 and price above SMA-50 \u2014 small edge before crowd arrives."
         },
         {
           "agent": "FABLEBOY_5",
-          "conviction": 0.4979898484922617,
+          "conviction": 0.5044760220434354,
           "rationale": "words +0.26 (5 arts)."
         }
       ],
       "dissenters": [],
       "consensus_signal": "BUY",
       "portfolio_size": 10000.0,
-      "generated_at": "2026-06-13T04:03:28.307089+00:00",
+      "generated_at": "2026-06-13T04:25:01.652081+00:00",
       "status": "ACTIVE",
       "execution": {
-        "order_id": "SIM-20260613-040328-TONUSD-B",
+        "order_id": "SIM-20260613-042501-TONUSD-B",
         "side": "BUY",
         "ticker": "TON-USD",
         "asset_class": "equity",
@@ -65,8 +199,8 @@
         "broker": "Interactive Brokers (simulated paper account)",
         "order_type": "MARKET",
         "time_in_force": "DAY",
-        "submitted_at_utc": "2026-06-13T04:03:28+00:00",
-        "filled_at_utc": "2026-06-13T04:03:30+00:00",
+        "submitted_at_utc": "2026-06-13T04:25:01+00:00",
+        "filled_at_utc": "2026-06-13T04:25:03+00:00",
         "settlement_date": "2026-06-15",
         "account": {
           "label": "EQUITY-CASH-SIM-001",
@@ -80,7 +214,7 @@
           {
             "shares": 235288.948862,
             "price": 0.0085,
-            "timestamp": "2026-06-13T04:03:30+00:00",
+            "timestamp": "2026-06-13T04:25:03+00:00",
             "venue": "NYSE Arca"
           }
         ],
@@ -100,9 +234,9 @@
       },
       "three_month_return": 0.7772,
       "three_month_signal": "uptrend",
-      "catalyst_strength": 0.39,
-      "catalyst_strength_label": "soft",
-      "catalyst_matched_keyword": null,
+      "catalyst_strength": 0.99,
+      "catalyst_strength_label": "strong",
+      "catalyst_matched_keyword": "surge",
       "override_applied": false,
       "override_reason": "",
       "regime_at_gate": "BALANCED",
@@ -155,7 +289,141 @@
       ]
     },
     {
-      "plan_id": "plan_20260613_0403_IWM",
+      "plan_id": "plan_20260613_0425_ANET",
+      "ticker": "ANET",
+      "name": "ANET",
+      "direction": "LONG",
+      "entry": 163.24,
+      "stop": 158.34,
+      "target": 170.59,
+      "shares": 12.2519,
+      "position_value": 2000.0,
+      "risk_amount": 60.0,
+      "risk_pct_of_portfolio": 0.006,
+      "reward_risk_ratio": 1.5,
+      "invalidation": "Close below $158.34 invalidates the thesis. Re-evaluate if consensus agreement drops below 50%.",
+      "backers": [
+        {
+          "agent": "AEGIS",
+          "conviction": 0.51390581963743,
+          "rationale": "Cautious constructive: clean uptrend with calm volatility, sentiment supportive."
+        },
+        {
+          "agent": "SYNTH",
+          "conviction": 0.5494512762540188,
+          "rationale": "Risk-on regime supports cyclical exposure."
+        },
+        {
+          "agent": "SPECK",
+          "conviction": 0.6119885022472424,
+          "rationale": "Low coverage (4 articles) but sentiment +0.50 and price above SMA-50 \u2014 small edge before crowd arrives."
+        },
+        {
+          "agent": "FABLEBOY_5",
+          "conviction": 0.55702560767296,
+          "rationale": "words +0.32 (4 arts)."
+        }
+      ],
+      "dissenters": [],
+      "consensus_signal": "BUY",
+      "portfolio_size": 10000.0,
+      "generated_at": "2026-06-13T04:25:01.652157+00:00",
+      "status": "ACTIVE",
+      "execution": {
+        "order_id": "SIM-20260613-042501-ANET-B",
+        "side": "BUY",
+        "ticker": "ANET",
+        "asset_class": "equity",
+        "exchange": "NYSE Arca",
+        "venue": "all-electronic ETF/options exchange",
+        "broker": "Interactive Brokers (simulated paper account)",
+        "order_type": "MARKET",
+        "time_in_force": "DAY",
+        "submitted_at_utc": "2026-06-13T04:25:01+00:00",
+        "filled_at_utc": "2026-06-13T04:25:03+00:00",
+        "settlement_date": "2026-06-15",
+        "account": {
+          "label": "EQUITY-CASH-SIM-001",
+          "type": "Cash Account",
+          "broker": "Interactive Brokers (simulated paper account)",
+          "funding_source": "ACH funding from simulated bank account (routed via broker cash sweep)",
+          "balance_before": 10000.0,
+          "balance_after": 7999.4
+        },
+        "fills": [
+          {
+            "shares": 12.251899,
+            "price": 163.24,
+            "timestamp": "2026-06-13T04:25:03+00:00",
+            "venue": "NYSE Arca"
+          }
+        ],
+        "avg_fill_price": 163.24,
+        "gross_notional": 2000.0,
+        "fees": {
+          "commission": 0.0,
+          "sec_section_31": 0.0,
+          "finra_taf": 0.0,
+          "spread_cost": 0.6,
+          "total": 0.6,
+          "notes": "Spread estimate: 3 bps. Zero commission (IBKR Lite/TD-class simulated)."
+        },
+        "net_cost": 2000.6,
+        "net_proceeds": null,
+        "disclaimer": "Simulated execution \u2014 no live orders were placed on any exchange. Fees modeled on US market structure: SEC Section 31 ($27.80/$1M of sale proceeds), FINRA Trading Activity Fee ($0.000166/share on sells, capped $9.30), Coinbase Advanced taker 0.40% for crypto. Spread cost estimated per ticker."
+      },
+      "three_month_return": 0.2221,
+      "three_month_signal": "uptrend",
+      "catalyst_strength": 0.38,
+      "catalyst_strength_label": "soft",
+      "catalyst_matched_keyword": null,
+      "override_applied": false,
+      "override_reason": "",
+      "regime_at_gate": "BALANCED",
+      "setup_archetype": "GENERIC",
+      "setup_lift": 1.0,
+      "setup_rationale": "no archetype match (signal=BUY)",
+      "brokers": [
+        {
+          "name": "Robinhood",
+          "url": "https://robinhood.com/stocks/ANET",
+          "fee_label": "$0 commission",
+          "key": "robinhood"
+        },
+        {
+          "name": "Fidelity",
+          "url": "https://digital.fidelity.com/prgw/digital/research/quote/dashboard/summary?symbol=ANET",
+          "fee_label": "$0 commission",
+          "key": "fidelity"
+        },
+        {
+          "name": "Schwab",
+          "url": "https://www.schwab.com/research/stocks/quotes?symbol=ANET",
+          "fee_label": "$0 commission",
+          "key": "schwab"
+        },
+        {
+          "name": "IBKR",
+          "url": "https://www.interactivebrokers.com/portal/?action=ACCT_MGMT_MAIN&symbol=ANET",
+          "fee_label": "$0\u20130.005/sh",
+          "key": "ibkr"
+        },
+        {
+          "name": "Webull",
+          "url": "https://www.webull.com/quote/ANET",
+          "fee_label": "$0 commission",
+          "key": "webull"
+        },
+        {
+          "name": "Alpaca",
+          "url": "https://app.alpaca.markets/",
+          "fee_label": "$0 commission",
+          "key": "alpaca"
+        }
+      ]
+    },
+    {
+      "plan_id": "plan_20260613_0425_IWM",
       "ticker": "IWM",
       "name": "IWM",
       "direction": "LONG",
@@ -171,32 +439,32 @@
       "backers": [
         {
           "agent": "ZENITH",
-          "conviction": 0.6876350432420356,
+          "conviction": 0.7125876184739757,
           "rationale": "Perfect stack with 11.3% total separation, +17.4% 50d momentum \u2014 cosmic trend intact."
         },
         {
           "agent": "SYNTH",
-          "conviction": 0.5027249840879232,
+          "conviction": 0.5494512762540188,
           "rationale": "Risk-on regime supports cyclical exposure."
         },
         {
           "agent": "TALON",
-          "conviction": 0.3706812311815076,
+          "conviction": 0.6576602895026984,
           "rationale": "Index structure intact: above both SMAs, 20d momentum +3.0%, VIX 18.0 calm \u2014 risk-on."
         },
         {
           "agent": "ATLAS",
-          "conviction": 0.5394458669367693,
+          "conviction": 0.6280726016684085,
           "rationale": "Constructive macro: stack aligned, 50d momentum +17.4%, VIX n/a."
         }
       ],
       "dissenters": [],
       "consensus_signal": "BUY",
       "portfolio_size": 10000.0,
-      "generated_at": "2026-06-13T04:03:28.307174+00:00",
+      "generated_at": "2026-06-13T04:25:01.652237+00:00",
       "status": "ACTIVE",
       "execution": {
-        "order_id": "SIM-20260613-040328-IWM-B",
+        "order_id": "SIM-20260613-042501-IWM-B",
         "side": "BUY",
         "ticker": "IWM",
         "asset_class": "etf",
@@ -205,8 +473,8 @@
         "broker": "Interactive Brokers (simulated paper account)",
         "order_type": "MARKET",
         "time_in_force": "DAY",
-        "submitted_at_utc": "2026-06-13T04:03:28+00:00",
-        "filled_at_utc": "2026-06-13T04:03:30+00:00",
+        "submitted_at_utc": "2026-06-13T04:25:01+00:00",
+        "filled_at_utc": "2026-06-13T04:25:03+00:00",
         "settlement_date": "2026-06-15",
         "account": {
           "label": "EQUITY-CASH-SIM-001",
@@ -220,7 +488,7 @@
           {
             "shares": 6.827104,
             "price": 292.95,
-            "timestamp": "2026-06-13T04:03:30+00:00",
+            "timestamp": "2026-06-13T04:25:03+00:00",
             "venue": "NYSE Arca"
           }
         ],
@@ -289,48 +557,65 @@
       ]
     },
     {
-      "plan_id": "plan_20260613_0403_VLO",
-      "ticker": "VLO",
-      "name": "VLO",
+      "plan_id": "plan_20260613_0425_NUE",
+      "ticker": "NUE",
+      "name": "NUE",
       "direction": "LONG",
-      "entry": 258.67,
-      "stop": 250.91,
-      "target": 270.31,
-      "shares": 7.7319,
+      "entry": 266.35,
+      "stop": 258.36,
+      "target": 278.34,
+      "shares": 7.5089,
       "position_value": 2000.0,
       "risk_amount": 60.0,
       "risk_pct_of_portfolio": 0.006,
       "reward_risk_ratio": 1.5,
-      "invalidation": "Close below $250.91 invalidates the thesis. Re-evaluate if consensus agreement drops below 50%.",
+      "invalidation": "Close below $258.36 invalidates the thesis. Re-evaluate if consensus agreement drops below 50%.",
       "backers": [
         {
-          "agent": "OBSIDIAN",
-          "conviction": 0.5749998588155747,
-          "rationale": "Commodity uptrend, RSI 57 not stretched \u2014 momentum continuation."
+          "agent": "AEGIS",
+          "conviction": 0.51390581963743,
+          "rationale": "Cautious constructive: clean uptrend with calm volatility, sentiment supportive."
         },
         {
           "agent": "ZENITH",
-          "conviction": 0.7780230370453334,
-          "rationale": "Perfect stack with 27.2% total separation, +7.6% 50d momentum \u2014 cosmic trend intact."
+          "conviction": 0.8062555706210476,
+          "rationale": "Perfect stack with 38.2% total separation, +53.3% 50d momentum \u2014 cosmic trend intact."
+        },
+        {
+          "agent": "SPECK",
+          "conviction": 0.6576592859970366,
+          "rationale": "Low coverage (5 articles) but sentiment +0.84 and price above SMA-50 \u2014 small edge before crowd arrives."
+        },
+        {
+          "agent": "FABLEBOY_5",
+          "conviction": 0.8092636186946778,
+          "rationale": "words +0.68 (5 arts); catalyst: analyst upgrade."
         }
       ],
-      "dissenters": [],
+      "dissenters": [
+        {
+          "agent": "OBSIDIAN",
+          "signal": "SELL",
+          "conviction": 0.6432855495954322,
+          "rationale": "Commodity overbought (RSI 73) \u2014 mean-reversion sell."
+        }
+      ],
       "consensus_signal": "BUY",
       "portfolio_size": 10000.0,
-      "generated_at": "2026-06-13T04:03:28.307285+00:00",
+      "generated_at": "2026-06-13T04:25:01.652290+00:00",
       "status": "ACTIVE",
       "execution": {
-        "order_id": "SIM-20260613-040328-VLO-B",
+        "order_id": "SIM-20260613-042501-NUE-B",
         "side": "BUY",
-        "ticker": "VLO",
+        "ticker": "NUE",
         "asset_class": "equity",
         "exchange": "NYSE Arca",
         "venue": "all-electronic ETF/options exchange",
         "broker": "Interactive Brokers (simulated paper account)",
         "order_type": "MARKET",
         "time_in_force": "DAY",
-        "submitted_at_utc": "2026-06-13T04:03:28+00:00",
-        "filled_at_utc": "2026-06-13T04:03:30+00:00",
+        "submitted_at_utc": "2026-06-13T04:25:01+00:00",
+        "filled_at_utc": "2026-06-13T04:25:03+00:00",
         "settlement_date": "2026-06-15",
         "account": {
           "label": "EQUITY-CASH-SIM-001",
@@ -342,13 +627,13 @@
         },
         "fills": [
           {
-            "shares": 7.731859,
-            "price": 258.67,
-            "timestamp": "2026-06-13T04:03:30+00:00",
+            "shares": 7.508917,
+            "price": 266.35,
+            "timestamp": "2026-06-13T04:25:03+00:00",
             "venue": "NYSE Arca"
           }
         ],
-        "avg_fill_price": 258.67,
+        "avg_fill_price": 266.35,
         "gross_notional": 2000.0,
         "fees": {
           "commission": 0.0,
@@ -362,11 +647,11 @@
         "net_proceeds": null,
         "disclaimer": "Simulated execution \u2014 no live orders were placed on any exchange. Fees modeled on US market structure: SEC Section 31 ($27.80/$1M of sale proceeds), FINRA Trading Activity Fee ($0.000166/share on sells, capped $9.30), Coinbase Advanced taker 0.40% for crypto. Spread cost estimated per ticker."
       },
-      "three_month_return": 0.1271,
+      "three_month_return": 0.6348,
       "three_month_signal": "uptrend",
-      "catalyst_strength": 0.0,
-      "catalyst_strength_label": "none",
-      "catalyst_matched_keyword": null,
+      "catalyst_strength": 1.0,
+      "catalyst_strength_label": "strong",
+      "catalyst_matched_keyword": "all-time high",
       "override_applied": false,
       "override_reason": "",
       "regime_at_gate": "BALANCED",
@@ -376,31 +661,31 @@
       "brokers": [
         {
           "name": "Robinhood",
-          "url": "https://robinhood.com/stocks/VLO",
+          "url": "https://robinhood.com/stocks/NUE",
           "fee_label": "$0 commission",
           "key": "robinhood"
         },
         {
           "name": "Fidelity",
-          "url": "https://digital.fidelity.com/prgw/digital/research/quote/dashboard/summary?symbol=VLO",
+          "url": "https://digital.fidelity.com/prgw/digital/research/quote/dashboard/summary?symbol=NUE",
           "fee_label": "$0 commission",
           "key": "fidelity"
         },
         {
           "name": "Schwab",
-          "url": "https://www.schwab.com/research/stocks/quotes?symbol=VLO",
+          "url": "https://www.schwab.com/research/stocks/quotes?symbol=NUE",
           "fee_label": "$0 commission",
           "key": "schwab"
         },
         {
           "name": "IBKR",
-          "url": "https://www.interactivebrokers.com/portal/?action=ACCT_MGMT_MAIN&symbol=VLO",
+          "url": "https://www.interactivebrokers.com/portal/?action=ACCT_MGMT_MAIN&symbol=NUE",
           "fee_label": "$0\u20130.005/sh",
           "key": "ibkr"
         },
         {
           "name": "Webull",
-          "url": "https://www.webull.com/quote/VLO",
+          "url": "https://www.webull.com/quote/NUE",
           "fee_label": "$0 commission",
           "key": "webull"
         },
