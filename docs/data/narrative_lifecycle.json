@@ -1,6 +1,6 @@
 {
   "version": "narrative-lifecycle-1.0",
-  "generated_at": "2026-06-13T06:44:06.678212+00:00",
+  "generated_at": "2026-06-13T07:04:18.034285+00:00",
   "date": "2026-06-13",
   "names": {
     "LRCX": {
@@ -245,8 +245,9 @@
       "days_tracked": 5
     },
     "TON-USD": {
-      "phase": "STEADY",
-      "heat": 0.2,
+      "phase": "PEAK",
+      "why": "rolling-window max \u2014 a CANDIDATE peak; only the decline after proves a top, and tomorrow will say",
+      "heat": 0.4,
       "last_date": "2026-06-13",
       "days_tracked": 5
     },
@@ -1054,9 +1055,8 @@
       "days_tracked": 5
     },
     "DOT-USD": {
-      "phase": "START",
-      "why": "signal after 4 quiet days",
-      "heat": 0.2,
+      "phase": "QUIET",
+      "heat": 0.0,
       "last_date": "2026-06-13",
       "days_tracked": 5
     },
@@ -1067,9 +1067,9 @@
       "days_tracked": 5
     },
     "BCH-USD": {
-      "phase": "DECAY",
-      "why": "story went silent off a hot stretch",
-      "heat": 0.0,
+      "phase": "PEAK",
+      "why": "rolling-window max \u2014 a CANDIDATE peak; only the decline after proves a top, and tomorrow will say",
+      "heat": 0.4,
       "last_date": "2026-06-13",
       "days_tracked": 5
     },
@@ -1081,14 +1081,16 @@
       "days_tracked": 5
     },
     "CRO-USD": {
-      "phase": "QUIET",
-      "heat": 0.0,
+      "phase": "ACCELERATION",
+      "why": "heat 0.20 vs 3d base 0.08 (x2.4)",
+      "heat": 0.2,
       "last_date": "2026-06-13",
       "days_tracked": 5
     },
     "VET-USD": {
-      "phase": "QUIET",
-      "heat": 0.0,
+      "phase": "PEAK",
+      "why": "rolling-window max \u2014 a CANDIDATE peak; only the decline after proves a top, and tomorrow will say",
+      "heat": 0.2,
       "last_date": "2026-06-13",
       "days_tracked": 5
     },
@@ -1125,9 +1127,8 @@
       "days_tracked": 5
     },
     "MANA-USD": {
-      "phase": "ACCELERATION",
-      "why": "heat 0.50 vs 3d base 0.33 (x1.5)",
-      "heat": 0.5,
+      "phase": "STEADY",
+      "heat": 0.4,
       "last_date": "2026-06-13",
       "days_tracked": 5
     },
@@ -1595,16 +1596,15 @@
       "days_tracked": 5
     },
     "TRX-USD": {
-      "phase": "START",
-      "why": "signal after 4 quiet days",
-      "heat": 0.2,
+      "phase": "QUIET",
+      "heat": 0.0,
       "last_date": "2026-06-13",
       "days_tracked": 5
     },
     "NEAR-USD": {
-      "phase": "DECAY",
-      "why": "two consecutive declines off a local max",
-      "heat": 0.5,
+      "phase": "ACCELERATION",
+      "why": "heat 0.60 vs 3d base 0.42 (x1.4)",
+      "heat": 0.6,
       "last_date": "2026-06-13",
       "days_tracked": 5
     },
@@ -1635,8 +1635,9 @@
       "days_tracked": 5
     },
     "UNI-USD": {
-      "phase": "QUIET",
-      "heat": 0.0,
+      "phase": "PEAK",
+      "why": "rolling-window max \u2014 a CANDIDATE peak; only the decline after proves a top, and tomorrow will say",
+      "heat": 0.2,
       "last_date": "2026-06-13",
       "days_tracked": 5
     },
@@ -1820,9 +1821,9 @@
       "days_tracked": 5
     },
     "FIL-USD": {
-      "phase": "DECAY",
-      "why": "story went silent off a hot stretch",
-      "heat": 0.0,
+      "phase": "ACCELERATION",
+      "why": "heat 0.20 vs 3d base 0.13 (x1.5)",
+      "heat": 0.2,
       "last_date": "2026-06-13",
       "days_tracked": 5
     },
@@ -1834,9 +1835,9 @@
       "days_tracked": 5
     },
     "ALGO-USD": {
-      "phase": "PEAK",
-      "why": "rolling-window max \u2014 a CANDIDATE peak; only the decline after proves a top, and tomorrow will say",
-      "heat": 0.4,
+      "phase": "ACCELERATION",
+      "why": "heat 0.20 vs 3d base 0.13 (x1.5)",
+      "heat": 0.2,
       "last_date": "2026-06-13",
       "days_tracked": 5
     },
@@ -1917,8 +1918,9 @@
       "days_tracked": 5
     },
     "ENA-USD": {
-      "phase": "STEADY",
-      "heat": 0.2,
+      "phase": "ACCELERATION",
+      "why": "heat 0.40 vs 3d base 0.23 (x1.7)",
+      "heat": 0.4,
       "last_date": "2026-06-13",
       "days_tracked": 5
     },
@@ -3617,12 +3619,11 @@
     }
   },
   "counts": {
-    "DECAY": 27,
-    "QUIET": 275,
-    "PEAK": 18,
-    "STEADY": 11,
-    "START": 2,
-    "ACCELERATION": 1,
+    "DECAY": 24,
+    "QUIET": 274,
+    "PEAK": 21,
+    "STEADY": 10,
+    "ACCELERATION": 5,
     "WARMING": 260
   },
   "heat_definition": "|sentiment| + |anticipation| + 1[catalyst] per day \u2014 attention intensity, direction-agnostic",
