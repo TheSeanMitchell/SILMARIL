@@ -1,32 +1,20 @@
 {
   "version": "wantgot-2.0",
-  "generated_at": "2026-06-13T19:44:08.153663+00:00",
+  "generated_at": "2026-06-13T20:04:08.516919+00:00",
   "accounts": {
     "LEGACY": {
       "account_id": "LEGACY",
       "mode": "consensus",
-      "cycle_at": "2026-06-13T19:43:58.429281+00:00",
+      "cycle_at": "2026-06-13T20:03:58.650971+00:00",
       "session_open": false,
       "composite_halt": false,
       "halt_reason": null,
       "has_cycle_intents": true,
       "rows": [
         {
-          "ticker": "INJ-USD",
+          "ticker": "VLO",
           "signal": "BUY",
-          "conviction": 0.9015,
-          "originated": false,
-          "intended_notional": 766.0,
-          "submitted": false,
-          "order_status": null,
-          "held_market_value": 0.0,
-          "verdict": "BLOCKED:blocked_not_equity_mission",
-          "reason": "INJ-USD is not a traditional equity \u2014 valuables trade in their own zone, never this account"
-        },
-        {
-          "ticker": "IWM",
-          "signal": "BUY",
-          "conviction": 0.654,
+          "conviction": 0.8399,
           "originated": false,
           "intended_notional": 766.0,
           "submitted": false,
@@ -36,16 +24,28 @@
           "reason": "off-session run \u2014 the session hard-gate parks orders until the next open (the off-hours-incident law working as designed)"
         },
         {
-          "ticker": "XLM-USD",
+          "ticker": "IWM",
           "signal": "BUY",
-          "conviction": 0.952,
+          "conviction": 0.6804,
+          "originated": false,
+          "intended_notional": 766.0,
+          "submitted": false,
+          "order_status": null,
+          "held_market_value": 0.0,
+          "verdict": "DEFERRED",
+          "reason": "off-session run \u2014 the session hard-gate parks orders until the next open (the off-hours-incident law working as designed)"
+        },
+        {
+          "ticker": "JTO-USD",
+          "signal": "BUY",
+          "conviction": 0.6686,
           "originated": false,
           "intended_notional": 766.0,
           "submitted": false,
           "order_status": null,
           "held_market_value": 0.0,
           "verdict": "BLOCKED:blocked_not_equity_mission",
-          "reason": "XLM-USD is not a traditional equity \u2014 valuables trade in their own zone, never this account"
+          "reason": "JTO-USD is not a traditional equity \u2014 valuables trade in their own zone, never this account"
         }
       ],
       "held_no_intent": [
@@ -92,33 +92,21 @@
         "equity": 9575.04,
         "deployment_gap": -1475.48
       },
-      "narrative": "wanted 3 name(s) ($2298): 0 filled+held, 0 pending, 2 gated, 1 deferred"
+      "narrative": "wanted 3 name(s) ($2298): 0 filled+held, 0 pending, 1 gated, 2 deferred"
     },
     "HARVEST_3": {
       "account_id": "HARVEST_3",
       "mode": "consensus",
-      "cycle_at": "2026-06-13T19:43:58.923545+00:00",
+      "cycle_at": "2026-06-13T20:03:59.649173+00:00",
       "session_open": false,
       "composite_halt": false,
       "halt_reason": null,
       "has_cycle_intents": true,
       "rows": [
         {
-          "ticker": "TON-USD",
+          "ticker": "TRGP",
           "signal": "BUY",
-          "conviction": 0.7224,
-          "originated": false,
-          "intended_notional": 958.79,
-          "submitted": false,
-          "order_status": null,
-          "held_market_value": 0.0,
-          "verdict": "BLOCKED:blocked_not_equity_mission",
-          "reason": "TON-USD is not a traditional equity \u2014 valuables trade in their own zone, never this account"
-        },
-        {
-          "ticker": "VLO",
-          "signal": "BUY",
-          "conviction": 0.9192,
+          "conviction": 0.8399,
           "originated": false,
           "intended_notional": 958.79,
           "submitted": false,
@@ -126,6 +114,18 @@
           "held_market_value": 0.0,
           "verdict": "DEFERRED",
           "reason": "off-session run \u2014 the session hard-gate parks orders until the next open (the off-hours-incident law working as designed)"
+        },
+        {
+          "ticker": "TON-USD",
+          "signal": "BUY",
+          "conviction": 0.5609,
+          "originated": false,
+          "intended_notional": 958.79,
+          "submitted": false,
+          "order_status": null,
+          "held_market_value": 0.0,
+          "verdict": "BLOCKED:blocked_not_equity_mission",
+          "reason": "TON-USD is not a traditional equity \u2014 valuables trade in their own zone, never this account"
         }
       ],
       "held_no_intent": [],
@@ -141,28 +141,16 @@
     "HARVEST_5": {
       "account_id": "HARVEST_5",
       "mode": "wordsmith",
-      "cycle_at": "2026-06-13T19:43:59.295296+00:00",
+      "cycle_at": "2026-06-13T20:04:00.131328+00:00",
       "session_open": false,
       "composite_halt": false,
       "halt_reason": null,
       "has_cycle_intents": true,
       "rows": [
         {
-          "ticker": "INJ-USD",
-          "signal": "BUY",
-          "conviction": 0.7416,
-          "originated": true,
-          "intended_notional": 1159.36,
-          "submitted": false,
-          "order_status": null,
-          "held_market_value": 0.0,
-          "verdict": "BLOCKED:blocked_signal_not_sell",
-          "reason": "signal HOLD is not SELL/STRONG_SELL"
-        },
-        {
           "ticker": "XLM-USD",
           "signal": "BUY",
-          "conviction": 0.8427,
+          "conviction": 0.7781,
           "originated": true,
           "intended_notional": 1159.36,
           "submitted": false,
@@ -174,7 +162,19 @@
         {
           "ticker": "LDO-USD",
           "signal": "BUY",
-          "conviction": 0.8652,
+          "conviction": 0.7988,
+          "originated": true,
+          "intended_notional": 1159.36,
+          "submitted": false,
+          "order_status": null,
+          "held_market_value": 0.0,
+          "verdict": "BLOCKED:blocked_signal_not_sell",
+          "reason": "signal HOLD is not SELL/STRONG_SELL"
+        },
+        {
+          "ticker": "INJ-USD",
+          "signal": "BUY",
+          "conviction": 0.6847,
           "originated": true,
           "intended_notional": 1159.36,
           "submitted": false,
@@ -186,7 +186,7 @@
         {
           "ticker": "STRK-USD",
           "signal": "BUY",
-          "conviction": 0.7416,
+          "conviction": 0.6847,
           "originated": true,
           "intended_notional": 1159.36,
           "submitted": false,
@@ -198,7 +198,7 @@
         {
           "ticker": "NEAR-USD",
           "signal": "BUY",
-          "conviction": 0.663,
+          "conviction": 0.6121,
           "originated": true,
           "intended_notional": 1159.36,
           "submitted": false,
