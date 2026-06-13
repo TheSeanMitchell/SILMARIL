@@ -1,7 +1,29 @@
 {
   "version": "6.0",
-  "generated_at": "2026-06-13T03:03:58.464436+00:00",
+  "generated_at": "2026-06-13T03:25:06.463397+00:00",
   "tickers": {
+    "CBRE": {
+      "ticker": "CBRE",
+      "use_limit_order": true,
+      "limit_buffer_bps": 41,
+      "defer_to_next_cycle": false,
+      "opening_volatility": 0.031,
+      "liquidity_score": 0.2961,
+      "extension_warning": false,
+      "timing_window": null,
+      "rationale": "limit 41bps \u00b7 ATR/px 3.1% \u00b7 liq 0.30"
+    },
+    "UNP": {
+      "ticker": "UNP",
+      "use_limit_order": false,
+      "limit_buffer_bps": 30,
+      "defer_to_next_cycle": false,
+      "opening_volatility": 0.0227,
+      "liquidity_score": 0.4298,
+      "extension_warning": false,
+      "timing_window": null,
+      "rationale": "clean entry \u00b7 ATR/px 2.3% \u00b7 liq 0.43"
+    },
     "TON-USD": {
       "ticker": "TON-USD",
       "use_limit_order": true,
@@ -13,6 +35,28 @@
       "timing_window": null,
       "rationale": "limit 44bps \u00b7 ATR/px 3.4% \u00b7 liq 0.10"
     },
+    "CPT": {
+      "ticker": "CPT",
+      "use_limit_order": false,
+      "limit_buffer_bps": 30,
+      "defer_to_next_cycle": false,
+      "opening_volatility": 0.0189,
+      "liquidity_score": 0.5301,
+      "extension_warning": false,
+      "timing_window": null,
+      "rationale": "clean entry \u00b7 ATR/px 1.9% \u00b7 liq 0.53"
+    },
+    "NUE": {
+      "ticker": "NUE",
+      "use_limit_order": true,
+      "limit_buffer_bps": 39,
+      "defer_to_next_cycle": false,
+      "opening_volatility": 0.0277,
+      "liquidity_score": 0.5412,
+      "extension_warning": false,
+      "timing_window": null,
+      "rationale": "limit 39bps \u00b7 ATR/px 2.8% \u00b7 liq 0.54"
+    },
     "IWM": {
       "ticker": "IWM",
       "use_limit_order": false,
@@ -23,46 +67,13 @@
       "extension_warning": false,
       "timing_window": null,
       "rationale": "clean entry \u00b7 ATR/px 2.1% \u00b7 liq 1.00"
-    },
-    "VLO": {
-      "ticker": "VLO",
-      "use_limit_order": true,
-      "limit_buffer_bps": 45,
-      "defer_to_next_cycle": false,
-      "opening_volatility": 0.0362,
-      "liquidity_score": 0.6279,
-      "extension_warning": false,
-      "timing_window": null,
-      "rationale": "limit 45bps \u00b7 ATR/px 3.6% \u00b7 liq 0.63"
-    },
-    "TRGP": {
-      "ticker": "TRGP",
-      "use_limit_order": true,
-      "limit_buffer_bps": 38,
-      "defer_to_next_cycle": false,
-      "opening_volatility": 0.0261,
-      "liquidity_score": 0.6332,
-      "extension_warning": false,
-      "timing_window": null,
-      "rationale": "limit 38bps \u00b7 ATR/px 2.6% \u00b7 liq 0.63"
-    },
-    "BK": {
-      "ticker": "BK",
-      "use_limit_order": false,
-      "limit_buffer_bps": 30,
-      "defer_to_next_cycle": false,
-      "opening_volatility": 0.0224,
-      "liquidity_score": 0.5605,
-      "extension_warning": false,
-      "timing_window": null,
-      "rationale": "clean entry \u00b7 ATR/px 2.2% \u00b7 liq 0.56"
     }
   },
   "summary": {
-    "tickers": 5,
+    "tickers": 6,
     "deferred": 0,
     "limit_recommended": 3,
-    "market_orders_ok": 2
+    "market_orders_ok": 3
   },
   "config": {
     "atr_defer_ratio": 0.05,

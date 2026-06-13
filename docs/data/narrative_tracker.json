@@ -1,10 +1,10 @@
 {
   "version": "5.0",
-  "generated_at": "2026-06-13T03:04:01.681716+00:00",
+  "generated_at": "2026-06-13T03:25:07.889055+00:00",
   "cycles_observed": 60,
-  "dominant_narrative": "risk_off",
-  "regime_shift": "RISK_OFF",
-  "regime_shift_confidence": 0.4361,
+  "dominant_narrative": "risk_on",
+  "regime_shift": "RISK_ON",
+  "regime_shift_confidence": 0.5335,
   "narratives": {
     "risk_on": {
       "label": "Risk-on sentiment returning",
@@ -18,12 +18,20 @@
         "Consumer Staples",
         "Utilities"
       ],
-      "frequency": 0,
-      "persistence": 8,
-      "acceleration": 0.0,
-      "score": 0.39,
-      "phrases": [],
-      "matched_articles": []
+      "frequency": 1,
+      "persistence": 9,
+      "acceleration": 1.0,
+      "score": 0.625,
+      "phrases": [
+        "all-time high"
+      ],
+      "matched_articles": [
+        {
+          "ticker": "NUE",
+          "title": "Nucor Corp stock hits all-time high at 265.14 USD",
+          "source": "Investing.com"
+        }
+      ]
     },
     "risk_off": {
       "label": "Risk-off / safe-haven buying",
@@ -65,12 +73,20 @@
         "Technology"
       ],
       "sectors_out": [],
-      "frequency": 0,
-      "persistence": 0,
-      "acceleration": 0.0,
-      "score": 0.04,
-      "phrases": [],
-      "matched_articles": []
+      "frequency": 1,
+      "persistence": 1,
+      "acceleration": 1.0,
+      "score": 0.3187,
+      "phrases": [
+        "ai boom"
+      ],
+      "matched_articles": [
+        {
+          "ticker": "PLTR",
+          "title": "Anthropic's AI Boom May Be Creating Palantir's Next Growth Opportunity - Palantir Technologies (NASDAQ:PL",
+          "source": "Benzinga"
+        }
+      ]
     },
     "ai_cooldown": {
       "label": "AI rally cooling / stretched valuations",
@@ -204,25 +220,19 @@
     }
   },
   "sector_pressure": {
-    "Technology": -0.15,
+    "Technology": 0.3637,
     "Energy": 0.0,
     "Industrials": 0.04,
     "Health Care": 0.58,
     "Financials": 0.04,
-    "Consumer Discretionary": -0.15,
-    "Consumer Staples": 0.15,
-    "Communication Services": 0.39,
+    "Consumer Discretionary": 0.085,
+    "Consumer Staples": -0.085,
+    "Communication Services": 0.625,
     "Real Estate": 0.0,
-    "Utilities": 0.11,
+    "Utilities": -0.125,
     "Materials": 0.0
   },
   "history": [
-    {
-      "cycle_ts": "2026-06-12T08:23:45.284906+00:00",
-      "dominant_narrative": "risk_off",
-      "regime_shift": "RISK_OFF",
-      "score": 0.425
-    },
     {
       "cycle_ts": "2026-06-12T08:30:22.296506+00:00",
       "dominant_narrative": "risk_off",
@@ -576,7 +586,13 @@
       "dominant_narrative": "risk_off",
       "regime_shift": "RISK_OFF",
       "score": 0.54
+    },
+    {
+      "cycle_ts": "2026-06-13T03:25:07.889055+00:00",
+      "dominant_narrative": "risk_on",
+      "regime_shift": "RISK_ON",
+      "score": 0.625
     }
   ],
-  "headline_count": 313
+  "headline_count": 464
 }

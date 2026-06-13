@@ -1,20 +1,32 @@
 {
   "version": "wantgot-2.0",
-  "generated_at": "2026-06-13T03:04:13.392191+00:00",
+  "generated_at": "2026-06-13T03:25:17.159813+00:00",
   "accounts": {
     "LEGACY": {
       "account_id": "LEGACY",
       "mode": "consensus",
-      "cycle_at": "2026-06-13T03:03:59.413675+00:00",
+      "cycle_at": "2026-06-13T03:25:07.028939+00:00",
       "session_open": false,
       "composite_halt": false,
       "halt_reason": null,
       "has_cycle_intents": true,
       "rows": [
         {
-          "ticker": "VLO",
+          "ticker": "UNP",
           "signal": "BUY",
-          "conviction": 0.8156,
+          "conviction": 0.6194,
+          "originated": false,
+          "intended_notional": 766.0,
+          "submitted": false,
+          "order_status": null,
+          "held_market_value": 976.62,
+          "verdict": "BLOCKED:blocked_already_held",
+          "reason": "UNP already held"
+        },
+        {
+          "ticker": "CPT",
+          "signal": "BUY",
+          "conviction": 0.6004,
           "originated": false,
           "intended_notional": 766.0,
           "submitted": false,
@@ -24,28 +36,16 @@
           "reason": "off-session run \u2014 the session hard-gate parks orders until the next open (the off-hours-incident law working as designed)"
         },
         {
-          "ticker": "IWM",
+          "ticker": "NUE",
           "signal": "BUY",
-          "conviction": 0.6931,
+          "conviction": 0.7092,
           "originated": false,
           "intended_notional": 766.0,
           "submitted": false,
           "order_status": null,
-          "held_market_value": 0.0,
-          "verdict": "DEFERRED",
-          "reason": "off-session run \u2014 the session hard-gate parks orders until the next open (the off-hours-incident law working as designed)"
-        },
-        {
-          "ticker": "BK",
-          "signal": "BUY",
-          "conviction": 0.8142,
-          "originated": false,
-          "intended_notional": 766.0,
-          "submitted": false,
-          "order_status": null,
-          "held_market_value": 0.0,
-          "verdict": "DEFERRED",
-          "reason": "off-session run \u2014 the session hard-gate parks orders until the next open (the off-hours-incident law working as designed)"
+          "held_market_value": 812.49,
+          "verdict": "BLOCKED:blocked_already_held",
+          "reason": "NUE already held"
         }
       ],
       "held_no_intent": [
@@ -69,20 +69,6 @@
           "unrealized_pl": -2.76,
           "first_seen": "2026-06-12T16:06:41.553127+00:00",
           "note": "held from a prior cycle \u2014 no fresh BUY intent this cycle"
-        },
-        {
-          "ticker": "NUE",
-          "market_value": 812.49,
-          "unrealized_pl": -5.67,
-          "first_seen": "2026-06-12T15:27:01.890044+00:00",
-          "note": "held from a prior cycle \u2014 no fresh BUY intent this cycle"
-        },
-        {
-          "ticker": "UNP",
-          "market_value": 976.62,
-          "unrealized_pl": 10.26,
-          "first_seen": "2026-06-11T19:34:55.273060+00:00",
-          "note": "held from a prior cycle \u2014 no fresh BUY intent this cycle"
         }
       ],
       "totals": {
@@ -92,12 +78,12 @@
         "equity": 9575.07,
         "deployment_gap": -1475.48
       },
-      "narrative": "wanted 3 name(s) ($2298): 0 filled+held, 0 pending, 0 gated, 3 deferred"
+      "narrative": "wanted 3 name(s) ($2298): 0 filled+held, 0 pending, 2 gated, 1 deferred"
     },
     "HARVEST_3": {
       "account_id": "HARVEST_3",
       "mode": "consensus",
-      "cycle_at": "2026-06-13T03:04:00.235020+00:00",
+      "cycle_at": "2026-06-13T03:25:07.231304+00:00",
       "session_open": false,
       "composite_halt": false,
       "halt_reason": null,
@@ -106,7 +92,7 @@
         {
           "ticker": "TON-USD",
           "signal": "BUY",
-          "conviction": 0.5967,
+          "conviction": 0.605,
           "originated": false,
           "intended_notional": 958.79,
           "submitted": false,
@@ -116,9 +102,9 @@
           "reason": "TON-USD is not a traditional equity \u2014 valuables trade in their own zone, never this account"
         },
         {
-          "ticker": "TRGP",
+          "ticker": "CBRE",
           "signal": "BUY",
-          "conviction": 0.8156,
+          "conviction": 1.4796,
           "originated": false,
           "intended_notional": 958.79,
           "submitted": false,
@@ -141,64 +127,64 @@
     "HARVEST_5": {
       "account_id": "HARVEST_5",
       "mode": "wordsmith",
-      "cycle_at": "2026-06-13T03:04:00.872817+00:00",
+      "cycle_at": "2026-06-13T03:25:07.455672+00:00",
       "session_open": false,
       "composite_halt": false,
       "halt_reason": null,
       "has_cycle_intents": true,
       "rows": [
         {
+          "ticker": "NUE",
+          "signal": "STRONG_BUY",
+          "conviction": 0.8985,
+          "originated": true,
+          "intended_notional": 1159.37,
+          "submitted": false,
+          "order_status": null,
+          "held_market_value": 0.0,
+          "verdict": "BLOCKED:blocked_signal_not_sell",
+          "reason": "signal HOLD is not SELL/STRONG_SELL"
+        },
+        {
+          "ticker": "AVGO",
+          "signal": "STRONG_BUY",
+          "conviction": 0.9918,
+          "originated": true,
+          "intended_notional": 1159.37,
+          "submitted": false,
+          "order_status": null,
+          "held_market_value": 0.0,
+          "verdict": "BLOCKED:blocked_signal_not_sell",
+          "reason": "signal HOLD is not SELL/STRONG_SELL"
+        },
+        {
+          "ticker": "MU",
+          "signal": "BUY",
+          "conviction": 0.8751,
+          "originated": true,
+          "intended_notional": 1159.37,
+          "submitted": false,
+          "order_status": null,
+          "held_market_value": 0.0,
+          "verdict": "BLOCKED:blocked_signal_not_sell",
+          "reason": "signal HOLD is not SELL/STRONG_SELL"
+        },
+        {
+          "ticker": "MPWR",
+          "signal": "BUY",
+          "conviction": 0.8751,
+          "originated": true,
+          "intended_notional": 1159.37,
+          "submitted": false,
+          "order_status": null,
+          "held_market_value": 0.0,
+          "verdict": "BLOCKED:blocked_signal_not_sell",
+          "reason": "signal HOLD is not SELL/STRONG_SELL"
+        },
+        {
           "ticker": "XLM-USD",
           "signal": "BUY",
-          "conviction": 0.8097,
-          "originated": true,
-          "intended_notional": 1159.37,
-          "submitted": false,
-          "order_status": null,
-          "held_market_value": 0.0,
-          "verdict": "BLOCKED:blocked_signal_not_sell",
-          "reason": "signal HOLD is not SELL/STRONG_SELL"
-        },
-        {
-          "ticker": "LDO-USD",
-          "signal": "BUY",
-          "conviction": 0.8097,
-          "originated": true,
-          "intended_notional": 1159.37,
-          "submitted": false,
-          "order_status": null,
-          "held_market_value": 0.0,
-          "verdict": "BLOCKED:blocked_signal_not_sell",
-          "reason": "signal HOLD is not SELL/STRONG_SELL"
-        },
-        {
-          "ticker": "INJ-USD",
-          "signal": "BUY",
-          "conviction": 0.7125,
-          "originated": true,
-          "intended_notional": 1159.37,
-          "submitted": false,
-          "order_status": null,
-          "held_market_value": 0.0,
-          "verdict": "BLOCKED:blocked_signal_not_sell",
-          "reason": "signal HOLD is not SELL/STRONG_SELL"
-        },
-        {
-          "ticker": "STRK-USD",
-          "signal": "BUY",
-          "conviction": 0.7125,
-          "originated": true,
-          "intended_notional": 1159.37,
-          "submitted": false,
-          "order_status": null,
-          "held_market_value": 0.0,
-          "verdict": "BLOCKED:blocked_signal_not_sell",
-          "reason": "signal HOLD is not SELL/STRONG_SELL"
-        },
-        {
-          "ticker": "OP-USD",
-          "signal": "BUY",
-          "conviction": 0.7125,
+          "conviction": 0.8751,
           "originated": true,
           "intended_notional": 1159.37,
           "submitted": false,
