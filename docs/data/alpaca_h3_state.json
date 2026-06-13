@@ -5153,14 +5153,14 @@
     "primary_symbol": "SGOV",
     "primary_qty": 7.8e-05,
     "primary_market_value": 0.0079,
-    "checked_at": "2026-06-13T02:25:21.129079+00:00"
+    "checked_at": "2026-06-13T02:43:55.351165+00:00"
   },
   "reason": "Live \u2014 configured; last run 2026-06-09T09:17:05",
   "seeded_at": "2026-05-11T05:00:26.087481+00:00",
   "genesis_at": "2026-05-11T05:08:52.354920+00:00",
   "last_cycle_summary": {
-    "time": "2026-06-13T02:25:21.261502+00:00",
-    "timestamp": "2026-06-13T02:25:21.261510+00:00",
+    "time": "2026-06-13T02:43:55.447526+00:00",
+    "timestamp": "2026-06-13T02:43:55.447534+00:00",
     "closed": 0,
     "opened": 0,
     "open_after": 1,
@@ -5186,10 +5186,10 @@
     "session": "closed",
     "is_extended": false
   },
-  "last_run": "2026-06-13T02:25:21.261758+00:00",
+  "last_run": "2026-06-13T02:43:55.447794+00:00",
   "sweep_protection": {
     "version": "4.0",
-    "checked_at": "2026-06-13T02:25:21.957448+00:00",
+    "checked_at": "2026-06-13T02:43:56.000224+00:00",
     "market_mode": "ATTACK",
     "force_sweep_floor_resolved": 10500.0,
     "stale_close_age_days": 5,
@@ -5644,7 +5644,7 @@
     }
   ],
   "cycle_intents": {
-    "at": "2026-06-13T02:25:21.261561+00:00",
+    "at": "2026-06-13T02:43:55.447565+00:00",
     "session": "closed",
     "session_open": false,
     "composite_halt": false,
@@ -5652,18 +5652,18 @@
     "plans_offered": 2,
     "buy_intents": [
       {
-        "ticker": "TRGP",
+        "ticker": "TON-USD",
         "signal": "BUY",
-        "conviction": 0.5923,
+        "conviction": 0.6897,
         "originated": false,
-        "outcome": "blocked_no_session_match",
+        "outcome": "blocked_not_equity_mission",
         "intended_notional": 958.79,
-        "reason": "no usable session for order"
+        "reason": "TON-USD is not a traditional equity \u2014 valuables trade in their own zone, never this account"
       },
       {
-        "ticker": "UNP",
+        "ticker": "VLO",
         "signal": "BUY",
-        "conviction": 0.5746,
+        "conviction": 0.8489,
         "originated": false,
         "outcome": "blocked_no_session_match",
         "intended_notional": 958.79,
@@ -5672,22 +5672,22 @@
     ],
     "decisions_this_cycle": [
       {
-        "ticker": "TRGP",
+        "ticker": "TON-USD",
+        "category": "blocked_not_equity_mission",
+        "reason": "TON-USD is not a traditional equity \u2014 valuables trade in their own zone, never this account"
+      },
+      {
+        "ticker": "VLO",
         "category": "blocked_no_session_match",
         "reason": "no usable session for order"
       },
       {
-        "ticker": "UNP",
-        "category": "blocked_no_session_match",
-        "reason": "no usable session for order"
-      },
-      {
-        "ticker": "TRGP",
+        "ticker": "TON-USD",
         "category": "blocked_signal_not_sell",
         "reason": "signal BUY is not SELL/STRONG_SELL"
       },
       {
-        "ticker": "UNP",
+        "ticker": "VLO",
         "category": "blocked_signal_not_sell",
         "reason": "signal BUY is not SELL/STRONG_SELL"
       }
