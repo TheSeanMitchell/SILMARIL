@@ -1,10 +1,10 @@
 {
   "version": "5.0",
-  "generated_at": "2026-06-13T02:04:02.169474+00:00",
+  "generated_at": "2026-06-13T02:25:22.693724+00:00",
   "cycles_observed": 60,
-  "dominant_narrative": "risk_off",
-  "regime_shift": "RISK_OFF",
-  "regime_shift_confidence": 0.4361,
+  "dominant_narrative": "risk_on",
+  "regime_shift": "RISK_ON",
+  "regime_shift_confidence": 0.3824,
   "narratives": {
     "risk_on": {
       "label": "Risk-on sentiment returning",
@@ -18,12 +18,25 @@
         "Consumer Staples",
         "Utilities"
       ],
-      "frequency": 0,
-      "persistence": 9,
-      "acceleration": 0.0,
-      "score": 0.39,
-      "phrases": [],
-      "matched_articles": []
+      "frequency": 1,
+      "persistence": 10,
+      "acceleration": 1.0,
+      "score": 0.625,
+      "phrases": [
+        "all-time high"
+      ],
+      "matched_articles": [
+        {
+          "ticker": "NUE",
+          "title": "Nucor Corp stock hits all-time high at 265.14 USD",
+          "source": "Investing.com"
+        },
+        {
+          "ticker": "EXPD",
+          "title": "Expeditors International stock hits all-time high at 167.38 USD By Investing.com",
+          "source": "Investing.com Nigeria"
+        }
+      ]
     },
     "risk_off": {
       "label": "Risk-off / safe-haven buying",
@@ -121,12 +134,20 @@
         "Industrials"
       ],
       "sectors_out": [],
-      "frequency": 0,
-      "persistence": 0,
-      "acceleration": 0.0,
-      "score": 0.04,
-      "phrases": [],
-      "matched_articles": []
+      "frequency": 1,
+      "persistence": 1,
+      "acceleration": 1.0,
+      "score": 0.3187,
+      "phrases": [
+        "geopolitical tension"
+      ],
+      "matched_articles": [
+        {
+          "ticker": "KR",
+          "title": "Here\u2019s Why The Kroger Co. (KR) is a Defensive Stock to Buy Amid Geopolitical Tensions",
+          "source": "Yahoo Finance"
+        }
+      ]
     },
     "biotech_breakout": {
       "label": "Biotech / pharma breakout",
@@ -204,25 +225,19 @@
     }
   },
   "sector_pressure": {
-    "Technology": -0.15,
+    "Technology": 0.085,
     "Energy": 0.0,
-    "Industrials": 0.04,
+    "Industrials": 0.3187,
     "Health Care": 0.58,
     "Financials": 0.04,
-    "Consumer Discretionary": -0.15,
-    "Consumer Staples": 0.15,
-    "Communication Services": 0.39,
+    "Consumer Discretionary": 0.085,
+    "Consumer Staples": -0.085,
+    "Communication Services": 0.625,
     "Real Estate": 0.0,
-    "Utilities": 0.11,
+    "Utilities": -0.125,
     "Materials": 0.0
   },
   "history": [
-    {
-      "cycle_ts": "2026-06-12T07:24:16.754000+00:00",
-      "dominant_narrative": "risk_off",
-      "regime_shift": "RISK_OFF",
-      "score": 0.54
-    },
     {
       "cycle_ts": "2026-06-12T07:44:12.101671+00:00",
       "dominant_narrative": "risk_off",
@@ -576,7 +591,13 @@
       "dominant_narrative": "risk_off",
       "regime_shift": "RISK_OFF",
       "score": 0.54
+    },
+    {
+      "cycle_ts": "2026-06-13T02:25:22.693724+00:00",
+      "dominant_narrative": "risk_on",
+      "regime_shift": "RISK_ON",
+      "score": 0.625
     }
   ],
-  "headline_count": 311
+  "headline_count": 584
 }
