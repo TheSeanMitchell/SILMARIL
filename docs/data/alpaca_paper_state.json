@@ -17,10 +17,6 @@
       "qty": 3.581294738,
       "snapshots_30m": [
         {
-          "ts": "2026-06-13T08:25:05.321531+00:00",
-          "price": 272.7
-        },
-        {
           "ts": "2026-06-13T09:03:42.918565+00:00",
           "price": 272.7
         },
@@ -47,6 +43,10 @@
         {
           "ts": "2026-06-13T13:04:50.480701+00:00",
           "price": 272.7
+        },
+        {
+          "ts": "2026-06-13T13:43:55.821497+00:00",
+          "price": 272.7
         }
       ]
     },
@@ -56,10 +56,6 @@
       "first_seen": "2026-06-12T14:26:13.732701+00:00",
       "qty": 7.93696,
       "snapshots_30m": [
-        {
-          "ts": "2026-06-13T08:25:05.321160+00:00",
-          "price": 62.99
-        },
         {
           "ts": "2026-06-13T09:03:42.918143+00:00",
           "price": 62.99
@@ -86,6 +82,10 @@
         },
         {
           "ts": "2026-06-13T13:04:50.480321+00:00",
+          "price": 62.99
+        },
+        {
+          "ts": "2026-06-13T13:43:55.821141+00:00",
           "price": 62.99
         }
       ]
@@ -4262,8 +4262,8 @@
     }
   ],
   "last_cycle_summary": {
-    "time": "2026-06-13T13:25:10.623119+00:00",
-    "timestamp": "2026-06-13T13:25:10.623129+00:00",
+    "time": "2026-06-13T13:43:55.937333+00:00",
+    "timestamp": "2026-06-13T13:43:55.937364+00:00",
     "closed": 0,
     "opened": 0,
     "open_after": 6,
@@ -4289,7 +4289,7 @@
     "session": "closed",
     "is_extended": false
   },
-  "last_run": "2026-06-13T13:25:10.623344+00:00",
+  "last_run": "2026-06-13T13:43:55.937659+00:00",
   "grocery_pending_harvest": 2398.051499999999,
   "trading_capital": 9575.02,
   "realized_savings": 0.02,
@@ -4310,7 +4310,7 @@
     "primary_symbol": "SGOV",
     "primary_qty": 0.00016,
     "primary_market_value": 0.0161,
-    "checked_at": "2026-06-13T13:25:10.558968+00:00"
+    "checked_at": "2026-06-13T13:43:55.815899+00:00"
   },
   "sgov_sweep_last_cycle": {
     "attempted": false,
@@ -4353,7 +4353,7 @@
   ],
   "sweep_protection": {
     "version": "4.0",
-    "checked_at": "2026-06-13T13:25:11.669946+00:00",
+    "checked_at": "2026-06-13T13:43:56.743922+00:00",
     "market_mode": "ATTACK",
     "force_sweep_floor_resolved": 10500.0,
     "stale_close_age_days": 5,
@@ -4617,17 +4617,35 @@
     "open_seen": 5
   },
   "cycle_intents": {
-    "at": "2026-06-13T13:25:10.623155+00:00",
+    "at": "2026-06-13T13:43:55.937400+00:00",
     "session": "closed",
     "session_open": false,
     "composite_halt": false,
     "halt_reason": null,
-    "plans_offered": 1,
+    "plans_offered": 3,
     "buy_intents": [
       {
-        "ticker": "MAS",
+        "ticker": "INJ-USD",
         "signal": "BUY",
-        "conviction": 0.5899,
+        "conviction": 0.8868,
+        "originated": false,
+        "outcome": "blocked_not_equity_mission",
+        "intended_notional": 766.0,
+        "reason": "INJ-USD is not a traditional equity \u2014 valuables trade in their own zone, never this account"
+      },
+      {
+        "ticker": "JTO-USD",
+        "signal": "BUY",
+        "conviction": 0.6348,
+        "originated": false,
+        "outcome": "blocked_not_equity_mission",
+        "intended_notional": 766.0,
+        "reason": "JTO-USD is not a traditional equity \u2014 valuables trade in their own zone, never this account"
+      },
+      {
+        "ticker": "IWM",
+        "signal": "BUY",
+        "conviction": 0.7028,
         "originated": false,
         "outcome": "blocked_no_session_match",
         "intended_notional": 766.0,
@@ -4636,12 +4654,32 @@
     ],
     "decisions_this_cycle": [
       {
-        "ticker": "MAS",
+        "ticker": "INJ-USD",
+        "category": "blocked_not_equity_mission",
+        "reason": "INJ-USD is not a traditional equity \u2014 valuables trade in their own zone, never this account"
+      },
+      {
+        "ticker": "JTO-USD",
+        "category": "blocked_not_equity_mission",
+        "reason": "JTO-USD is not a traditional equity \u2014 valuables trade in their own zone, never this account"
+      },
+      {
+        "ticker": "IWM",
         "category": "blocked_no_session_match",
         "reason": "no usable session for order"
       },
       {
-        "ticker": "MAS",
+        "ticker": "INJ-USD",
+        "category": "blocked_signal_not_sell",
+        "reason": "signal BUY is not SELL/STRONG_SELL"
+      },
+      {
+        "ticker": "JTO-USD",
+        "category": "blocked_signal_not_sell",
+        "reason": "signal BUY is not SELL/STRONG_SELL"
+      },
+      {
+        "ticker": "IWM",
         "category": "blocked_signal_not_sell",
         "reason": "signal BUY is not SELL/STRONG_SELL"
       }
