@@ -1,6 +1,6 @@
 {
   "version": "ipo-analysis-1.0",
-  "generated_at": "2026-06-14T01:24:54.848023+00:00",
+  "generated_at": "2026-06-14T01:43:42.625328+00:00",
   "active": {
     "id": "spacex_ipo",
     "company": "SpaceX",
@@ -22,9 +22,9 @@
     "days_until": -2,
     "phase": "post_event_decay",
     "recording": true,
-    "snapshot_count": 209,
+    "snapshot_count": 210,
     "first_snapshot": "2026-06-06T19:24:48.160860+00:00",
-    "last_snapshot": "2026-06-14T01:24:54.689389+00:00",
+    "last_snapshot": "2026-06-14T01:43:42.472457+00:00",
     "latest": {
       "market": {
         "regime": "RISK_ON",
@@ -37,13 +37,13 @@
         "qqq_1d": 0.0,
         "xlk_1d": 0.0,
         "xle_1d": 0.0,
-        "spy_1w": 0.0,
-        "qqq_1w": -0.05,
-        "xlk_1w": -0.01,
+        "spy_1w": -0.02,
+        "qqq_1w": -0.24,
+        "xlk_1w": 0.05,
         "xle_1w": -0.02,
-        "spy_1mo": 0.0,
-        "qqq_1mo": -0.05,
-        "xlk_1mo": -0.01,
+        "spy_1mo": -0.02,
+        "qqq_1mo": -0.24,
+        "xlk_1mo": 0.05,
         "xle_1mo": -0.02
       },
       "complex": [
@@ -53,102 +53,69 @@
           "in_universe": false
         },
         {
-          "ticker": "DIA",
-          "group": "market_rotation",
-          "in_universe": true,
-          "price": 513.06,
-          "signal": "BUY",
-          "score": 0.887,
-          "headlines": 0,
-          "sector": "Index",
-          "news_state": "NORMAL"
-        },
-        {
-          "ticker": "IWM",
-          "group": "market_rotation",
-          "in_universe": true,
-          "price": 292.95,
-          "signal": "BUY",
-          "score": 0.855,
-          "headlines": 0,
-          "sector": "Index",
-          "news_state": "NORMAL"
-        },
-        {
-          "ticker": "SPY",
-          "group": "market_rotation",
-          "in_universe": true,
-          "price": 741.75,
-          "signal": "BUY",
-          "score": 0.73,
-          "headlines": 0,
-          "sector": "Index",
-          "news_state": "NORMAL"
-        },
-        {
-          "ticker": "MS",
-          "group": "underwriters",
-          "in_universe": true,
-          "price": 214.04,
-          "signal": "BUY",
-          "score": 0.658,
-          "headlines": 0,
-          "sector": "Financials",
-          "news_state": "NORMAL"
-        },
-        {
-          "ticker": "GS",
-          "group": "underwriters",
-          "in_universe": true,
-          "price": 1062.75,
-          "signal": "BUY",
-          "score": 0.653,
-          "headlines": 0,
-          "sector": "Financials",
-          "news_state": "NORMAL"
-        },
-        {
           "ticker": "TSM",
           "group": "ai_xai_complex",
           "in_universe": true,
           "price": 423.93,
-          "signal": "BUY",
-          "score": 0.623,
-          "headlines": 0,
+          "signal": "STRONG_BUY",
+          "score": 1.415,
+          "headlines": 5,
           "sector": "Semiconductors",
           "news_state": "NORMAL"
         },
         {
-          "ticker": "XLK",
-          "group": "market_rotation",
+          "ticker": "AMD",
+          "group": "ai_xai_complex",
           "in_universe": true,
-          "price": 184.8,
+          "price": 511.57,
           "signal": "BUY",
-          "score": 0.623,
-          "headlines": 0,
+          "score": 0.369,
+          "headlines": 5,
+          "sector": "Semiconductors",
+          "news_state": "NORMAL"
+        },
+        {
+          "ticker": "AVGO",
+          "group": "ai_xai_complex",
+          "in_universe": true,
+          "price": 382.07,
+          "signal": "HOLD",
+          "score": 0.144,
+          "headlines": 5,
+          "sector": "Semiconductors",
+          "news_state": "NORMAL"
+        },
+        {
+          "ticker": "MSFT",
+          "group": "ai_xai_complex",
+          "in_universe": true,
+          "price": 390.74,
+          "signal": "HOLD",
+          "score": 0.007,
+          "headlines": 5,
           "sector": "Technology",
           "news_state": "NORMAL"
         },
         {
-          "ticker": "GD",
-          "group": "space_defense",
+          "ticker": "NVDA",
+          "group": "ai_xai_complex",
           "in_universe": true,
-          "price": 360.22,
-          "signal": "SELL",
-          "score": -0.576,
-          "headlines": 0,
-          "sector": "Industrials",
+          "price": 205.19,
+          "signal": "HOLD",
+          "score": 0.0,
+          "headlines": 5,
+          "sector": "Technology",
           "news_state": "NORMAL"
         },
         {
-          "ticker": "QQQ",
-          "group": "market_rotation",
+          "ticker": "TSLA",
+          "group": "musk_adjacent",
           "in_universe": true,
-          "price": 721.34,
-          "signal": "BUY",
-          "score": 0.573,
-          "headlines": 0,
-          "sector": "Index",
+          "price": 406.43,
+          "signal": "HOLD",
+          "score": 0.0,
+          "headlines": 4,
+          "sector": "Discretionary",
           "news_state": "NORMAL"
         },
         {
@@ -157,82 +124,179 @@
           "in_universe": true,
           "price": 320.72,
           "signal": "SELL",
-          "score": -0.562,
-          "headlines": 0,
+          "score": -0.412,
+          "headlines": 3,
           "sector": "Financials",
           "news_state": "NORMAL"
         },
         {
-          "ticker": "AVGO",
+          "ticker": "XLK",
+          "group": "market_rotation",
+          "in_universe": true,
+          "price": 184.8,
+          "signal": "BUY",
+          "score": 0.525,
+          "headlines": 1,
+          "sector": "Technology",
+          "news_state": "NORMAL"
+        },
+        {
+          "ticker": "MU",
           "group": "ai_xai_complex",
           "in_universe": true,
-          "price": 382.07,
-          "signal": "SELL",
-          "score": -0.561,
-          "headlines": 0,
+          "price": 981.61,
+          "signal": "BUY",
+          "score": 0.369,
+          "headlines": 1,
           "sector": "Semiconductors",
+          "news_state": "NORMAL"
+        },
+        {
+          "ticker": "META",
+          "group": "ai_xai_complex",
+          "in_universe": true,
+          "price": 566.98,
+          "signal": "HOLD",
+          "score": -0.367,
+          "headlines": 1,
+          "sector": "Communications",
+          "news_state": "NORMAL"
+        },
+        {
+          "ticker": "DIA",
+          "group": "market_rotation",
+          "in_universe": true,
+          "price": 513.06,
+          "signal": "BUY",
+          "score": 0.893,
+          "headlines": 0,
+          "sector": "Index",
           "news_state": "NORMAL"
         }
       ],
       "money_flow_proxy": [
         {
-          "basket": "Index",
-          "etf": "\u2014",
-          "net_score": 0.731,
+          "basket": "Technology",
+          "etf": "XLK",
+          "net_score": 0.282,
           "stance": "bullish",
-          "headline_count": 0
+          "headline_count": 46
         },
         {
-          "basket": "Credit",
-          "etf": "\u2014",
-          "net_score": 0.384,
+          "basket": "Software",
+          "etf": "IGV",
+          "net_score": 0.277,
           "stance": "bullish",
-          "headline_count": 0
-        },
-        {
-          "basket": "Semiconductors",
-          "etf": "SMH",
-          "net_score": 0.336,
-          "stance": "bullish",
-          "headline_count": 0
-        },
-        {
-          "basket": "Consumer Discretionary",
-          "etf": "XLY",
-          "net_score": 0.327,
-          "stance": "bullish",
-          "headline_count": 0
+          "headline_count": 30
         },
         {
           "basket": "Real Estate",
           "etf": "XLRE",
-          "net_score": 0.278,
+          "net_score": 0.337,
           "stance": "bullish",
-          "headline_count": 0
+          "headline_count": 27
         },
         {
-          "basket": "Technology",
-          "etf": "XLK",
-          "net_score": 0.252,
+          "basket": "Semiconductors",
+          "etf": "SMH",
+          "net_score": 0.562,
           "stance": "bullish",
-          "headline_count": 0
+          "headline_count": 22
         },
         {
-          "basket": "Communications",
-          "etf": "\u2014",
-          "net_score": -0.22,
-          "stance": "bearish",
-          "headline_count": 0
+          "basket": "Health Care",
+          "etf": "XLV",
+          "net_score": 0.121,
+          "stance": "mixed",
+          "headline_count": 16
         },
         {
-          "basket": "Industrials",
-          "etf": "XLI",
-          "net_score": 0.196,
+          "basket": "Consumer Staples",
+          "etf": "XLP",
+          "net_score": 0.068,
+          "stance": "mixed",
+          "headline_count": 15
+        },
+        {
+          "basket": "Communication Services",
+          "etf": "XLC",
+          "net_score": 0.139,
+          "stance": "mixed",
+          "headline_count": 12
+        },
+        {
+          "basket": "Energy",
+          "etf": "XLE",
+          "net_score": 0.168,
           "stance": "bullish",
-          "headline_count": 0
+          "headline_count": 10
         }
       ],
       "hot_stocks": [
+        {
+          "ticker": "INTC",
+          "side": "stock",
+          "headlines": 5,
+          "signal": "STRONG_BUY",
+          "momentum": 5.0,
+          "news_state": "NORMAL"
+        },
+        {
+          "ticker": "TSM",
+          "side": "stock",
+          "headlines": 5,
+          "signal": "STRONG_BUY",
+          "momentum": 5.0,
+          "news_state": "NORMAL"
+        },
+        {
+          "ticker": "WMT",
+          "side": "stock",
+          "headlines": 5,
+          "signal": "STRONG_SELL",
+          "momentum": -5.0,
+          "news_state": "NORMAL"
+        },
+        {
+          "ticker": "BXP",
+          "side": "stock",
+          "headlines": 5,
+          "signal": "BUY",
+          "momentum": 3.0,
+          "news_state": "NORMAL"
+        },
+        {
+          "ticker": "MPWR",
+          "side": "stock",
+          "headlines": 5,
+          "signal": "BUY",
+          "momentum": 3.0,
+          "news_state": "NORMAL"
+        },
+        {
+          "ticker": "INVH",
+          "side": "stock",
+          "headlines": 5,
+          "signal": "BUY",
+          "momentum": 3.0,
+          "news_state": "NORMAL"
+        },
+        {
+          "ticker": "LRCX",
+          "side": "stock",
+          "headlines": 5,
+          "signal": "BUY",
+          "momentum": 3.0,
+          "news_state": "NORMAL"
+        },
+        {
+          "ticker": "NUE",
+          "side": "stock",
+          "headlines": 5,
+          "signal": "BUY",
+          "momentum": 3.0,
+          "news_state": "NORMAL"
+        },
         {
           "ticker": "TON-USD",
           "side": "other",
@@ -242,7 +306,7 @@
           "news_state": "NORMAL"
         },
         {
-          "ticker": "JTO-USD",
+          "ticker": "NEAR-USD",
           "side": "other",
           "headlines": 5,
           "signal": "BUY",
@@ -250,7 +314,7 @@
           "news_state": "NORMAL"
         },
         {
-          "ticker": "INJ-USD",
+          "ticker": "UNI-USD",
           "side": "other",
           "headlines": 5,
           "signal": "BUY",
@@ -361,23 +425,23 @@
           },
           {
             "date": "2026-06-14",
-            "complex_headlines": 0,
-            "market_headlines": 0
+            "complex_headlines": 35,
+            "market_headlines": 216
           }
         ],
         "by_phase": {
           "pre_event": 30.6,
           "event_window": 9.7,
-          "post_event_decay": 0.0
+          "post_event_decay": 5.8
         },
         "peak": {
-          "date": "2026-06-08",
-          "complex_headlines": 34,
-          "market_headlines": 215
+          "date": "2026-06-14",
+          "complex_headlines": 35,
+          "market_headlines": 216
         },
         "first": 27,
-        "latest": 0,
-        "trend": "falling",
+        "latest": 35,
+        "trend": "rising",
         "days_recorded": 9
       },
       "market": {
@@ -406,15 +470,15 @@
           "xle": 0.0
         },
         "latest_1w": {
-          "spy": 0.0,
-          "qqq": -0.05,
-          "xlk": -0.01,
+          "spy": -0.02,
+          "qqq": -0.24,
+          "xlk": 0.05,
           "xle": -0.02
         },
         "latest_1mo": {
-          "spy": 0.0,
-          "qqq": -0.05,
-          "xlk": -0.01,
+          "spy": -0.02,
+          "qqq": -0.24,
+          "xlk": 0.05,
           "xle": -0.02
         },
         "series": [
@@ -506,126 +570,138 @@
       "sector_rotation": {
         "winners": [
           {
-            "basket": "Credit",
-            "delta_net": 0.083,
-            "from": 0.301,
-            "to": 0.384
+            "basket": "Semiconductors",
+            "delta_net": 0.236,
+            "from": 0.326,
+            "to": 0.562
+          },
+          {
+            "basket": "Communication Services",
+            "delta_net": 0.171,
+            "from": -0.032,
+            "to": 0.139
           },
           {
             "basket": "Health Care",
-            "delta_net": 0.063,
+            "delta_net": 0.094,
             "from": 0.027,
-            "to": 0.09
+            "to": 0.121
           },
           {
             "basket": "Consumer Discretionary",
-            "delta_net": 0.062,
+            "delta_net": 0.064,
             "from": 0.265,
-            "to": 0.327
-          },
-          {
-            "basket": "Communications",
-            "delta_net": 0.054,
-            "from": -0.274,
-            "to": -0.22
+            "to": 0.329
           },
           {
             "basket": "Commodities (broad)",
-            "delta_net": 0.044,
+            "delta_net": 0.055,
             "from": -0.179,
-            "to": -0.135
+            "to": -0.124
           }
         ],
         "losers": [
           {
             "basket": "Energy",
-            "delta_net": -0.006,
+            "delta_net": -0.003,
             "from": 0.171,
-            "to": 0.165
+            "to": 0.168
+          },
+          {
+            "basket": "Software",
+            "delta_net": -0.02,
+            "from": 0.297,
+            "to": 0.277
+          },
+          {
+            "basket": "Financials",
+            "delta_net": -0.093,
+            "from": 0.052,
+            "to": -0.041
           },
           {
             "basket": "Consumer Staples",
-            "delta_net": -0.083,
+            "delta_net": -0.134,
             "from": 0.202,
-            "to": 0.119
+            "to": 0.068
           },
           {
             "basket": "Technology",
-            "delta_net": -0.248,
+            "delta_net": -0.218,
             "from": 0.5,
-            "to": 0.252
+            "to": 0.282
           }
         ],
         "current": [
           {
-            "basket": "Index",
-            "etf": "\u2014",
-            "net_score": 0.731,
+            "basket": "Technology",
+            "etf": "XLK",
+            "net_score": 0.282,
             "stance": "bullish",
-            "headline_count": 0
+            "headline_count": 46
           },
           {
-            "basket": "Credit",
-            "etf": "\u2014",
-            "net_score": 0.384,
+            "basket": "Software",
+            "etf": "IGV",
+            "net_score": 0.277,
             "stance": "bullish",
-            "headline_count": 0
-          },
-          {
-            "basket": "Semiconductors",
-            "etf": "SMH",
-            "net_score": 0.336,
-            "stance": "bullish",
-            "headline_count": 0
-          },
-          {
-            "basket": "Consumer Discretionary",
-            "etf": "XLY",
-            "net_score": 0.327,
-            "stance": "bullish",
-            "headline_count": 0
+            "headline_count": 30
           },
           {
             "basket": "Real Estate",
             "etf": "XLRE",
-            "net_score": 0.278,
+            "net_score": 0.337,
             "stance": "bullish",
-            "headline_count": 0
+            "headline_count": 27
           },
           {
-            "basket": "Technology",
-            "etf": "XLK",
-            "net_score": 0.252,
+            "basket": "Semiconductors",
+            "etf": "SMH",
+            "net_score": 0.562,
             "stance": "bullish",
-            "headline_count": 0
+            "headline_count": 22
           },
           {
-            "basket": "Communications",
-            "etf": "\u2014",
-            "net_score": -0.22,
-            "stance": "bearish",
-            "headline_count": 0
+            "basket": "Health Care",
+            "etf": "XLV",
+            "net_score": 0.121,
+            "stance": "mixed",
+            "headline_count": 16
           },
           {
-            "basket": "Industrials",
-            "etf": "XLI",
-            "net_score": 0.196,
+            "basket": "Consumer Staples",
+            "etf": "XLP",
+            "net_score": 0.068,
+            "stance": "mixed",
+            "headline_count": 15
+          },
+          {
+            "basket": "Communication Services",
+            "etf": "XLC",
+            "net_score": 0.139,
+            "stance": "mixed",
+            "headline_count": 12
+          },
+          {
+            "basket": "Energy",
+            "etf": "XLE",
+            "net_score": 0.168,
             "stance": "bullish",
-            "headline_count": 0
+            "headline_count": 10
           }
         ]
       },
       "hot_persistence": [
         {
           "ticker": "TON-USD",
-          "appearances": 92,
+          "appearances": 93,
           "still_hot": true,
           "last_signal": "BUY"
         },
         {
           "ticker": "INJ-USD",
           "appearances": 77,
-          "still_hot": true,
+          "still_hot": false,
           "last_signal": "BUY"
         },
         {
@@ -636,19 +712,19 @@
         },
         {
           "ticker": "LRCX",
-          "appearances": 58,
-          "still_hot": false,
-          "last_signal": "BUY"
-        },
-        {
-          "ticker": "JTO-USD",
-          "appearances": 57,
+          "appearances": 59,
           "still_hot": true,
           "last_signal": "BUY"
         },
         {
           "ticker": "NEAR-USD",
-          "appearances": 56,
+          "appearances": 57,
+          "still_hot": true,
+          "last_signal": "BUY"
+        },
+        {
+          "ticker": "JTO-USD",
+          "appearances": 57,
           "still_hot": false,
           "last_signal": "BUY"
         },

@@ -1,44 +1,20 @@
 {
   "version": "wantgot-2.0",
-  "generated_at": "2026-06-14T01:25:20.701819+00:00",
+  "generated_at": "2026-06-14T01:44:12.111693+00:00",
   "accounts": {
     "LEGACY": {
       "account_id": "LEGACY",
       "mode": "consensus",
-      "cycle_at": "2026-06-14T01:25:13.267738+00:00",
+      "cycle_at": "2026-06-14T01:44:04.057204+00:00",
       "session_open": false,
       "composite_halt": false,
       "halt_reason": null,
       "has_cycle_intents": true,
       "rows": [
         {
-          "ticker": "HST",
-          "signal": "BUY",
-          "conviction": 0.7227,
-          "originated": false,
-          "intended_notional": 766.0,
-          "submitted": false,
-          "order_status": null,
-          "held_market_value": 0.0,
-          "verdict": "DEFERRED",
-          "reason": "off-session run \u2014 the session hard-gate parks orders until the next open (the off-hours-incident law working as designed)"
-        },
-        {
           "ticker": "IWM",
           "signal": "BUY",
-          "conviction": 0.6982,
-          "originated": false,
-          "intended_notional": 766.0,
-          "submitted": false,
-          "order_status": null,
-          "held_market_value": 0.0,
-          "verdict": "DEFERRED",
-          "reason": "off-session run \u2014 the session hard-gate parks orders until the next open (the off-hours-incident law working as designed)"
-        },
-        {
-          "ticker": "PANW",
-          "signal": "BUY",
-          "conviction": 0.7139,
+          "conviction": 0.6832,
           "originated": false,
           "intended_notional": 766.0,
           "submitted": false,
@@ -86,27 +62,27 @@
         }
       ],
       "totals": {
-        "intended": 2298.0,
+        "intended": 766.0,
         "submitted": 0.0,
         "held": 3773.48,
         "equity": 9575.04,
-        "deployment_gap": -1475.48
+        "deployment_gap": -3007.48
       },
-      "narrative": "wanted 3 name(s) ($2298): 0 filled+held, 0 pending, 0 gated, 3 deferred"
+      "narrative": "wanted 1 name(s) ($766): 0 filled+held, 0 pending, 0 gated, 1 deferred"
     },
     "HARVEST_3": {
       "account_id": "HARVEST_3",
       "mode": "consensus",
-      "cycle_at": "2026-06-14T01:25:13.570803+00:00",
+      "cycle_at": "2026-06-14T01:44:04.412472+00:00",
       "session_open": false,
       "composite_halt": false,
       "halt_reason": null,
       "has_cycle_intents": true,
       "rows": [
         {
-          "ticker": "INTC",
-          "signal": "STRONG_BUY",
-          "conviction": 0.7389,
+          "ticker": "TRGP",
+          "signal": "BUY",
+          "conviction": 0.9087,
           "originated": false,
           "intended_notional": 958.79,
           "submitted": false,
@@ -116,9 +92,9 @@
           "reason": "off-session run \u2014 the session hard-gate parks orders until the next open (the off-hours-incident law working as designed)"
         },
         {
-          "ticker": "NUE",
+          "ticker": "VLO",
           "signal": "BUY",
-          "conviction": 0.7014,
+          "conviction": 0.9087,
           "originated": false,
           "intended_notional": 958.79,
           "submitted": false,
@@ -141,34 +117,82 @@
     "HARVEST_5": {
       "account_id": "HARVEST_5",
       "mode": "wordsmith",
-      "cycle_at": "2026-06-14T01:25:13.765660+00:00",
+      "cycle_at": "2026-06-14T01:44:04.794730+00:00",
       "session_open": false,
       "composite_halt": false,
       "halt_reason": null,
       "has_cycle_intents": true,
       "rows": [
         {
-          "ticker": "TSM",
-          "signal": "STRONG_BUY",
-          "conviction": 0.7268,
-          "originated": false,
+          "ticker": "LDO-USD",
+          "signal": "BUY",
+          "conviction": 0.8966,
+          "originated": true,
           "intended_notional": 1159.36,
           "submitted": false,
           "order_status": null,
           "held_market_value": 0.0,
-          "verdict": "DEFERRED",
-          "reason": "off-session run \u2014 the session hard-gate parks orders until the next open (the off-hours-incident law working as designed)"
+          "verdict": "BLOCKED:blocked_signal_not_sell",
+          "reason": "signal HOLD is not SELL/STRONG_SELL"
+        },
+        {
+          "ticker": "XLM-USD",
+          "signal": "BUY",
+          "conviction": 0.8734,
+          "originated": true,
+          "intended_notional": 1159.36,
+          "submitted": false,
+          "order_status": null,
+          "held_market_value": 0.0,
+          "verdict": "BLOCKED:blocked_signal_not_sell",
+          "reason": "signal HOLD is not SELL/STRONG_SELL"
+        },
+        {
+          "ticker": "INJ-USD",
+          "signal": "BUY",
+          "conviction": 0.7686,
+          "originated": true,
+          "intended_notional": 1159.36,
+          "submitted": false,
+          "order_status": null,
+          "held_market_value": 0.0,
+          "verdict": "BLOCKED:blocked_signal_not_sell",
+          "reason": "signal HOLD is not SELL/STRONG_SELL"
+        },
+        {
+          "ticker": "STRK-USD",
+          "signal": "BUY",
+          "conviction": 0.7686,
+          "originated": true,
+          "intended_notional": 1159.36,
+          "submitted": false,
+          "order_status": null,
+          "held_market_value": 0.0,
+          "verdict": "BLOCKED:blocked_signal_not_sell",
+          "reason": "signal HOLD is not SELL/STRONG_SELL"
+        },
+        {
+          "ticker": "NEAR-USD",
+          "signal": "BUY",
+          "conviction": 0.687,
+          "originated": true,
+          "intended_notional": 1159.36,
+          "submitted": false,
+          "order_status": null,
+          "held_market_value": 0.0,
+          "verdict": "BLOCKED:blocked_signal_not_sell",
+          "reason": "signal HOLD is not SELL/STRONG_SELL"
         }
       ],
       "held_no_intent": [],
       "totals": {
-        "intended": 1159.36,
+        "intended": 5796.8,
         "submitted": 0.0,
         "held": 0,
         "equity": 9661.36,
-        "deployment_gap": 1159.36
+        "deployment_gap": 5796.8
       },
-      "narrative": "wanted 1 name(s) ($1159): 0 filled+held, 0 pending, 0 gated, 1 deferred"
+      "narrative": "wanted 5 name(s) ($5797): 0 filled+held, 0 pending, 5 gated, 0 deferred"
     }
   },
   "note": "intended vs filled vs held, with the FIRST gate that stopped each name. Fills law: 'held' is broker positions_snapshot truth, never order acceptance."
