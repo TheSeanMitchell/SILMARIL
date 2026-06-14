@@ -1,50 +1,28 @@
 {
   "version": "6.0",
-  "generated_at": "2026-06-14T05:04:03.999392+00:00",
+  "generated_at": "2026-06-14T05:25:21.816801+00:00",
   "tickers": {
-    "IWM": {
-      "ticker": "IWM",
-      "use_limit_order": false,
-      "limit_buffer_bps": 30,
-      "defer_to_next_cycle": false,
-      "opening_volatility": 0.0209,
-      "liquidity_score": 1.0,
-      "extension_warning": false,
-      "timing_window": null,
-      "rationale": "clean entry \u00b7 ATR/px 2.1% \u00b7 liq 1.00"
-    },
-    "XLM-USD": {
-      "ticker": "XLM-USD",
+    "BWA": {
+      "ticker": "BWA",
       "use_limit_order": true,
-      "limit_buffer_bps": 85,
-      "defer_to_next_cycle": true,
-      "opening_volatility": 0.0937,
-      "liquidity_score": 0.2251,
-      "extension_warning": false,
-      "timing_window": null,
-      "rationale": "DEFER: ATR/price 9.4% \u2265 9% \u2014 untradeable"
-    },
-    "TON-USD": {
-      "ticker": "TON-USD",
-      "use_limit_order": true,
-      "limit_buffer_bps": 42,
+      "limit_buffer_bps": 50,
       "defer_to_next_cycle": false,
-      "opening_volatility": 0.032,
-      "liquidity_score": 0.1221,
+      "opening_volatility": 0.0433,
+      "liquidity_score": 0.4217,
       "extension_warning": false,
       "timing_window": null,
-      "rationale": "limit 42bps \u00b7 ATR/px 3.2% \u00b7 liq 0.12"
+      "rationale": "limit 50bps \u00b7 ATR/px 4.3% \u00b7 liq 0.42"
     },
-    "VLO": {
-      "ticker": "VLO",
+    "MAS": {
+      "ticker": "MAS",
       "use_limit_order": true,
-      "limit_buffer_bps": 45,
+      "limit_buffer_bps": 40,
       "defer_to_next_cycle": false,
-      "opening_volatility": 0.0362,
-      "liquidity_score": 0.628,
+      "opening_volatility": 0.0288,
+      "liquidity_score": 0.5883,
       "extension_warning": false,
       "timing_window": null,
-      "rationale": "limit 45bps \u00b7 ATR/px 3.6% \u00b7 liq 0.63"
+      "rationale": "limit 40bps \u00b7 ATR/px 2.9% \u00b7 liq 0.59"
     },
     "TRGP": {
       "ticker": "TRGP",
@@ -56,13 +34,24 @@
       "extension_warning": false,
       "timing_window": null,
       "rationale": "limit 38bps \u00b7 ATR/px 2.6% \u00b7 liq 0.85"
+    },
+    "IWM": {
+      "ticker": "IWM",
+      "use_limit_order": false,
+      "limit_buffer_bps": 30,
+      "defer_to_next_cycle": false,
+      "opening_volatility": 0.0209,
+      "liquidity_score": 1.0,
+      "extension_warning": false,
+      "timing_window": null,
+      "rationale": "clean entry \u00b7 ATR/px 2.1% \u00b7 liq 1.00"
     }
   },
   "summary": {
-    "tickers": 5,
-    "deferred": 1,
-    "limit_recommended": 4,
-    "market_orders_ok": 0
+    "tickers": 4,
+    "deferred": 0,
+    "limit_recommended": 3,
+    "market_orders_ok": 1
   },
   "config": {
     "atr_defer_ratio": 0.05,
