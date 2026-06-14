@@ -1,6 +1,6 @@
 {
   "version": "6.0",
-  "generated_at": "2026-06-14T09:44:28.864867+00:00",
+  "generated_at": "2026-06-14T10:03:50.120773+00:00",
   "tickers": {
     "IWM": {
       "ticker": "IWM",
@@ -13,16 +13,16 @@
       "timing_window": null,
       "rationale": "clean entry \u00b7 ATR/px 2.1% \u00b7 liq 1.00"
     },
-    "TON-USD": {
-      "ticker": "TON-USD",
+    "STRK-USD": {
+      "ticker": "STRK-USD",
       "use_limit_order": true,
-      "limit_buffer_bps": 40,
-      "defer_to_next_cycle": false,
-      "opening_volatility": 0.0297,
-      "liquidity_score": 0.1221,
+      "limit_buffer_bps": 85,
+      "defer_to_next_cycle": true,
+      "opening_volatility": 0.0943,
+      "liquidity_score": 0.8333,
       "extension_warning": false,
       "timing_window": null,
-      "rationale": "limit 40bps \u00b7 ATR/px 3.0% \u00b7 liq 0.12"
+      "rationale": "DEFER: ATR/price 9.4% \u2265 9% \u2014 untradeable"
     },
     "VLO": {
       "ticker": "VLO",
@@ -49,9 +49,9 @@
   },
   "summary": {
     "tickers": 4,
-    "deferred": 0,
+    "deferred": 1,
     "limit_recommended": 3,
-    "market_orders_ok": 1
+    "market_orders_ok": 0
   },
   "config": {
     "atr_defer_ratio": 0.05,
