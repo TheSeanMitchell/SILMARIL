@@ -1,16 +1,53 @@
 {
   "version": "wantgot-2.0",
-  "generated_at": "2026-06-14T08:05:06.401322+00:00",
+  "generated_at": "2026-06-14T08:25:28.479008+00:00",
   "accounts": {
     "LEGACY": {
       "account_id": "LEGACY",
       "mode": "consensus",
-      "cycle_at": "2026-06-14T08:04:52.597272+00:00",
+      "cycle_at": "2026-06-14T08:25:15.854036+00:00",
       "session_open": false,
       "composite_halt": false,
       "halt_reason": null,
       "has_cycle_intents": true,
-      "rows": [],
+      "rows": [
+        {
+          "ticker": "FDX",
+          "signal": "BUY",
+          "conviction": 0.7255,
+          "originated": false,
+          "intended_notional": 766.0,
+          "submitted": false,
+          "order_status": null,
+          "held_market_value": 0.0,
+          "verdict": "DEFERRED",
+          "reason": "off-session run \u2014 the session hard-gate parks orders until the next open (the off-hours-incident law working as designed)"
+        },
+        {
+          "ticker": "MS",
+          "signal": "BUY",
+          "conviction": 0.6036,
+          "originated": false,
+          "intended_notional": 766.0,
+          "submitted": false,
+          "order_status": null,
+          "held_market_value": 0.0,
+          "verdict": "DEFERRED",
+          "reason": "off-session run \u2014 the session hard-gate parks orders until the next open (the off-hours-incident law working as designed)"
+        },
+        {
+          "ticker": "IWM",
+          "signal": "BUY",
+          "conviction": 0.7761,
+          "originated": false,
+          "intended_notional": 766.0,
+          "submitted": false,
+          "order_status": null,
+          "held_market_value": 0.0,
+          "verdict": "DEFERRED",
+          "reason": "off-session run \u2014 the session hard-gate parks orders until the next open (the off-hours-incident law working as designed)"
+        }
+      ],
       "held_no_intent": [
         {
           "ticker": "ALGN",
@@ -49,27 +86,39 @@
         }
       ],
       "totals": {
-        "intended": 0.0,
+        "intended": 2298.0,
         "submitted": 0.0,
         "held": 3773.48,
         "equity": 9575.04,
-        "deployment_gap": -3773.48
+        "deployment_gap": -1475.48
       },
-      "narrative": "no fresh intents; riding 5 prior position(s) worth $3773.48"
+      "narrative": "wanted 3 name(s) ($2298): 0 filled+held, 0 pending, 0 gated, 3 deferred"
     },
     "HARVEST_3": {
       "account_id": "HARVEST_3",
       "mode": "consensus",
-      "cycle_at": "2026-06-14T08:04:53.940119+00:00",
+      "cycle_at": "2026-06-14T08:25:16.093162+00:00",
       "session_open": false,
       "composite_halt": false,
       "halt_reason": null,
       "has_cycle_intents": true,
       "rows": [
         {
-          "ticker": "IWM",
+          "ticker": "TRGP",
           "signal": "BUY",
-          "conviction": 0.7137,
+          "conviction": 0.9026,
+          "originated": false,
+          "intended_notional": 958.79,
+          "submitted": false,
+          "order_status": null,
+          "held_market_value": 0.0,
+          "verdict": "DEFERRED",
+          "reason": "off-session run \u2014 the session hard-gate parks orders until the next open (the off-hours-incident law working as designed)"
+        },
+        {
+          "ticker": "VLO",
+          "signal": "BUY",
+          "conviction": 0.6424,
           "originated": false,
           "intended_notional": 958.79,
           "submitted": false,
@@ -81,18 +130,18 @@
       ],
       "held_no_intent": [],
       "totals": {
-        "intended": 958.79,
+        "intended": 1917.58,
         "submitted": 0.0,
         "held": 0,
         "equity": 9587.89,
-        "deployment_gap": 958.79
+        "deployment_gap": 1917.58
       },
-      "narrative": "wanted 1 name(s) ($959): 0 filled+held, 0 pending, 0 gated, 1 deferred"
+      "narrative": "wanted 2 name(s) ($1918): 0 filled+held, 0 pending, 0 gated, 2 deferred"
     },
     "HARVEST_5": {
       "account_id": "HARVEST_5",
       "mode": "wordsmith",
-      "cycle_at": "2026-06-14T08:04:54.941946+00:00",
+      "cycle_at": "2026-06-14T08:25:16.315264+00:00",
       "session_open": false,
       "composite_halt": false,
       "halt_reason": null,
@@ -101,7 +150,7 @@
         {
           "ticker": "XLM-USD",
           "signal": "BUY",
-          "conviction": 0.8001,
+          "conviction": 0.7742,
           "originated": true,
           "intended_notional": 1159.36,
           "submitted": false,
@@ -111,9 +160,9 @@
           "reason": "signal HOLD is not SELL/STRONG_SELL"
         },
         {
-          "ticker": "LDO-USD",
+          "ticker": "MPC",
           "signal": "BUY",
-          "conviction": 0.7254,
+          "conviction": 0.6916,
           "originated": true,
           "intended_notional": 1159.36,
           "submitted": false,
@@ -123,9 +172,9 @@
           "reason": "signal HOLD is not SELL/STRONG_SELL"
         },
         {
-          "ticker": "INJ-USD",
+          "ticker": "WMB",
           "signal": "BUY",
-          "conviction": 0.6828,
+          "conviction": 0.6916,
           "originated": true,
           "intended_notional": 1159.36,
           "submitted": false,
@@ -135,9 +184,9 @@
           "reason": "signal HOLD is not SELL/STRONG_SELL"
         },
         {
-          "ticker": "STRK-USD",
+          "ticker": "UPS",
           "signal": "BUY",
-          "conviction": 0.6828,
+          "conviction": 0.6813,
           "originated": true,
           "intended_notional": 1159.36,
           "submitted": false,
@@ -147,9 +196,9 @@
           "reason": "signal HOLD is not SELL/STRONG_SELL"
         },
         {
-          "ticker": "PYTH-USD",
+          "ticker": "PNC",
           "signal": "BUY",
-          "conviction": 0.6081,
+          "conviction": 0.6813,
           "originated": true,
           "intended_notional": 1159.36,
           "submitted": false,
