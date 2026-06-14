@@ -1,55 +1,44 @@
 {
   "version": "6.0",
-  "generated_at": "2026-06-14T13:25:16.362319+00:00",
+  "generated_at": "2026-06-14T13:44:10.563947+00:00",
   "tickers": {
-    "ANET": {
-      "ticker": "ANET",
+    "TON-USD": {
+      "ticker": "TON-USD",
       "use_limit_order": true,
-      "limit_buffer_bps": 56,
+      "limit_buffer_bps": 40,
       "defer_to_next_cycle": false,
-      "opening_volatility": 0.0517,
-      "liquidity_score": 0.4369,
+      "opening_volatility": 0.0297,
+      "liquidity_score": 0.1221,
       "extension_warning": false,
-      "timing_window": null,
-      "rationale": "limit 56bps \u00b7 ATR/px 5.2% \u00b7 liq 0.44"
-    },
-    "XLM-USD": {
-      "ticker": "XLM-USD",
-      "use_limit_order": true,
-      "limit_buffer_bps": 85,
-      "defer_to_next_cycle": true,
-      "opening_volatility": 0.0929,
-      "liquidity_score": 0.2079,
-      "extension_warning": false,
-      "timing_window": null,
-      "rationale": "DEFER: ATR/price 9.3% \u2265 9% \u2014 untradeable"
+      "timing_window": "now is TON-USD's typical daily-LOW window (09:30 ET) \u2014 historically favorable entry",
+      "rationale": "limit 40bps \u00b7 ATR/px 3.0% \u00b7 liq 0.12 \u00b7 now is TON-USD's typical daily-LOW window (09:30 ET) \u2014 historically favorable entry"
     },
     "IWM": {
       "ticker": "IWM",
-      "use_limit_order": false,
-      "limit_buffer_bps": 30,
+      "use_limit_order": true,
+      "limit_buffer_bps": 150,
       "defer_to_next_cycle": false,
       "opening_volatility": 0.0209,
       "liquidity_score": 1.0,
       "extension_warning": false,
-      "timing_window": null,
-      "rationale": "clean entry \u00b7 ATR/px 2.1% \u00b7 liq 1.00"
+      "timing_window": "resting toward IWM's ~281.8 floor (his low window is 11:30 ET) \u2014 limit 150bps below",
+      "rationale": "limit 150bps \u00b7 ATR/px 2.1% \u00b7 liq 1.00 \u00b7 resting toward IWM's ~281.8 floor (his low window is 11:30 ET) \u2014 limit 150bps below"
     },
-    "MS": {
-      "ticker": "MS",
+    "VLO": {
+      "ticker": "VLO",
       "use_limit_order": true,
-      "limit_buffer_bps": 37,
+      "limit_buffer_bps": 45,
       "defer_to_next_cycle": false,
-      "opening_volatility": 0.0255,
-      "liquidity_score": 0.691,
+      "opening_volatility": 0.0362,
+      "liquidity_score": 0.628,
       "extension_warning": false,
-      "timing_window": null,
-      "rationale": "limit 37bps \u00b7 ATR/px 2.5% \u00b7 liq 0.69"
+      "timing_window": "now is VLO's typical daily-LOW window (09:30 ET) \u2014 historically favorable entry",
+      "rationale": "limit 45bps \u00b7 ATR/px 3.6% \u00b7 liq 0.63 \u00b7 now is VLO's typical daily-LOW window (09:30 ET) \u2014 historically favorable entry"
     }
   },
   "summary": {
-    "tickers": 4,
-    "deferred": 1,
+    "tickers": 3,
+    "deferred": 0,
     "limit_recommended": 3,
     "market_orders_ok": 0
   },
