@@ -1,40 +1,65 @@
 {
   "version": "4.0",
-  "generated_at": "2026-06-14T18:44:01.619436+00:00",
+  "generated_at": "2026-06-14T19:04:27.719225+00:00",
   "assignments": [
     {
-      "ticker": "VLO",
+      "ticker": "STRK-USD",
       "account": "HARVEST_3",
-      "score": 0.9241,
+      "score": 0.96,
       "is_elite": false,
       "is_urgent": false,
-      "rationale": "BUY conv 0.92 \u2192 best fit HARVEST_3 (score 0.92) [cap\u00d71.00]"
+      "rationale": "BUY conv 0.96 \u2192 best fit HARVEST_3 (score 0.96) [cap\u00d71.00]"
+    },
+    {
+      "ticker": "NEAR-USD",
+      "account": "HARVEST_3",
+      "score": 0.8034,
+      "is_elite": false,
+      "is_urgent": false,
+      "rationale": "BUY conv 0.80 \u2192 best fit HARVEST_3 (score 0.80) [cap\u00d71.00]"
+    },
+    {
+      "ticker": "VLO",
+      "account": "LEGACY",
+      "score": 0.8449,
+      "is_elite": false,
+      "is_urgent": false,
+      "rationale": "BUY conv 0.84 \u2192 best fit LEGACY (score 0.84) [cap\u00d71.00]"
     },
     {
       "ticker": "IWM",
-      "account": "HARVEST_3",
-      "score": 0.7264,
+      "account": "LEGACY",
+      "score": 0.7124,
       "is_elite": false,
       "is_urgent": false,
-      "rationale": "BUY conv 0.73 \u2192 best fit HARVEST_3 (score 0.73) [cap\u00d71.00]"
+      "rationale": "BUY conv 0.71 \u2192 best fit LEGACY (score 0.71) [cap\u00d71.00]"
     },
     {
-      "ticker": "JTO-USD",
+      "ticker": "INJ-USD",
       "account": "LEGACY",
-      "score": 0.798,
+      "score": 0.7702,
       "is_elite": false,
       "is_urgent": false,
-      "rationale": "BUY conv 0.80 \u2192 best fit LEGACY (score 0.80) [cap\u00d71.00]"
+      "rationale": "BUY conv 0.77 \u2192 best fit LEGACY (score 0.77) [cap\u00d71.00]"
     }
   ],
-  "unassigned": [],
+  "unassigned": [
+    {
+      "ticker": "TON-USD",
+      "reason": "no enabled account meets fitness for this plan",
+      "plan_signal": "BUY",
+      "plan_conviction": 0.6621
+    }
+  ],
   "by_account_tickers": {
     "LEGACY": [
-      "JTO-USD"
+      "VLO",
+      "IWM",
+      "INJ-USD"
     ],
     "HARVEST_3": [
-      "VLO",
-      "IWM"
+      "STRK-USD",
+      "NEAR-USD"
     ],
     "HARVEST_5": []
   },
@@ -44,7 +69,7 @@
     "HARVEST_5": 1
   },
   "used": {
-    "LEGACY": 1,
+    "LEGACY": 3,
     "HARVEST_3": 2,
     "HARVEST_5": 0
   },

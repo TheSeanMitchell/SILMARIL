@@ -1,6 +1,6 @@
 {
   "version": "6.0",
-  "generated_at": "2026-06-14T18:44:01.627407+00:00",
+  "generated_at": "2026-06-14T19:04:27.727250+00:00",
   "tickers": {
     "IWM": {
       "ticker": "IWM",
@@ -13,16 +13,49 @@
       "timing_window": "resting toward IWM's ~281.8 floor (his low window is 11:30 ET) \u2014 limit 150bps below",
       "rationale": "limit 150bps \u00b7 ATR/px 2.1% \u00b7 liq 1.00 \u00b7 resting toward IWM's ~281.8 floor (his low window is 11:30 ET) \u2014 limit 150bps below"
     },
-    "JTO-USD": {
-      "ticker": "JTO-USD",
+    "TON-USD": {
+      "ticker": "TON-USD",
       "use_limit_order": true,
-      "limit_buffer_bps": 102,
+      "limit_buffer_bps": 45,
+      "defer_to_next_cycle": false,
+      "opening_volatility": 0.0297,
+      "liquidity_score": 0.1221,
+      "extension_warning": false,
+      "timing_window": "now is TON-USD's typical daily-HIGH window (15:00 ET) \u2014 limit only, refusing to market-buy its top",
+      "rationale": "limit 45bps \u00b7 ATR/px 3.0% \u00b7 liq 0.12 \u00b7 now is TON-USD's typical daily-HIGH window (15:00 ET) \u2014 limit only, refusing to market-buy its top"
+    },
+    "NEAR-USD": {
+      "ticker": "NEAR-USD",
+      "use_limit_order": true,
+      "limit_buffer_bps": 150,
       "defer_to_next_cycle": true,
-      "opening_volatility": 0.118,
-      "liquidity_score": 0.3509,
+      "opening_volatility": 0.1118,
+      "liquidity_score": 0.2888,
+      "extension_warning": false,
+      "timing_window": "resting toward NEAR-USD's ~1.97 floor (his low window is 10:30 ET) \u2014 limit 150bps below",
+      "rationale": "DEFER: ATR/price 11.2% \u2265 9% \u2014 untradeable \u00b7 resting toward NEAR-USD's ~1.97 floor (his low window is 10:30 ET) \u2014 limit 150bps below"
+    },
+    "INJ-USD": {
+      "ticker": "INJ-USD",
+      "use_limit_order": true,
+      "limit_buffer_bps": 96,
+      "defer_to_next_cycle": true,
+      "opening_volatility": 0.1095,
+      "liquidity_score": 0.4221,
       "extension_warning": false,
       "timing_window": null,
-      "rationale": "DEFER: ATR/price 11.8% \u2265 9% \u2014 untradeable"
+      "rationale": "DEFER: ATR/price 10.9% \u2265 9% \u2014 untradeable"
+    },
+    "STRK-USD": {
+      "ticker": "STRK-USD",
+      "use_limit_order": true,
+      "limit_buffer_bps": 89,
+      "defer_to_next_cycle": true,
+      "opening_volatility": 0.0988,
+      "liquidity_score": 0.8333,
+      "extension_warning": false,
+      "timing_window": null,
+      "rationale": "DEFER: ATR/price 9.9% \u2265 9% \u2014 untradeable"
     },
     "VLO": {
       "ticker": "VLO",
@@ -37,10 +70,10 @@
     }
   },
   "summary": {
-    "tickers": 3,
-    "deferred": 1,
-    "limit_recommended": 3,
-    "market_orders_ok": -1
+    "tickers": 6,
+    "deferred": 3,
+    "limit_recommended": 6,
+    "market_orders_ok": -3
   },
   "config": {
     "atr_defer_ratio": 0.05,
