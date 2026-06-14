@@ -97,10 +97,6 @@
       "qty": 3.050460254,
       "snapshots_30m": [
         {
-          "ts": "2026-06-14T07:26:08.738390+00:00",
-          "price": 266.35
-        },
-        {
           "ts": "2026-06-14T08:04:52.190254+00:00",
           "price": 266.35
         },
@@ -127,6 +123,10 @@
         {
           "ts": "2026-06-14T12:04:08.434794+00:00",
           "price": 266.35
+        },
+        {
+          "ts": "2026-06-14T12:44:09.945501+00:00",
+          "price": 266.35
         }
       ]
     },
@@ -136,10 +136,6 @@
       "first_seen": "2026-06-12T16:06:41.553127+00:00",
       "qty": 0.405357634,
       "snapshots_30m": [
-        {
-          "ts": "2026-06-14T07:26:08.738299+00:00",
-          "price": 1577.32
-        },
         {
           "ts": "2026-06-14T08:04:52.190156+00:00",
           "price": 1577.32
@@ -167,6 +163,10 @@
         {
           "ts": "2026-06-14T12:04:08.434698+00:00",
           "price": 1577.32
+        },
+        {
+          "ts": "2026-06-14T12:44:09.945404+00:00",
+          "price": 1577.32
         }
       ]
     },
@@ -176,10 +176,6 @@
       "first_seen": "2026-06-12T18:46:03.524318+00:00",
       "qty": 4.833247378,
       "snapshots_30m": [
-        {
-          "ts": "2026-06-14T07:26:08.738028+00:00",
-          "price": 174.84
-        },
         {
           "ts": "2026-06-14T08:04:52.189862+00:00",
           "price": 174.84
@@ -206,6 +202,10 @@
         },
         {
           "ts": "2026-06-14T12:04:08.434373+00:00",
+          "price": 174.84
+        },
+        {
+          "ts": "2026-06-14T12:44:09.945099+00:00",
           "price": 174.84
         }
       ]
@@ -4251,8 +4251,8 @@
     }
   ],
   "last_cycle_summary": {
-    "time": "2026-06-14T12:26:00.130713+00:00",
-    "timestamp": "2026-06-14T12:26:00.130722+00:00",
+    "time": "2026-06-14T12:44:10.033409+00:00",
+    "timestamp": "2026-06-14T12:44:10.033419+00:00",
     "closed": 0,
     "opened": 0,
     "open_after": 6,
@@ -4278,7 +4278,7 @@
     "session": "closed",
     "is_extended": false
   },
-  "last_run": "2026-06-14T12:26:00.130941+00:00",
+  "last_run": "2026-06-14T12:44:10.033655+00:00",
   "grocery_pending_harvest": 2398.051499999999,
   "trading_capital": 9575.02,
   "realized_savings": 0.02,
@@ -4299,7 +4299,7 @@
     "primary_symbol": "SGOV",
     "primary_qty": 0.00016,
     "primary_market_value": 0.0161,
-    "checked_at": "2026-06-14T12:25:59.888917+00:00"
+    "checked_at": "2026-06-14T12:44:09.939465+00:00"
   },
   "sgov_sweep_last_cycle": {
     "attempted": false,
@@ -4342,7 +4342,7 @@
   ],
   "sweep_protection": {
     "version": "4.0",
-    "checked_at": "2026-06-14T12:26:01.957533+00:00",
+    "checked_at": "2026-06-14T12:44:10.744323+00:00",
     "market_mode": "ATTACK",
     "force_sweep_floor_resolved": 10500.0,
     "stale_close_age_days": 5,
@@ -4606,7 +4606,7 @@
     "open_seen": 5
   },
   "cycle_intents": {
-    "at": "2026-06-14T12:26:00.130755+00:00",
+    "at": "2026-06-14T12:44:10.033457+00:00",
     "session": "closed",
     "session_open": false,
     "composite_halt": false,
@@ -4614,18 +4614,18 @@
     "plans_offered": 3,
     "buy_intents": [
       {
-        "ticker": "IWM",
+        "ticker": "VLO",
         "signal": "BUY",
-        "conviction": 0.7664,
+        "conviction": 0.8722,
         "originated": false,
         "outcome": "blocked_no_session_match",
         "intended_notional": 766.0,
         "reason": "no usable session for order"
       },
       {
-        "ticker": "PANW",
+        "ticker": "IWM",
         "signal": "BUY",
-        "conviction": 0.7273,
+        "conviction": 0.7229,
         "originated": false,
         "outcome": "blocked_no_session_match",
         "intended_notional": 766.0,
@@ -4634,7 +4634,7 @@
       {
         "ticker": "TON-USD",
         "signal": "BUY",
-        "conviction": 0.7338,
+        "conviction": 0.6943,
         "originated": false,
         "outcome": "blocked_not_equity_mission",
         "intended_notional": 766.0,
@@ -4643,12 +4643,12 @@
     ],
     "decisions_this_cycle": [
       {
-        "ticker": "IWM",
+        "ticker": "VLO",
         "category": "blocked_no_session_match",
         "reason": "no usable session for order"
       },
       {
-        "ticker": "PANW",
+        "ticker": "IWM",
         "category": "blocked_no_session_match",
         "reason": "no usable session for order"
       },
@@ -4658,12 +4658,12 @@
         "reason": "TON-USD is not a traditional equity \u2014 valuables trade in their own zone, never this account"
       },
       {
-        "ticker": "IWM",
+        "ticker": "VLO",
         "category": "blocked_signal_not_sell",
         "reason": "signal BUY is not SELL/STRONG_SELL"
       },
       {
-        "ticker": "PANW",
+        "ticker": "IWM",
         "category": "blocked_signal_not_sell",
         "reason": "signal BUY is not SELL/STRONG_SELL"
       },
