@@ -1,26 +1,32 @@
 {
   "version": "5.1",
-  "generated_at": "2026-06-14T08:25:16.960054+00:00",
+  "generated_at": "2026-06-14T08:44:12.921871+00:00",
   "current_regimes": [
+    {
+      "key": "narrow_leadership",
+      "label": "Narrow Leadership",
+      "confidence": 1.0,
+      "persistence_cycles": 90
+    },
     {
       "key": "rotational_bull",
       "label": "Rotational Bull",
-      "confidence": 0.633,
-      "persistence_cycles": 50
+      "confidence": 0.4093,
+      "persistence_cycles": 51
     }
   ],
   "regime_states": {
     "rotational_bull": {
       "label": "Rotational Bull",
       "active": true,
-      "confidence": 0.633,
-      "persistence": 50
+      "confidence": 0.4093,
+      "persistence": 51
     },
     "narrow_leadership": {
       "label": "Narrow Leadership",
-      "active": false,
-      "confidence": 0.0,
-      "persistence": 89
+      "active": true,
+      "confidence": 1.0,
+      "persistence": 90
     },
     "broad_participation": {
       "label": "Broad Participation",
@@ -31,19 +37,19 @@
     "recession_fear": {
       "label": "Recession Fear",
       "active": false,
-      "confidence": 0.35,
+      "confidence": 0.27,
       "persistence": 0
     },
     "inflation_fear": {
       "label": "Inflation Fear",
       "active": false,
-      "confidence": 0.1275,
+      "confidence": 0.0,
       "persistence": 0
     },
     "liquidity_squeeze": {
       "label": "Liquidity Squeeze",
       "active": false,
-      "confidence": 0.0956,
+      "confidence": 0.0,
       "persistence": 0
     },
     "ai_bubble_expansion": {
@@ -67,7 +73,7 @@
     "defensive_flight": {
       "label": "Defensive Flight",
       "active": false,
-      "confidence": 0.28,
+      "confidence": 0.229,
       "persistence": 0
     },
     "commodity_inflation": {
@@ -79,7 +85,7 @@
     "geopolitical_escalation": {
       "label": "Geopolitical Escalation",
       "active": false,
-      "confidence": 0.1593,
+      "confidence": 0.0,
       "persistence": 0
     },
     "election_uncertainty": {
@@ -96,18 +102,12 @@
     }
   },
   "summary": {
-    "active_regimes": 1,
-    "dominant_regime": "rotational_bull",
-    "stability_score": 0.0,
-    "transition_pressure": 1.0
+    "active_regimes": 2,
+    "dominant_regime": "narrow_leadership",
+    "stability_score": 0.5,
+    "transition_pressure": 0.5
   },
   "history": [
-    {
-      "cycle_ts": "2026-06-13T02:43:56.422363+00:00",
-      "dominant_regime": "narrow_leadership",
-      "active_count": 1,
-      "stability": 0.5
-    },
     {
       "cycle_ts": "2026-06-13T03:04:01.733111+00:00",
       "dominant_regime": "narrow_leadership",
@@ -641,6 +641,12 @@
       "dominant_regime": "rotational_bull",
       "active_count": 1,
       "stability": 0.0
+    },
+    {
+      "cycle_ts": "2026-06-14T08:44:12.921871+00:00",
+      "dominant_regime": "narrow_leadership",
+      "active_count": 2,
+      "stability": 0.5
     }
   ]
 }
