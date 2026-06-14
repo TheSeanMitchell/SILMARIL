@@ -17,10 +17,6 @@
       "qty": 3.581294738,
       "snapshots_30m": [
         {
-          "ts": "2026-06-13T23:43:50.430992+00:00",
-          "price": 272.7
-        },
-        {
           "ts": "2026-06-14T00:25:38.209028+00:00",
           "price": 272.7
         },
@@ -47,6 +43,10 @@
         {
           "ts": "2026-06-14T04:25:24.357053+00:00",
           "price": 272.7
+        },
+        {
+          "ts": "2026-06-14T05:04:04.405320+00:00",
+          "price": 272.7
         }
       ]
     },
@@ -56,10 +56,6 @@
       "first_seen": "2026-06-12T14:26:13.732701+00:00",
       "qty": 7.93696,
       "snapshots_30m": [
-        {
-          "ts": "2026-06-13T23:43:50.430572+00:00",
-          "price": 62.99
-        },
         {
           "ts": "2026-06-14T00:25:38.208719+00:00",
           "price": 62.99
@@ -86,6 +82,10 @@
         },
         {
           "ts": "2026-06-14T04:25:24.356680+00:00",
+          "price": 62.99
+        },
+        {
+          "ts": "2026-06-14T05:04:04.404950+00:00",
           "price": 62.99
         }
       ]
@@ -4251,8 +4251,8 @@
     }
   ],
   "last_cycle_summary": {
-    "time": "2026-06-14T04:44:00.843288+00:00",
-    "timestamp": "2026-06-14T04:44:00.843297+00:00",
+    "time": "2026-06-14T05:04:04.809887+00:00",
+    "timestamp": "2026-06-14T05:04:04.809898+00:00",
     "closed": 0,
     "opened": 0,
     "open_after": 6,
@@ -4278,7 +4278,7 @@
     "session": "closed",
     "is_extended": false
   },
-  "last_run": "2026-06-14T04:44:00.843539+00:00",
+  "last_run": "2026-06-14T05:04:04.810191+00:00",
   "grocery_pending_harvest": 2398.051499999999,
   "trading_capital": 9575.02,
   "realized_savings": 0.02,
@@ -4299,7 +4299,7 @@
     "primary_symbol": "SGOV",
     "primary_qty": 0.00016,
     "primary_market_value": 0.0161,
-    "checked_at": "2026-06-14T04:44:00.732851+00:00"
+    "checked_at": "2026-06-14T05:04:04.399235+00:00"
   },
   "sgov_sweep_last_cycle": {
     "attempted": false,
@@ -4342,7 +4342,7 @@
   ],
   "sweep_protection": {
     "version": "4.0",
-    "checked_at": "2026-06-14T04:44:01.810871+00:00",
+    "checked_at": "2026-06-14T05:04:05.926797+00:00",
     "market_mode": "ATTACK",
     "force_sweep_floor_resolved": 10500.0,
     "stale_close_age_days": 5,
@@ -4606,17 +4606,17 @@
     "open_seen": 5
   },
   "cycle_intents": {
-    "at": "2026-06-14T04:44:00.843329+00:00",
+    "at": "2026-06-14T05:04:04.809935+00:00",
     "session": "closed",
     "session_open": false,
     "composite_halt": false,
     "halt_reason": null,
-    "plans_offered": 2,
+    "plans_offered": 3,
     "buy_intents": [
       {
         "ticker": "VLO",
         "signal": "BUY",
-        "conviction": 0.8683,
+        "conviction": 0.8269,
         "originated": false,
         "outcome": "blocked_no_session_match",
         "intended_notional": 766.0,
@@ -4625,11 +4625,20 @@
       {
         "ticker": "IWM",
         "signal": "BUY",
-        "conviction": 0.7416,
+        "conviction": 0.6798,
         "originated": false,
         "outcome": "blocked_no_session_match",
         "intended_notional": 766.0,
         "reason": "no usable session for order"
+      },
+      {
+        "ticker": "XLM-USD",
+        "signal": "BUY",
+        "conviction": 0.8589,
+        "originated": false,
+        "outcome": "blocked_not_equity_mission",
+        "intended_notional": 766.0,
+        "reason": "XLM-USD is not a traditional equity \u2014 valuables trade in their own zone, never this account"
       }
     ],
     "decisions_this_cycle": [
@@ -4644,12 +4653,22 @@
         "reason": "no usable session for order"
       },
       {
+        "ticker": "XLM-USD",
+        "category": "blocked_not_equity_mission",
+        "reason": "XLM-USD is not a traditional equity \u2014 valuables trade in their own zone, never this account"
+      },
+      {
         "ticker": "VLO",
         "category": "blocked_signal_not_sell",
         "reason": "signal BUY is not SELL/STRONG_SELL"
       },
       {
         "ticker": "IWM",
+        "category": "blocked_signal_not_sell",
+        "reason": "signal BUY is not SELL/STRONG_SELL"
+      },
+      {
+        "ticker": "XLM-USD",
         "category": "blocked_signal_not_sell",
         "reason": "signal BUY is not SELL/STRONG_SELL"
       }
