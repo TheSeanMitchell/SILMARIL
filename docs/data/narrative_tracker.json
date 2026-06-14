@@ -1,10 +1,10 @@
 {
   "version": "5.0",
-  "generated_at": "2026-06-14T23:26:44.809436+00:00",
+  "generated_at": "2026-06-14T23:44:01.666964+00:00",
   "cycles_observed": 60,
-  "dominant_narrative": "risk_on",
-  "regime_shift": "RISK_ON",
-  "regime_shift_confidence": 0.5275,
+  "dominant_narrative": "risk_off",
+  "regime_shift": "ROTATION",
+  "regime_shift_confidence": 0.3846,
   "narratives": {
     "risk_on": {
       "label": "Risk-on sentiment returning",
@@ -18,30 +18,24 @@
         "Consumer Staples",
         "Utilities"
       ],
-      "frequency": 3,
+      "frequency": 2,
       "persistence": 60,
-      "acceleration": 0.5,
-      "score": 0.695,
+      "acceleration": -0.3333,
+      "score": 0.5,
       "phrases": [
-        "all-time high",
-        "risk-on",
-        "buying the dip"
+        "buying the dip",
+        "risk-on"
       ],
       "matched_articles": [
         {
-          "ticker": "NUE",
-          "title": "Nucor Corp stock hits all-time high at 265.14 USD",
-          "source": "Investing.com"
+          "ticker": "LTC-USD",
+          "title": "Litecoin Whales Are Buying the Dip \u2014 Can LTC Price Reclaim $60?",
+          "source": "TradingView"
         },
         {
           "ticker": "SOL-USD",
           "title": "3 reasons XRP and Solana could lead the next risk-on phase",
           "source": "AMBCrypto"
-        },
-        {
-          "ticker": "LTC-USD",
-          "title": "Litecoin Whales Are Buying the Dip \u2014 Can LTC Price Reclaim $60?",
-          "source": "TradingView"
         }
       ]
     },
@@ -57,14 +51,20 @@
         "Technology",
         "Consumer Discretionary"
       ],
-      "frequency": 1,
+      "frequency": 2,
       "persistence": 60,
-      "acceleration": -0.5,
-      "score": 0.425,
+      "acceleration": 1.0,
+      "score": 0.7,
       "phrases": [
+        "risk off",
         "risk-off"
       ],
       "matched_articles": [
+        {
+          "ticker": "DOT-USD",
+          "title": "Polkadot (DOT) Volatility Explained: Broad Risk Off, Technical Selling",
+          "source": "CoinMarketCap"
+        },
         {
           "ticker": "HBAR-USD",
           "title": "Hedera (HBAR) Declines 3.3% Amid Broad Crypto Risk-Off",
@@ -84,26 +84,12 @@
         "Technology"
       ],
       "sectors_out": [],
-      "frequency": 2,
-      "persistence": 1,
-      "acceleration": 1.0,
-      "score": 0.3937,
-      "phrases": [
-        "chip demand",
-        "ai boom"
-      ],
-      "matched_articles": [
-        {
-          "ticker": "AMAT",
-          "title": "Applied Materials Invests $500 Million To Expand Singapore Manufacturing And R&D For AI Chip Demand",
-          "source": "Pulse 2.0"
-        },
-        {
-          "ticker": "ORCL",
-          "title": "Oracle Just Showed Wall Street the AI Boom, Then Handed It The Bill",
-          "source": "Trefis"
-        }
-      ]
+      "frequency": 0,
+      "persistence": 0,
+      "acceleration": -1.0,
+      "score": 0.0,
+      "phrases": [],
+      "matched_articles": []
     },
     "ai_cooldown": {
       "label": "AI rally cooling / stretched valuations",
@@ -126,12 +112,20 @@
         "Energy"
       ],
       "sectors_out": [],
-      "frequency": 0,
-      "persistence": 7,
-      "acceleration": -1.0,
-      "score": 0.3062,
-      "phrases": [],
-      "matched_articles": []
+      "frequency": 1,
+      "persistence": 8,
+      "acceleration": 1.0,
+      "score": 0.625,
+      "phrases": [
+        "supply concerns"
+      ],
+      "matched_articles": [
+        {
+          "ticker": "PYTH-USD",
+          "title": "Pyth Network expands into institutional data, boosting revenue amid token supply concerns.",
+          "source": "Pluang"
+        }
+      ]
     },
     "oil_weakness": {
       "label": "Oil / energy weakening",
@@ -237,25 +231,19 @@
     }
   },
   "sector_pressure": {
-    "Technology": 0.6237,
-    "Energy": 0.2662,
+    "Technology": -0.24,
+    "Energy": 0.585,
     "Industrials": 0.04,
-    "Health Care": 0.465,
+    "Health Care": 0.74,
     "Financials": 0.04,
-    "Consumer Discretionary": 0.27,
-    "Consumer Staples": -0.27,
-    "Communication Services": 0.695,
+    "Consumer Discretionary": -0.2,
+    "Consumer Staples": 0.2,
+    "Communication Services": 0.5,
     "Real Estate": 0.0,
-    "Utilities": -0.31,
+    "Utilities": 0.16,
     "Materials": 0.0
   },
   "history": [
-    {
-      "cycle_ts": "2026-06-14T03:44:09.132630+00:00",
-      "dominant_narrative": "risk_off",
-      "regime_shift": "RISK_OFF",
-      "score": 0.54
-    },
     {
       "cycle_ts": "2026-06-14T04:04:11.488406+00:00",
       "dominant_narrative": "risk_off",
@@ -609,7 +597,13 @@
       "dominant_narrative": "risk_on",
       "regime_shift": "RISK_ON",
       "score": 0.695
+    },
+    {
+      "cycle_ts": "2026-06-14T23:44:01.666964+00:00",
+      "dominant_narrative": "risk_off",
+      "regime_shift": "ROTATION",
+      "score": 0.7
     }
   ],
-  "headline_count": 472
+  "headline_count": 309
 }
