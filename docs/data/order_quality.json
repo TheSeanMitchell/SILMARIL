@@ -1,17 +1,17 @@
 {
   "version": "6.0",
-  "generated_at": "2026-06-14T22:44:11.743750+00:00",
+  "generated_at": "2026-06-14T23:04:14.058379+00:00",
   "tickers": {
-    "JTO-USD": {
-      "ticker": "JTO-USD",
-      "use_limit_order": true,
-      "limit_buffer_bps": 100,
-      "defer_to_next_cycle": true,
-      "opening_volatility": 0.1149,
-      "liquidity_score": 0.4397,
+    "IWM": {
+      "ticker": "IWM",
+      "use_limit_order": false,
+      "limit_buffer_bps": 30,
+      "defer_to_next_cycle": false,
+      "opening_volatility": 0.0209,
+      "liquidity_score": 1.0,
       "extension_warning": false,
       "timing_window": null,
-      "rationale": "DEFER: ATR/price 11.5% \u2265 9% \u2014 untradeable"
+      "rationale": "clean entry \u00b7 ATR/px 2.1% \u00b7 liq 1.00"
     },
     "TON-USD": {
       "ticker": "TON-USD",
@@ -24,44 +24,22 @@
       "timing_window": null,
       "rationale": "limit 40bps \u00b7 ATR/px 3.0% \u00b7 liq 0.12"
     },
-    "IWM": {
-      "ticker": "IWM",
-      "use_limit_order": false,
-      "limit_buffer_bps": 30,
-      "defer_to_next_cycle": false,
-      "opening_volatility": 0.0209,
-      "liquidity_score": 1.0,
-      "extension_warning": false,
-      "timing_window": null,
-      "rationale": "clean entry \u00b7 ATR/px 2.1% \u00b7 liq 1.00"
-    },
-    "VLO": {
-      "ticker": "VLO",
+    "XLM-USD": {
+      "ticker": "XLM-USD",
       "use_limit_order": true,
-      "limit_buffer_bps": 45,
-      "defer_to_next_cycle": false,
-      "opening_volatility": 0.0362,
-      "liquidity_score": 0.628,
+      "limit_buffer_bps": 83,
+      "defer_to_next_cycle": true,
+      "opening_volatility": 0.0907,
+      "liquidity_score": 0.2209,
       "extension_warning": false,
       "timing_window": null,
-      "rationale": "limit 45bps \u00b7 ATR/px 3.6% \u00b7 liq 0.63"
-    },
-    "TRGP": {
-      "ticker": "TRGP",
-      "use_limit_order": true,
-      "limit_buffer_bps": 38,
-      "defer_to_next_cycle": false,
-      "opening_volatility": 0.0261,
-      "liquidity_score": 0.8512,
-      "extension_warning": false,
-      "timing_window": null,
-      "rationale": "limit 38bps \u00b7 ATR/px 2.6% \u00b7 liq 0.85"
+      "rationale": "DEFER: ATR/price 9.1% \u2265 9% \u2014 untradeable"
     }
   },
   "summary": {
-    "tickers": 5,
+    "tickers": 3,
     "deferred": 1,
-    "limit_recommended": 4,
+    "limit_recommended": 2,
     "market_orders_ok": 0
   },
   "config": {
