@@ -1,10 +1,10 @@
 {
   "version": "5.0",
-  "generated_at": "2026-06-14T18:04:06.703603+00:00",
+  "generated_at": "2026-06-14T18:26:00.066957+00:00",
   "cycles_observed": 60,
-  "dominant_narrative": "risk_off",
-  "regime_shift": "RISK_OFF",
-  "regime_shift_confidence": 0.36,
+  "dominant_narrative": "risk_on",
+  "regime_shift": "RISK_ON",
+  "regime_shift_confidence": 0.5886,
   "narratives": {
     "risk_on": {
       "label": "Risk-on sentiment returning",
@@ -18,14 +18,20 @@
         "Consumer Staples",
         "Utilities"
       ],
-      "frequency": 1,
+      "frequency": 2,
       "persistence": 60,
-      "acceleration": 0.0,
-      "score": 0.465,
+      "acceleration": 1.0,
+      "score": 0.7,
       "phrases": [
+        "all-time high",
         "buying the dip"
       ],
       "matched_articles": [
+        {
+          "ticker": "NUE",
+          "title": "Nucor Corp stock hits all-time high at 265.14 USD",
+          "source": "Investing.com"
+        },
         {
           "ticker": "LTC-USD",
           "title": "Litecoin Whales Are Buying the Dip \u2014 Can LTC Price Reclaim $60?",
@@ -45,23 +51,17 @@
         "Technology",
         "Consumer Discretionary"
       ],
-      "frequency": 2,
+      "frequency": 1,
       "persistence": 60,
-      "acceleration": 0.0,
-      "score": 0.54,
+      "acceleration": -0.5,
+      "score": 0.425,
       "phrases": [
-        "risk off",
-        "risk-off"
+        "risk off"
       ],
       "matched_articles": [
         {
           "ticker": "DOT-USD",
           "title": "Polkadot (DOT) Volatility Explained: Broad Risk Off, Technical Selling",
-          "source": "CoinMarketCap"
-        },
-        {
-          "ticker": "HBAR-USD",
-          "title": "Hedera (HBAR) Declines 3.3% Amid Broad Crypto Risk-Off",
           "source": "CoinMarketCap"
         }
       ]
@@ -73,12 +73,31 @@
         "Technology"
       ],
       "sectors_out": [],
-      "frequency": 0,
-      "persistence": 0,
-      "acceleration": 0.0,
-      "score": 0.04,
-      "phrases": [],
-      "matched_articles": []
+      "frequency": 2,
+      "persistence": 1,
+      "acceleration": 1.0,
+      "score": 0.3937,
+      "phrases": [
+        "chip demand",
+        "ai boom"
+      ],
+      "matched_articles": [
+        {
+          "ticker": "TSM",
+          "title": "Taiwan Semiconductor (TSM) Sees AI Chip Demand Outpacing Supply",
+          "source": "Yahoo Finance"
+        },
+        {
+          "ticker": "AMAT",
+          "title": "Applied Materials Invests $500 Million To Expand Singapore Manufacturing And R&D For AI Chip Demand",
+          "source": "Pulse 2.0"
+        },
+        {
+          "ticker": "AVGO",
+          "title": "Broadcom\u2019s AI Boom Meets Google Risk: Is AVGO Topping Out?",
+          "source": "TipRanks"
+        }
+      ]
     },
     "ai_cooldown": {
       "label": "AI rally cooling / stretched valuations",
@@ -101,20 +120,12 @@
         "Energy"
       ],
       "sectors_out": [],
-      "frequency": 1,
-      "persistence": 3,
-      "acceleration": 0.0,
-      "score": 0.2462,
-      "phrases": [
-        "supply concerns"
-      ],
-      "matched_articles": [
-        {
-          "ticker": "PYTH-USD",
-          "title": "Pyth Network expands into institutional data, boosting revenue amid token supply concerns.",
-          "source": "Pluang"
-        }
-      ]
+      "frequency": 0,
+      "persistence": 2,
+      "acceleration": -1.0,
+      "score": 0.0875,
+      "phrases": [],
+      "matched_articles": []
     },
     "oil_weakness": {
       "label": "Oil / energy weakening",
@@ -220,25 +231,19 @@
     }
   },
   "sector_pressure": {
-    "Technology": -0.075,
-    "Energy": 0.2062,
+    "Technology": 0.6287,
+    "Energy": 0.0475,
     "Industrials": 0.04,
-    "Health Care": 0.58,
+    "Health Care": 0.465,
     "Financials": 0.04,
-    "Consumer Discretionary": -0.075,
-    "Consumer Staples": 0.075,
-    "Communication Services": 0.465,
+    "Consumer Discretionary": 0.275,
+    "Consumer Staples": -0.275,
+    "Communication Services": 0.7,
     "Real Estate": 0.0,
-    "Utilities": 0.035,
+    "Utilities": -0.315,
     "Materials": 0.0
   },
   "history": [
-    {
-      "cycle_ts": "2026-06-13T22:25:37.934138+00:00",
-      "dominant_narrative": "risk_on",
-      "regime_shift": "RISK_OFF",
-      "score": 0.7
-    },
     {
       "cycle_ts": "2026-06-13T22:43:59.211123+00:00",
       "dominant_narrative": "risk_off",
@@ -592,7 +597,13 @@
       "dominant_narrative": "risk_off",
       "regime_shift": "RISK_OFF",
       "score": 0.54
+    },
+    {
+      "cycle_ts": "2026-06-14T18:26:00.066957+00:00",
+      "dominant_narrative": "risk_on",
+      "regime_shift": "RISK_ON",
+      "score": 0.7
     }
   ],
-  "headline_count": 311
+  "headline_count": 559
 }
