@@ -1,7 +1,51 @@
 {
   "version": "6.0",
-  "generated_at": "2026-06-14T02:04:19.822983+00:00",
+  "generated_at": "2026-06-14T02:25:53.838536+00:00",
   "tickers": {
+    "PM": {
+      "ticker": "PM",
+      "use_limit_order": true,
+      "limit_buffer_bps": 39,
+      "defer_to_next_cycle": false,
+      "opening_volatility": 0.0272,
+      "liquidity_score": 0.6005,
+      "extension_warning": false,
+      "timing_window": null,
+      "rationale": "limit 39bps \u00b7 ATR/px 2.7% \u00b7 liq 0.60"
+    },
+    "MS": {
+      "ticker": "MS",
+      "use_limit_order": true,
+      "limit_buffer_bps": 37,
+      "defer_to_next_cycle": false,
+      "opening_volatility": 0.0255,
+      "liquidity_score": 0.691,
+      "extension_warning": false,
+      "timing_window": null,
+      "rationale": "limit 37bps \u00b7 ATR/px 2.5% \u00b7 liq 0.69"
+    },
+    "ANET": {
+      "ticker": "ANET",
+      "use_limit_order": true,
+      "limit_buffer_bps": 56,
+      "defer_to_next_cycle": false,
+      "opening_volatility": 0.0517,
+      "liquidity_score": 0.4369,
+      "extension_warning": false,
+      "timing_window": null,
+      "rationale": "limit 56bps \u00b7 ATR/px 5.2% \u00b7 liq 0.44"
+    },
+    "BAC": {
+      "ticker": "BAC",
+      "use_limit_order": false,
+      "limit_buffer_bps": 30,
+      "defer_to_next_cycle": false,
+      "opening_volatility": 0.02,
+      "liquidity_score": 0.7424,
+      "extension_warning": false,
+      "timing_window": null,
+      "rationale": "clean entry \u00b7 ATR/px 2.0% \u00b7 liq 0.74"
+    },
     "IWM": {
       "ticker": "IWM",
       "use_limit_order": false,
@@ -12,35 +56,13 @@
       "extension_warning": false,
       "timing_window": null,
       "rationale": "clean entry \u00b7 ATR/px 2.1% \u00b7 liq 1.00"
-    },
-    "VLO": {
-      "ticker": "VLO",
-      "use_limit_order": true,
-      "limit_buffer_bps": 45,
-      "defer_to_next_cycle": false,
-      "opening_volatility": 0.0362,
-      "liquidity_score": 0.628,
-      "extension_warning": false,
-      "timing_window": null,
-      "rationale": "limit 45bps \u00b7 ATR/px 3.6% \u00b7 liq 0.63"
-    },
-    "TRGP": {
-      "ticker": "TRGP",
-      "use_limit_order": true,
-      "limit_buffer_bps": 38,
-      "defer_to_next_cycle": false,
-      "opening_volatility": 0.0261,
-      "liquidity_score": 0.8512,
-      "extension_warning": false,
-      "timing_window": null,
-      "rationale": "limit 38bps \u00b7 ATR/px 2.6% \u00b7 liq 0.85"
     }
   },
   "summary": {
-    "tickers": 3,
+    "tickers": 5,
     "deferred": 0,
-    "limit_recommended": 2,
-    "market_orders_ok": 1
+    "limit_recommended": 3,
+    "market_orders_ok": 2
   },
   "config": {
     "atr_defer_ratio": 0.05,
