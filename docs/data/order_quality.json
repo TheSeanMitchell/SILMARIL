@@ -1,6 +1,6 @@
 {
   "version": "6.0",
-  "generated_at": "2026-06-14T03:44:03.015865+00:00",
+  "generated_at": "2026-06-14T04:04:08.827140+00:00",
   "tickers": {
     "IWM": {
       "ticker": "IWM",
@@ -12,6 +12,17 @@
       "extension_warning": false,
       "timing_window": null,
       "rationale": "clean entry \u00b7 ATR/px 2.1% \u00b7 liq 1.00"
+    },
+    "XLM-USD": {
+      "ticker": "XLM-USD",
+      "use_limit_order": true,
+      "limit_buffer_bps": 85,
+      "defer_to_next_cycle": true,
+      "opening_volatility": 0.0937,
+      "liquidity_score": 0.2267,
+      "extension_warning": false,
+      "timing_window": null,
+      "rationale": "DEFER: ATR/price 9.4% \u2265 9% \u2014 untradeable"
     },
     "VLO": {
       "ticker": "VLO",
@@ -34,12 +45,23 @@
       "extension_warning": false,
       "timing_window": null,
       "rationale": "limit 38bps \u00b7 ATR/px 2.6% \u00b7 liq 0.85"
+    },
+    "TRX-USD": {
+      "ticker": "TRX-USD",
+      "use_limit_order": false,
+      "limit_buffer_bps": 30,
+      "defer_to_next_cycle": false,
+      "opening_volatility": 0.02,
+      "liquidity_score": 0.4205,
+      "extension_warning": false,
+      "timing_window": null,
+      "rationale": "clean entry \u00b7 ATR/px 2.0% \u00b7 liq 0.42"
     }
   },
   "summary": {
-    "tickers": 3,
-    "deferred": 0,
-    "limit_recommended": 2,
+    "tickers": 5,
+    "deferred": 1,
+    "limit_recommended": 3,
     "market_orders_ok": 1
   },
   "config": {
