@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-14T11:04:13.329239+00:00",
+  "generated_at": "2026-06-14T11:25:14.972254+00:00",
   "advisory_only": true,
   "note": "Advisory only \u2014 recommendations are NOT auto-executed in Alpha 3.0. Existing trailing-stop / momentum-exit logic still does the actual closing.",
   "summary": {
@@ -105,20 +105,20 @@
         "rationale": "position stable \u00b7 score 0.44 @ aggression 0.50"
       }
     ],
+    "GOLDSMITH": [
+      {
+        "ticker": "SOL-USD",
+        "recommendation": "HOLD",
+        "score": 0.4249,
+        "rationale": "position stable \u00b7 score 0.42 @ aggression 0.50"
+      }
+    ],
     "HEX": [
       {
         "ticker": "SNAP",
         "recommendation": "HOLD",
         "score": 0.4179,
         "rationale": "flat from entry \u00b7 score 0.42 @ aggression 0.50"
-      }
-    ],
-    "GOLDSMITH": [
-      {
-        "ticker": "SOL-USD",
-        "recommendation": "HOLD",
-        "score": 0.4105,
-        "rationale": "+2.1% from entry \u00b7 score 0.41 @ aggression 0.50"
       }
     ],
     "VEIL": [
@@ -427,6 +427,25 @@
       "advisory_only": true
     },
     {
+      "owner": "GOLDSMITH",
+      "ticker": "SOL-USD",
+      "recommendation": "HOLD",
+      "score": 0.4249,
+      "rationale": "position stable \u00b7 score 0.42 @ aggression 0.50",
+      "components": {
+        "age": 0.1429,
+        "drift_flat": 0.8128,
+        "peak_giveback": 0.2152,
+        "decay": 0.5,
+        "illiquidity": 1.0
+      },
+      "aggression": 0.5,
+      "hold_age_days": 1.0,
+      "intraday_drift_pct": 0.0187,
+      "peak_drop_pct": -0.0108,
+      "advisory_only": true
+    },
+    {
       "owner": "HEX",
       "ticker": "SNAP",
       "recommendation": "HOLD",
@@ -443,25 +462,6 @@
       "hold_age_days": 1.0,
       "intraday_drift_pct": 0.0,
       "peak_drop_pct": 0.0,
-      "advisory_only": true
-    },
-    {
-      "owner": "GOLDSMITH",
-      "ticker": "SOL-USD",
-      "recommendation": "HOLD",
-      "score": 0.4105,
-      "rationale": "+2.1% from entry \u00b7 score 0.41 @ aggression 0.50",
-      "components": {
-        "age": 0.1429,
-        "drift_flat": 0.7933,
-        "peak_giveback": 0.1774,
-        "decay": 0.5,
-        "illiquidity": 1.0
-      },
-      "aggression": 0.5,
-      "hold_age_days": 1.0,
-      "intraday_drift_pct": 0.0207,
-      "peak_drop_pct": -0.0089,
       "advisory_only": true
     },
     {
