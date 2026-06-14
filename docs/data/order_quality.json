@@ -1,6 +1,6 @@
 {
   "version": "6.0",
-  "generated_at": "2026-06-14T06:44:03.674006+00:00",
+  "generated_at": "2026-06-14T07:04:16.142210+00:00",
   "tickers": {
     "IWM": {
       "ticker": "IWM",
@@ -13,27 +13,16 @@
       "timing_window": null,
       "rationale": "clean entry \u00b7 ATR/px 2.1% \u00b7 liq 1.00"
     },
-    "INJ-USD": {
-      "ticker": "INJ-USD",
+    "TON-USD": {
+      "ticker": "TON-USD",
       "use_limit_order": true,
-      "limit_buffer_bps": 92,
-      "defer_to_next_cycle": true,
-      "opening_volatility": 0.1041,
-      "liquidity_score": 0.4694,
+      "limit_buffer_bps": 40,
+      "defer_to_next_cycle": false,
+      "opening_volatility": 0.0297,
+      "liquidity_score": 0.1221,
       "extension_warning": false,
       "timing_window": null,
-      "rationale": "DEFER: ATR/price 10.4% \u2265 9% \u2014 untradeable"
-    },
-    "JTO-USD": {
-      "ticker": "JTO-USD",
-      "use_limit_order": true,
-      "limit_buffer_bps": 99,
-      "defer_to_next_cycle": true,
-      "opening_volatility": 0.1141,
-      "liquidity_score": 0.4704,
-      "extension_warning": false,
-      "timing_window": null,
-      "rationale": "DEFER: ATR/price 11.4% \u2265 9% \u2014 untradeable"
+      "rationale": "limit 40bps \u00b7 ATR/px 3.0% \u00b7 liq 0.12"
     },
     "VLO": {
       "ticker": "VLO",
@@ -59,10 +48,10 @@
     }
   },
   "summary": {
-    "tickers": 5,
-    "deferred": 2,
-    "limit_recommended": 4,
-    "market_orders_ok": -1
+    "tickers": 4,
+    "deferred": 0,
+    "limit_recommended": 3,
+    "market_orders_ok": 1
   },
   "config": {
     "atr_defer_ratio": 0.05,
