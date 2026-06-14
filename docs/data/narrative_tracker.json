@@ -1,10 +1,10 @@
 {
   "version": "5.0",
-  "generated_at": "2026-06-14T00:04:00.610225+00:00",
+  "generated_at": "2026-06-14T00:25:40.830267+00:00",
   "cycles_observed": 60,
-  "dominant_narrative": "risk_off",
-  "regime_shift": "RISK_OFF",
-  "regime_shift_confidence": 0.4728,
+  "dominant_narrative": "risk_on",
+  "regime_shift": "RISK_ON",
+  "regime_shift_confidence": 0.4654,
   "narratives": {
     "risk_on": {
       "label": "Risk-on sentiment returning",
@@ -18,18 +18,34 @@
         "Consumer Staples",
         "Utilities"
       ],
-      "frequency": 1,
-      "persistence": 43,
-      "acceleration": 0.0,
-      "score": 0.465,
+      "frequency": 3,
+      "persistence": 44,
+      "acceleration": 1.0,
+      "score": 0.775,
       "phrases": [
+        "all-time high",
         "buying the dip"
       ],
       "matched_articles": [
         {
+          "ticker": "NUE",
+          "title": "Nucor Corp stock hits all-time high at 265.14 USD",
+          "source": "Investing.com"
+        },
+        {
+          "ticker": "STLD",
+          "title": "Steel Dynamics stock hits all-time high at $280.56",
+          "source": "Investing.com"
+        },
+        {
+          "ticker": "EXPD",
+          "title": "Expeditors International stock hits all-time high at 167.38 USD",
+          "source": "Investing.com"
+        },
+        {
           "ticker": "LTC-USD",
           "title": "Litecoin Whales Are Buying the Dip \u2014 Can LTC Price Reclaim $60?",
-          "source": "Coinpedia"
+          "source": "TradingView"
         }
       ]
     },
@@ -45,18 +61,17 @@
         "Technology",
         "Consumer Discretionary"
       ],
-      "frequency": 2,
+      "frequency": 1,
       "persistence": 60,
-      "acceleration": 1.0,
-      "score": 0.7,
+      "acceleration": -0.5,
+      "score": 0.425,
       "phrases": [
-        "risk off",
         "risk-off"
       ],
       "matched_articles": [
         {
-          "ticker": "DOT-USD",
-          "title": "Polkadot (DOT) Volatility Explained: Broad Risk Off, Technical Selling",
+          "ticker": "HBAR-USD",
+          "title": "Hedera (HBAR) Declines 3.3% Amid Broad Crypto Risk-Off",
           "source": "CoinMarketCap"
         },
         {
@@ -129,12 +144,20 @@
         "Industrials"
       ],
       "sectors_out": [],
-      "frequency": 0,
-      "persistence": 0,
-      "acceleration": 0.0,
-      "score": 0.04,
-      "phrases": [],
-      "matched_articles": []
+      "frequency": 1,
+      "persistence": 1,
+      "acceleration": 1.0,
+      "score": 0.3187,
+      "phrases": [
+        "geopolitical tension"
+      ],
+      "matched_articles": [
+        {
+          "ticker": "KR",
+          "title": "Here\u2019s Why The Kroger Co. (KR) is a Defensive Stock to Buy Amid Geopolitical Tensions",
+          "source": "Yahoo Finance"
+        }
+      ]
     },
     "biotech_breakout": {
       "label": "Biotech / pharma breakout",
@@ -175,12 +198,20 @@
         "Real Estate",
         "Utilities"
       ],
-      "frequency": 0,
-      "persistence": 0,
-      "acceleration": 0.0,
-      "score": 0.04,
-      "phrases": [],
-      "matched_articles": []
+      "frequency": 1,
+      "persistence": 1,
+      "acceleration": 1.0,
+      "score": 0.3187,
+      "phrases": [
+        "rate hike"
+      ],
+      "matched_articles": [
+        {
+          "ticker": "PPL",
+          "title": "Will Rate Hike Approval Support PPL's Investment and Growth Strategy?",
+          "source": "Yahoo Finance"
+        }
+      ]
     },
     "fed_dovish": {
       "label": "Fed dovish / rate-cut expectations",
@@ -191,12 +222,20 @@
         "Real Estate"
       ],
       "sectors_out": [],
-      "frequency": 0,
-      "persistence": 0,
-      "acceleration": 0.0,
-      "score": 0.04,
-      "phrases": [],
-      "matched_articles": []
+      "frequency": 1,
+      "persistence": 1,
+      "acceleration": 1.0,
+      "score": 0.3187,
+      "phrases": [
+        "rate cut"
+      ],
+      "matched_articles": [
+        {
+          "ticker": "APA",
+          "title": "APA, American Psychiatric Association Urge Aetna to Pause Reimbursement Rate Cuts for Behavioral Health Clinicians",
+          "source": "APA/APASI Response Center"
+        }
+      ]
     },
     "rotation_explicit": {
       "label": "Explicit rotation language in headlines",
@@ -212,25 +251,19 @@
     }
   },
   "sector_pressure": {
-    "Technology": -0.235,
+    "Technology": 0.35,
     "Energy": 0.0,
-    "Industrials": 0.04,
-    "Health Care": 0.74,
-    "Financials": 0.04,
-    "Consumer Discretionary": -0.235,
-    "Consumer Staples": 0.235,
-    "Communication Services": 0.465,
+    "Industrials": 0.3187,
+    "Health Care": 0.465,
+    "Financials": 0.3187,
+    "Consumer Discretionary": 0.6287,
+    "Consumer Staples": -0.35,
+    "Communication Services": 0.775,
     "Real Estate": 0.0,
-    "Utilities": 0.195,
+    "Utilities": -0.6687,
     "Materials": 0.0
   },
   "history": [
-    {
-      "cycle_ts": "2026-06-13T04:25:31.422887+00:00",
-      "dominant_narrative": "risk_on",
-      "regime_shift": "RISK_ON",
-      "score": 0.625
-    },
     {
       "cycle_ts": "2026-06-13T04:44:00.655883+00:00",
       "dominant_narrative": "risk_off",
@@ -584,7 +617,13 @@
       "dominant_narrative": "risk_off",
       "regime_shift": "RISK_OFF",
       "score": 0.7
+    },
+    {
+      "cycle_ts": "2026-06-14T00:25:40.830267+00:00",
+      "dominant_narrative": "risk_on",
+      "regime_shift": "RISK_ON",
+      "score": 0.775
     }
   ],
-  "headline_count": 313
+  "headline_count": 615
 }
