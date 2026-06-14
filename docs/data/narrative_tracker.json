@@ -1,10 +1,10 @@
 {
   "version": "5.0",
-  "generated_at": "2026-06-14T14:25:41.213424+00:00",
+  "generated_at": "2026-06-14T14:44:11.967473+00:00",
   "cycles_observed": 60,
-  "dominant_narrative": "risk_on",
-  "regime_shift": "RISK_ON",
-  "regime_shift_confidence": 0.4818,
+  "dominant_narrative": "risk_off",
+  "regime_shift": "RISK_OFF",
+  "regime_shift_confidence": 0.4826,
   "narratives": {
     "risk_on": {
       "label": "Risk-on sentiment returning",
@@ -18,20 +18,14 @@
         "Consumer Staples",
         "Utilities"
       ],
-      "frequency": 2,
+      "frequency": 1,
       "persistence": 60,
-      "acceleration": 1.0,
-      "score": 0.7,
+      "acceleration": -0.5,
+      "score": 0.425,
       "phrases": [
-        "all-time high",
         "buying the dip"
       ],
       "matched_articles": [
-        {
-          "ticker": "NUE",
-          "title": "Nucor Corp stock hits all-time high at 265.14 USD",
-          "source": "Investing.com"
-        },
         {
           "ticker": "LTC-USD",
           "title": "Litecoin Whales Are Buying the Dip \u2014 Can LTC Price Reclaim $60?",
@@ -51,15 +45,20 @@
         "Technology",
         "Consumer Discretionary"
       ],
-      "frequency": 2,
+      "frequency": 3,
       "persistence": 60,
-      "acceleration": 0.0,
-      "score": 0.54,
+      "acceleration": 0.5,
+      "score": 0.695,
       "phrases": [
-        "risk off",
-        "risk-off"
+        "risk-off",
+        "risk off"
       ],
       "matched_articles": [
+        {
+          "ticker": "TON-USD",
+          "title": "Toncoin Declines 3% Amid Broad Crypto Risk-Off Move | Top Stories",
+          "source": "CoinMarketCap"
+        },
         {
           "ticker": "DOT-USD",
           "title": "Polkadot (DOT) Volatility Explained: Broad Risk Off, Technical Selling",
@@ -68,6 +67,11 @@
         {
           "ticker": "HBAR-USD",
           "title": "Hedera (HBAR) Declines 3.3% Amid Broad Crypto Risk-Off",
+          "source": "CoinMarketCap"
+        },
+        {
+          "ticker": "CRO-USD",
+          "title": "Cronos (CRO) Declines 3.5% Amid Broad Crypto Risk-Off Phase",
           "source": "CoinMarketCap"
         }
       ]
@@ -79,25 +83,12 @@
         "Technology"
       ],
       "sectors_out": [],
-      "frequency": 1,
-      "persistence": 1,
-      "acceleration": 1.0,
-      "score": 0.3187,
-      "phrases": [
-        "ai boom"
-      ],
-      "matched_articles": [
-        {
-          "ticker": "GLW",
-          "title": "Corning Is Riding High on the AI Boom\u2014and Planning Ahead in Case It Goes Bust",
-          "source": "WSJ"
-        },
-        {
-          "ticker": "APH",
-          "title": "Amphenol Stock\u2019s AI Boom Adds More Market Horsepower, Not a Different Ride",
-          "source": "Trefis"
-        }
-      ]
+      "frequency": 0,
+      "persistence": 0,
+      "acceleration": -1.0,
+      "score": 0.0,
+      "phrases": [],
+      "matched_articles": []
     },
     "ai_cooldown": {
       "label": "AI rally cooling / stretched valuations",
@@ -194,20 +185,12 @@
         "Real Estate",
         "Utilities"
       ],
-      "frequency": 1,
-      "persistence": 1,
-      "acceleration": 1.0,
-      "score": 0.3187,
-      "phrases": [
-        "rate hike"
-      ],
-      "matched_articles": [
-        {
-          "ticker": "XEL",
-          "title": "Xcel Energy still facing pushback after cutting electric rate hike request",
-          "source": "The Denver Post"
-        }
-      ]
+      "frequency": 0,
+      "persistence": 0,
+      "acceleration": -1.0,
+      "score": 0.0,
+      "phrases": [],
+      "matched_articles": []
     },
     "fed_dovish": {
       "label": "Fed dovish / rate-cut expectations",
@@ -239,25 +222,19 @@
     }
   },
   "sector_pressure": {
-    "Technology": 0.16,
+    "Technology": -0.27,
     "Energy": 0.0,
     "Industrials": 0.04,
-    "Health Care": 0.58,
-    "Financials": 0.3187,
-    "Consumer Discretionary": 0.16,
-    "Consumer Staples": -0.16,
-    "Communication Services": 0.7,
-    "Real Estate": -0.2787,
-    "Utilities": -0.4787,
+    "Health Care": 0.735,
+    "Financials": 0.0,
+    "Consumer Discretionary": -0.27,
+    "Consumer Staples": 0.27,
+    "Communication Services": 0.425,
+    "Real Estate": 0.04,
+    "Utilities": 0.27,
     "Materials": 0.0
   },
   "history": [
-    {
-      "cycle_ts": "2026-06-13T18:44:19.114473+00:00",
-      "dominant_narrative": "risk_off",
-      "regime_shift": "RISK_OFF",
-      "score": 0.54
-    },
     {
       "cycle_ts": "2026-06-13T19:04:54.450349+00:00",
       "dominant_narrative": "risk_off",
@@ -611,7 +588,13 @@
       "dominant_narrative": "risk_on",
       "regime_shift": "RISK_ON",
       "score": 0.7
+    },
+    {
+      "cycle_ts": "2026-06-14T14:44:11.967473+00:00",
+      "dominant_narrative": "risk_off",
+      "regime_shift": "RISK_OFF",
+      "score": 0.695
     }
   ],
-  "headline_count": 511
+  "headline_count": 313
 }
