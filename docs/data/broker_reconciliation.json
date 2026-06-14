@@ -1,6 +1,6 @@
 {
   "version": "broker-reconciliation-1.0",
-  "generated_at": "2026-06-14T19:44:39.578634+00:00",
+  "generated_at": "2026-06-14T20:04:32.126008+00:00",
   "summary": {
     "accounts_live": 3,
     "accounts_total": 3,
@@ -25,14 +25,20 @@
       "phantom_in_meta": [],
       "missing_meta": [],
       "last_order_at": "2026-06-12T19:46:31.595862+00:00",
-      "last_run": "2026-06-14T19:44:25.400837+00:00",
-      "dormant_days": 1,
+      "last_run": "2026-06-14T20:04:16.904608+00:00",
+      "dormant_days": 2,
       "lifetime": {
         "wins": 37,
         "losses": 19
       },
       "in_sync": true,
-      "flags": []
+      "flags": [
+        {
+          "level": "WARN",
+          "code": "DORMANT",
+          "detail": "No order in ~2d (last 2026-06-12). If unintended, confirm this account's Alpaca secrets are set in the repo."
+        }
+      ]
     },
     {
       "account_id": "HARVEST_3",
@@ -51,14 +57,20 @@
       "phantom_in_meta": [],
       "missing_meta": [],
       "last_order_at": "2026-06-12T19:46:34.984894+00:00",
-      "last_run": "2026-06-14T19:44:26.407947+00:00",
-      "dormant_days": 1,
+      "last_run": "2026-06-14T20:04:18.014538+00:00",
+      "dormant_days": 2,
       "lifetime": {
         "wins": 15,
         "losses": 23
       },
       "in_sync": true,
-      "flags": []
+      "flags": [
+        {
+          "level": "WARN",
+          "code": "DORMANT",
+          "detail": "No order in ~2d (last 2026-06-12). If unintended, confirm this account's Alpaca secrets are set in the repo."
+        }
+      ]
     },
     {
       "account_id": "HARVEST_5",
@@ -77,7 +89,7 @@
       "phantom_in_meta": [],
       "missing_meta": [],
       "last_order_at": "2026-06-12T17:26:31.777369508Z",
-      "last_run": "2026-06-14T19:44:27.430806+00:00",
+      "last_run": "2026-06-14T20:04:18.906094+00:00",
       "dormant_days": 2,
       "lifetime": {
         "wins": 1,
@@ -97,6 +109,6 @@
   "notes": [
     "3/3 accounts show trading activity: LEGACY, HARVEST_3, HARVEST_5.",
     "All accounts: position_meta matches the broker snapshot. No phantoms.",
-    "Dormant \u22652d (likely unset secrets): HARVEST_5."
+    "Dormant \u22652d (likely unset secrets): LEGACY, HARVEST_3, HARVEST_5."
   ]
 }
