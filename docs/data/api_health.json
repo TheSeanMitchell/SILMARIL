@@ -1,6 +1,6 @@
 {
   "version": "api-health-1.3",
-  "generated_at": "2026-06-14T15:04:10.906268+00:00",
+  "generated_at": "2026-06-14T15:25:22.822224+00:00",
   "overall": "healthy",
   "freshness": {
     "ok": 12,
@@ -58,32 +58,32 @@
       },
       "market_leaders.json": {
         "status": "fresh",
-        "age_hours": 0.3,
+        "age_hours": 0.4,
         "budget_hours": 36
       },
       "debug_stream.json": {
         "status": "fresh",
-        "age_hours": 0.3,
+        "age_hours": 0.4,
         "budget_hours": 24
       }
     }
   },
   "news": {
-    "distinct_sources": 103,
-    "articles_in_cycle": 234,
+    "distinct_sources": 174,
+    "articles_in_cycle": 482,
     "top_sources": {
-      "Yahoo Finance": 26,
-      "CoinMarketCap": 19,
-      "CoinDesk": 16,
+      "Yahoo Finance": 90,
+      "simplywall.st": 35,
+      "MarketWatch": 21,
+      "MarketBeat": 17,
+      "PR Newswire": 17,
+      "CoinMarketCap": 12,
       "TradingView": 11,
-      "Coinpedia": 10,
-      "Crypto Briefing": 7,
-      "The Motley Fool": 7,
-      "CryptoRank": 7,
-      "Binance": 6,
-      "Bitget": 5,
-      "The Block": 5,
-      "PR Newswire": 4
+      "CoinDesk": 10,
+      "Coinpedia": 9,
+      "Stock Titan": 9,
+      "Trefis": 9,
+      "Seeking Alpha": 8
     },
     "gated_by_domain_clock": true,
     "note": "Quota note: providers don't expose remaining minutes; delivery (sources x volume) is the real meter \u2014 a rate-limited feed collapses here first."
@@ -100,7 +100,7 @@
       "errors_logged": 20,
       "errors_recent_48h": 0,
       "last_error": "{'time': '2026-06-04T22:14:34.156193+00:00', 'msg': 'POST https://paper-api.alpaca.markets/v2/orders -> HTTP 422: {\"code\":42210000,\"message\":\"invalid limit_pric",
-      "last_error_age_hours": 232.8,
+      "last_error_age_hours": 233.2,
       "errors_note": "all errors historic (none in 48h) \u2014 plumbing currently clean",
       "equity": 9575.04
     },
@@ -108,9 +108,9 @@
       "configured": true,
       "last_run_age_hours": 0.0,
       "errors_logged": 20,
-      "errors_recent_48h": 3,
+      "errors_recent_48h": 2,
       "last_error": "{'time': '2026-06-12T15:47:17.756965+00:00', 'msg': 'POST https://paper-api.alpaca.markets/v2/orders -> HTTP 403: {\"available\":\"1.695078349\",\"code\":40310000,\"ex",
-      "last_error_age_hours": 47.3,
+      "last_error_age_hours": 47.6,
       "errors_note": null,
       "equity": 9587.89
     },
@@ -120,14 +120,14 @@
       "errors_logged": 20,
       "errors_recent_48h": 0,
       "last_error": "{'time': '2026-06-04T00:19:24.288294+00:00', 'msg': 'POST https://paper-api.alpaca.markets/v2/orders -> HTTP 422: {\"code\":42210000,\"message\":\"invalid limit_pric",
-      "last_error_age_hours": 254.7,
+      "last_error_age_hours": 255.1,
       "errors_note": "all errors historic (none in 48h) \u2014 plumbing currently clean",
       "equity": 9661.36
     }
   },
   "domain_clocks": {
     "version": "domain-clock-1.0",
-    "checked_at": "2026-06-14T15:04:10.906268+00:00",
+    "checked_at": "2026-06-14T15:25:22.822224+00:00",
     "domains": {
       "stocks": {
         "open": false,
@@ -135,7 +135,7 @@
       },
       "stocks_news": {
         "open": false,
-        "reason": "off-hours hourly news sweep \u2014 42 min since last"
+        "reason": "off-hours hourly news sweep \u2014 3 min since last"
       },
       "valuables": {
         "open": true,
@@ -143,7 +143,7 @@
       },
       "social": {
         "open": false,
-        "reason": "hourly cadence \u2014 20 min since last"
+        "reason": "hourly cadence \u2014 41 min since last"
       },
       "edgar": {
         "open": true,
@@ -151,36 +151,36 @@
       }
     },
     "last_allowed": {
-      "edgar": "2026-06-14T14:44:18.347213+00:00",
+      "edgar": "2026-06-14T15:04:13.494666+00:00",
       "social": "2026-06-14T14:44:18.648796+00:00",
-      "stocks_news": "2026-06-14T14:22:39.602279+00:00"
+      "stocks_news": "2026-06-14T15:22:20.862260+00:00"
     },
     "today_budget": {
       "stocks": {
         "allowed": 0,
-        "skipped": 91
+        "skipped": 93
       },
       "stocks_news": {
-        "allowed": 15,
+        "allowed": 16,
         "skipped": 31
       },
       "edgar": {
-        "allowed": 45,
+        "allowed": 46,
         "skipped": 0
       },
       "social": {
         "allowed": 15,
-        "skipped": 30
+        "skipped": 31
       }
     },
     "spcx_intensive_until": "2026-07-03",
     "note": "the cron may run 24/7: stock TRADING-adjacent fetches (earnings/ipo-cal) keep 08:30-16:30 ET Mon-Fri; equity NEWS runs every cycle in-window and hourly off-hours (information never sleeps); valuables always; social hourly; EDGAR every run through the SPCX window then 4h"
   },
   "storage": {
-    "repo_mb": 862.4,
-    "worktree_mb": 94.9,
-    "git_history_mb": 767.5,
-    "data_dir_mb": 89.9,
+    "repo_mb": 863.7,
+    "worktree_mb": 95.5,
+    "git_history_mb": 768.2,
+    "data_dir_mb": 90.5,
     "archive_mb": 1.8,
     "archive_share_pct": 2.0,
     "status": "watch",
