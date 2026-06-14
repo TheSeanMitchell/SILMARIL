@@ -1,11 +1,11 @@
 {
   "version": "wantgot-2.0",
-  "generated_at": "2026-06-14T12:04:17.673923+00:00",
+  "generated_at": "2026-06-14T12:26:16.705043+00:00",
   "accounts": {
     "LEGACY": {
       "account_id": "LEGACY",
       "mode": "consensus",
-      "cycle_at": "2026-06-14T12:04:08.501210+00:00",
+      "cycle_at": "2026-06-14T12:26:00.130755+00:00",
       "session_open": false,
       "composite_halt": false,
       "halt_reason": null,
@@ -14,7 +14,19 @@
         {
           "ticker": "IWM",
           "signal": "BUY",
-          "conviction": 0.7135,
+          "conviction": 0.7664,
+          "originated": false,
+          "intended_notional": 766.0,
+          "submitted": false,
+          "order_status": null,
+          "held_market_value": 0.0,
+          "verdict": "DEFERRED",
+          "reason": "off-session run \u2014 the session hard-gate parks orders until the next open (the off-hours-incident law working as designed)"
+        },
+        {
+          "ticker": "PANW",
+          "signal": "BUY",
+          "conviction": 0.7273,
           "originated": false,
           "intended_notional": 766.0,
           "submitted": false,
@@ -26,7 +38,7 @@
         {
           "ticker": "TON-USD",
           "signal": "BUY",
-          "conviction": 0.7103,
+          "conviction": 0.7338,
           "originated": false,
           "intended_notional": 766.0,
           "submitted": false,
@@ -74,27 +86,27 @@
         }
       ],
       "totals": {
-        "intended": 1532.0,
+        "intended": 2298.0,
         "submitted": 0.0,
         "held": 3773.48,
         "equity": 9575.04,
-        "deployment_gap": -2241.48
+        "deployment_gap": -1475.48
       },
-      "narrative": "wanted 2 name(s) ($1532): 0 filled+held, 0 pending, 1 gated, 1 deferred"
+      "narrative": "wanted 3 name(s) ($2298): 0 filled+held, 0 pending, 1 gated, 2 deferred"
     },
     "HARVEST_3": {
       "account_id": "HARVEST_3",
       "mode": "consensus",
-      "cycle_at": "2026-06-14T12:04:08.702942+00:00",
+      "cycle_at": "2026-06-14T12:26:01.087779+00:00",
       "session_open": false,
       "composite_halt": false,
       "halt_reason": null,
       "has_cycle_intents": true,
       "rows": [
         {
-          "ticker": "TRGP",
+          "ticker": "KO",
           "signal": "BUY",
-          "conviction": 0.9181,
+          "conviction": 0.6596,
           "originated": false,
           "intended_notional": 958.79,
           "submitted": false,
@@ -104,9 +116,9 @@
           "reason": "off-session run \u2014 the session hard-gate parks orders until the next open (the off-hours-incident law working as designed)"
         },
         {
-          "ticker": "VLO",
-          "signal": "BUY",
-          "conviction": 0.9181,
+          "ticker": "TSM",
+          "signal": "STRONG_BUY",
+          "conviction": 0.6512,
           "originated": false,
           "intended_notional": 958.79,
           "submitted": false,
@@ -129,16 +141,28 @@
     "HARVEST_5": {
       "account_id": "HARVEST_5",
       "mode": "wordsmith",
-      "cycle_at": "2026-06-14T12:04:09.246591+00:00",
+      "cycle_at": "2026-06-14T12:26:01.953224+00:00",
       "session_open": false,
       "composite_halt": false,
       "halt_reason": null,
       "has_cycle_intents": true,
       "rows": [
         {
+          "ticker": "KO",
+          "signal": "BUY",
+          "conviction": 0.6727,
+          "originated": true,
+          "intended_notional": 1159.36,
+          "submitted": false,
+          "order_status": null,
+          "held_market_value": 0.0,
+          "verdict": "BLOCKED:blocked_signal_not_sell",
+          "reason": "signal HOLD is not SELL/STRONG_SELL"
+        },
+        {
           "ticker": "XLM-USD",
           "signal": "BUY",
-          "conviction": 0.7575,
+          "conviction": 0.7645,
           "originated": true,
           "intended_notional": 1159.36,
           "submitted": false,
@@ -148,9 +172,9 @@
           "reason": "signal HOLD is not SELL/STRONG_SELL"
         },
         {
-          "ticker": "LDO-USD",
-          "signal": "BUY",
-          "conviction": 0.7171,
+          "ticker": "LYV",
+          "signal": "STRONG_BUY",
+          "conviction": 0.7543,
           "originated": true,
           "intended_notional": 1159.36,
           "submitted": false,
@@ -160,9 +184,9 @@
           "reason": "signal HOLD is not SELL/STRONG_SELL"
         },
         {
-          "ticker": "STRK-USD",
+          "ticker": "FTNT",
           "signal": "BUY",
-          "conviction": 0.6666,
+          "conviction": 0.6727,
           "originated": true,
           "intended_notional": 1159.36,
           "submitted": false,
@@ -172,21 +196,9 @@
           "reason": "signal HOLD is not SELL/STRONG_SELL"
         },
         {
-          "ticker": "PYTH-USD",
+          "ticker": "COST",
           "signal": "BUY",
-          "conviction": 0.6666,
-          "originated": true,
-          "intended_notional": 1159.36,
-          "submitted": false,
-          "order_status": null,
-          "held_market_value": 0.0,
-          "verdict": "BLOCKED:blocked_signal_not_sell",
-          "reason": "signal HOLD is not SELL/STRONG_SELL"
-        },
-        {
-          "ticker": "INJ-USD",
-          "signal": "BUY",
-          "conviction": 0.6464,
+          "conviction": 0.6727,
           "originated": true,
           "intended_notional": 1159.36,
           "submitted": false,
