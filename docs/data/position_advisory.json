@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-14T13:04:21.170189+00:00",
+  "generated_at": "2026-06-14T13:25:17.506920+00:00",
   "advisory_only": true,
   "note": "Advisory only \u2014 recommendations are NOT auto-executed in Alpha 3.0. Existing trailing-stop / momentum-exit logic still does the actual closing.",
   "summary": {
@@ -57,6 +57,14 @@
         "rationale": "flat from entry \u00b7 score 0.45 @ aggression 0.50"
       }
     ],
+    "GOLDSMITH": [
+      {
+        "ticker": "SOL-USD",
+        "recommendation": "HOLD",
+        "score": 0.4667,
+        "rationale": "position stable \u00b7 score 0.47 @ aggression 0.50"
+      }
+    ],
     "THUNDERHEAD": [
       {
         "ticker": "HYG",
@@ -71,14 +79,6 @@
         "recommendation": "HOLD",
         "score": 0.4607,
         "rationale": "flat from entry \u00b7 score 0.46 @ aggression 0.50"
-      }
-    ],
-    "GOLDSMITH": [
-      {
-        "ticker": "SOL-USD",
-        "recommendation": "HOLD",
-        "score": 0.448,
-        "rationale": "position stable \u00b7 score 0.45 @ aggression 0.50"
       }
     ],
     "ZENITH": [
@@ -294,6 +294,25 @@
       "advisory_only": true
     },
     {
+      "owner": "GOLDSMITH",
+      "ticker": "SOL-USD",
+      "recommendation": "HOLD",
+      "score": 0.4667,
+      "rationale": "position stable \u00b7 score 0.47 @ aggression 0.50",
+      "components": {
+        "age": 0.1429,
+        "drift_flat": 0.8697,
+        "peak_giveback": 0.3258,
+        "decay": 0.5,
+        "illiquidity": 1.0
+      },
+      "aggression": 0.5,
+      "hold_age_days": 1.0,
+      "intraday_drift_pct": 0.013,
+      "peak_drop_pct": -0.0163,
+      "advisory_only": true
+    },
+    {
       "owner": "THUNDERHEAD",
       "ticker": "HYG",
       "recommendation": "HOLD",
@@ -348,25 +367,6 @@
       "hold_age_days": 2.0,
       "intraday_drift_pct": 0.0049,
       "peak_drop_pct": -0.0008,
-      "advisory_only": true
-    },
-    {
-      "owner": "GOLDSMITH",
-      "ticker": "SOL-USD",
-      "recommendation": "HOLD",
-      "score": 0.448,
-      "rationale": "position stable \u00b7 score 0.45 @ aggression 0.50",
-      "components": {
-        "age": 0.1429,
-        "drift_flat": 0.8442,
-        "peak_giveback": 0.2763,
-        "decay": 0.5,
-        "illiquidity": 1.0
-      },
-      "aggression": 0.5,
-      "hold_age_days": 1.0,
-      "intraday_drift_pct": 0.0156,
-      "peak_drop_pct": -0.0138,
       "advisory_only": true
     },
     {

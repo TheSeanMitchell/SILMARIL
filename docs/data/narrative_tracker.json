@@ -1,10 +1,10 @@
 {
   "version": "5.0",
-  "generated_at": "2026-06-14T13:04:20.919537+00:00",
+  "generated_at": "2026-06-14T13:25:17.320751+00:00",
   "cycles_observed": 60,
-  "dominant_narrative": "risk_off",
-  "regime_shift": "RISK_OFF",
-  "regime_shift_confidence": 0.4128,
+  "dominant_narrative": "risk_on",
+  "regime_shift": "RISK_ON",
+  "regime_shift_confidence": 0.4345,
   "narratives": {
     "risk_on": {
       "label": "Risk-on sentiment returning",
@@ -18,14 +18,20 @@
         "Consumer Staples",
         "Utilities"
       ],
-      "frequency": 1,
+      "frequency": 2,
       "persistence": 60,
-      "acceleration": 0.0,
-      "score": 0.465,
+      "acceleration": 1.0,
+      "score": 0.7,
       "phrases": [
+        "all-time high",
         "buying the dip"
       ],
       "matched_articles": [
+        {
+          "ticker": "NUE",
+          "title": "Nucor Corp stock hits all-time high at 265.14 USD",
+          "source": "Investing.com"
+        },
         {
           "ticker": "LTC-USD",
           "title": "Litecoin Whales Are Buying the Dip \u2014 Can LTC Price Reclaim $60?",
@@ -45,15 +51,20 @@
         "Technology",
         "Consumer Discretionary"
       ],
-      "frequency": 2,
+      "frequency": 3,
       "persistence": 60,
-      "acceleration": 0.0,
-      "score": 0.54,
+      "acceleration": 0.5,
+      "score": 0.695,
       "phrases": [
-        "risk off",
-        "risk-off"
+        "risk-off",
+        "risk off"
       ],
       "matched_articles": [
+        {
+          "ticker": "TON-USD",
+          "title": "Toncoin Declines 3% Amid Broad Crypto Risk-Off Move | Top Stories",
+          "source": "CoinMarketCap"
+        },
         {
           "ticker": "DOT-USD",
           "title": "Polkadot (DOT) Volatility Explained: Broad Risk Off, Technical Selling",
@@ -217,25 +228,19 @@
     }
   },
   "sector_pressure": {
-    "Technology": -0.075,
+    "Technology": 0.005,
     "Energy": 0.0,
     "Industrials": 0.04,
-    "Health Care": 0.58,
+    "Health Care": 0.735,
     "Financials": 0.04,
-    "Consumer Discretionary": -0.075,
-    "Consumer Staples": 0.075,
-    "Communication Services": 0.465,
+    "Consumer Discretionary": 0.005,
+    "Consumer Staples": -0.005,
+    "Communication Services": 0.7,
     "Real Estate": 0.0,
-    "Utilities": 0.035,
+    "Utilities": -0.045,
     "Materials": 0.0
   },
   "history": [
-    {
-      "cycle_ts": "2026-06-13T17:26:15.622062+00:00",
-      "dominant_narrative": "risk_on",
-      "regime_shift": "RISK_ON",
-      "score": 0.7
-    },
     {
       "cycle_ts": "2026-06-13T17:44:49.552197+00:00",
       "dominant_narrative": "risk_off",
@@ -589,7 +594,13 @@
       "dominant_narrative": "risk_off",
       "regime_shift": "RISK_OFF",
       "score": 0.54
+    },
+    {
+      "cycle_ts": "2026-06-14T13:25:17.320751+00:00",
+      "dominant_narrative": "risk_on",
+      "regime_shift": "RISK_ON",
+      "score": 0.7
     }
   ],
-  "headline_count": 313
+  "headline_count": 600
 }
