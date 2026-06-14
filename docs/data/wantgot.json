@@ -1,20 +1,20 @@
 {
   "version": "wantgot-2.0",
-  "generated_at": "2026-06-14T22:25:44.317220+00:00",
+  "generated_at": "2026-06-14T22:44:25.705071+00:00",
   "accounts": {
     "LEGACY": {
       "account_id": "LEGACY",
       "mode": "consensus",
-      "cycle_at": "2026-06-14T22:25:35.202350+00:00",
+      "cycle_at": "2026-06-14T22:44:13.652472+00:00",
       "session_open": false,
       "composite_halt": false,
       "halt_reason": null,
       "has_cycle_intents": true,
       "rows": [
         {
-          "ticker": "MAS",
+          "ticker": "VLO",
           "signal": "BUY",
-          "conviction": 0.5418,
+          "conviction": 0.8716,
           "originated": false,
           "intended_notional": 766.0,
           "submitted": false,
@@ -26,7 +26,7 @@
         {
           "ticker": "IWM",
           "signal": "BUY",
-          "conviction": 0.7494,
+          "conviction": 0.7204,
           "originated": false,
           "intended_notional": 766.0,
           "submitted": false,
@@ -34,6 +34,18 @@
           "held_market_value": 0.0,
           "verdict": "DEFERRED",
           "reason": "off-session run \u2014 the session hard-gate parks orders until the next open (the off-hours-incident law working as designed)"
+        },
+        {
+          "ticker": "TON-USD",
+          "signal": "BUY",
+          "conviction": 0.7396,
+          "originated": false,
+          "intended_notional": 766.0,
+          "submitted": false,
+          "order_status": null,
+          "held_market_value": 0.0,
+          "verdict": "BLOCKED:blocked_not_equity_mission",
+          "reason": "TON-USD is not a traditional equity \u2014 valuables trade in their own zone, never this account"
         }
       ],
       "held_no_intent": [
@@ -74,18 +86,18 @@
         }
       ],
       "totals": {
-        "intended": 1532.0,
+        "intended": 2298.0,
         "submitted": 0.0,
         "held": 3773.48,
         "equity": 9575.04,
-        "deployment_gap": -2241.48
+        "deployment_gap": -1475.48
       },
-      "narrative": "wanted 2 name(s) ($1532): 0 filled+held, 0 pending, 0 gated, 2 deferred"
+      "narrative": "wanted 3 name(s) ($2298): 0 filled+held, 0 pending, 1 gated, 2 deferred"
     },
     "HARVEST_3": {
       "account_id": "HARVEST_3",
       "mode": "consensus",
-      "cycle_at": "2026-06-14T22:25:35.650579+00:00",
+      "cycle_at": "2026-06-14T22:44:14.880962+00:00",
       "session_open": false,
       "composite_halt": false,
       "halt_reason": null,
@@ -94,7 +106,7 @@
         {
           "ticker": "TRGP",
           "signal": "BUY",
-          "conviction": 0.7075,
+          "conviction": 0.8716,
           "originated": false,
           "intended_notional": 958.79,
           "submitted": false,
@@ -104,16 +116,16 @@
           "reason": "off-session run \u2014 the session hard-gate parks orders until the next open (the off-hours-incident law working as designed)"
         },
         {
-          "ticker": "CPT",
+          "ticker": "JTO-USD",
           "signal": "BUY",
-          "conviction": 0.5842,
+          "conviction": 0.6532,
           "originated": false,
           "intended_notional": 958.79,
           "submitted": false,
           "order_status": null,
           "held_market_value": 0.0,
-          "verdict": "DEFERRED",
-          "reason": "off-session run \u2014 the session hard-gate parks orders until the next open (the off-hours-incident law working as designed)"
+          "verdict": "BLOCKED:blocked_not_equity_mission",
+          "reason": "JTO-USD is not a traditional equity \u2014 valuables trade in their own zone, never this account"
         }
       ],
       "held_no_intent": [],
@@ -124,33 +136,21 @@
         "equity": 9587.89,
         "deployment_gap": 1917.58
       },
-      "narrative": "wanted 2 name(s) ($1918): 0 filled+held, 0 pending, 0 gated, 2 deferred"
+      "narrative": "wanted 2 name(s) ($1918): 0 filled+held, 0 pending, 1 gated, 1 deferred"
     },
     "HARVEST_5": {
       "account_id": "HARVEST_5",
       "mode": "wordsmith",
-      "cycle_at": "2026-06-14T22:25:35.933961+00:00",
+      "cycle_at": "2026-06-14T22:44:16.580005+00:00",
       "session_open": false,
       "composite_halt": false,
       "halt_reason": null,
       "has_cycle_intents": true,
       "rows": [
         {
-          "ticker": "STLD",
-          "signal": "STRONG_BUY",
-          "conviction": 0.7614,
-          "originated": true,
-          "intended_notional": 1159.36,
-          "submitted": false,
-          "order_status": null,
-          "held_market_value": 0.0,
-          "verdict": "BLOCKED:blocked_signal_not_sell",
-          "reason": "signal HOLD is not SELL/STRONG_SELL"
-        },
-        {
           "ticker": "XLM-USD",
           "signal": "BUY",
-          "conviction": 0.7416,
+          "conviction": 0.7984,
           "originated": true,
           "intended_notional": 1159.36,
           "submitted": false,
@@ -160,9 +160,9 @@
           "reason": "signal HOLD is not SELL/STRONG_SELL"
         },
         {
-          "ticker": "DTE",
+          "ticker": "LDO-USD",
           "signal": "BUY",
-          "conviction": 0.7416,
+          "conviction": 0.7771,
           "originated": true,
           "intended_notional": 1159.36,
           "submitted": false,
@@ -172,9 +172,9 @@
           "reason": "signal HOLD is not SELL/STRONG_SELL"
         },
         {
-          "ticker": "IP",
+          "ticker": "PYTH-USD",
           "signal": "BUY",
-          "conviction": 0.7416,
+          "conviction": 0.7026,
           "originated": true,
           "intended_notional": 1159.36,
           "submitted": false,
@@ -184,9 +184,21 @@
           "reason": "signal HOLD is not SELL/STRONG_SELL"
         },
         {
-          "ticker": "BXP",
-          "signal": "STRONG_BUY",
-          "conviction": 0.712,
+          "ticker": "NEAR-USD",
+          "signal": "BUY",
+          "conviction": 0.6493,
+          "originated": true,
+          "intended_notional": 1159.36,
+          "submitted": false,
+          "order_status": null,
+          "held_market_value": 0.0,
+          "verdict": "BLOCKED:blocked_signal_not_sell",
+          "reason": "signal HOLD is not SELL/STRONG_SELL"
+        },
+        {
+          "ticker": "FET-USD",
+          "signal": "BUY",
+          "conviction": 0.6387,
           "originated": true,
           "intended_notional": 1159.36,
           "submitted": false,
