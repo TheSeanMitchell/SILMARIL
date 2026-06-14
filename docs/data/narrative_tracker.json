@@ -1,10 +1,10 @@
 {
   "version": "5.0",
-  "generated_at": "2026-06-14T18:26:00.066957+00:00",
+  "generated_at": "2026-06-14T18:44:03.726831+00:00",
   "cycles_observed": 60,
-  "dominant_narrative": "risk_on",
-  "regime_shift": "RISK_ON",
-  "regime_shift_confidence": 0.5886,
+  "dominant_narrative": "risk_off",
+  "regime_shift": "ROTATION",
+  "regime_shift_confidence": 0.3751,
   "narratives": {
     "risk_on": {
       "label": "Risk-on sentiment returning",
@@ -18,20 +18,14 @@
         "Consumer Staples",
         "Utilities"
       ],
-      "frequency": 2,
+      "frequency": 1,
       "persistence": 60,
-      "acceleration": 1.0,
-      "score": 0.7,
+      "acceleration": -0.5,
+      "score": 0.425,
       "phrases": [
-        "all-time high",
         "buying the dip"
       ],
       "matched_articles": [
-        {
-          "ticker": "NUE",
-          "title": "Nucor Corp stock hits all-time high at 265.14 USD",
-          "source": "Investing.com"
-        },
         {
           "ticker": "LTC-USD",
           "title": "Litecoin Whales Are Buying the Dip \u2014 Can LTC Price Reclaim $60?",
@@ -53,8 +47,8 @@
       ],
       "frequency": 1,
       "persistence": 60,
-      "acceleration": -0.5,
-      "score": 0.425,
+      "acceleration": 0.0,
+      "score": 0.465,
       "phrases": [
         "risk off"
       ],
@@ -73,31 +67,12 @@
         "Technology"
       ],
       "sectors_out": [],
-      "frequency": 2,
-      "persistence": 1,
-      "acceleration": 1.0,
-      "score": 0.3937,
-      "phrases": [
-        "chip demand",
-        "ai boom"
-      ],
-      "matched_articles": [
-        {
-          "ticker": "TSM",
-          "title": "Taiwan Semiconductor (TSM) Sees AI Chip Demand Outpacing Supply",
-          "source": "Yahoo Finance"
-        },
-        {
-          "ticker": "AMAT",
-          "title": "Applied Materials Invests $500 Million To Expand Singapore Manufacturing And R&D For AI Chip Demand",
-          "source": "Pulse 2.0"
-        },
-        {
-          "ticker": "AVGO",
-          "title": "Broadcom\u2019s AI Boom Meets Google Risk: Is AVGO Topping Out?",
-          "source": "TipRanks"
-        }
-      ]
+      "frequency": 0,
+      "persistence": 0,
+      "acceleration": -1.0,
+      "score": 0.0,
+      "phrases": [],
+      "matched_articles": []
     },
     "ai_cooldown": {
       "label": "AI rally cooling / stretched valuations",
@@ -120,12 +95,20 @@
         "Energy"
       ],
       "sectors_out": [],
-      "frequency": 0,
-      "persistence": 2,
-      "acceleration": -1.0,
-      "score": 0.0875,
-      "phrases": [],
-      "matched_articles": []
+      "frequency": 1,
+      "persistence": 3,
+      "acceleration": 1.0,
+      "score": 0.4062,
+      "phrases": [
+        "supply concerns"
+      ],
+      "matched_articles": [
+        {
+          "ticker": "PYTH-USD",
+          "title": "Pyth Network expands into institutional data, boosting revenue amid token supply concerns.",
+          "source": "Pluang"
+        }
+      ]
     },
     "oil_weakness": {
       "label": "Oil / energy weakening",
@@ -231,25 +214,19 @@
     }
   },
   "sector_pressure": {
-    "Technology": 0.6287,
-    "Energy": 0.0475,
+    "Technology": -0.08,
+    "Energy": 0.3662,
     "Industrials": 0.04,
-    "Health Care": 0.465,
+    "Health Care": 0.505,
     "Financials": 0.04,
-    "Consumer Discretionary": 0.275,
-    "Consumer Staples": -0.275,
-    "Communication Services": 0.7,
+    "Consumer Discretionary": -0.04,
+    "Consumer Staples": 0.04,
+    "Communication Services": 0.425,
     "Real Estate": 0.0,
-    "Utilities": -0.315,
+    "Utilities": 0.0,
     "Materials": 0.0
   },
   "history": [
-    {
-      "cycle_ts": "2026-06-13T22:43:59.211123+00:00",
-      "dominant_narrative": "risk_off",
-      "regime_shift": "RISK_OFF",
-      "score": 0.54
-    },
     {
       "cycle_ts": "2026-06-13T23:04:05.105083+00:00",
       "dominant_narrative": "risk_off",
@@ -603,7 +580,13 @@
       "dominant_narrative": "risk_on",
       "regime_shift": "RISK_ON",
       "score": 0.7
+    },
+    {
+      "cycle_ts": "2026-06-14T18:44:03.726831+00:00",
+      "dominant_narrative": "risk_off",
+      "regime_shift": "ROTATION",
+      "score": 0.465
     }
   ],
-  "headline_count": 559
+  "headline_count": 314
 }
