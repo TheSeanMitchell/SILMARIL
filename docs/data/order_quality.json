@@ -1,79 +1,46 @@
 {
   "version": "6.0",
-  "generated_at": "2026-06-14T15:25:16.239262+00:00",
+  "generated_at": "2026-06-14T15:44:11.219281+00:00",
   "tickers": {
-    "TEL": {
-      "ticker": "TEL",
+    "TON-USD": {
+      "ticker": "TON-USD",
       "use_limit_order": true,
-      "limit_buffer_bps": 46,
+      "limit_buffer_bps": 40,
       "defer_to_next_cycle": false,
-      "opening_volatility": 0.0385,
-      "liquidity_score": 0.5817,
+      "opening_volatility": 0.0297,
+      "liquidity_score": 0.1221,
       "extension_warning": false,
       "timing_window": null,
-      "rationale": "limit 46bps \u00b7 ATR/px 3.8% \u00b7 liq 0.58"
-    },
-    "NDAQ": {
-      "ticker": "NDAQ",
-      "use_limit_order": true,
-      "limit_buffer_bps": 129,
-      "defer_to_next_cycle": false,
-      "opening_volatility": 0.0238,
-      "liquidity_score": 0.7498,
-      "extension_warning": false,
-      "timing_window": "resting toward NDAQ's ~87.06 floor (his low window is 09:30 ET) \u2014 limit 129bps below",
-      "rationale": "limit 129bps \u00b7 ATR/px 2.4% \u00b7 liq 0.75 \u00b7 resting toward NDAQ's ~87.06 floor (his low window is 09:30 ET) \u2014 limit 129bps below"
-    },
-    "MOH": {
-      "ticker": "MOH",
-      "use_limit_order": true,
-      "limit_buffer_bps": 147,
-      "defer_to_next_cycle": false,
-      "opening_volatility": 0.0392,
-      "liquidity_score": 1.0,
-      "extension_warning": false,
-      "timing_window": "resting toward MOH's ~195.36 floor (his low window is 09:30 ET) \u2014 limit 147bps below",
-      "rationale": "limit 147bps \u00b7 ATR/px 3.9% \u00b7 liq 1.00 \u00b7 resting toward MOH's ~195.36 floor (his low window is 09:30 ET) \u2014 limit 147bps below"
-    },
-    "AIZ": {
-      "ticker": "AIZ",
-      "use_limit_order": true,
-      "limit_buffer_bps": 70,
-      "defer_to_next_cycle": false,
-      "opening_volatility": 0.0209,
-      "liquidity_score": 0.4413,
-      "extension_warning": false,
-      "timing_window": "resting toward AIZ's ~257.89 floor (his low window is 10:00 ET) \u2014 limit 70bps below",
-      "rationale": "limit 70bps \u00b7 ATR/px 2.1% \u00b7 liq 0.44 \u00b7 resting toward AIZ's ~257.89 floor (his low window is 10:00 ET) \u2014 limit 70bps below"
+      "rationale": "limit 40bps \u00b7 ATR/px 3.0% \u00b7 liq 0.12"
     },
     "IWM": {
       "ticker": "IWM",
-      "use_limit_order": true,
-      "limit_buffer_bps": 45,
+      "use_limit_order": false,
+      "limit_buffer_bps": 30,
       "defer_to_next_cycle": false,
       "opening_volatility": 0.0209,
       "liquidity_score": 1.0,
       "extension_warning": false,
-      "timing_window": "now is IWM's typical daily-HIGH window (11:00 ET) \u2014 limit only, refusing to market-buy its top",
-      "rationale": "limit 45bps \u00b7 ATR/px 2.1% \u00b7 liq 1.00 \u00b7 now is IWM's typical daily-HIGH window (11:00 ET) \u2014 limit only, refusing to market-buy its top"
+      "timing_window": "now is IWM's typical daily-LOW window (11:30 ET) \u2014 historically favorable entry",
+      "rationale": "now is IWM's typical daily-LOW window (11:30 ET) \u2014 historically favorable entry"
     },
-    "CCL": {
-      "ticker": "CCL",
+    "VLO": {
+      "ticker": "VLO",
       "use_limit_order": true,
       "limit_buffer_bps": 150,
       "defer_to_next_cycle": false,
-      "opening_volatility": 0.0426,
-      "liquidity_score": 0.8457,
+      "opening_volatility": 0.0362,
+      "liquidity_score": 0.628,
       "extension_warning": false,
-      "timing_window": "resting toward CCL's ~28.14 floor (his low window is 10:30 ET) \u2014 limit 150bps below",
-      "rationale": "limit 150bps \u00b7 ATR/px 4.3% \u00b7 liq 0.85 \u00b7 resting toward CCL's ~28.14 floor (his low window is 10:30 ET) \u2014 limit 150bps below"
+      "timing_window": "resting toward VLO's ~248.93 floor (his low window is 09:30 ET) \u2014 limit 150bps below",
+      "rationale": "limit 150bps \u00b7 ATR/px 3.6% \u00b7 liq 0.63 \u00b7 resting toward VLO's ~248.93 floor (his low window is 09:30 ET) \u2014 limit 150bps below"
     }
   },
   "summary": {
-    "tickers": 6,
+    "tickers": 3,
     "deferred": 0,
-    "limit_recommended": 6,
-    "market_orders_ok": 0
+    "limit_recommended": 2,
+    "market_orders_ok": 1
   },
   "config": {
     "atr_defer_ratio": 0.05,
