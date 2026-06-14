@@ -17,10 +17,6 @@
       "qty": 3.581294738,
       "snapshots_30m": [
         {
-          "ts": "2026-06-14T09:04:03.537329+00:00",
-          "price": 272.7
-        },
-        {
           "ts": "2026-06-14T09:44:29.713004+00:00",
           "price": 272.7
         },
@@ -47,6 +43,10 @@
         {
           "ts": "2026-06-14T13:44:11.702060+00:00",
           "price": 272.7
+        },
+        {
+          "ts": "2026-06-14T14:25:39.815550+00:00",
+          "price": 272.7
         }
       ]
     },
@@ -56,10 +56,6 @@
       "first_seen": "2026-06-12T14:26:13.732701+00:00",
       "qty": 7.93696,
       "snapshots_30m": [
-        {
-          "ts": "2026-06-14T09:04:03.536968+00:00",
-          "price": 62.99
-        },
         {
           "ts": "2026-06-14T09:44:29.712607+00:00",
           "price": 62.99
@@ -86,6 +82,10 @@
         },
         {
           "ts": "2026-06-14T13:44:11.701688+00:00",
+          "price": 62.99
+        },
+        {
+          "ts": "2026-06-14T14:25:39.815162+00:00",
           "price": 62.99
         }
       ]
@@ -4251,8 +4251,8 @@
     }
   ],
   "last_cycle_summary": {
-    "time": "2026-06-14T14:06:16.117990+00:00",
-    "timestamp": "2026-06-14T14:06:16.118003+00:00",
+    "time": "2026-06-14T14:25:39.890009+00:00",
+    "timestamp": "2026-06-14T14:25:39.890019+00:00",
     "closed": 0,
     "opened": 0,
     "open_after": 6,
@@ -4278,7 +4278,7 @@
     "session": "closed",
     "is_extended": false
   },
-  "last_run": "2026-06-14T14:06:16.118213+00:00",
+  "last_run": "2026-06-14T14:25:39.890306+00:00",
   "grocery_pending_harvest": 2398.051499999999,
   "trading_capital": 9575.02,
   "realized_savings": 0.02,
@@ -4299,7 +4299,7 @@
     "primary_symbol": "SGOV",
     "primary_qty": 0.00016,
     "primary_market_value": 0.0161,
-    "checked_at": "2026-06-14T14:06:15.710769+00:00"
+    "checked_at": "2026-06-14T14:25:39.809466+00:00"
   },
   "sgov_sweep_last_cycle": {
     "attempted": false,
@@ -4342,7 +4342,7 @@
   ],
   "sweep_protection": {
     "version": "4.0",
-    "checked_at": "2026-06-14T14:06:18.239881+00:00",
+    "checked_at": "2026-06-14T14:25:40.749730+00:00",
     "market_mode": "ATTACK",
     "force_sweep_floor_resolved": 10500.0,
     "stale_close_age_days": 5,
@@ -4606,14 +4606,54 @@
     "open_seen": 5
   },
   "cycle_intents": {
-    "at": "2026-06-14T14:06:16.118019+00:00",
+    "at": "2026-06-14T14:25:39.890053+00:00",
     "session": "closed",
     "session_open": false,
     "composite_halt": false,
     "halt_reason": null,
-    "plans_offered": 0,
-    "buy_intents": [],
-    "decisions_this_cycle": []
+    "plans_offered": 2,
+    "buy_intents": [
+      {
+        "ticker": "IWM",
+        "signal": "BUY",
+        "conviction": 0.7414,
+        "originated": false,
+        "outcome": "blocked_no_session_match",
+        "intended_notional": 766.0,
+        "reason": "no usable session for order"
+      },
+      {
+        "ticker": "TON-USD",
+        "signal": "BUY",
+        "conviction": 0.7066,
+        "originated": false,
+        "outcome": "blocked_not_equity_mission",
+        "intended_notional": 766.0,
+        "reason": "TON-USD is not a traditional equity \u2014 valuables trade in their own zone, never this account"
+      }
+    ],
+    "decisions_this_cycle": [
+      {
+        "ticker": "IWM",
+        "category": "blocked_no_session_match",
+        "reason": "no usable session for order"
+      },
+      {
+        "ticker": "TON-USD",
+        "category": "blocked_not_equity_mission",
+        "reason": "TON-USD is not a traditional equity \u2014 valuables trade in their own zone, never this account"
+      },
+      {
+        "ticker": "IWM",
+        "category": "blocked_signal_not_sell",
+        "reason": "signal BUY is not SELL/STRONG_SELL"
+      },
+      {
+        "ticker": "TON-USD",
+        "category": "blocked_signal_not_sell",
+        "reason": "signal BUY is not SELL/STRONG_SELL"
+      }
+    ]
   },
   "stale_orders_cancelled": [
     {
