@@ -1,10 +1,10 @@
 {
   "version": "5.0",
-  "generated_at": "2026-06-14T11:25:14.795918+00:00",
+  "generated_at": "2026-06-14T11:44:35.427220+00:00",
   "cycles_observed": 60,
-  "dominant_narrative": "risk_on",
-  "regime_shift": "RISK_ON",
-  "regime_shift_confidence": 0.5084,
+  "dominant_narrative": "risk_off",
+  "regime_shift": "RISK_OFF",
+  "regime_shift_confidence": 0.4844,
   "narratives": {
     "risk_on": {
       "label": "Risk-on sentiment returning",
@@ -18,20 +18,14 @@
         "Consumer Staples",
         "Utilities"
       ],
-      "frequency": 2,
+      "frequency": 1,
       "persistence": 60,
-      "acceleration": 1.0,
-      "score": 0.7,
+      "acceleration": -0.5,
+      "score": 0.425,
       "phrases": [
-        "all-time high",
         "buying the dip"
       ],
       "matched_articles": [
-        {
-          "ticker": "NUE",
-          "title": "Nucor Corp stock hits all-time high at 265.14 USD",
-          "source": "Investing.com"
-        },
         {
           "ticker": "LTC-USD",
           "title": "Litecoin Whales Are Buying the Dip \u2014 Can LTC Price Reclaim $60?",
@@ -51,14 +45,20 @@
         "Technology",
         "Consumer Discretionary"
       ],
-      "frequency": 1,
+      "frequency": 2,
       "persistence": 60,
-      "acceleration": -0.5,
-      "score": 0.425,
+      "acceleration": 1.0,
+      "score": 0.7,
       "phrases": [
+        "risk off",
         "risk-off"
       ],
       "matched_articles": [
+        {
+          "ticker": "DOT-USD",
+          "title": "Polkadot (DOT) Volatility Explained: Broad Risk Off, Technical Selling",
+          "source": "CoinMarketCap"
+        },
         {
           "ticker": "HBAR-USD",
           "title": "Hedera (HBAR) Declines 3.3% Amid Broad Crypto Risk-Off",
@@ -180,20 +180,12 @@
         "Real Estate",
         "Utilities"
       ],
-      "frequency": 1,
-      "persistence": 1,
-      "acceleration": 1.0,
-      "score": 0.3187,
-      "phrases": [
-        "rate hike"
-      ],
-      "matched_articles": [
-        {
-          "ticker": "PPL",
-          "title": "How A US$275 Million Rate Hike At PPL (PPL) Has Changed Its Investment Story",
-          "source": "simplywall.st"
-        }
-      ]
+      "frequency": 0,
+      "persistence": 0,
+      "acceleration": -1.0,
+      "score": 0.0,
+      "phrases": [],
+      "matched_articles": []
     },
     "fed_dovish": {
       "label": "Fed dovish / rate-cut expectations",
@@ -204,20 +196,12 @@
         "Real Estate"
       ],
       "sectors_out": [],
-      "frequency": 1,
-      "persistence": 1,
-      "acceleration": 1.0,
-      "score": 0.3187,
-      "phrases": [
-        "rate cut"
-      ],
-      "matched_articles": [
-        {
-          "ticker": "APA",
-          "title": "APA, American Psychiatric Association Urge Aetna to Pause Reimbursement Rate Cuts for Behavioral Health Clinicians",
-          "source": "APA/APASI Response Center"
-        }
-      ]
+      "frequency": 0,
+      "persistence": 0,
+      "acceleration": -1.0,
+      "score": 0.0,
+      "phrases": [],
+      "matched_articles": []
     },
     "rotation_explicit": {
       "label": "Explicit rotation language in headlines",
@@ -233,25 +217,19 @@
     }
   },
   "sector_pressure": {
-    "Technology": 0.275,
+    "Technology": -0.275,
     "Energy": 0.0,
     "Industrials": 0.04,
-    "Health Care": 0.465,
-    "Financials": 0.3187,
-    "Consumer Discretionary": 0.5537,
-    "Consumer Staples": -0.275,
-    "Communication Services": 0.7,
+    "Health Care": 0.74,
+    "Financials": 0.0,
+    "Consumer Discretionary": -0.315,
+    "Consumer Staples": 0.275,
+    "Communication Services": 0.425,
     "Real Estate": 0.0,
-    "Utilities": -0.5937,
+    "Utilities": 0.275,
     "Materials": 0.0
   },
   "history": [
-    {
-      "cycle_ts": "2026-06-13T15:44:00.477800+00:00",
-      "dominant_narrative": "risk_off",
-      "regime_shift": "RISK_OFF",
-      "score": 0.54
-    },
     {
       "cycle_ts": "2026-06-13T16:04:46.971206+00:00",
       "dominant_narrative": "risk_off",
@@ -605,7 +583,13 @@
       "dominant_narrative": "risk_on",
       "regime_shift": "RISK_ON",
       "score": 0.7
+    },
+    {
+      "cycle_ts": "2026-06-14T11:44:35.427220+00:00",
+      "dominant_narrative": "risk_off",
+      "regime_shift": "RISK_OFF",
+      "score": 0.7
     }
   ],
-  "headline_count": 594
+  "headline_count": 316
 }
