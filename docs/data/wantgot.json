@@ -1,20 +1,32 @@
 {
   "version": "wantgot-2.0",
-  "generated_at": "2026-06-14T06:01:28.524514+00:00",
+  "generated_at": "2026-06-14T06:25:46.213842+00:00",
   "accounts": {
     "LEGACY": {
       "account_id": "LEGACY",
       "mode": "consensus",
-      "cycle_at": "2026-06-14T06:01:18.909150+00:00",
+      "cycle_at": "2026-06-14T06:25:30.183951+00:00",
       "session_open": false,
       "composite_halt": false,
       "halt_reason": null,
       "has_cycle_intents": true,
       "rows": [
         {
+          "ticker": "FRT",
+          "signal": "BUY",
+          "conviction": 0.6958,
+          "originated": false,
+          "intended_notional": 766.0,
+          "submitted": false,
+          "order_status": null,
+          "held_market_value": 0.0,
+          "verdict": "DEFERRED",
+          "reason": "off-session run \u2014 the session hard-gate parks orders until the next open (the off-hours-incident law working as designed)"
+        },
+        {
           "ticker": "IWM",
           "signal": "BUY",
-          "conviction": 0.7538,
+          "conviction": 0.6768,
           "originated": false,
           "intended_notional": 766.0,
           "submitted": false,
@@ -62,27 +74,27 @@
         }
       ],
       "totals": {
-        "intended": 766.0,
+        "intended": 1532.0,
         "submitted": 0.0,
         "held": 3773.48,
         "equity": 9575.04,
-        "deployment_gap": -3007.48
+        "deployment_gap": -2241.48
       },
-      "narrative": "wanted 1 name(s) ($766): 0 filled+held, 0 pending, 0 gated, 1 deferred"
+      "narrative": "wanted 2 name(s) ($1532): 0 filled+held, 0 pending, 0 gated, 2 deferred"
     },
     "HARVEST_3": {
       "account_id": "HARVEST_3",
       "mode": "consensus",
-      "cycle_at": "2026-06-14T06:01:19.461632+00:00",
+      "cycle_at": "2026-06-14T06:25:31.148343+00:00",
       "session_open": false,
       "composite_halt": false,
       "halt_reason": null,
       "has_cycle_intents": true,
       "rows": [
         {
-          "ticker": "TRGP",
+          "ticker": "CPT",
           "signal": "BUY",
-          "conviction": 0.9048,
+          "conviction": 0.659,
           "originated": false,
           "intended_notional": 958.79,
           "submitted": false,
@@ -92,9 +104,9 @@
           "reason": "off-session run \u2014 the session hard-gate parks orders until the next open (the off-hours-incident law working as designed)"
         },
         {
-          "ticker": "VLO",
+          "ticker": "HST",
           "signal": "BUY",
-          "conviction": 0.9048,
+          "conviction": 0.7148,
           "originated": false,
           "intended_notional": 958.79,
           "submitted": false,
@@ -117,16 +129,28 @@
     "HARVEST_5": {
       "account_id": "HARVEST_5",
       "mode": "wordsmith",
-      "cycle_at": "2026-06-14T06:01:20.141124+00:00",
+      "cycle_at": "2026-06-14T06:25:32.311170+00:00",
       "session_open": false,
       "composite_halt": false,
       "halt_reason": null,
       "has_cycle_intents": true,
       "rows": [
         {
+          "ticker": "LYV",
+          "signal": "STRONG_BUY",
+          "conviction": 0.8634,
+          "originated": true,
+          "intended_notional": 1159.36,
+          "submitted": false,
+          "order_status": null,
+          "held_market_value": 0.0,
+          "verdict": "BLOCKED:blocked_signal_not_sell",
+          "reason": "signal HOLD is not SELL/STRONG_SELL"
+        },
+        {
           "ticker": "XLM-USD",
           "signal": "BUY",
-          "conviction": 0.7974,
+          "conviction": 0.7618,
           "originated": true,
           "intended_notional": 1159.36,
           "submitted": false,
@@ -136,9 +160,9 @@
           "reason": "signal HOLD is not SELL/STRONG_SELL"
         },
         {
-          "ticker": "LDO-USD",
+          "ticker": "IP",
           "signal": "BUY",
-          "conviction": 0.7548,
+          "conviction": 0.7618,
           "originated": true,
           "intended_notional": 1159.36,
           "submitted": false,
@@ -148,9 +172,9 @@
           "reason": "signal HOLD is not SELL/STRONG_SELL"
         },
         {
-          "ticker": "INJ-USD",
+          "ticker": "CEG",
           "signal": "BUY",
-          "conviction": 0.7017,
+          "conviction": 0.6907,
           "originated": true,
           "intended_notional": 1159.36,
           "submitted": false,
@@ -160,21 +184,9 @@
           "reason": "signal HOLD is not SELL/STRONG_SELL"
         },
         {
-          "ticker": "STRK-USD",
+          "ticker": "STLD",
           "signal": "BUY",
-          "conviction": 0.7017,
-          "originated": true,
-          "intended_notional": 1159.36,
-          "submitted": false,
-          "order_status": null,
-          "held_market_value": 0.0,
-          "verdict": "BLOCKED:blocked_signal_not_sell",
-          "reason": "signal HOLD is not SELL/STRONG_SELL"
-        },
-        {
-          "ticker": "UNI-USD",
-          "signal": "BUY",
-          "conviction": 0.606,
+          "conviction": 0.6907,
           "originated": true,
           "intended_notional": 1159.36,
           "submitted": false,

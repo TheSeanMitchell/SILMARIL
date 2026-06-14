@@ -17,10 +17,6 @@
       "qty": 3.581294738,
       "snapshots_30m": [
         {
-          "ts": "2026-06-14T01:04:15.852430+00:00",
-          "price": 272.7
-        },
-        {
           "ts": "2026-06-14T01:44:03.959338+00:00",
           "price": 272.7
         },
@@ -47,6 +43,10 @@
         {
           "ts": "2026-06-14T05:43:58.618911+00:00",
           "price": 272.7
+        },
+        {
+          "ts": "2026-06-14T06:25:29.389443+00:00",
+          "price": 272.7
         }
       ]
     },
@@ -56,10 +56,6 @@
       "first_seen": "2026-06-12T14:26:13.732701+00:00",
       "qty": 7.93696,
       "snapshots_30m": [
-        {
-          "ts": "2026-06-14T01:04:15.852023+00:00",
-          "price": 62.99
-        },
         {
           "ts": "2026-06-14T01:44:03.958822+00:00",
           "price": 62.99
@@ -86,6 +82,10 @@
         },
         {
           "ts": "2026-06-14T05:43:58.618532+00:00",
+          "price": 62.99
+        },
+        {
+          "ts": "2026-06-14T06:25:29.389013+00:00",
           "price": 62.99
         }
       ]
@@ -4251,8 +4251,8 @@
     }
   ],
   "last_cycle_summary": {
-    "time": "2026-06-14T06:01:18.909109+00:00",
-    "timestamp": "2026-06-14T06:01:18.909121+00:00",
+    "time": "2026-06-14T06:25:30.183909+00:00",
+    "timestamp": "2026-06-14T06:25:30.183921+00:00",
     "closed": 0,
     "opened": 0,
     "open_after": 6,
@@ -4278,7 +4278,7 @@
     "session": "closed",
     "is_extended": false
   },
-  "last_run": "2026-06-14T06:01:18.909355+00:00",
+  "last_run": "2026-06-14T06:25:30.184174+00:00",
   "grocery_pending_harvest": 2398.051499999999,
   "trading_capital": 9575.02,
   "realized_savings": 0.02,
@@ -4299,7 +4299,7 @@
     "primary_symbol": "SGOV",
     "primary_qty": 0.00016,
     "primary_market_value": 0.0161,
-    "checked_at": "2026-06-14T06:01:18.635863+00:00"
+    "checked_at": "2026-06-14T06:25:29.383570+00:00"
   },
   "sgov_sweep_last_cycle": {
     "attempted": false,
@@ -4342,7 +4342,7 @@
   ],
   "sweep_protection": {
     "version": "4.0",
-    "checked_at": "2026-06-14T06:01:20.145735+00:00",
+    "checked_at": "2026-06-14T06:25:32.315801+00:00",
     "market_mode": "ATTACK",
     "force_sweep_floor_resolved": 10500.0,
     "stale_close_age_days": 5,
@@ -4606,17 +4606,26 @@
     "open_seen": 5
   },
   "cycle_intents": {
-    "at": "2026-06-14T06:01:18.909150+00:00",
+    "at": "2026-06-14T06:25:30.183951+00:00",
     "session": "closed",
     "session_open": false,
     "composite_halt": false,
     "halt_reason": null,
-    "plans_offered": 1,
+    "plans_offered": 2,
     "buy_intents": [
+      {
+        "ticker": "FRT",
+        "signal": "BUY",
+        "conviction": 0.6958,
+        "originated": false,
+        "outcome": "blocked_no_session_match",
+        "intended_notional": 766.0,
+        "reason": "no usable session for order"
+      },
       {
         "ticker": "IWM",
         "signal": "BUY",
-        "conviction": 0.7538,
+        "conviction": 0.6768,
         "originated": false,
         "outcome": "blocked_no_session_match",
         "intended_notional": 766.0,
@@ -4625,9 +4634,19 @@
     ],
     "decisions_this_cycle": [
       {
+        "ticker": "FRT",
+        "category": "blocked_no_session_match",
+        "reason": "no usable session for order"
+      },
+      {
         "ticker": "IWM",
         "category": "blocked_no_session_match",
         "reason": "no usable session for order"
+      },
+      {
+        "ticker": "FRT",
+        "category": "blocked_signal_not_sell",
+        "reason": "signal BUY is not SELL/STRONG_SELL"
       },
       {
         "ticker": "IWM",
