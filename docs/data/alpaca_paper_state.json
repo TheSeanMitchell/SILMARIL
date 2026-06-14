@@ -97,10 +97,6 @@
       "qty": 3.050460254,
       "snapshots_30m": [
         {
-          "ts": "2026-06-14T10:43:52.377259+00:00",
-          "price": 266.35
-        },
-        {
           "ts": "2026-06-14T11:25:13.675394+00:00",
           "price": 266.35
         },
@@ -127,6 +123,10 @@
         {
           "ts": "2026-06-14T15:25:16.655951+00:00",
           "price": 266.35
+        },
+        {
+          "ts": "2026-06-14T16:04:29.604842+00:00",
+          "price": 266.35
         }
       ]
     },
@@ -136,10 +136,6 @@
       "first_seen": "2026-06-12T16:06:41.553127+00:00",
       "qty": 0.405357634,
       "snapshots_30m": [
-        {
-          "ts": "2026-06-14T10:43:52.377162+00:00",
-          "price": 1577.32
-        },
         {
           "ts": "2026-06-14T11:25:13.675274+00:00",
           "price": 1577.32
@@ -167,6 +163,10 @@
         {
           "ts": "2026-06-14T15:25:16.655853+00:00",
           "price": 1577.32
+        },
+        {
+          "ts": "2026-06-14T16:04:29.604741+00:00",
+          "price": 1577.32
         }
       ]
     },
@@ -176,10 +176,6 @@
       "first_seen": "2026-06-12T18:46:03.524318+00:00",
       "qty": 4.833247378,
       "snapshots_30m": [
-        {
-          "ts": "2026-06-14T10:43:52.376868+00:00",
-          "price": 174.84
-        },
         {
           "ts": "2026-06-14T11:25:13.674979+00:00",
           "price": 174.84
@@ -206,6 +202,10 @@
         },
         {
           "ts": "2026-06-14T15:25:16.655543+00:00",
+          "price": 174.84
+        },
+        {
+          "ts": "2026-06-14T16:04:29.604374+00:00",
           "price": 174.84
         }
       ]
@@ -4251,8 +4251,8 @@
     }
   ],
   "last_cycle_summary": {
-    "time": "2026-06-14T15:44:12.348929+00:00",
-    "timestamp": "2026-06-14T15:44:12.348941+00:00",
+    "time": "2026-06-14T16:04:29.685858+00:00",
+    "timestamp": "2026-06-14T16:04:29.685871+00:00",
     "closed": 0,
     "opened": 0,
     "open_after": 6,
@@ -4278,7 +4278,7 @@
     "session": "closed",
     "is_extended": false
   },
-  "last_run": "2026-06-14T15:44:12.349243+00:00",
+  "last_run": "2026-06-14T16:04:29.686094+00:00",
   "grocery_pending_harvest": 2398.051499999999,
   "trading_capital": 9575.02,
   "realized_savings": 0.02,
@@ -4299,7 +4299,7 @@
     "primary_symbol": "SGOV",
     "primary_qty": 0.00016,
     "primary_market_value": 0.0161,
-    "checked_at": "2026-06-14T15:44:12.208785+00:00"
+    "checked_at": "2026-06-14T16:04:29.598870+00:00"
   },
   "sgov_sweep_last_cycle": {
     "attempted": false,
@@ -4342,7 +4342,7 @@
   ],
   "sweep_protection": {
     "version": "4.0",
-    "checked_at": "2026-06-14T15:44:13.298871+00:00",
+    "checked_at": "2026-06-14T16:04:31.330691+00:00",
     "market_mode": "ATTACK",
     "force_sweep_floor_resolved": 10500.0,
     "stale_close_age_days": 5,
@@ -4606,17 +4606,26 @@
     "open_seen": 5
   },
   "cycle_intents": {
-    "at": "2026-06-14T15:44:12.348965+00:00",
+    "at": "2026-06-14T16:04:29.685905+00:00",
     "session": "closed",
     "session_open": false,
     "composite_halt": false,
     "halt_reason": null,
-    "plans_offered": 1,
+    "plans_offered": 2,
     "buy_intents": [
+      {
+        "ticker": "JTO-USD",
+        "signal": "BUY",
+        "conviction": 0.8253,
+        "originated": false,
+        "outcome": "blocked_not_equity_mission",
+        "intended_notional": 766.0,
+        "reason": "JTO-USD is not a traditional equity \u2014 valuables trade in their own zone, never this account"
+      },
       {
         "ticker": "TON-USD",
         "signal": "BUY",
-        "conviction": 0.7185,
+        "conviction": 0.7135,
         "originated": false,
         "outcome": "blocked_not_equity_mission",
         "intended_notional": 766.0,
@@ -4625,9 +4634,19 @@
     ],
     "decisions_this_cycle": [
       {
+        "ticker": "JTO-USD",
+        "category": "blocked_not_equity_mission",
+        "reason": "JTO-USD is not a traditional equity \u2014 valuables trade in their own zone, never this account"
+      },
+      {
         "ticker": "TON-USD",
         "category": "blocked_not_equity_mission",
         "reason": "TON-USD is not a traditional equity \u2014 valuables trade in their own zone, never this account"
+      },
+      {
+        "ticker": "JTO-USD",
+        "category": "blocked_signal_not_sell",
+        "reason": "signal BUY is not SELL/STRONG_SELL"
       },
       {
         "ticker": "TON-USD",

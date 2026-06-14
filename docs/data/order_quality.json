@@ -1,6 +1,6 @@
 {
   "version": "6.0",
-  "generated_at": "2026-06-14T15:44:11.219281+00:00",
+  "generated_at": "2026-06-14T16:04:29.031392+00:00",
   "tickers": {
     "TON-USD": {
       "ticker": "TON-USD",
@@ -15,14 +15,25 @@
     },
     "IWM": {
       "ticker": "IWM",
-      "use_limit_order": false,
-      "limit_buffer_bps": 30,
+      "use_limit_order": true,
+      "limit_buffer_bps": 150,
       "defer_to_next_cycle": false,
       "opening_volatility": 0.0209,
       "liquidity_score": 1.0,
       "extension_warning": false,
-      "timing_window": "now is IWM's typical daily-LOW window (11:30 ET) \u2014 historically favorable entry",
-      "rationale": "now is IWM's typical daily-LOW window (11:30 ET) \u2014 historically favorable entry"
+      "timing_window": "resting toward IWM's ~281.8 floor (his low window is 11:30 ET) \u2014 limit 150bps below",
+      "rationale": "limit 150bps \u00b7 ATR/px 2.1% \u00b7 liq 1.00 \u00b7 resting toward IWM's ~281.8 floor (his low window is 11:30 ET) \u2014 limit 150bps below"
+    },
+    "JTO-USD": {
+      "ticker": "JTO-USD",
+      "use_limit_order": true,
+      "limit_buffer_bps": 103,
+      "defer_to_next_cycle": true,
+      "opening_volatility": 0.1196,
+      "liquidity_score": 0.3844,
+      "extension_warning": false,
+      "timing_window": null,
+      "rationale": "DEFER: ATR/price 12.0% \u2265 9% \u2014 untradeable"
     },
     "VLO": {
       "ticker": "VLO",
@@ -37,10 +48,10 @@
     }
   },
   "summary": {
-    "tickers": 3,
-    "deferred": 0,
-    "limit_recommended": 2,
-    "market_orders_ok": 1
+    "tickers": 4,
+    "deferred": 1,
+    "limit_recommended": 4,
+    "market_orders_ok": -1
   },
   "config": {
     "atr_defer_ratio": 0.05,

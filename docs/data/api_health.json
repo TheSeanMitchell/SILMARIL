@@ -1,6 +1,6 @@
 {
   "version": "api-health-1.3",
-  "generated_at": "2026-06-14T15:44:18.438325+00:00",
+  "generated_at": "2026-06-14T16:04:36.825619+00:00",
   "overall": "healthy",
   "freshness": {
     "ok": 12,
@@ -69,16 +69,16 @@
     }
   },
   "news": {
-    "distinct_sources": 104,
+    "distinct_sources": 107,
     "articles_in_cycle": 233,
     "top_sources": {
-      "Yahoo Finance": 27,
+      "Yahoo Finance": 25,
       "CoinMarketCap": 18,
-      "TradingView": 14,
-      "CoinDesk": 14,
-      "Coinpedia": 10,
+      "CoinDesk": 16,
+      "TradingView": 12,
+      "Coinpedia": 9,
       "CryptoRank": 8,
-      "Binance": 6,
+      "Binance": 7,
       "The Motley Fool": 6,
       "Bitget": 5,
       "Crypto Briefing": 5,
@@ -100,7 +100,7 @@
       "errors_logged": 20,
       "errors_recent_48h": 0,
       "last_error": "{'time': '2026-06-04T22:14:34.156193+00:00', 'msg': 'POST https://paper-api.alpaca.markets/v2/orders -> HTTP 422: {\"code\":42210000,\"message\":\"invalid limit_pric",
-      "last_error_age_hours": 233.5,
+      "last_error_age_hours": 233.8,
       "errors_note": "all errors historic (none in 48h) \u2014 plumbing currently clean",
       "equity": 9575.04
     },
@@ -108,10 +108,10 @@
       "configured": true,
       "last_run_age_hours": 0.0,
       "errors_logged": 20,
-      "errors_recent_48h": 1,
+      "errors_recent_48h": 0,
       "last_error": "{'time': '2026-06-12T15:47:17.756965+00:00', 'msg': 'POST https://paper-api.alpaca.markets/v2/orders -> HTTP 403: {\"available\":\"1.695078349\",\"code\":40310000,\"ex",
-      "last_error_age_hours": 48.0,
-      "errors_note": null,
+      "last_error_age_hours": 48.3,
+      "errors_note": "all errors historic (none in 48h) \u2014 plumbing currently clean",
       "equity": 9587.89
     },
     "HARVEST_5": {
@@ -120,14 +120,14 @@
       "errors_logged": 20,
       "errors_recent_48h": 0,
       "last_error": "{'time': '2026-06-04T00:19:24.288294+00:00', 'msg': 'POST https://paper-api.alpaca.markets/v2/orders -> HTTP 422: {\"code\":42210000,\"message\":\"invalid limit_pric",
-      "last_error_age_hours": 255.4,
+      "last_error_age_hours": 255.8,
       "errors_note": "all errors historic (none in 48h) \u2014 plumbing currently clean",
       "equity": 9661.36
     }
   },
   "domain_clocks": {
     "version": "domain-clock-1.0",
-    "checked_at": "2026-06-14T15:44:18.438325+00:00",
+    "checked_at": "2026-06-14T16:04:36.825619+00:00",
     "domains": {
       "stocks": {
         "open": false,
@@ -135,15 +135,15 @@
       },
       "stocks_news": {
         "open": false,
-        "reason": "off-hours hourly news sweep \u2014 22 min since last"
+        "reason": "off-hours hourly news sweep \u2014 42 min since last"
       },
       "valuables": {
         "open": true,
         "reason": "always open \u2014 markets never close"
       },
       "social": {
-        "open": true,
-        "reason": "hourly cadence \u2014 60 min since last"
+        "open": false,
+        "reason": "hourly cadence \u2014 20 min since last"
       },
       "edgar": {
         "open": true,
@@ -151,25 +151,25 @@
       }
     },
     "last_allowed": {
-      "edgar": "2026-06-14T15:25:24.859069+00:00",
-      "social": "2026-06-14T14:44:18.648796+00:00",
+      "edgar": "2026-06-14T15:44:21.178736+00:00",
+      "social": "2026-06-14T15:44:21.591726+00:00",
       "stocks_news": "2026-06-14T15:22:20.862260+00:00"
     },
     "today_budget": {
       "stocks": {
         "allowed": 0,
-        "skipped": 95
+        "skipped": 97
       },
       "stocks_news": {
         "allowed": 16,
-        "skipped": 32
+        "skipped": 33
       },
       "edgar": {
-        "allowed": 47,
+        "allowed": 48,
         "skipped": 0
       },
       "social": {
-        "allowed": 15,
+        "allowed": 16,
         "skipped": 32
       }
     },
@@ -177,9 +177,9 @@
     "note": "the cron may run 24/7: stock TRADING-adjacent fetches (earnings/ipo-cal) keep 08:30-16:30 ET Mon-Fri; equity NEWS runs every cycle in-window and hourly off-hours (information never sleeps); valuables always; social hourly; EDGAR every run through the SPCX window then 4h"
   },
   "storage": {
-    "repo_mb": 859.5,
+    "repo_mb": 865.3,
     "worktree_mb": 95.1,
-    "git_history_mb": 764.4,
+    "git_history_mb": 770.2,
     "data_dir_mb": 90.1,
     "archive_mb": 1.8,
     "archive_share_pct": 2.0,
