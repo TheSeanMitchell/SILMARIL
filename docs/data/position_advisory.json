@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-14T20:44:27.395025+00:00",
+  "generated_at": "2026-06-14T21:04:58.993637+00:00",
   "advisory_only": true,
   "note": "Advisory only \u2014 recommendations are NOT auto-executed in Alpha 3.0. Existing trailing-stop / momentum-exit logic still does the actual closing.",
   "summary": {
@@ -73,6 +73,14 @@
         "rationale": "flat from entry \u00b7 score 0.46 @ aggression 0.50"
       }
     ],
+    "GOLDSMITH": [
+      {
+        "ticker": "SOL-USD",
+        "recommendation": "HOLD",
+        "score": 0.4469,
+        "rationale": "position stable \u00b7 score 0.45 @ aggression 0.50"
+      }
+    ],
     "ZENITH": [
       {
         "ticker": "DIA",
@@ -102,14 +110,6 @@
         "ticker": "DIA",
         "recommendation": "HOLD",
         "score": 0.4389,
-        "rationale": "position stable \u00b7 score 0.44 @ aggression 0.50"
-      }
-    ],
-    "GOLDSMITH": [
-      {
-        "ticker": "SOL-USD",
-        "recommendation": "HOLD",
-        "score": 0.437,
         "rationale": "position stable \u00b7 score 0.44 @ aggression 0.50"
       }
     ],
@@ -351,6 +351,25 @@
       "advisory_only": true
     },
     {
+      "owner": "GOLDSMITH",
+      "ticker": "SOL-USD",
+      "recommendation": "HOLD",
+      "score": 0.4469,
+      "rationale": "position stable \u00b7 score 0.45 @ aggression 0.50",
+      "components": {
+        "age": 0.1429,
+        "drift_flat": 0.8427,
+        "peak_giveback": 0.2734,
+        "decay": 0.5,
+        "illiquidity": 1.0
+      },
+      "aggression": 0.5,
+      "hold_age_days": 1.0,
+      "intraday_drift_pct": 0.0157,
+      "peak_drop_pct": -0.0137,
+      "advisory_only": true
+    },
+    {
       "owner": "ZENITH",
       "ticker": "DIA",
       "recommendation": "HOLD",
@@ -424,25 +443,6 @@
       "hold_age_days": 2.0,
       "intraday_drift_pct": 0.0073,
       "peak_drop_pct": 0.0,
-      "advisory_only": true
-    },
-    {
-      "owner": "GOLDSMITH",
-      "ticker": "SOL-USD",
-      "recommendation": "HOLD",
-      "score": 0.437,
-      "rationale": "position stable \u00b7 score 0.44 @ aggression 0.50",
-      "components": {
-        "age": 0.1429,
-        "drift_flat": 0.8293,
-        "peak_giveback": 0.2472,
-        "decay": 0.5,
-        "illiquidity": 1.0
-      },
-      "aggression": 0.5,
-      "hold_age_days": 1.0,
-      "intraday_drift_pct": 0.0171,
-      "peak_drop_pct": -0.0124,
       "advisory_only": true
     },
     {
