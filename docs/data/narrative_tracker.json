@@ -1,10 +1,10 @@
 {
   "version": "5.0",
-  "generated_at": "2026-06-15T02:26:01.702418+00:00",
+  "generated_at": "2026-06-15T02:44:25.030649+00:00",
   "cycles_observed": 60,
-  "dominant_narrative": "risk_on",
-  "regime_shift": "RISK_ON",
-  "regime_shift_confidence": 0.4,
+  "dominant_narrative": "oil_rally",
+  "regime_shift": "ROTATION",
+  "regime_shift_confidence": 0.4231,
   "narratives": {
     "risk_on": {
       "label": "Risk-on sentiment returning",
@@ -20,27 +20,22 @@
       ],
       "frequency": 2,
       "persistence": 60,
-      "acceleration": 1.0,
-      "score": 0.7,
+      "acceleration": 0.0,
+      "score": 0.54,
       "phrases": [
-        "all-time high",
-        "buying the dip"
+        "buying the dip",
+        "risk-on"
       ],
       "matched_articles": [
-        {
-          "ticker": "JBL",
-          "title": "Jabil Stock Hits All-Time Highs as Analysts Target $425. Here\u2019s Where the Stock Could Go",
-          "source": "TIKR.com"
-        },
-        {
-          "ticker": "NUE",
-          "title": "Nucor Corp stock hits all-time high at 265.14 USD",
-          "source": "Investing.com"
-        },
         {
           "ticker": "LTC-USD",
           "title": "Litecoin Whales Are Buying the Dip \u2014 Can LTC Price Reclaim $60?",
           "source": "TradingView"
+        },
+        {
+          "ticker": "SOL-USD",
+          "title": "3 reasons XRP and Solana could lead the next risk-on phase",
+          "source": "AMBCrypto"
         }
       ]
     },
@@ -56,28 +51,17 @@
         "Technology",
         "Consumer Discretionary"
       ],
-      "frequency": 2,
+      "frequency": 1,
       "persistence": 60,
-      "acceleration": 0.0,
-      "score": 0.54,
+      "acceleration": -0.5,
+      "score": 0.425,
       "phrases": [
-        "risk off",
-        "risk-off"
+        "risk off"
       ],
       "matched_articles": [
         {
           "ticker": "DOT-USD",
           "title": "Polkadot (DOT) Volatility Explained: Broad Risk Off, Technical Selling",
-          "source": "CoinMarketCap"
-        },
-        {
-          "ticker": "HBAR-USD",
-          "title": "Hedera (HBAR) Declines 3.3% Amid Broad Crypto Risk-Off",
-          "source": "CoinMarketCap"
-        },
-        {
-          "ticker": "CRO-USD",
-          "title": "Cronos (CRO) Declines 3.5% Amid Broad Crypto Risk-Off Phase",
           "source": "CoinMarketCap"
         }
       ]
@@ -117,12 +101,20 @@
         "Energy"
       ],
       "sectors_out": [],
-      "frequency": 0,
-      "persistence": 10,
-      "acceleration": -1.0,
-      "score": 0.35,
-      "phrases": [],
-      "matched_articles": []
+      "frequency": 1,
+      "persistence": 11,
+      "acceleration": 1.0,
+      "score": 0.625,
+      "phrases": [
+        "supply concerns"
+      ],
+      "matched_articles": [
+        {
+          "ticker": "PYTH-USD",
+          "title": "Pyth Network expands into institutional data, boosting revenue amid token supply concerns.",
+          "source": "Pluang"
+        }
+      ]
     },
     "oil_weakness": {
       "label": "Oil / energy weakening",
@@ -228,25 +220,19 @@
     }
   },
   "sector_pressure": {
-    "Technology": 0.16,
-    "Energy": 0.31,
+    "Technology": 0.115,
+    "Energy": 0.585,
     "Industrials": 0.04,
-    "Health Care": 0.58,
+    "Health Care": 0.465,
     "Financials": 0.04,
-    "Consumer Discretionary": 0.16,
-    "Consumer Staples": -0.16,
-    "Communication Services": 0.7,
+    "Consumer Discretionary": 0.115,
+    "Consumer Staples": -0.115,
+    "Communication Services": 0.54,
     "Real Estate": 0.0,
-    "Utilities": -0.2,
+    "Utilities": -0.155,
     "Materials": 0.0
   },
   "history": [
-    {
-      "cycle_ts": "2026-06-14T06:44:05.773867+00:00",
-      "dominant_narrative": "risk_off",
-      "regime_shift": "RISK_OFF",
-      "score": 0.54
-    },
     {
       "cycle_ts": "2026-06-14T07:04:18.089649+00:00",
       "dominant_narrative": "risk_off",
@@ -600,7 +586,13 @@
       "dominant_narrative": "risk_on",
       "regime_shift": "RISK_ON",
       "score": 0.7
+    },
+    {
+      "cycle_ts": "2026-06-15T02:44:25.030649+00:00",
+      "dominant_narrative": "oil_rally",
+      "regime_shift": "ROTATION",
+      "score": 0.625
     }
   ],
-  "headline_count": 564
+  "headline_count": 306
 }
