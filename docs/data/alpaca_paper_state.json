@@ -2,7 +2,7 @@
   "version": "2.2",
   "enabled": true,
   "account": {
-    "equity": 9584.77,
+    "equity": 9580.74,
     "cash": 3753.49
   },
   "principal_target": 10000.0,
@@ -270,6 +270,10 @@
         },
         {
           "ts": "2026-06-15T20:07:14.289137+00:00",
+          "price": 124.71
+        },
+        {
+          "ts": "2026-06-15T20:44:41.949686+00:00",
           "price": 124.71
         }
       ]
@@ -4664,14 +4668,14 @@
     }
   ],
   "last_cycle_summary": {
-    "time": "2026-06-15T20:28:39.457365+00:00",
-    "timestamp": "2026-06-15T20:28:39.457378+00:00",
+    "time": "2026-06-15T20:44:42.176659+00:00",
+    "timestamp": "2026-06-15T20:44:42.176671+00:00",
     "closed": 0,
     "opened": 0,
     "open_after": 9,
-    "equity": 9584.77,
+    "equity": 9580.74,
     "savings": 0.0,
-    "total_value": 9584.77,
+    "total_value": 9580.74,
     "tickers_traded": [],
     "bleed_exits_count": 0,
     "bleed_exits": [],
@@ -4687,13 +4691,13 @@
     },
     "directives_consumed": 0,
     "rotations_executed": 0,
-    "composite_halt": false,
+    "composite_halt": true,
     "session": "after-hours",
     "is_extended": true
   },
-  "last_run": "2026-06-15T20:28:39.457622+00:00",
+  "last_run": "2026-06-15T20:44:42.176893+00:00",
   "grocery_pending_harvest": 2721.2685999999967,
-  "trading_capital": 9584.77,
+  "trading_capital": 9580.74,
   "realized_savings": 0.0,
   "account_id": "LEGACY",
   "genesis_at": "2026-05-11T05:08:46.083334+00:00",
@@ -4704,7 +4708,7 @@
         "qty": 4.5e-05,
         "market_value": 0.0045,
         "avg_entry_price": 100.5297,
-        "current_price": 100.53,
+        "current_price": 100.5224,
         "unrealized_pl": 0.0
       }
     ],
@@ -4712,7 +4716,7 @@
     "primary_symbol": "SGOV",
     "primary_qty": 4.5e-05,
     "primary_market_value": 0.0045,
-    "checked_at": "2026-06-15T20:28:39.233172+00:00"
+    "checked_at": "2026-06-15T20:44:41.944069+00:00"
   },
   "sgov_sweep_last_cycle": {
     "attempted": false,
@@ -4758,10 +4762,10 @@
   ],
   "sweep_protection": {
     "version": "4.0",
-    "checked_at": "2026-06-15T20:28:41.357155+00:00",
-    "market_mode": "ATTACK",
+    "checked_at": "2026-06-15T20:44:44.140993+00:00",
+    "market_mode": "PRESERVATION",
     "force_sweep_floor_resolved": 10500.0,
-    "stale_close_age_days": 5,
+    "stale_close_age_days": 3,
     "instant_sweeps": [],
     "stale_closes": [],
     "news_boosts": [],
@@ -4782,11 +4786,11 @@
   },
   "policy_applied": {
     "version": "4.0",
-    "market_mode": "ATTACK",
-    "winner_engine": "default",
-    "halt_opens": false,
-    "effective_trail_pct": 0.0213,
-    "effective_min_conv": 0.4,
+    "market_mode": "PRESERVATION",
+    "winner_engine": "market_state",
+    "halt_opens": true,
+    "effective_trail_pct": 0.0375,
+    "effective_min_conv": 0.75,
     "elite_tickers": [],
     "force_close_targets": [],
     "blocked_count": 0,
@@ -4829,12 +4833,12 @@
       "symbol": "ANET",
       "ticker": "ANET",
       "qty": 2.919079124,
-      "current_price": 169.1433,
+      "current_price": 168.8,
       "avg_entry_price": 167.196574,
       "peak_price": 169.63,
-      "market_value": 493.74,
-      "unrealized_pl": 5.68,
-      "unrealized_plpc": 0.0116,
+      "market_value": 492.74,
+      "unrealized_pl": 4.68,
+      "unrealized_plpc": 0.0096,
       "first_seen": "2026-06-15T17:47:16.315384+00:00",
       "scale_out_history": {},
       "stop_at_break_even": false,
@@ -4874,12 +4878,12 @@
       "symbol": "GLW",
       "ticker": "GLW",
       "qty": 2.656044835,
-      "current_price": 187.9426,
+      "current_price": 187.13,
       "avg_entry_price": 187.0,
       "peak_price": 188.195,
-      "market_value": 499.18,
-      "unrealized_pl": 2.5,
-      "unrealized_plpc": 0.005,
+      "market_value": 497.03,
+      "unrealized_pl": 0.35,
+      "unrealized_plpc": 0.0007,
       "first_seen": "2026-06-15T14:27:42.718341+00:00",
       "scale_out_history": {},
       "stop_at_break_even": false,
@@ -4889,12 +4893,12 @@
       "symbol": "IWM",
       "ticker": "IWM",
       "qty": 3.243874412,
-      "current_price": 294.72,
+      "current_price": 294.61,
       "avg_entry_price": 295.893083,
       "peak_price": 296.03,
-      "market_value": 956.03,
-      "unrealized_pl": -3.81,
-      "unrealized_plpc": -0.004,
+      "market_value": 955.68,
+      "unrealized_pl": -4.16,
+      "unrealized_plpc": -0.0043,
       "first_seen": "2026-06-15T16:07:26.564738+00:00",
       "scale_out_history": {},
       "stop_at_break_even": false,
@@ -4919,12 +4923,12 @@
       "symbol": "VTI",
       "ticker": "VTI",
       "qty": 2.071650506,
-      "current_price": 372.5,
+      "current_price": 372.2491,
       "avg_entry_price": 373.13,
       "peak_price": 373.2369,
-      "market_value": 771.69,
-      "unrealized_pl": -1.31,
-      "unrealized_plpc": -0.0017,
+      "market_value": 771.17,
+      "unrealized_pl": -1.82,
+      "unrealized_plpc": -0.0024,
       "first_seen": "2026-06-15T17:07:19.491411+00:00",
       "scale_out_history": {},
       "stop_at_break_even": false,
@@ -5072,33 +5076,18 @@
     "open_seen": 1
   },
   "cycle_intents": {
-    "at": "2026-06-15T20:28:39.457406+00:00",
+    "at": "2026-06-15T20:44:42.176689+00:00",
     "session": "after-hours",
     "session_open": false,
-    "composite_halt": false,
-    "halt_reason": null,
-    "plans_offered": 1,
-    "buy_intents": [
-      {
-        "ticker": "DXCM",
-        "signal": "BUY",
-        "conviction": 0.8016,
-        "originated": false,
-        "outcome": "blocked_already_held",
-        "intended_notional": 766.78,
-        "reason": "DXCM already held"
-      }
-    ],
+    "composite_halt": true,
+    "halt_reason": "Halt: market_state: market_state=PRESERVATION: inside closing-bell window",
+    "plans_offered": 0,
+    "buy_intents": [],
     "decisions_this_cycle": [
       {
-        "ticker": "DXCM",
-        "category": "blocked_already_held",
-        "reason": "DXCM already held"
-      },
-      {
-        "ticker": "DXCM",
-        "category": "blocked_signal_not_sell",
-        "reason": "signal BUY is not SELL/STRONG_SELL"
+        "ticker": "*",
+        "category": "blocked_composite_halt",
+        "reason": "Halt: market_state: market_state=PRESERVATION: inside closing-bell window"
       }
     ]
   },
