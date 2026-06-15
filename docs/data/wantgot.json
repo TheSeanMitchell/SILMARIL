@@ -1,44 +1,20 @@
 {
   "version": "wantgot-2.0",
-  "generated_at": "2026-06-15T10:26:16.015497+00:00",
+  "generated_at": "2026-06-15T10:44:38.009489+00:00",
   "accounts": {
     "LEGACY": {
       "account_id": "LEGACY",
       "mode": "consensus",
-      "cycle_at": "2026-06-15T10:26:06.148360+00:00",
+      "cycle_at": "2026-06-15T10:44:27.467666+00:00",
       "session_open": false,
       "composite_halt": false,
       "halt_reason": null,
       "has_cycle_intents": true,
       "rows": [
         {
-          "ticker": "TSM",
-          "signal": "BUY",
-          "conviction": 0.6533,
-          "originated": false,
-          "intended_notional": 759.41,
-          "submitted": false,
-          "order_status": null,
-          "held_market_value": 0.0,
-          "verdict": "DEFERRED",
-          "reason": "submission deferred by market-closed gate (will retry during regular hours)"
-        },
-        {
           "ticker": "IWM",
           "signal": "BUY",
-          "conviction": 0.7623,
-          "originated": false,
-          "intended_notional": 759.41,
-          "submitted": false,
-          "order_status": null,
-          "held_market_value": 0.0,
-          "verdict": "DEFERRED",
-          "reason": "submission deferred by market-closed gate (will retry during regular hours)"
-        },
-        {
-          "ticker": "PANW",
-          "signal": "BUY",
-          "conviction": 0.7096,
+          "conviction": 0.7076,
           "originated": false,
           "intended_notional": 759.41,
           "submitted": false,
@@ -86,18 +62,18 @@
         }
       ],
       "totals": {
-        "intended": 2278.23,
+        "intended": 759.41,
         "submitted": 0.0,
         "held": 3789.36,
         "equity": 9590.93,
-        "deployment_gap": -1511.13
+        "deployment_gap": -3029.95
       },
-      "narrative": "wanted 3 name(s) ($2278): 0 filled+held, 0 pending, 0 gated, 3 deferred"
+      "narrative": "wanted 1 name(s) ($759): 0 filled+held, 0 pending, 0 gated, 1 deferred"
     },
     "HARVEST_3": {
       "account_id": "HARVEST_3",
       "mode": "consensus",
-      "cycle_at": "2026-06-15T10:26:06.795934+00:00",
+      "cycle_at": "2026-06-15T10:44:27.673436+00:00",
       "session_open": false,
       "composite_halt": false,
       "halt_reason": null,
@@ -106,7 +82,7 @@
         {
           "ticker": "NEAR-USD",
           "signal": "BUY",
-          "conviction": 0.7337,
+          "conviction": 0.7195,
           "originated": false,
           "intended_notional": 958.79,
           "submitted": false,
@@ -116,9 +92,9 @@
           "reason": "NEAR-USD is not a traditional equity \u2014 valuables trade in their own zone, never this account"
         },
         {
-          "ticker": "ANET",
+          "ticker": "VLO",
           "signal": "BUY",
-          "conviction": 0.5588,
+          "conviction": 0.8596,
           "originated": false,
           "intended_notional": 958.79,
           "submitted": false,
@@ -141,28 +117,16 @@
     "HARVEST_5": {
       "account_id": "HARVEST_5",
       "mode": "wordsmith",
-      "cycle_at": "2026-06-15T10:26:07.082691+00:00",
+      "cycle_at": "2026-06-15T10:44:27.885146+00:00",
       "session_open": false,
       "composite_halt": false,
       "halt_reason": null,
       "has_cycle_intents": true,
       "rows": [
         {
-          "ticker": "TSM",
-          "signal": "BUY",
-          "conviction": 0.7087,
-          "originated": true,
-          "intended_notional": 1159.36,
-          "submitted": false,
-          "order_status": null,
-          "held_market_value": 0.0,
-          "verdict": "BLOCKED:blocked_signal_not_sell",
-          "reason": "signal HOLD is not SELL/STRONG_SELL"
-        },
-        {
           "ticker": "XLM-USD",
           "signal": "BUY",
-          "conviction": 0.7934,
+          "conviction": 0.7795,
           "originated": true,
           "intended_notional": 1159.36,
           "submitted": false,
@@ -172,9 +136,9 @@
           "reason": "signal HOLD is not SELL/STRONG_SELL"
         },
         {
-          "ticker": "WBD",
+          "ticker": "LDO-USD",
           "signal": "BUY",
-          "conviction": 0.7934,
+          "conviction": 0.7587,
           "originated": true,
           "intended_notional": 1159.36,
           "submitted": false,
@@ -184,21 +148,33 @@
           "reason": "signal HOLD is not SELL/STRONG_SELL"
         },
         {
-          "ticker": "ORCL",
-          "signal": "STRONG_BUY",
-          "conviction": 0.7828,
-          "originated": true,
-          "intended_notional": 1159.36,
-          "submitted": false,
-          "order_status": null,
-          "held_market_value": 0.0,
-          "verdict": "BLOCKED:blocked_signal_not_sell",
-          "reason": "signal HOLD is not SELL/STRONG_SELL"
-        },
-        {
-          "ticker": "DELL",
+          "ticker": "JTO-USD",
           "signal": "BUY",
-          "conviction": 0.7087,
+          "conviction": 0.686,
+          "originated": true,
+          "intended_notional": 1159.36,
+          "submitted": false,
+          "order_status": null,
+          "held_market_value": 0.0,
+          "verdict": "BLOCKED:blocked_signal_not_sell",
+          "reason": "signal HOLD is not SELL/STRONG_SELL"
+        },
+        {
+          "ticker": "XMR-USD",
+          "signal": "BUY",
+          "conviction": 0.6652,
+          "originated": true,
+          "intended_notional": 1159.36,
+          "submitted": false,
+          "order_status": null,
+          "held_market_value": 0.0,
+          "verdict": "BLOCKED:blocked_signal_not_sell",
+          "reason": "signal HOLD is not SELL/STRONG_SELL"
+        },
+        {
+          "ticker": "FET-USD",
+          "signal": "BUY",
+          "conviction": 0.6548,
           "originated": true,
           "intended_notional": 1159.36,
           "submitted": false,
