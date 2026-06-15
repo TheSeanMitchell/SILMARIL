@@ -1,12 +1,12 @@
 {
   "version": "sentiment-ledger-1.0",
-  "generated_at": "2026-06-15T08:44:43.810725+00:00",
+  "generated_at": "2026-06-15T09:06:02.744788+00:00",
   "ledger_rows": 3710,
   "recorded_this_cycle": 0,
-  "graded_this_cycle": 0,
+  "graded_this_cycle": 1,
   "calibration": {
-    "graded_total": 1373,
-    "graded_clean": 1373,
+    "graded_total": 1374,
+    "graded_clean": 1374,
     "graded_stale": 0,
     "by_bin": [
       {
@@ -27,10 +27,10 @@
       },
       {
         "bin": "neutral",
-        "n": 1229,
-        "mean_return": 0.0871,
-        "hit_rate": 0.5435,
-        "t_stat": 1.714,
+        "n": 1230,
+        "mean_return": 0.0803,
+        "hit_rate": 0.5431,
+        "t_stat": 1.566,
         "verdict": "suggestive"
       },
       {
@@ -60,21 +60,21 @@
     "by_realized_horizon": [
       {
         "horizon": "1d",
-        "n": 1373,
-        "mean_return": -0.0181,
-        "hit_rate": 0.5353,
-        "t_stat": -0.222,
+        "n": 1374,
+        "mean_return": -0.0242,
+        "hit_rate": 0.5349,
+        "t_stat": -0.295,
         "verdict": "none"
       }
     ],
-    "sentiment_return_correlation": -0.0379
+    "sentiment_return_correlation": -0.0375
   },
   "responsiveness_now": {
     "n_with_sentiment": 593,
-    "avg_sentiment_on_BUY_consensus": 0.0563,
+    "avg_sentiment_on_BUY_consensus": 0.0556,
     "avg_sentiment_on_SELL_consensus": 0.0,
-    "avg_sentiment_on_HOLD_ABSTAIN": 0.0075,
-    "sentiment_vs_consensus_score_corr": 0.1101
+    "avg_sentiment_on_HOLD_ABSTAIN": 0.008,
+    "sentiment_vs_consensus_score_corr": 0.1355
   },
   "deal_journal_proxy": {
     "news_vs_silence": {
@@ -118,9 +118,9 @@
     "deals_count": 582
   },
   "notes": [
-    "Sentiment is not yet predictive of realized return (r=-0.0379, 1373 clean).",
+    "Sentiment is not yet predictive of realized return (r=-0.0375, 1374 clean).",
     "Of 39 strongly-positive-sentiment names, 54% FELL (overhype) vs 46% rose (legit signal).",
-    "Live responsiveness: avg sentiment is 0.0563 on BUY consensus vs 0.0075 on HOLD/ABSTAIN \u2014 the news\u2192vote wire is active.",
-    "This cycle: recorded 0 ticker-day snapshots, graded 0 prior rows. Ledger holds 3710 rows."
+    "Live responsiveness: avg sentiment is 0.0556 on BUY consensus vs 0.008 on HOLD/ABSTAIN \u2014 the news\u2192vote wire is active.",
+    "This cycle: recorded 0 ticker-day snapshots, graded 1 prior rows. Ledger holds 3710 rows."
   ]
 }

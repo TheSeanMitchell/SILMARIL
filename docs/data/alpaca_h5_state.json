@@ -422,14 +422,14 @@
     "primary_symbol": null,
     "primary_qty": 0.0,
     "primary_market_value": 0.0,
-    "checked_at": "2026-06-15T08:44:34.198699+00:00"
+    "checked_at": "2026-06-15T09:05:46.159291+00:00"
   },
   "reason": "Live \u2014 configured; last run 2026-06-09T09:17:06",
   "seeded_at": "2026-05-11T05:00:26.087739+00:00",
   "genesis_at": "2026-05-11T05:08:53.396920+00:00",
   "last_cycle_summary": {
-    "time": "2026-06-15T08:44:34.317355+00:00",
-    "timestamp": "2026-06-15T08:44:34.317370+00:00",
+    "time": "2026-06-15T09:05:46.398462+00:00",
+    "timestamp": "2026-06-15T09:05:46.398481+00:00",
     "closed": 0,
     "opened": 0,
     "open_after": 0,
@@ -447,7 +447,7 @@
     "session": "pre-market",
     "is_extended": true
   },
-  "last_run": "2026-06-15T08:44:34.317446+00:00",
+  "last_run": "2026-06-15T09:05:46.398569+00:00",
   "sgov_sweep_last_cycle": {
     "attempted": false,
     "reason": "below min sweep $5.00",
@@ -458,7 +458,7 @@
   ],
   "sweep_protection": {
     "version": "4.0",
-    "checked_at": "2026-06-15T08:44:35.051238+00:00",
+    "checked_at": "2026-06-15T09:05:48.037157+00:00",
     "market_mode": "ATTACK",
     "force_sweep_floor_resolved": 10500.0,
     "stale_close_age_days": 5,
@@ -537,36 +537,36 @@
       {
         "ticker": "XLM-USD",
         "signal": "BUY",
-        "conviction": 0.6260659157301446,
+        "conviction": 0.9055101897600373,
         "why": "words +0.64 (4 arts).",
         "originated": true
       },
       {
         "ticker": "LDO-USD",
         "signal": "BUY",
-        "conviction": 0.6093708246440074,
+        "conviction": 0.8813632513664362,
         "why": "words +0.61 (4 arts).",
-        "originated": true
-      },
-      {
-        "ticker": "JTO-USD",
-        "signal": "BUY",
-        "conviction": 0.5509380058425273,
-        "why": "words +0.51 (5 arts).",
         "originated": true
       },
       {
         "ticker": "XMR-USD",
         "signal": "BUY",
-        "conviction": 0.5342429147563901,
+        "conviction": 0.7727020285952318,
         "why": "words +0.49 (5 arts).",
         "originated": true
       },
       {
         "ticker": "FET-USD",
         "signal": "BUY",
-        "conviction": 0.5258953692133215,
+        "conviction": 0.7606285593984313,
         "why": "words +0.47 (3 arts).",
+        "originated": true
+      },
+      {
+        "ticker": "PYTH-USD",
+        "signal": "BUY",
+        "conviction": 0.7123346826112293,
+        "why": "words +0.41 (5 arts).",
         "originated": true
       }
     ],
@@ -574,7 +574,7 @@
     "note": "headlines-only book: entries require a FABLEBOY_5 BUY/STRONG_BUY; all safety rails unchanged"
   },
   "cycle_intents": {
-    "at": "2026-06-15T08:44:34.317420+00:00",
+    "at": "2026-06-15T09:05:46.398534+00:00",
     "session": "pre-market",
     "session_open": false,
     "composite_halt": false,
@@ -582,18 +582,9 @@
     "plans_offered": 5,
     "buy_intents": [
       {
-        "ticker": "JTO-USD",
-        "signal": "BUY",
-        "conviction": 0.5509,
-        "originated": true,
-        "outcome": "blocked_signal_not_sell",
-        "intended_notional": 1159.36,
-        "reason": "signal HOLD is not SELL/STRONG_SELL"
-      },
-      {
         "ticker": "XLM-USD",
         "signal": "BUY",
-        "conviction": 0.6261,
+        "conviction": 0.9055,
         "originated": true,
         "outcome": "blocked_signal_not_sell",
         "intended_notional": 1159.36,
@@ -602,7 +593,7 @@
       {
         "ticker": "LDO-USD",
         "signal": "BUY",
-        "conviction": 0.6094,
+        "conviction": 0.8814,
         "originated": true,
         "outcome": "blocked_signal_not_sell",
         "intended_notional": 1159.36,
@@ -611,7 +602,7 @@
       {
         "ticker": "XMR-USD",
         "signal": "BUY",
-        "conviction": 0.5342,
+        "conviction": 0.7727,
         "originated": true,
         "outcome": "blocked_signal_not_sell",
         "intended_notional": 1159.36,
@@ -620,7 +611,16 @@
       {
         "ticker": "FET-USD",
         "signal": "BUY",
-        "conviction": 0.5259,
+        "conviction": 0.7606,
+        "originated": true,
+        "outcome": "blocked_signal_not_sell",
+        "intended_notional": 1159.36,
+        "reason": "signal HOLD is not SELL/STRONG_SELL"
+      },
+      {
+        "ticker": "PYTH-USD",
+        "signal": "BUY",
+        "conviction": 0.7123,
         "originated": true,
         "outcome": "blocked_signal_not_sell",
         "intended_notional": 1159.36,
@@ -629,11 +629,6 @@
     ],
     "decisions_this_cycle": [
       {
-        "ticker": "JTO-USD",
-        "category": "blocked_signal_not_buy",
-        "reason": "signal HOLD is not BUY/STRONG_BUY"
-      },
-      {
         "ticker": "XLM-USD",
         "category": "blocked_signal_not_buy",
         "reason": "signal HOLD is not BUY/STRONG_BUY"
@@ -654,9 +649,9 @@
         "reason": "signal HOLD is not BUY/STRONG_BUY"
       },
       {
-        "ticker": "JTO-USD",
-        "category": "blocked_signal_not_sell",
-        "reason": "signal HOLD is not SELL/STRONG_SELL"
+        "ticker": "PYTH-USD",
+        "category": "blocked_signal_not_buy",
+        "reason": "signal HOLD is not BUY/STRONG_BUY"
       },
       {
         "ticker": "XLM-USD",
@@ -675,6 +670,11 @@
       },
       {
         "ticker": "FET-USD",
+        "category": "blocked_signal_not_sell",
+        "reason": "signal HOLD is not SELL/STRONG_SELL"
+      },
+      {
+        "ticker": "PYTH-USD",
         "category": "blocked_signal_not_sell",
         "reason": "signal HOLD is not SELL/STRONG_SELL"
       }

@@ -1,6 +1,6 @@
 {
   "version": "narrative-lifecycle-1.0",
-  "generated_at": "2026-06-15T08:44:42.968340+00:00",
+  "generated_at": "2026-06-15T09:06:00.816118+00:00",
   "date": "2026-06-15",
   "names": {
     "LRCX": {
@@ -186,7 +186,7 @@
     "JTO-USD": {
       "phase": "PEAK",
       "why": "rolling-window max \u2014 a CANDIDATE peak; only the decline after proves a top, and tomorrow will say",
-      "heat": 0.8,
+      "heat": 0.6,
       "last_date": "2026-06-15",
       "days_tracked": 7
     },
@@ -239,8 +239,9 @@
       "days_tracked": 7
     },
     "TON-USD": {
-      "phase": "STEADY",
-      "heat": 0.2,
+      "phase": "DECAY",
+      "why": "story went silent off a hot stretch",
+      "heat": 0.0,
       "last_date": "2026-06-15",
       "days_tracked": 7
     },
@@ -1042,9 +1043,9 @@
       "days_tracked": 7
     },
     "DOT-USD": {
-      "phase": "PEAK",
-      "why": "rolling-window max \u2014 a CANDIDATE peak; only the decline after proves a top, and tomorrow will say",
-      "heat": 0.4,
+      "phase": "ACCELERATION",
+      "why": "heat 0.20 vs 3d base 0.08 (x2.4)",
+      "heat": 0.2,
       "last_date": "2026-06-15",
       "days_tracked": 7
     },
@@ -1056,9 +1057,8 @@
       "days_tracked": 7
     },
     "BCH-USD": {
-      "phase": "DECAY",
-      "why": "story went silent off a hot stretch",
-      "heat": 0.0,
+      "phase": "STEADY",
+      "heat": 0.2,
       "last_date": "2026-06-15",
       "days_tracked": 7
     },
@@ -1108,8 +1108,9 @@
       "days_tracked": 7
     },
     "SAND-USD": {
-      "phase": "QUIET",
-      "heat": 0.0,
+      "phase": "START",
+      "why": "signal after 6 quiet days",
+      "heat": 0.24,
       "last_date": "2026-06-15",
       "days_tracked": 7
     },
@@ -1133,15 +1134,15 @@
       "days_tracked": 7
     },
     "SEI-USD": {
-      "phase": "QUIET",
-      "heat": 0.0,
+      "phase": "START",
+      "why": "signal after 3 quiet days",
+      "heat": 0.5,
       "last_date": "2026-06-15",
       "days_tracked": 7
     },
     "ROSE-USD": {
-      "phase": "PEAK",
-      "why": "rolling-window max \u2014 a CANDIDATE peak; only the decline after proves a top, and tomorrow will say",
-      "heat": 0.3333,
+      "phase": "STEADY",
+      "heat": 0.25,
       "last_date": "2026-06-15",
       "days_tracked": 7
     },
@@ -1780,8 +1781,8 @@
     },
     "LINK-USD": {
       "phase": "ACCELERATION",
-      "why": "heat 0.20 vs 3d base 0.13 (x1.5)",
-      "heat": 0.2,
+      "why": "heat 0.36 vs 3d base 0.13 (x2.7)",
+      "heat": 0.36,
       "last_date": "2026-06-15",
       "days_tracked": 7
     },
@@ -3592,11 +3593,12 @@
     }
   },
   "counts": {
-    "QUIET": 553,
-    "PEAK": 15,
-    "STEADY": 17,
-    "ACCELERATION": 5,
+    "QUIET": 551,
+    "PEAK": 13,
     "DECAY": 3,
+    "ACCELERATION": 6,
+    "STEADY": 18,
+    "START": 2,
     "WARMING": 1
   },
   "heat_definition": "|sentiment| + |anticipation| + 1[catalyst] per day \u2014 attention intensity, direction-agnostic",
