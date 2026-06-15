@@ -1,27 +1,27 @@
 {
   "version": "wantgot-2.0",
-  "generated_at": "2026-06-15T06:11:02.226328+00:00",
+  "generated_at": "2026-06-15T06:26:25.224965+00:00",
   "accounts": {
     "LEGACY": {
       "account_id": "LEGACY",
       "mode": "consensus",
-      "cycle_at": "2026-06-15T06:10:52.648128+00:00",
+      "cycle_at": "2026-06-15T06:26:12.813313+00:00",
       "session_open": false,
       "composite_halt": false,
       "halt_reason": null,
       "has_cycle_intents": true,
       "rows": [
         {
-          "ticker": "IWM",
+          "ticker": "TON-USD",
           "signal": "BUY",
-          "conviction": 0.7062,
+          "conviction": 0.7206,
           "originated": false,
           "intended_notional": 768.69,
           "submitted": false,
           "order_status": null,
           "held_market_value": 0.0,
-          "verdict": "DEFERRED",
-          "reason": "off-session run \u2014 the session hard-gate parks orders until the next open (the off-hours-incident law working as designed)"
+          "verdict": "BLOCKED:blocked_not_equity_mission",
+          "reason": "TON-USD is not a traditional equity \u2014 valuables trade in their own zone, never this account"
         }
       ],
       "held_no_intent": [
@@ -68,21 +68,21 @@
         "equity": 9608.6,
         "deployment_gap": -3038.35
       },
-      "narrative": "wanted 1 name(s) ($769): 0 filled+held, 0 pending, 0 gated, 1 deferred"
+      "narrative": "wanted 1 name(s) ($769): 0 filled+held, 0 pending, 1 gated, 0 deferred"
     },
     "HARVEST_3": {
       "account_id": "HARVEST_3",
       "mode": "consensus",
-      "cycle_at": "2026-06-15T06:10:52.930765+00:00",
+      "cycle_at": "2026-06-15T06:26:13.664802+00:00",
       "session_open": false,
       "composite_halt": false,
       "halt_reason": null,
       "has_cycle_intents": true,
       "rows": [
         {
-          "ticker": "TRGP",
+          "ticker": "VLO",
           "signal": "BUY",
-          "conviction": 0.9178,
+          "conviction": 0.6303,
           "originated": false,
           "intended_notional": 958.79,
           "submitted": false,
@@ -92,9 +92,9 @@
           "reason": "off-session run \u2014 the session hard-gate parks orders until the next open (the off-hours-incident law working as designed)"
         },
         {
-          "ticker": "VLO",
+          "ticker": "IWM",
           "signal": "BUY",
-          "conviction": 0.9178,
+          "conviction": 0.714,
           "originated": false,
           "intended_notional": 958.79,
           "submitted": false,
@@ -117,21 +117,82 @@
     "HARVEST_5": {
       "account_id": "HARVEST_5",
       "mode": "wordsmith",
-      "cycle_at": "2026-06-15T06:10:53.639101+00:00",
+      "cycle_at": "2026-06-15T06:26:14.881593+00:00",
       "session_open": false,
       "composite_halt": false,
       "halt_reason": null,
       "has_cycle_intents": true,
-      "rows": [],
+      "rows": [
+        {
+          "ticker": "MPC",
+          "signal": "STRONG_BUY",
+          "conviction": 0.8933,
+          "originated": true,
+          "intended_notional": 1159.36,
+          "submitted": false,
+          "order_status": null,
+          "held_market_value": 0.0,
+          "verdict": "BLOCKED:blocked_signal_not_sell",
+          "reason": "signal HOLD is not SELL/STRONG_SELL"
+        },
+        {
+          "ticker": "XLM-USD",
+          "signal": "BUY",
+          "conviction": 0.8272,
+          "originated": true,
+          "intended_notional": 1159.36,
+          "submitted": false,
+          "order_status": null,
+          "held_market_value": 0.0,
+          "verdict": "BLOCKED:blocked_signal_not_sell",
+          "reason": "signal HOLD is not SELL/STRONG_SELL"
+        },
+        {
+          "ticker": "LIN",
+          "signal": "BUY",
+          "conviction": 0.8272,
+          "originated": true,
+          "intended_notional": 1159.36,
+          "submitted": false,
+          "order_status": null,
+          "held_market_value": 0.0,
+          "verdict": "BLOCKED:blocked_signal_not_sell",
+          "reason": "signal HOLD is not SELL/STRONG_SELL"
+        },
+        {
+          "ticker": "WMB",
+          "signal": "STRONG_BUY",
+          "conviction": 0.7941,
+          "originated": true,
+          "intended_notional": 1159.36,
+          "submitted": false,
+          "order_status": null,
+          "held_market_value": 0.0,
+          "verdict": "BLOCKED:blocked_signal_not_sell",
+          "reason": "signal HOLD is not SELL/STRONG_SELL"
+        },
+        {
+          "ticker": "WM",
+          "signal": "BUY",
+          "conviction": 0.783,
+          "originated": true,
+          "intended_notional": 1159.36,
+          "submitted": false,
+          "order_status": null,
+          "held_market_value": 0.0,
+          "verdict": "BLOCKED:blocked_signal_not_sell",
+          "reason": "signal HOLD is not SELL/STRONG_SELL"
+        }
+      ],
       "held_no_intent": [],
       "totals": {
-        "intended": 0.0,
+        "intended": 5796.8,
         "submitted": 0.0,
         "held": 0,
         "equity": 9661.36,
-        "deployment_gap": 0.0
+        "deployment_gap": 5796.8
       },
-      "narrative": "book is EMPTY and wanted NOTHING this cycle \u2014 wordsmith filter saw 593 debate rows and approved 0 name(s); if fed=0 the word engine is starved, not silent"
+      "narrative": "wanted 5 name(s) ($5797): 0 filled+held, 0 pending, 5 gated, 0 deferred"
     }
   },
   "note": "intended vs filled vs held, with the FIRST gate that stopped each name. Fills law: 'held' is broker positions_snapshot truth, never order acceptance."
