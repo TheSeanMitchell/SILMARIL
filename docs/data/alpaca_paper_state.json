@@ -2,7 +2,7 @@
   "version": "2.2",
   "enabled": true,
   "account": {
-    "equity": 9585.3,
+    "equity": 9587.79,
     "cash": 5801.54
   },
   "principal_target": 10000.0,
@@ -97,10 +97,6 @@
       "qty": 3.050460254,
       "snapshots_30m": [
         {
-          "ts": "2026-06-14T19:25:33.534044+00:00",
-          "price": 266.35
-        },
-        {
           "ts": "2026-06-14T20:04:16.792325+00:00",
           "price": 266.35
         },
@@ -126,6 +122,10 @@
         },
         {
           "ts": "2026-06-15T00:44:16.489168+00:00",
+          "price": 263.2468
+        },
+        {
+          "ts": "2026-06-15T01:25:37.762045+00:00",
           "price": 263.2468
         }
       ]
@@ -168,7 +168,9 @@
           "ts": "2026-06-15T00:44:16.489049+00:00",
           "price": 1577.67
         }
-      ]
+      ],
+      "stop_at_break_even": true,
+      "stop_at_break_even_set_at": "2026-06-15T01:25:36.057392+00:00"
     },
     "ALGN": {
       "entry_price": 175.03,
@@ -176,10 +178,6 @@
       "first_seen": "2026-06-12T18:46:03.524318+00:00",
       "qty": 4.833247378,
       "snapshots_30m": [
-        {
-          "ts": "2026-06-14T20:04:16.791970+00:00",
-          "price": 174.84
-        },
         {
           "ts": "2026-06-14T20:44:22.451131+00:00",
           "price": 174.84
@@ -207,12 +205,18 @@
         {
           "ts": "2026-06-15T00:44:16.488746+00:00",
           "price": 174.84
+        },
+        {
+          "ts": "2026-06-15T01:25:37.761837+00:00",
+          "price": 174.84
         }
       ]
     }
   },
   "tickers_traded_this_cycle": [],
-  "recent_alpaca_tickers": [],
+  "recent_alpaca_tickers": [
+    "MPWR"
+  ],
   "orders": [
     {
       "action": "OPEN",
@@ -4145,9 +4149,32 @@
       "timestamp": "2026-06-12T19:46:31.595865+00:00",
       "session": "regular",
       "is_extended": false
+    },
+    {
+      "action": "STOP_ADJUST",
+      "symbol": "MPWR",
+      "directive": "BREAK_EVEN_STOP",
+      "new_stop_pct": 0.0,
+      "trigger_reason": "move stop to entry \u2014 risk-free trade established",
+      "rationale": "move stop to entry \u2014 risk-free trade established",
+      "time": "2026-06-15T01:25:36.057399+00:00",
+      "timestamp": "2026-06-15T01:25:36.057401+00:00",
+      "submitted": false
     }
   ],
-  "orders_placed": [],
+  "orders_placed": [
+    {
+      "action": "STOP_ADJUST",
+      "symbol": "MPWR",
+      "directive": "BREAK_EVEN_STOP",
+      "new_stop_pct": 0.0,
+      "trigger_reason": "move stop to entry \u2014 risk-free trade established",
+      "rationale": "move stop to entry \u2014 risk-free trade established",
+      "time": "2026-06-15T01:25:36.057399+00:00",
+      "timestamp": "2026-06-15T01:25:36.057401+00:00",
+      "submitted": false
+    }
+  ],
   "errors": [
     {
       "time": "2026-06-02T22:37:58.484205+00:00",
@@ -4251,14 +4278,14 @@
     }
   ],
   "last_cycle_summary": {
-    "time": "2026-06-15T01:05:12.038608+00:00",
-    "timestamp": "2026-06-15T01:05:12.038621+00:00",
+    "time": "2026-06-15T01:25:37.967284+00:00",
+    "timestamp": "2026-06-15T01:25:37.967298+00:00",
     "closed": 0,
     "opened": 0,
     "open_after": 6,
-    "equity": 9585.3,
+    "equity": 9587.79,
     "savings": 0.02,
-    "total_value": 9585.32,
+    "total_value": 9587.81,
     "tickers_traded": [],
     "bleed_exits_count": 0,
     "bleed_exits": [],
@@ -4272,15 +4299,15 @@
       "reason": "contract forbids sweep this cycle (max=$0)",
       "contract_max": 0.0
     },
-    "directives_consumed": 0,
+    "directives_consumed": 1,
     "rotations_executed": 0,
     "composite_halt": true,
     "session": "closed",
     "is_extended": false
   },
-  "last_run": "2026-06-15T01:05:12.038937+00:00",
+  "last_run": "2026-06-15T01:25:37.967527+00:00",
   "grocery_pending_harvest": 2402.364599999999,
-  "trading_capital": 9585.28,
+  "trading_capital": 9587.77,
   "realized_savings": 0.02,
   "account_id": "LEGACY",
   "genesis_at": "2026-05-11T05:08:46.083334+00:00",
@@ -4291,7 +4318,7 @@
         "qty": 0.00016,
         "market_value": 0.0161,
         "avg_entry_price": 100.49,
-        "current_price": 100.52,
+        "current_price": 100.53,
         "unrealized_pl": 0.0
       }
     ],
@@ -4299,7 +4326,7 @@
     "primary_symbol": "SGOV",
     "primary_qty": 0.00016,
     "primary_market_value": 0.0161,
-    "checked_at": "2026-06-15T01:05:11.811294+00:00"
+    "checked_at": "2026-06-15T01:25:36.054683+00:00"
   },
   "sgov_sweep_last_cycle": {
     "attempted": false,
@@ -4342,7 +4369,7 @@
   ],
   "sweep_protection": {
     "version": "4.0",
-    "checked_at": "2026-06-15T01:05:13.919539+00:00",
+    "checked_at": "2026-06-15T01:25:39.737727+00:00",
     "market_mode": "PRESERVATION",
     "force_sweep_floor_resolved": 10500.0,
     "stale_close_age_days": 3,
@@ -4356,8 +4383,8 @@
     },
     "evening_shield": {
       "triggered": true,
-      "reason": "danger window overnight_thin \u00b7 positive non-spared unrealized $13.63 (PRESERVATION)",
-      "equity_before": 9585.3,
+      "reason": "danger window overnight_thin \u00b7 positive non-spared unrealized $16.12 (PRESERVATION)",
+      "equity_before": 9587.79,
       "floor_used": 10500.0,
       "spared_count": 0,
       "orders": [
@@ -4369,7 +4396,7 @@
           "trigger": "danger window: overnight_thin (PRESERVATION)",
           "order_id": null,
           "mode": "regular_market",
-          "submitted_at": "2026-06-15T01:05:14.650038+00:00",
+          "submitted_at": "2026-06-15T01:25:40.358739+00:00",
           "ok": false
         },
         {
@@ -4380,7 +4407,7 @@
           "trigger": "danger window: overnight_thin (PRESERVATION)",
           "order_id": null,
           "mode": "regular_market",
-          "submitted_at": "2026-06-15T01:05:15.092692+00:00",
+          "submitted_at": "2026-06-15T01:25:40.816820+00:00",
           "ok": false
         },
         {
@@ -4391,7 +4418,7 @@
           "trigger": "danger window: overnight_thin (PRESERVATION)",
           "order_id": null,
           "mode": "regular_market",
-          "submitted_at": "2026-06-15T01:05:15.520942+00:00",
+          "submitted_at": "2026-06-15T01:25:41.279738+00:00",
           "ok": false
         },
         {
@@ -4402,7 +4429,7 @@
           "trigger": "danger window: overnight_thin (PRESERVATION)",
           "order_id": null,
           "mode": "regular_market",
-          "submitted_at": "2026-06-15T01:05:15.962402+00:00",
+          "submitted_at": "2026-06-15T01:25:41.740435+00:00",
           "ok": false
         },
         {
@@ -4411,10 +4438,10 @@
           "side": "sell",
           "qty": 3.581294738,
           "trigger": "danger window: overnight_thin (PRESERVATION)",
-          "order_id": "55709f72-fec5-4ee4-be92-fc03745de6b7",
+          "order_id": null,
           "mode": "regular_market",
-          "submitted_at": "2026-06-15T01:05:16.427094+00:00",
-          "ok": true
+          "submitted_at": "2026-06-15T01:25:42.184097+00:00",
+          "ok": false
         }
       ]
     },
@@ -4435,7 +4462,7 @@
     "force_close_targets": [],
     "blocked_count": 0,
     "vulnerable_count": 0,
-    "position_directives_count": 0,
+    "position_directives_count": 2,
     "forced_rotations_count": 0,
     "orch_objective": "RECOVER_FROM_DRAWDOWN",
     "deployment_floor_objective": "REDEPLOY_FROM_SGOV",
@@ -4488,15 +4515,15 @@
       "symbol": "MPWR",
       "ticker": "MPWR",
       "qty": 0.405357634,
-      "current_price": 1626.0,
+      "current_price": 1632.14,
       "avg_entry_price": 1584.126,
-      "peak_price": 1626.0,
-      "market_value": 659.11,
-      "unrealized_pl": 16.97,
-      "unrealized_plpc": 0.0264,
+      "peak_price": 1632.14,
+      "market_value": 661.6,
+      "unrealized_pl": 19.46,
+      "unrealized_plpc": 0.0303,
       "first_seen": "2026-06-12T16:06:41.553127+00:00",
       "scale_out_history": {},
-      "stop_at_break_even": false,
+      "stop_at_break_even": true,
       "tightened_stop_pct": null
     },
     {
@@ -4661,12 +4688,12 @@
     }
   ],
   "last_stale_cancel": {
-    "at": "2026-06-15T01:05:11.177294+00:00",
+    "at": "2026-06-15T01:25:35.630079+00:00",
     "cancelled": 0,
-    "open_seen": 4
+    "open_seen": 5
   },
   "cycle_intents": {
-    "at": "2026-06-15T01:05:12.038639+00:00",
+    "at": "2026-06-15T01:25:37.967314+00:00",
     "session": "closed",
     "session_open": false,
     "composite_halt": true,
