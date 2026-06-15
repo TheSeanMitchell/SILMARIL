@@ -1,7 +1,18 @@
 {
   "version": "6.0",
-  "generated_at": "2026-06-15T22:44:46.609877+00:00",
+  "generated_at": "2026-06-15T23:04:24.071552+00:00",
   "tickers": {
+    "NEAR-USD": {
+      "ticker": "NEAR-USD",
+      "use_limit_order": true,
+      "limit_buffer_bps": 91,
+      "defer_to_next_cycle": true,
+      "opening_volatility": 0.1021,
+      "liquidity_score": 0.7309,
+      "extension_warning": false,
+      "timing_window": null,
+      "rationale": "DEFER: ATR/price 10.2% \u2265 9% \u2014 untradeable"
+    },
     "QRVO": {
       "ticker": "QRVO",
       "use_limit_order": true,
@@ -12,6 +23,17 @@
       "extension_warning": false,
       "timing_window": null,
       "rationale": "limit 49bps \u00b7 ATR/px 4.2% \u00b7 liq 0.55"
+    },
+    "D": {
+      "ticker": "D",
+      "use_limit_order": false,
+      "limit_buffer_bps": 30,
+      "defer_to_next_cycle": false,
+      "opening_volatility": 0.0203,
+      "liquidity_score": 0.7531,
+      "extension_warning": false,
+      "timing_window": null,
+      "rationale": "clean entry \u00b7 ATR/px 2.0% \u00b7 liq 0.75"
     },
     "KMX": {
       "ticker": "KMX",
@@ -37,9 +59,9 @@
     }
   },
   "summary": {
-    "tickers": 3,
-    "deferred": 0,
-    "limit_recommended": 3,
+    "tickers": 5,
+    "deferred": 1,
+    "limit_recommended": 4,
     "market_orders_ok": 0
   },
   "config": {
