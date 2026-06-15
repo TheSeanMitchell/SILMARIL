@@ -1,17 +1,28 @@
 {
   "version": "6.0",
-  "generated_at": "2026-06-15T06:26:11.759471+00:00",
+  "generated_at": "2026-06-15T06:35:05.795692+00:00",
   "tickers": {
-    "VLO": {
-      "ticker": "VLO",
+    "JTO-USD": {
+      "ticker": "JTO-USD",
       "use_limit_order": true,
-      "limit_buffer_bps": 45,
-      "defer_to_next_cycle": false,
-      "opening_volatility": 0.0362,
-      "liquidity_score": 0.628,
+      "limit_buffer_bps": 96,
+      "defer_to_next_cycle": true,
+      "opening_volatility": 0.1096,
+      "liquidity_score": 0.5804,
       "extension_warning": false,
       "timing_window": null,
-      "rationale": "limit 45bps \u00b7 ATR/px 3.6% \u00b7 liq 0.63"
+      "rationale": "DEFER: ATR/price 11.0% \u2265 9% \u2014 untradeable"
+    },
+    "NEAR-USD": {
+      "ticker": "NEAR-USD",
+      "use_limit_order": true,
+      "limit_buffer_bps": 92,
+      "defer_to_next_cycle": true,
+      "opening_volatility": 0.1035,
+      "liquidity_score": 0.4474,
+      "extension_warning": false,
+      "timing_window": null,
+      "rationale": "DEFER: ATR/price 10.4% \u2265 9% \u2014 untradeable"
     },
     "IWM": {
       "ticker": "IWM",
@@ -34,13 +45,35 @@
       "extension_warning": false,
       "timing_window": null,
       "rationale": "limit 40bps \u00b7 ATR/px 3.0% \u00b7 liq 0.12"
+    },
+    "VLO": {
+      "ticker": "VLO",
+      "use_limit_order": true,
+      "limit_buffer_bps": 45,
+      "defer_to_next_cycle": false,
+      "opening_volatility": 0.0362,
+      "liquidity_score": 0.628,
+      "extension_warning": false,
+      "timing_window": null,
+      "rationale": "limit 45bps \u00b7 ATR/px 3.6% \u00b7 liq 0.63"
+    },
+    "TRGP": {
+      "ticker": "TRGP",
+      "use_limit_order": true,
+      "limit_buffer_bps": 38,
+      "defer_to_next_cycle": false,
+      "opening_volatility": 0.0261,
+      "liquidity_score": 0.8512,
+      "extension_warning": false,
+      "timing_window": null,
+      "rationale": "limit 38bps \u00b7 ATR/px 2.6% \u00b7 liq 0.85"
     }
   },
   "summary": {
-    "tickers": 3,
-    "deferred": 0,
-    "limit_recommended": 2,
-    "market_orders_ok": 1
+    "tickers": 6,
+    "deferred": 2,
+    "limit_recommended": 5,
+    "market_orders_ok": -1
   },
   "config": {
     "atr_defer_ratio": 0.05,
