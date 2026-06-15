@@ -1,17 +1,17 @@
 {
   "version": "6.0",
-  "generated_at": "2026-06-15T04:04:27.466740+00:00",
+  "generated_at": "2026-06-15T04:25:35.583971+00:00",
   "tickers": {
-    "JTO-USD": {
-      "ticker": "JTO-USD",
+    "INTC": {
+      "ticker": "INTC",
       "use_limit_order": true,
-      "limit_buffer_bps": 97,
-      "defer_to_next_cycle": true,
-      "opening_volatility": 0.1108,
-      "liquidity_score": 0.5117,
+      "limit_buffer_bps": 73,
+      "defer_to_next_cycle": false,
+      "opening_volatility": 0.0761,
+      "liquidity_score": 0.9056,
       "extension_warning": false,
       "timing_window": null,
-      "rationale": "DEFER: ATR/price 11.1% \u2265 9% \u2014 untradeable"
+      "rationale": "limit 73bps \u00b7 ATR/px 7.6% \u00b7 liq 0.91"
     },
     "IWM": {
       "ticker": "IWM",
@@ -35,34 +35,34 @@
       "timing_window": null,
       "rationale": "limit 40bps \u00b7 ATR/px 3.0% \u00b7 liq 0.12"
     },
-    "VLO": {
-      "ticker": "VLO",
-      "use_limit_order": true,
-      "limit_buffer_bps": 45,
+    "FRT": {
+      "ticker": "FRT",
+      "use_limit_order": false,
+      "limit_buffer_bps": 30,
       "defer_to_next_cycle": false,
-      "opening_volatility": 0.0362,
-      "liquidity_score": 0.628,
+      "opening_volatility": 0.0153,
+      "liquidity_score": 0.6692,
       "extension_warning": false,
       "timing_window": null,
-      "rationale": "limit 45bps \u00b7 ATR/px 3.6% \u00b7 liq 0.63"
+      "rationale": "clean entry \u00b7 ATR/px 1.5% \u00b7 liq 0.67"
     },
-    "TRGP": {
-      "ticker": "TRGP",
-      "use_limit_order": true,
-      "limit_buffer_bps": 38,
+    "CPT": {
+      "ticker": "CPT",
+      "use_limit_order": false,
+      "limit_buffer_bps": 30,
       "defer_to_next_cycle": false,
-      "opening_volatility": 0.0261,
-      "liquidity_score": 0.8512,
+      "opening_volatility": 0.0189,
+      "liquidity_score": 0.6747,
       "extension_warning": false,
       "timing_window": null,
-      "rationale": "limit 38bps \u00b7 ATR/px 2.6% \u00b7 liq 0.85"
+      "rationale": "clean entry \u00b7 ATR/px 1.9% \u00b7 liq 0.67"
     }
   },
   "summary": {
     "tickers": 5,
-    "deferred": 1,
-    "limit_recommended": 4,
-    "market_orders_ok": 0
+    "deferred": 0,
+    "limit_recommended": 2,
+    "market_orders_ok": 3
   },
   "config": {
     "atr_defer_ratio": 0.05,
