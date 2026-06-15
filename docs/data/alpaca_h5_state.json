@@ -5,20 +5,31 @@
   "account_id": "HARVEST_5",
   "label": "Headlines-Only Book (Fableboy 5)",
   "account": {
-    "equity": 9661.36,
-    "cash": 9661.36
+    "equity": 9662.08,
+    "cash": 8833.68
   },
   "principal_target": 10000.0,
   "min_harvest_gain_pct": 0.05,
   "savings": 0.0,
   "realized_savings": 0.0,
-  "trading_capital": 9661.36,
+  "trading_capital": 9662.08,
   "lifetime_realized_wins": 1,
   "lifetime_realized_losses": 3,
-  "position_meta": {},
-  "tickers_traded_this_cycle": [
-    "BWA"
-  ],
+  "position_meta": {
+    "BWA": {
+      "entry_price": 74.15,
+      "peak_price": 74.215,
+      "first_seen": "2026-06-15T15:46:58.064267+00:00",
+      "qty": 11.162209616,
+      "snapshots_30m": [
+        {
+          "ts": "2026-06-15T15:46:58.064303+00:00",
+          "price": 74.215
+        }
+      ]
+    }
+  },
+  "tickers_traded_this_cycle": [],
   "recent_alpaca_tickers": [
     "BWA"
   ],
@@ -342,33 +353,7 @@
       "timestamp": "2026-06-15T15:27:06.623628+00:00"
     }
   ],
-  "orders_placed": [
-    {
-      "action": "OPEN",
-      "symbol": "BWA",
-      "side": "buy",
-      "notional": 826.45,
-      "conviction": 0.6503,
-      "signal": "STRONG_BUY",
-      "order_id": "8b7d34c5-ad0f-4731-89f8-e783e53ac17e",
-      "status": "pending_new",
-      "order_type": "market",
-      "submitted_qty": "11.162209616",
-      "filled_qty": "0",
-      "filled_avg_price": null,
-      "limit_price": null,
-      "elite": false,
-      "use_limit": true,
-      "limit_buffer_bps": 50,
-      "session": "regular",
-      "is_extended": false,
-      "sizing_rationale": "base $1159.36 \u00d7 conv 1.09 \u00d7 urg 0.87 \u00d7 mkt 1.00 \u00d7 elite 1.00 \u00d7 pressure 1.00 \u00d7 vol 0.75 \u00d7 concentration 1.00 \u00d7 catalyst 1.00 \u00d7 urgency_boost 1.00 \u2192 $826.45",
-      "synthetic_from_rotation": null,
-      "submitted_at": "2026-06-15T15:27:06.610224354Z",
-      "time": "2026-06-15T15:27:06.623610+00:00",
-      "timestamp": "2026-06-15T15:27:06.623628+00:00"
-    }
-  ],
+  "orders_placed": [],
   "errors": [
     {
       "time": "2026-05-11T20:46:23.915031+00:00",
@@ -477,23 +462,21 @@
     "primary_symbol": null,
     "primary_qty": 0.0,
     "primary_market_value": 0.0,
-    "checked_at": "2026-06-15T15:27:06.181703+00:00"
+    "checked_at": "2026-06-15T15:46:58.064174+00:00"
   },
   "reason": "Live \u2014 configured; last run 2026-06-09T09:17:06",
   "seeded_at": "2026-05-11T05:00:26.087739+00:00",
   "genesis_at": "2026-05-11T05:08:53.396920+00:00",
   "last_cycle_summary": {
-    "time": "2026-06-15T15:27:06.686803+00:00",
-    "timestamp": "2026-06-15T15:27:06.686819+00:00",
+    "time": "2026-06-15T15:46:58.360675+00:00",
+    "timestamp": "2026-06-15T15:46:58.360687+00:00",
     "closed": 0,
-    "opened": 1,
+    "opened": 0,
     "open_after": 1,
-    "equity": 9661.36,
+    "equity": 9662.08,
     "savings": 0.0,
-    "total_value": 9661.36,
-    "tickers_traded": [
-      "BWA"
-    ],
+    "total_value": 9662.08,
+    "tickers_traded": [],
     "bleed_exits_count": 0,
     "bleed_exits": [],
     "sgov_sweep_cap_applied": false,
@@ -504,7 +487,7 @@
     "session": "regular",
     "is_extended": false
   },
-  "last_run": "2026-06-15T15:27:06.686882+00:00",
+  "last_run": "2026-06-15T15:46:58.360753+00:00",
   "sgov_sweep_last_cycle": {
     "attempted": false,
     "reason": "below min sweep $5.00",
@@ -515,7 +498,7 @@
   ],
   "sweep_protection": {
     "version": "4.0",
-    "checked_at": "2026-06-15T15:27:06.953530+00:00",
+    "checked_at": "2026-06-15T15:46:59.311094+00:00",
     "market_mode": "ATTACK",
     "force_sweep_floor_resolved": 10500.0,
     "stale_close_age_days": 5,
@@ -557,7 +540,23 @@
     "cohort_safe_mode": false
   },
   "bleed_exits_this_cycle": [],
-  "positions_snapshot": [],
+  "positions_snapshot": [
+    {
+      "symbol": "BWA",
+      "ticker": "BWA",
+      "qty": 11.162209616,
+      "current_price": 74.215,
+      "avg_entry_price": 74.15,
+      "peak_price": 74.215,
+      "market_value": 828.4,
+      "unrealized_pl": 0.73,
+      "unrealized_plpc": 0.0009,
+      "first_seen": "2026-06-15T15:46:58.064267+00:00",
+      "scale_out_history": {},
+      "stop_at_break_even": false,
+      "tightened_stop_pct": null
+    }
+  ],
   "market_session_open": true,
   "meta_pruned_last_cycle": {
     "count": 2,
@@ -594,38 +593,146 @@
       {
         "ticker": "BWA",
         "signal": "STRONG_BUY",
-        "conviction": 0.7245494929881638,
-        "why": "words +0.67 (5 arts); catalyst: analyst upgrade."
+        "conviction": 0.763377251369793,
+        "why": "words +0.67 (5 arts); catalyst: analyst upgrade.",
+        "originated": true
+      },
+      {
+        "ticker": "MS",
+        "signal": "BUY",
+        "conviction": 0.7435492708147333,
+        "why": "words +0.64 (1 arts).",
+        "originated": true
+      },
+      {
+        "ticker": "PNC",
+        "signal": "BUY",
+        "conviction": 0.7435492708147333,
+        "why": "words +0.64 (1 arts).",
+        "originated": true
+      },
+      {
+        "ticker": "DE",
+        "signal": "BUY",
+        "conviction": 0.7435492708147333,
+        "why": "words +0.64 (1 arts).",
+        "originated": true
+      },
+      {
+        "ticker": "XLM-USD",
+        "signal": "BUY",
+        "conviction": 0.7435492708147333,
+        "why": "words +0.64 (5 arts).",
+        "originated": true
       }
     ],
-    "fed_debate_rows": 593,
+    "fed_debate_rows": 594,
     "note": "headlines-only book: entries require a FABLEBOY_5 BUY/STRONG_BUY; all safety rails unchanged"
   },
   "cycle_intents": {
-    "at": "2026-06-15T15:27:06.686850+00:00",
+    "at": "2026-06-15T15:46:58.360728+00:00",
     "session": "regular",
     "session_open": true,
     "composite_halt": false,
     "halt_reason": null,
-    "plans_offered": 1,
+    "plans_offered": 5,
     "buy_intents": [
+      {
+        "ticker": "PNC",
+        "signal": "BUY",
+        "conviction": 0.7435,
+        "originated": true,
+        "outcome": "blocked_signal_not_sell",
+        "intended_notional": 1159.45,
+        "reason": "signal HOLD is not SELL/STRONG_SELL"
+      },
       {
         "ticker": "BWA",
         "signal": "STRONG_BUY",
-        "conviction": 0.6503,
-        "originated": false,
-        "outcome": "submitted",
-        "intended_notional": 826.45,
-        "order_id": "8b7d34c5-ad0f-4731-89f8-e783e53ac17e",
-        "order_status": "pending_new",
-        "filled_qty": "0"
+        "conviction": 0.7634,
+        "originated": true,
+        "outcome": "blocked_signal_not_sell",
+        "intended_notional": 1159.45,
+        "reason": "signal HOLD is not SELL/STRONG_SELL"
+      },
+      {
+        "ticker": "MS",
+        "signal": "BUY",
+        "conviction": 0.7435,
+        "originated": true,
+        "outcome": "blocked_signal_not_sell",
+        "intended_notional": 1159.45,
+        "reason": "signal HOLD is not SELL/STRONG_SELL"
+      },
+      {
+        "ticker": "DE",
+        "signal": "BUY",
+        "conviction": 0.7435,
+        "originated": true,
+        "outcome": "blocked_signal_not_sell",
+        "intended_notional": 1159.45,
+        "reason": "signal HOLD is not SELL/STRONG_SELL"
+      },
+      {
+        "ticker": "XLM-USD",
+        "signal": "BUY",
+        "conviction": 0.7435,
+        "originated": true,
+        "outcome": "blocked_signal_not_sell",
+        "intended_notional": 1159.45,
+        "reason": "signal HOLD is not SELL/STRONG_SELL"
       }
     ],
     "decisions_this_cycle": [
       {
+        "ticker": "PNC",
+        "category": "blocked_signal_not_buy",
+        "reason": "signal HOLD is not BUY/STRONG_BUY"
+      },
+      {
+        "ticker": "BWA",
+        "category": "blocked_signal_not_buy",
+        "reason": "signal HOLD is not BUY/STRONG_BUY"
+      },
+      {
+        "ticker": "MS",
+        "category": "blocked_signal_not_buy",
+        "reason": "signal HOLD is not BUY/STRONG_BUY"
+      },
+      {
+        "ticker": "DE",
+        "category": "blocked_signal_not_buy",
+        "reason": "signal HOLD is not BUY/STRONG_BUY"
+      },
+      {
+        "ticker": "XLM-USD",
+        "category": "blocked_signal_not_buy",
+        "reason": "signal HOLD is not BUY/STRONG_BUY"
+      },
+      {
+        "ticker": "PNC",
+        "category": "blocked_signal_not_sell",
+        "reason": "signal HOLD is not SELL/STRONG_SELL"
+      },
+      {
         "ticker": "BWA",
         "category": "blocked_signal_not_sell",
-        "reason": "signal STRONG_BUY is not SELL/STRONG_SELL"
+        "reason": "signal HOLD is not SELL/STRONG_SELL"
+      },
+      {
+        "ticker": "MS",
+        "category": "blocked_signal_not_sell",
+        "reason": "signal HOLD is not SELL/STRONG_SELL"
+      },
+      {
+        "ticker": "DE",
+        "category": "blocked_signal_not_sell",
+        "reason": "signal HOLD is not SELL/STRONG_SELL"
+      },
+      {
+        "ticker": "XLM-USD",
+        "category": "blocked_signal_not_sell",
+        "reason": "signal HOLD is not SELL/STRONG_SELL"
       }
     ]
   }

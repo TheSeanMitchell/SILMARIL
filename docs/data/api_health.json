@@ -1,6 +1,6 @@
 {
   "version": "api-health-1.3",
-  "generated_at": "2026-06-15T15:27:11.876995+00:00",
+  "generated_at": "2026-06-15T15:47:04.413110+00:00",
   "overall": "healthy",
   "freshness": {
     "ok": 12,
@@ -69,29 +69,29 @@
     }
   },
   "news": {
-    "distinct_sources": 156,
-    "articles_in_cycle": 402,
+    "distinct_sources": 223,
+    "articles_in_cycle": 487,
     "top_sources": {
-      "Yahoo Finance": 75,
-      "CoinMarketCap": 15,
-      "Seeking Alpha": 14,
-      "simplywall.st": 13,
-      "TradingView": 13,
+      "Yahoo Finance": 74,
+      "simplywall.st": 26,
+      "MarketBeat": 23,
+      "CoinMarketCap": 14,
+      "Seeking Alpha": 12,
       "The Motley Fool": 11,
-      "Benzinga": 10,
-      "MarketBeat": 10,
+      "TradingView": 10,
       "CoinDesk": 10,
-      "CNBC": 10,
-      "24/7 Wall St.": 8,
-      "PR Newswire": 5
+      "MarketWatch": 10,
+      "PR Newswire": 9,
+      "Reuters": 6,
+      "GuruFocus": 5
     },
     "gated_by_domain_clock": false,
     "note": "Quota note: providers don't expose remaining minutes; delivery (sources x volume) is the real meter \u2014 a rate-limited feed collapses here first."
   },
   "prices": {
     "coverage_pct": 100.0,
-    "priced": 593,
-    "universe": 593
+    "priced": 594,
+    "universe": 594
   },
   "broker": {
     "LEGACY": {
@@ -100,9 +100,9 @@
       "errors_logged": 20,
       "errors_recent_48h": 0,
       "last_error": "{'time': '2026-06-04T22:14:34.156193+00:00', 'msg': 'POST https://paper-api.alpaca.markets/v2/orders -> HTTP 422: {\"code\":42210000,\"message\":\"invalid limit_pric",
-      "last_error_age_hours": 257.2,
+      "last_error_age_hours": 257.5,
       "errors_note": "all errors historic (none in 48h) \u2014 plumbing currently clean",
-      "equity": 9585.02
+      "equity": 9586.3
     },
     "HARVEST_3": {
       "configured": true,
@@ -110,9 +110,9 @@
       "errors_logged": 20,
       "errors_recent_48h": 0,
       "last_error": "{'time': '2026-06-12T15:47:17.756965+00:00', 'msg': 'POST https://paper-api.alpaca.markets/v2/orders -> HTTP 403: {\"available\":\"1.695078349\",\"code\":40310000,\"ex",
-      "last_error_age_hours": 71.7,
+      "last_error_age_hours": 72.0,
       "errors_note": "all errors historic (none in 48h) \u2014 plumbing currently clean",
-      "equity": 9568.95
+      "equity": 9571.95
     },
     "HARVEST_5": {
       "configured": true,
@@ -120,14 +120,14 @@
       "errors_logged": 20,
       "errors_recent_48h": 0,
       "last_error": "{'time': '2026-06-04T00:19:24.288294+00:00', 'msg': 'POST https://paper-api.alpaca.markets/v2/orders -> HTTP 422: {\"code\":42210000,\"message\":\"invalid limit_pric",
-      "last_error_age_hours": 279.1,
+      "last_error_age_hours": 279.5,
       "errors_note": "all errors historic (none in 48h) \u2014 plumbing currently clean",
-      "equity": 9661.36
+      "equity": 9662.08
     }
   },
   "domain_clocks": {
     "version": "domain-clock-1.0",
-    "checked_at": "2026-06-15T15:27:11.876995+00:00",
+    "checked_at": "2026-06-15T15:47:04.413110+00:00",
     "domains": {
       "stocks": {
         "open": true,
@@ -143,7 +143,7 @@
       },
       "social": {
         "open": false,
-        "reason": "hourly cadence \u2014 19 min since last"
+        "reason": "hourly cadence \u2014 39 min since last"
       },
       "edgar": {
         "open": true,
@@ -151,38 +151,38 @@
       }
     },
     "last_allowed": {
-      "edgar": "2026-06-15T15:08:03.006379+00:00",
+      "edgar": "2026-06-15T15:27:14.403041+00:00",
       "social": "2026-06-15T15:08:04.315656+00:00",
-      "stocks_news": "2026-06-15T15:23:15.552735+00:00"
+      "stocks_news": "2026-06-15T15:43:14.848939+00:00"
     },
     "today_budget": {
       "stocks": {
-        "allowed": 17,
+        "allowed": 19,
         "skipped": 78
       },
       "stocks_news": {
-        "allowed": 22,
+        "allowed": 23,
         "skipped": 26
       },
       "edgar": {
-        "allowed": 47,
+        "allowed": 48,
         "skipped": 0
       },
       "social": {
         "allowed": 15,
-        "skipped": 32
+        "skipped": 33
       }
     },
     "spcx_intensive_until": "2026-07-03",
     "note": "the cron may run 24/7: stock TRADING-adjacent fetches (earnings/ipo-cal) keep 08:30-16:30 ET Mon-Fri; equity NEWS runs every cycle in-window and hourly off-hours (information never sleeps); valuables always; social hourly; EDGAR every run through the SPCX window then 4h"
   },
   "storage": {
-    "repo_mb": 309.5,
-    "worktree_mb": 100.6,
-    "git_history_mb": 208.9,
-    "data_dir_mb": 95.6,
-    "archive_mb": 3.0,
-    "archive_share_pct": 3.1,
+    "repo_mb": 310.8,
+    "worktree_mb": 101.0,
+    "git_history_mb": 209.8,
+    "data_dir_mb": 96.0,
+    "archive_mb": 3.1,
+    "archive_share_pct": 3.2,
     "status": "ok",
     "note": "comfortably inside GitHub free limits",
     "limits_reference": {
@@ -193,18 +193,18 @@
   },
   "cron_pressure": {
     "runs_observed_today": 0,
-    "stock_window_runs_today": 17,
+    "stock_window_runs_today": 19,
     "providers": {
       "marketaux": {
-        "est_calls_today": 34.0,
+        "est_calls_today": 38.0,
         "free_per_day": 100,
-        "pct_of_budget": 34.0,
+        "pct_of_budget": 38.0,
         "status": "headroom"
       },
       "newsapi": {
-        "est_calls_today": 34.0,
+        "est_calls_today": 38.0,
         "free_per_day": 100,
-        "pct_of_budget": 34.0,
+        "pct_of_budget": 38.0,
         "status": "headroom"
       },
       "finnhub": {
@@ -215,15 +215,15 @@
         "note": "60/min limit, effectively per-day huge"
       },
       "alpha_vantage": {
-        "est_calls_today": 3.4,
+        "est_calls_today": 3.8,
         "free_per_day": 25,
-        "pct_of_budget": 13.6,
+        "pct_of_budget": 15.2,
         "status": "headroom"
       },
       "fmp": {
-        "est_calls_today": 34.0,
+        "est_calls_today": 38.0,
         "free_per_day": 250,
-        "pct_of_budget": 13.6,
+        "pct_of_budget": 15.2,
         "status": "headroom"
       },
       "twelve_data": {
