@@ -1,34 +1,34 @@
 {
   "version": "broker-reconciliation-1.0",
-  "generated_at": "2026-06-15T14:27:54.363973+00:00",
+  "generated_at": "2026-06-15T14:47:53.637551+00:00",
   "summary": {
     "accounts_live": 3,
     "accounts_total": 3,
-    "in_sync": false,
+    "in_sync": true,
     "total_phantom_meta": 0
   },
   "accounts": [
     {
       "account_id": "LEGACY",
       "configured": true,
-      "trading_capital": 9607.54,
+      "trading_capital": 9590.49,
       "principal_target": 10000.0,
-      "drawdown_pct": -3.92,
+      "drawdown_pct": -4.1,
       "counts": {
         "meta": 3,
         "snapshot": 3,
         "matched": 3,
         "phantom_in_meta": 0,
         "missing_meta": 0,
-        "orders": 280
+        "orders": 281
       },
       "phantom_in_meta": [],
       "missing_meta": [],
-      "last_order_at": "2026-06-15T14:27:42.771849072Z",
-      "last_run": "2026-06-15T14:27:42.865504+00:00",
+      "last_order_at": "2026-06-15T14:47:37.767113+00:00",
+      "last_run": "2026-06-15T14:47:39.434671+00:00",
       "dormant_days": 0,
       "lifetime": {
-        "wins": 39,
+        "wins": 40,
         "losses": 20
       },
       "in_sync": true,
@@ -37,36 +37,28 @@
     {
       "account_id": "HARVEST_3",
       "configured": true,
-      "trading_capital": 9582.38,
+      "trading_capital": 9563.72,
       "principal_target": 10000.0,
-      "drawdown_pct": -4.18,
+      "drawdown_pct": -4.36,
       "counts": {
         "meta": 1,
-        "snapshot": 2,
+        "snapshot": 1,
         "matched": 1,
         "phantom_in_meta": 0,
-        "missing_meta": 1,
-        "orders": 348
+        "missing_meta": 0,
+        "orders": 350
       },
       "phantom_in_meta": [],
-      "missing_meta": [
-        "STX"
-      ],
-      "last_order_at": "2026-06-15T14:27:43.137538286Z",
-      "last_run": "2026-06-15T14:27:43.235710+00:00",
+      "missing_meta": [],
+      "last_order_at": "2026-06-15T14:47:41.363478182Z",
+      "last_run": "2026-06-15T14:47:41.422410+00:00",
       "dormant_days": 0,
       "lifetime": {
         "wins": 15,
-        "losses": 23
+        "losses": 24
       },
-      "in_sync": false,
-      "flags": [
-        {
-          "level": "INFO",
-          "code": "MISSING_META",
-          "detail": "1 held symbols have no memo: STX"
-        }
-      ]
+      "in_sync": true,
+      "flags": []
     },
     {
       "account_id": "HARVEST_5",
@@ -85,7 +77,7 @@
       "phantom_in_meta": [],
       "missing_meta": [],
       "last_order_at": "2026-06-12T17:26:31.777369508Z",
-      "last_run": "2026-06-15T14:27:43.866468+00:00",
+      "last_run": "2026-06-15T14:47:41.696371+00:00",
       "dormant_days": 2,
       "lifetime": {
         "wins": 1,
@@ -104,7 +96,7 @@
   "recommended_fixes": [],
   "notes": [
     "3/3 accounts show trading activity: LEGACY, HARVEST_3, HARVEST_5.",
-    "Out of sync: 0 phantom memo entries across accounts (see PRUNE_META_TO_SNAPSHOT). Dashboards reading positions_snapshot are already correct; the memo dict is the stale layer.",
+    "All accounts: position_meta matches the broker snapshot. No phantoms.",
     "Dormant \u22652d (likely unset secrets): HARVEST_5."
   ]
 }

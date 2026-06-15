@@ -1,143 +1,101 @@
 {
   "version": "wantgot-2.0",
-  "generated_at": "2026-06-15T14:27:53.297216+00:00",
+  "generated_at": "2026-06-15T14:47:52.568409+00:00",
   "accounts": {
     "LEGACY": {
       "account_id": "LEGACY",
       "mode": "consensus",
-      "cycle_at": "2026-06-15T14:27:42.865313+00:00",
+      "cycle_at": "2026-06-15T14:47:39.434447+00:00",
       "session_open": true,
       "composite_halt": false,
       "halt_reason": null,
       "has_cycle_intents": true,
-      "rows": [
-        {
-          "ticker": "AIZ",
-          "signal": "BUY",
-          "conviction": 0.7099,
-          "originated": false,
-          "intended_notional": 922.14,
-          "submitted": true,
-          "order_status": "pending_new",
-          "held_market_value": 0.0,
-          "verdict": "SUBMITTED_PENDING",
-          "reason": "order status 'pending_new' but not in holdings yet \u2014 pending limit, partial, or async fill (fills-or-it-didn't-happen: not counted as held)"
-        },
-        {
-          "ticker": "MPWR",
-          "signal": "BUY",
-          "conviction": 0.6786,
-          "originated": false,
-          "intended_notional": 768.6,
-          "submitted": false,
-          "order_status": null,
-          "held_market_value": 951.6,
-          "verdict": "BLOCKED:blocked_correlation_book",
-          "reason": "correlation cluster HIGH severity"
-        },
-        {
-          "ticker": "MSCI",
-          "signal": "BUY",
-          "conviction": 0.6623,
-          "originated": false,
-          "intended_notional": 768.6,
-          "submitted": false,
-          "order_status": null,
-          "held_market_value": 0.0,
-          "verdict": "DEFERRED",
-          "reason": "DEFER: liquidity 10% < 10% of 30d avg \u2014 illiquid \u00b7 resting toward MSCI's ~589.89 floor (his low window is 09:30 ET) \u2014 limit 150bps below"
-        }
-      ],
+      "rows": [],
       "held_no_intent": [
         {
+          "ticker": "AIZ",
+          "market_value": 920.06,
+          "unrealized_pl": -2.93,
+          "first_seen": "2026-06-15T14:47:37.723609+00:00",
+          "note": "held from a prior cycle \u2014 no fresh BUY intent this cycle"
+        },
+        {
           "ticker": "GLW",
-          "market_value": 498.09,
-          "unrealized_pl": 1.41,
+          "market_value": 495.33,
+          "unrealized_pl": -1.35,
           "first_seen": "2026-06-15T14:27:42.718341+00:00",
           "note": "held from a prior cycle \u2014 no fresh BUY intent this cycle"
         },
         {
           "ticker": "MDLZ",
-          "market_value": 493.76,
-          "unrealized_pl": -3.73,
+          "market_value": 492.57,
+          "unrealized_pl": -4.92,
           "first_seen": "2026-06-12T14:26:13.732701+00:00",
           "note": "held from a prior cycle \u2014 no fresh BUY intent this cycle"
         }
       ],
       "totals": {
-        "intended": 2459.34,
-        "submitted": 922.14,
-        "held": 1943.45,
-        "equity": 9607.54,
-        "deployment_gap": 515.89
+        "intended": 0.0,
+        "submitted": 0.0,
+        "held": 1907.96,
+        "equity": 9590.49,
+        "deployment_gap": -1907.96
       },
-      "narrative": "wanted 3 name(s) ($2459): 0 filled+held, 1 pending, 1 gated, 1 deferred"
+      "narrative": "no fresh intents; riding 3 prior position(s) worth $1907.96"
     },
     "HARVEST_3": {
       "account_id": "HARVEST_3",
       "mode": "consensus",
-      "cycle_at": "2026-06-15T14:27:43.235502+00:00",
+      "cycle_at": "2026-06-15T14:47:41.422207+00:00",
       "session_open": true,
       "composite_halt": false,
       "halt_reason": null,
       "has_cycle_intents": true,
       "rows": [
         {
-          "ticker": "TON-USD",
-          "signal": "BUY",
-          "conviction": 0.7249,
+          "ticker": "BWA",
+          "signal": "STRONG_BUY",
+          "conviction": 0.6969,
           "originated": false,
-          "intended_notional": 958.24,
-          "submitted": false,
-          "order_status": null,
-          "held_market_value": 0.0,
-          "verdict": "BLOCKED:blocked_not_equity_mission",
-          "reason": "TON-USD is not a traditional equity \u2014 valuables trade in their own zone, never this account"
-        },
-        {
-          "ticker": "STX",
-          "signal": "BUY",
-          "conviction": 0.6325,
-          "originated": false,
-          "intended_notional": 671.05,
+          "intended_notional": 727.11,
           "submitted": true,
           "order_status": "pending_new",
-          "held_market_value": 672.19,
-          "verdict": "FILLED_AND_HELD",
-          "reason": "order pending_new; broker holds $672.19"
+          "held_market_value": 0.0,
+          "verdict": "SUBMITTED_PENDING",
+          "reason": "order status 'pending_new' but not in holdings yet \u2014 pending limit, partial, or async fill (fills-or-it-didn't-happen: not counted as held)"
         }
       ],
       "held_no_intent": [
         {
           "ticker": "MPWR",
-          "market_value": 758.58,
-          "unrealized_pl": -5.6,
+          "market_value": 749.51,
+          "unrealized_pl": -14.67,
           "first_seen": "2026-06-15T14:27:43.074775+00:00",
           "note": "held from a prior cycle \u2014 no fresh BUY intent this cycle"
         }
       ],
       "totals": {
-        "intended": 1629.29,
-        "submitted": 671.05,
-        "held": 1430.77,
-        "equity": 9582.39,
-        "deployment_gap": 198.52
+        "intended": 727.11,
+        "submitted": 727.11,
+        "held": 749.51,
+        "equity": 9563.73,
+        "deployment_gap": -22.4
       },
-      "narrative": "wanted 2 name(s) ($1629): 1 filled+held, 0 pending, 1 gated, 0 deferred"
+      "narrative": "wanted 1 name(s) ($727): 0 filled+held, 1 pending, 0 gated, 0 deferred"
     },
     "HARVEST_5": {
       "account_id": "HARVEST_5",
       "mode": "wordsmith",
-      "cycle_at": "2026-06-15T14:27:43.866437+00:00",
+      "cycle_at": "2026-06-15T14:47:41.696347+00:00",
       "session_open": true,
       "composite_halt": false,
       "halt_reason": null,
       "has_cycle_intents": true,
       "rows": [
         {
-          "ticker": "STX",
+          "ticker": "BWA",
           "signal": "STRONG_BUY",
-          "conviction": 0.6575,
+          "conviction": 0.7159,
           "originated": true,
           "intended_notional": 1159.36,
           "submitted": false,
@@ -147,9 +105,9 @@
           "reason": "signal HOLD is not SELL/STRONG_SELL"
         },
         {
-          "ticker": "MPWR",
-          "signal": "BUY",
-          "conviction": 0.676,
+          "ticker": "DXCM",
+          "signal": "STRONG_BUY",
+          "conviction": 0.7624,
           "originated": true,
           "intended_notional": 1159.36,
           "submitted": false,
@@ -161,7 +119,7 @@
         {
           "ticker": "XLM-USD",
           "signal": "BUY",
-          "conviction": 0.6945,
+          "conviction": 0.6973,
           "originated": true,
           "intended_notional": 1159.36,
           "submitted": false,
@@ -171,21 +129,21 @@
           "reason": "signal HOLD is not SELL/STRONG_SELL"
         },
         {
-          "ticker": "NDAQ",
-          "signal": "STRONG_BUY",
-          "conviction": 0.676,
-          "originated": true,
-          "intended_notional": 1159.36,
-          "submitted": false,
-          "order_status": null,
-          "held_market_value": 0.0,
-          "verdict": "BLOCKED:blocked_signal_not_sell",
-          "reason": "signal HOLD is not SELL/STRONG_SELL"
-        },
-        {
-          "ticker": "TYL",
+          "ticker": "CPB",
           "signal": "BUY",
-          "conviction": 0.6667,
+          "conviction": 0.6973,
+          "originated": true,
+          "intended_notional": 1159.36,
+          "submitted": false,
+          "order_status": null,
+          "held_market_value": 0.0,
+          "verdict": "BLOCKED:blocked_signal_not_sell",
+          "reason": "signal HOLD is not SELL/STRONG_SELL"
+        },
+        {
+          "ticker": "BG",
+          "signal": "BUY",
+          "conviction": 0.6973,
           "originated": true,
           "intended_notional": 1159.36,
           "submitted": false,

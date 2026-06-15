@@ -5,16 +5,16 @@
   "account_id": "HARVEST_3",
   "label": "3% Disciplined Harvester",
   "account": {
-    "equity": 9582.39,
-    "cash": 8823.7
+    "equity": 9563.73,
+    "cash": 8151.2
   },
   "principal_target": 10000.0,
   "min_harvest_gain_pct": 0.03,
   "savings": 0.01,
   "realized_savings": 0.01,
-  "trading_capital": 9582.38,
+  "trading_capital": 9563.72,
   "lifetime_realized_wins": 15,
-  "lifetime_realized_losses": 23,
+  "lifetime_realized_losses": 24,
   "position_meta": {
     "MPWR": {
       "entry_price": 1641.944,
@@ -30,11 +30,13 @@
     }
   },
   "tickers_traded_this_cycle": [
+    "BWA",
     "STX"
   ],
   "recent_alpaca_tickers": [
     "MPWR",
-    "STX"
+    "STX",
+    "BWA"
   ],
   "orders": [
     {
@@ -5091,33 +5093,88 @@
       "submitted_at": "2026-06-15T14:27:43.137538286Z",
       "time": "2026-06-15T14:27:43.147864+00:00",
       "timestamp": "2026-06-15T14:27:43.147878+00:00"
-    }
-  ],
-  "orders_placed": [
+    },
+    {
+      "action": "CLOSE",
+      "symbol": "STX",
+      "side": "sell",
+      "qty": 0.661126491,
+      "trigger_reason": "Consensus turned bearish: SELL",
+      "realized_pnl": -9.49,
+      "entry_price": 1017.208,
+      "exit_price": 1002.855,
+      "order_id": "3658a896-9114-4efe-84cb-53be607c878f",
+      "time": "2026-06-15T14:47:39.766040+00:00",
+      "timestamp": "2026-06-15T14:47:39.766048+00:00",
+      "session": "regular",
+      "is_extended": false
+    },
     {
       "action": "OPEN",
-      "symbol": "STX",
+      "symbol": "BWA",
       "side": "buy",
-      "notional": 671.05,
-      "conviction": 0.6325,
-      "signal": "BUY",
-      "order_id": "8c461d7c-1608-42d0-9521-4d3f9606de5e",
+      "notional": 727.11,
+      "conviction": 0.6969,
+      "signal": "STRONG_BUY",
+      "order_id": "27fce0be-554e-4ac6-b238-449134c09c2f",
       "status": "pending_new",
       "order_type": "market",
-      "submitted_qty": "0.661126491",
+      "submitted_qty": "9.758555898",
       "filled_qty": "0",
       "filled_avg_price": null,
       "limit_price": null,
       "elite": false,
       "use_limit": true,
-      "limit_buffer_bps": 150,
+      "limit_buffer_bps": 49,
       "session": "regular",
       "is_extended": false,
-      "sizing_rationale": "base $958.24 \u00d7 conv 1.06 \u00d7 urg 1.02 \u00d7 mkt 1.00 \u00d7 elite 1.00 \u00d7 pressure 1.00 \u00d7 vol 0.75 \u00d7 concentration 0.86 \u00d7 catalyst 1.00 \u00d7 urgency_boost 1.00 \u2192 $671.05",
+      "sizing_rationale": "base $956.37 \u00d7 conv 1.16 \u00d7 urg 0.87 \u00d7 mkt 1.00 \u00d7 elite 1.00 \u00d7 pressure 1.00 \u00d7 vol 0.75 \u00d7 concentration 1.00 \u00d7 catalyst 1.00 \u00d7 urgency_boost 1.00 \u2192 $727.11",
       "synthetic_from_rotation": null,
-      "submitted_at": "2026-06-15T14:27:43.137538286Z",
-      "time": "2026-06-15T14:27:43.147864+00:00",
-      "timestamp": "2026-06-15T14:27:43.147878+00:00"
+      "submitted_at": "2026-06-15T14:47:41.363478182Z",
+      "time": "2026-06-15T14:47:41.371462+00:00",
+      "timestamp": "2026-06-15T14:47:41.371471+00:00"
+    }
+  ],
+  "orders_placed": [
+    {
+      "action": "CLOSE",
+      "symbol": "STX",
+      "side": "sell",
+      "qty": 0.661126491,
+      "trigger_reason": "Consensus turned bearish: SELL",
+      "realized_pnl": -9.49,
+      "entry_price": 1017.208,
+      "exit_price": 1002.855,
+      "order_id": "3658a896-9114-4efe-84cb-53be607c878f",
+      "time": "2026-06-15T14:47:39.766040+00:00",
+      "timestamp": "2026-06-15T14:47:39.766048+00:00",
+      "session": "regular",
+      "is_extended": false
+    },
+    {
+      "action": "OPEN",
+      "symbol": "BWA",
+      "side": "buy",
+      "notional": 727.11,
+      "conviction": 0.6969,
+      "signal": "STRONG_BUY",
+      "order_id": "27fce0be-554e-4ac6-b238-449134c09c2f",
+      "status": "pending_new",
+      "order_type": "market",
+      "submitted_qty": "9.758555898",
+      "filled_qty": "0",
+      "filled_avg_price": null,
+      "limit_price": null,
+      "elite": false,
+      "use_limit": true,
+      "limit_buffer_bps": 49,
+      "session": "regular",
+      "is_extended": false,
+      "sizing_rationale": "base $956.37 \u00d7 conv 1.16 \u00d7 urg 0.87 \u00d7 mkt 1.00 \u00d7 elite 1.00 \u00d7 pressure 1.00 \u00d7 vol 0.75 \u00d7 concentration 1.00 \u00d7 catalyst 1.00 \u00d7 urgency_boost 1.00 \u2192 $727.11",
+      "synthetic_from_rotation": null,
+      "submitted_at": "2026-06-15T14:47:41.363478182Z",
+      "time": "2026-06-15T14:47:41.371462+00:00",
+      "timestamp": "2026-06-15T14:47:41.371471+00:00"
     }
   ],
   "errors": [
@@ -5229,7 +5286,7 @@
         "qty": 7.8e-05,
         "market_value": 0.0079,
         "avg_entry_price": 100.4887,
-        "current_price": 100.525,
+        "current_price": 100.5274,
         "unrealized_pl": 0.0
       }
     ],
@@ -5237,21 +5294,22 @@
     "primary_symbol": "SGOV",
     "primary_qty": 7.8e-05,
     "primary_market_value": 0.0079,
-    "checked_at": "2026-06-15T14:27:43.074691+00:00"
+    "checked_at": "2026-06-15T14:47:39.717529+00:00"
   },
   "reason": "Live \u2014 configured; last run 2026-06-09T09:17:05",
   "seeded_at": "2026-05-11T05:00:26.087481+00:00",
   "genesis_at": "2026-05-11T05:08:52.354920+00:00",
   "last_cycle_summary": {
-    "time": "2026-06-15T14:27:43.235461+00:00",
-    "timestamp": "2026-06-15T14:27:43.235473+00:00",
-    "closed": 0,
+    "time": "2026-06-15T14:47:41.422172+00:00",
+    "timestamp": "2026-06-15T14:47:41.422180+00:00",
+    "closed": 1,
     "opened": 1,
     "open_after": 3,
-    "equity": 9582.39,
+    "equity": 9563.73,
     "savings": 0.01,
-    "total_value": 9582.4,
+    "total_value": 9563.74,
     "tickers_traded": [
+      "BWA",
       "STX"
     ],
     "bleed_exits_count": 0,
@@ -5272,10 +5330,10 @@
     "session": "regular",
     "is_extended": false
   },
-  "last_run": "2026-06-15T14:27:43.235710+00:00",
+  "last_run": "2026-06-15T14:47:41.422410+00:00",
   "sweep_protection": {
     "version": "4.0",
-    "checked_at": "2026-06-15T14:27:44.009424+00:00",
+    "checked_at": "2026-06-15T14:47:42.027267+00:00",
     "market_mode": "ATTACK",
     "force_sweep_floor_resolved": 10500.0,
     "stale_close_age_days": 5,
@@ -5354,28 +5412,13 @@
       "symbol": "MPWR",
       "ticker": "MPWR",
       "qty": 0.46540961,
-      "current_price": 1629.92,
+      "current_price": 1610.4325,
       "avg_entry_price": 1641.944,
       "peak_price": 1641.944,
-      "market_value": 758.58,
-      "unrealized_pl": -5.6,
-      "unrealized_plpc": -0.0073,
+      "market_value": 749.51,
+      "unrealized_pl": -14.67,
+      "unrealized_plpc": -0.0192,
       "first_seen": "2026-06-15T14:27:43.074775+00:00",
-      "scale_out_history": {},
-      "stop_at_break_even": false,
-      "tightened_stop_pct": null
-    },
-    {
-      "symbol": "STX",
-      "ticker": "STX",
-      "qty": 0.661126491,
-      "current_price": 1016.735,
-      "avg_entry_price": 1017.208,
-      "peak_price": 1016.735,
-      "market_value": 672.19,
-      "unrealized_pl": -0.31,
-      "unrealized_plpc": -0.0005,
-      "first_seen": "",
       "scale_out_history": {},
       "stop_at_break_even": false,
       "tightened_stop_pct": null
@@ -5761,49 +5804,30 @@
     }
   ],
   "cycle_intents": {
-    "at": "2026-06-15T14:27:43.235502+00:00",
+    "at": "2026-06-15T14:47:41.422207+00:00",
     "session": "regular",
     "session_open": true,
     "composite_halt": false,
     "halt_reason": null,
-    "plans_offered": 2,
+    "plans_offered": 1,
     "buy_intents": [
       {
-        "ticker": "TON-USD",
-        "signal": "BUY",
-        "conviction": 0.7249,
-        "originated": false,
-        "outcome": "blocked_not_equity_mission",
-        "intended_notional": 958.24,
-        "reason": "TON-USD is not a traditional equity \u2014 valuables trade in their own zone, never this account"
-      },
-      {
-        "ticker": "STX",
-        "signal": "BUY",
-        "conviction": 0.6325,
+        "ticker": "BWA",
+        "signal": "STRONG_BUY",
+        "conviction": 0.6969,
         "originated": false,
         "outcome": "submitted",
-        "intended_notional": 671.05,
-        "order_id": "8c461d7c-1608-42d0-9521-4d3f9606de5e",
+        "intended_notional": 727.11,
+        "order_id": "27fce0be-554e-4ac6-b238-449134c09c2f",
         "order_status": "pending_new",
         "filled_qty": "0"
       }
     ],
     "decisions_this_cycle": [
       {
-        "ticker": "TON-USD",
-        "category": "blocked_not_equity_mission",
-        "reason": "TON-USD is not a traditional equity \u2014 valuables trade in their own zone, never this account"
-      },
-      {
-        "ticker": "TON-USD",
+        "ticker": "BWA",
         "category": "blocked_signal_not_sell",
-        "reason": "signal BUY is not SELL/STRONG_SELL"
-      },
-      {
-        "ticker": "STX",
-        "category": "blocked_signal_not_sell",
-        "reason": "signal BUY is not SELL/STRONG_SELL"
+        "reason": "signal STRONG_BUY is not SELL/STRONG_SELL"
       }
     ]
   }
