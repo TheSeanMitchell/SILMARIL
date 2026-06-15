@@ -1,10 +1,10 @@
 {
   "version": "5.0",
-  "generated_at": "2026-06-15T03:26:00.013127+00:00",
+  "generated_at": "2026-06-15T03:44:41.281607+00:00",
   "cycles_observed": 60,
-  "dominant_narrative": "risk_on",
+  "dominant_narrative": "risk_off",
   "regime_shift": "ROTATION",
-  "regime_shift_confidence": 0.4528,
+  "regime_shift_confidence": 0.3935,
   "narratives": {
     "risk_on": {
       "label": "Risk-on sentiment returning",
@@ -18,25 +18,14 @@
         "Consumer Staples",
         "Utilities"
       ],
-      "frequency": 2,
+      "frequency": 1,
       "persistence": 60,
-      "acceleration": 0.0,
-      "score": 0.54,
+      "acceleration": -0.5,
+      "score": 0.425,
       "phrases": [
-        "all-time high",
         "buying the dip"
       ],
       "matched_articles": [
-        {
-          "ticker": "NUE",
-          "title": "Nucor Corp stock hits all-time high at 265.14 USD",
-          "source": "Investing.com"
-        },
-        {
-          "ticker": "STLD",
-          "title": "Steel Dynamics stock hits all-time high at $280.56",
-          "source": "Investing.com"
-        },
         {
           "ticker": "LTC-USD",
           "title": "Litecoin Whales Are Buying the Dip \u2014 Can LTC Price Reclaim $60?",
@@ -56,12 +45,20 @@
         "Technology",
         "Consumer Discretionary"
       ],
-      "frequency": 0,
-      "persistence": 59,
-      "acceleration": -1.0,
-      "score": 0.35,
-      "phrases": [],
-      "matched_articles": []
+      "frequency": 1,
+      "persistence": 60,
+      "acceleration": 1.0,
+      "score": 0.625,
+      "phrases": [
+        "risk off"
+      ],
+      "matched_articles": [
+        {
+          "ticker": "DOT-USD",
+          "title": "Polkadot (DOT) Volatility Explained: Broad Risk Off, Technical Selling",
+          "source": "CoinMarketCap"
+        }
+      ]
     },
     "ai_rally": {
       "label": "AI / Tech rally accelerating",
@@ -98,12 +95,20 @@
         "Energy"
       ],
       "sectors_out": [],
-      "frequency": 0,
-      "persistence": 9,
-      "acceleration": 0.0,
-      "score": 0.39,
-      "phrases": [],
-      "matched_articles": []
+      "frequency": 1,
+      "persistence": 10,
+      "acceleration": 1.0,
+      "score": 0.625,
+      "phrases": [
+        "supply concerns"
+      ],
+      "matched_articles": [
+        {
+          "ticker": "PYTH-USD",
+          "title": "Pyth Network expands into institutional data, boosting revenue amid token supply concerns.",
+          "source": "Pluang"
+        }
+      ]
     },
     "oil_weakness": {
       "label": "Oil / energy weakening",
@@ -126,20 +131,12 @@
         "Industrials"
       ],
       "sectors_out": [],
-      "frequency": 1,
-      "persistence": 1,
-      "acceleration": 1.0,
-      "score": 0.3187,
-      "phrases": [
-        "geopolitical tension"
-      ],
-      "matched_articles": [
-        {
-          "ticker": "KR",
-          "title": "Here\u2019s Why The Kroger Co. (KR) is a Defensive Stock to Buy Amid Geopolitical Tensions",
-          "source": "Yahoo Finance"
-        }
-      ]
+      "frequency": 0,
+      "persistence": 0,
+      "acceleration": -1.0,
+      "score": 0.0,
+      "phrases": [],
+      "matched_articles": []
     },
     "biotech_breakout": {
       "label": "Biotech / pharma breakout",
@@ -217,25 +214,19 @@
     }
   },
   "sector_pressure": {
-    "Technology": 0.19,
-    "Energy": 0.35,
-    "Industrials": 0.3187,
-    "Health Care": 0.39,
+    "Technology": -0.2,
+    "Energy": 0.585,
+    "Industrials": 0.0,
+    "Health Care": 0.665,
     "Financials": 0.04,
-    "Consumer Discretionary": 0.19,
-    "Consumer Staples": -0.19,
-    "Communication Services": 0.54,
+    "Consumer Discretionary": -0.2,
+    "Consumer Staples": 0.2,
+    "Communication Services": 0.425,
     "Real Estate": 0.0,
-    "Utilities": -0.23,
+    "Utilities": 0.16,
     "Materials": 0.0
   },
   "history": [
-    {
-      "cycle_ts": "2026-06-14T07:44:04.665047+00:00",
-      "dominant_narrative": "risk_off",
-      "regime_shift": "RISK_OFF",
-      "score": 0.54
-    },
     {
       "cycle_ts": "2026-06-14T08:04:56.750132+00:00",
       "dominant_narrative": "risk_on",
@@ -589,7 +580,13 @@
       "dominant_narrative": "risk_on",
       "regime_shift": "ROTATION",
       "score": 0.54
+    },
+    {
+      "cycle_ts": "2026-06-15T03:44:41.281607+00:00",
+      "dominant_narrative": "risk_off",
+      "regime_shift": "ROTATION",
+      "score": 0.625
     }
   ],
-  "headline_count": 624
+  "headline_count": 310
 }
