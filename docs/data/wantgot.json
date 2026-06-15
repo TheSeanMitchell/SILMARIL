@@ -1,34 +1,34 @@
 {
   "version": "wantgot-2.0",
-  "generated_at": "2026-06-15T11:26:18.313429+00:00",
+  "generated_at": "2026-06-15T11:44:43.263265+00:00",
   "accounts": {
     "LEGACY": {
       "account_id": "LEGACY",
       "mode": "consensus",
-      "cycle_at": "2026-06-15T11:26:06.397391+00:00",
+      "cycle_at": "2026-06-15T11:44:28.800183+00:00",
       "session_open": false,
       "composite_halt": false,
       "halt_reason": null,
       "has_cycle_intents": true,
       "rows": [
         {
-          "ticker": "MS",
+          "ticker": "XLM-USD",
           "signal": "BUY",
-          "conviction": 0.6325,
+          "conviction": 0.9299,
           "originated": false,
-          "intended_notional": 760.57,
+          "intended_notional": 760.34,
           "submitted": false,
           "order_status": null,
           "held_market_value": 0.0,
-          "verdict": "DEFERRED",
-          "reason": "submission deferred by market-closed gate (will retry during regular hours)"
+          "verdict": "BLOCKED:blocked_not_equity_mission",
+          "reason": "XLM-USD is not a traditional equity \u2014 valuables trade in their own zone, never this account"
         },
         {
           "ticker": "IWM",
           "signal": "BUY",
-          "conviction": 0.6733,
+          "conviction": 0.6614,
           "originated": false,
-          "intended_notional": 760.57,
+          "intended_notional": 760.34,
           "submitted": false,
           "order_status": null,
           "held_market_value": 0.0,
@@ -38,9 +38,9 @@
         {
           "ticker": "TON-USD",
           "signal": "BUY",
-          "conviction": 0.7149,
+          "conviction": 0.7147,
           "originated": false,
-          "intended_notional": 760.57,
+          "intended_notional": 760.34,
           "submitted": false,
           "order_status": null,
           "held_market_value": 0.0,
@@ -65,8 +65,8 @@
         },
         {
           "ticker": "MPWR",
-          "market_value": 668.03,
-          "unrealized_pl": 25.89,
+          "market_value": 665.19,
+          "unrealized_pl": 23.05,
           "first_seen": "2026-06-12T16:06:41.553127+00:00",
           "note": "held from a prior cycle \u2014 no fresh BUY intent this cycle"
         },
@@ -86,27 +86,27 @@
         }
       ],
       "totals": {
-        "intended": 2281.71,
+        "intended": 2281.02,
         "submitted": 0.0,
-        "held": 3803.88,
-        "equity": 9605.43,
-        "deployment_gap": -1522.17
+        "held": 3801.04,
+        "equity": 9602.59,
+        "deployment_gap": -1520.02
       },
-      "narrative": "wanted 3 name(s) ($2282): 0 filled+held, 0 pending, 1 gated, 2 deferred"
+      "narrative": "wanted 3 name(s) ($2281): 0 filled+held, 0 pending, 2 gated, 1 deferred"
     },
     "HARVEST_3": {
       "account_id": "HARVEST_3",
       "mode": "consensus",
-      "cycle_at": "2026-06-15T11:26:07.503532+00:00",
+      "cycle_at": "2026-06-15T11:44:29.024326+00:00",
       "session_open": false,
       "composite_halt": false,
       "halt_reason": null,
       "has_cycle_intents": true,
       "rows": [
         {
-          "ticker": "PM",
+          "ticker": "TRGP",
           "signal": "BUY",
-          "conviction": 0.6272,
+          "conviction": 0.9031,
           "originated": false,
           "intended_notional": 958.79,
           "submitted": false,
@@ -116,9 +116,9 @@
           "reason": "submission deferred by market-closed gate (will retry during regular hours)"
         },
         {
-          "ticker": "YUM",
+          "ticker": "VLO",
           "signal": "BUY",
-          "conviction": 0.8459,
+          "conviction": 0.9031,
           "originated": false,
           "intended_notional": 958.79,
           "submitted": false,
@@ -141,28 +141,16 @@
     "HARVEST_5": {
       "account_id": "HARVEST_5",
       "mode": "wordsmith",
-      "cycle_at": "2026-06-15T11:26:08.458794+00:00",
+      "cycle_at": "2026-06-15T11:44:29.259548+00:00",
       "session_open": false,
       "composite_halt": false,
       "halt_reason": null,
       "has_cycle_intents": true,
       "rows": [
         {
-          "ticker": "YUM",
-          "signal": "STRONG_BUY",
-          "conviction": 0.7466,
-          "originated": true,
-          "intended_notional": 1159.36,
-          "submitted": false,
-          "order_status": null,
-          "held_market_value": 0.0,
-          "verdict": "BLOCKED:blocked_signal_not_sell",
-          "reason": "signal HOLD is not SELL/STRONG_SELL"
-        },
-        {
           "ticker": "XLM-USD",
           "signal": "BUY",
-          "conviction": 0.8115,
+          "conviction": 0.8578,
           "originated": true,
           "intended_notional": 1159.36,
           "submitted": false,
@@ -172,9 +160,9 @@
           "reason": "signal HOLD is not SELL/STRONG_SELL"
         },
         {
-          "ticker": "MCD",
+          "ticker": "LDO-USD",
           "signal": "BUY",
-          "conviction": 0.8115,
+          "conviction": 0.8349,
           "originated": true,
           "intended_notional": 1159.36,
           "submitted": false,
@@ -184,21 +172,33 @@
           "reason": "signal HOLD is not SELL/STRONG_SELL"
         },
         {
-          "ticker": "SCHW",
-          "signal": "STRONG_BUY",
-          "conviction": 0.7898,
-          "originated": true,
-          "intended_notional": 1159.36,
-          "submitted": false,
-          "order_status": null,
-          "held_market_value": 0.0,
-          "verdict": "BLOCKED:blocked_signal_not_sell",
-          "reason": "signal HOLD is not SELL/STRONG_SELL"
-        },
-        {
-          "ticker": "MPWR",
+          "ticker": "JTO-USD",
           "signal": "BUY",
-          "conviction": 0.7357,
+          "conviction": 0.7548,
+          "originated": true,
+          "intended_notional": 1159.36,
+          "submitted": false,
+          "order_status": null,
+          "held_market_value": 0.0,
+          "verdict": "BLOCKED:blocked_signal_not_sell",
+          "reason": "signal HOLD is not SELL/STRONG_SELL"
+        },
+        {
+          "ticker": "XMR-USD",
+          "signal": "BUY",
+          "conviction": 0.732,
+          "originated": true,
+          "intended_notional": 1159.36,
+          "submitted": false,
+          "order_status": null,
+          "held_market_value": 0.0,
+          "verdict": "BLOCKED:blocked_signal_not_sell",
+          "reason": "signal HOLD is not SELL/STRONG_SELL"
+        },
+        {
+          "ticker": "FET-USD",
+          "signal": "BUY",
+          "conviction": 0.7205,
           "originated": true,
           "intended_notional": 1159.36,
           "submitted": false,
