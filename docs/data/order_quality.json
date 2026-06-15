@@ -1,57 +1,35 @@
 {
   "version": "6.0",
-  "generated_at": "2026-06-15T17:20:49.102589+00:00",
+  "generated_at": "2026-06-15T17:47:16.040209+00:00",
   "tickers": {
-    "FTNT": {
-      "ticker": "FTNT",
-      "use_limit_order": true,
-      "limit_buffer_bps": 150,
-      "defer_to_next_cycle": false,
-      "opening_volatility": 0.0383,
-      "liquidity_score": 0.2658,
-      "extension_warning": false,
-      "timing_window": "resting toward FTNT's ~135.81 floor (his low window is 09:30 ET) \u2014 limit 150bps below",
-      "rationale": "limit 150bps \u00b7 ATR/px 3.8% \u00b7 liq 0.27 \u00b7 resting toward FTNT's ~135.81 floor (his low window is 09:30 ET) \u2014 limit 150bps below"
-    },
     "DXCM": {
       "ticker": "DXCM",
       "use_limit_order": true,
       "limit_buffer_bps": 46,
       "defer_to_next_cycle": false,
-      "opening_volatility": 0.0381,
-      "liquidity_score": 0.2299,
+      "opening_volatility": 0.0379,
+      "liquidity_score": 0.2513,
       "extension_warning": false,
-      "timing_window": "now is DXCM's typical daily-LOW window (13:00 ET) \u2014 historically favorable entry",
-      "rationale": "limit 46bps \u00b7 ATR/px 3.8% \u00b7 liq 0.23 \u00b7 now is DXCM's typical daily-LOW window (13:00 ET) \u2014 historically favorable entry"
+      "timing_window": null,
+      "rationale": "limit 46bps \u00b7 ATR/px 3.8% \u00b7 liq 0.25"
     },
-    "CL": {
-      "ticker": "CL",
+    "NEAR-USD": {
+      "ticker": "NEAR-USD",
       "use_limit_order": true,
-      "limit_buffer_bps": 150,
-      "defer_to_next_cycle": false,
-      "opening_volatility": 0.0243,
-      "liquidity_score": 0.4105,
+      "limit_buffer_bps": 88,
+      "defer_to_next_cycle": true,
+      "opening_volatility": 0.0982,
+      "liquidity_score": 0.7264,
       "extension_warning": false,
-      "timing_window": "resting toward CL's ~88.11 floor (his low window is 10:00 ET) \u2014 limit 150bps below",
-      "rationale": "limit 150bps \u00b7 ATR/px 2.4% \u00b7 liq 0.41 \u00b7 resting toward CL's ~88.11 floor (his low window is 10:00 ET) \u2014 limit 150bps below"
-    },
-    "ANET": {
-      "ticker": "ANET",
-      "use_limit_order": true,
-      "limit_buffer_bps": 150,
-      "defer_to_next_cycle": false,
-      "opening_volatility": 0.0489,
-      "liquidity_score": 0.2371,
-      "extension_warning": false,
-      "timing_window": "resting toward ANET's ~149.24 floor (his low window is 09:30 ET) \u2014 limit 150bps below",
-      "rationale": "limit 150bps \u00b7 ATR/px 4.9% \u00b7 liq 0.24 \u00b7 resting toward ANET's ~149.24 floor (his low window is 09:30 ET) \u2014 limit 150bps below"
+      "timing_window": "now is NEAR-USD's typical daily-HIGH window (13:30 ET) \u2014 limit only, refusing to market-buy its top",
+      "rationale": "DEFER: ATR/price 9.8% \u2265 9% \u2014 untradeable \u00b7 now is NEAR-USD's typical daily-HIGH window (13:30 ET) \u2014 limit only, refusing to market-buy its top"
     }
   },
   "summary": {
-    "tickers": 4,
-    "deferred": 0,
-    "limit_recommended": 4,
-    "market_orders_ok": 0
+    "tickers": 2,
+    "deferred": 1,
+    "limit_recommended": 2,
+    "market_orders_ok": -1
   },
   "config": {
     "atr_defer_ratio": 0.05,
