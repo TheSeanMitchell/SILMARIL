@@ -1,49 +1,65 @@
 {
   "version": "4.0",
-  "generated_at": "2026-06-15T14:07:54.495393+00:00",
+  "generated_at": "2026-06-15T14:27:42.208510+00:00",
   "assignments": [
     {
-      "ticker": "EQIX",
+      "ticker": "TON-USD",
       "account": "HARVEST_3",
-      "score": 0.9695,
+      "score": 0.7249,
       "is_elite": false,
       "is_urgent": false,
-      "rationale": "STRONG_BUY conv 0.97 \u2192 best fit HARVEST_3 (score 0.97) [cap\u00d71.00]"
+      "rationale": "BUY conv 0.72 \u2192 best fit HARVEST_3 (score 0.72) [cap\u00d71.00]"
+    },
+    {
+      "ticker": "STX",
+      "account": "HARVEST_3",
+      "score": 0.6325,
+      "is_elite": false,
+      "is_urgent": false,
+      "rationale": "BUY conv 0.63 \u2192 best fit HARVEST_3 (score 0.63) [cap\u00d71.00]"
+    },
+    {
+      "ticker": "AIZ",
+      "account": "LEGACY",
+      "score": 0.7099,
+      "is_elite": false,
+      "is_urgent": false,
+      "rationale": "BUY conv 0.71 \u2192 best fit LEGACY (score 0.71) [cap\u00d71.00]"
     },
     {
       "ticker": "MPWR",
-      "account": "HARVEST_3",
-      "score": 0.6935,
+      "account": "LEGACY",
+      "score": 0.6786,
       "is_elite": false,
       "is_urgent": false,
-      "rationale": "BUY conv 0.69 \u2192 best fit HARVEST_3 (score 0.69) [cap\u00d71.00]"
+      "rationale": "BUY conv 0.68 \u2192 best fit LEGACY (score 0.68) [cap\u00d71.00]"
     },
     {
-      "ticker": "GLW",
+      "ticker": "MSCI",
       "account": "LEGACY",
-      "score": 0.8159,
+      "score": 0.6623,
       "is_elite": false,
       "is_urgent": false,
-      "rationale": "BUY conv 0.82 \u2192 best fit LEGACY (score 0.82) [cap\u00d71.00]"
-    },
-    {
-      "ticker": "TON-USD",
-      "account": "LEGACY",
-      "score": 0.7337,
-      "is_elite": false,
-      "is_urgent": false,
-      "rationale": "BUY conv 0.73 \u2192 best fit LEGACY (score 0.73) [cap\u00d71.00]"
+      "rationale": "BUY conv 0.66 \u2192 best fit LEGACY (score 0.66) [cap\u00d71.00]"
     }
   ],
-  "unassigned": [],
+  "unassigned": [
+    {
+      "ticker": "GLW",
+      "reason": "no enabled account meets fitness for this plan",
+      "plan_signal": "BUY",
+      "plan_conviction": 0.6153
+    }
+  ],
   "by_account_tickers": {
     "LEGACY": [
-      "GLW",
-      "TON-USD"
+      "AIZ",
+      "MPWR",
+      "MSCI"
     ],
     "HARVEST_3": [
-      "EQIX",
-      "MPWR"
+      "TON-USD",
+      "STX"
     ],
     "HARVEST_5": []
   },
@@ -53,7 +69,7 @@
     "HARVEST_5": 1
   },
   "used": {
-    "LEGACY": 2,
+    "LEGACY": 3,
     "HARVEST_3": 2,
     "HARVEST_5": 0
   },
