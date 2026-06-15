@@ -1,16 +1,41 @@
 {
   "version": "wantgot-2.0",
-  "generated_at": "2026-06-15T12:25:59.567109+00:00",
+  "generated_at": "2026-06-15T12:47:09.533646+00:00",
   "accounts": {
     "LEGACY": {
       "account_id": "LEGACY",
       "mode": "consensus",
-      "cycle_at": "2026-06-15T12:25:50.510560+00:00",
+      "cycle_at": "2026-06-15T12:46:56.359980+00:00",
       "session_open": false,
       "composite_halt": false,
       "halt_reason": null,
       "has_cycle_intents": true,
-      "rows": [],
+      "rows": [
+        {
+          "ticker": "NDAQ",
+          "signal": "BUY",
+          "conviction": 0.8219,
+          "originated": false,
+          "intended_notional": 760.69,
+          "submitted": false,
+          "order_status": null,
+          "held_market_value": 0.0,
+          "verdict": "DEFERRED",
+          "reason": "submission deferred by market-closed gate (will retry during regular hours)"
+        },
+        {
+          "ticker": "TON-USD",
+          "signal": "BUY",
+          "conviction": 0.7425,
+          "originated": false,
+          "intended_notional": 760.69,
+          "submitted": false,
+          "order_status": null,
+          "held_market_value": 0.0,
+          "verdict": "BLOCKED:blocked_not_equity_mission",
+          "reason": "TON-USD is not a traditional equity \u2014 valuables trade in their own zone, never this account"
+        }
+      ],
       "held_no_intent": [
         {
           "ticker": "ALGN",
@@ -28,15 +53,15 @@
         },
         {
           "ticker": "MPWR",
-          "market_value": 665.21,
-          "unrealized_pl": 23.07,
+          "market_value": 667.22,
+          "unrealized_pl": 25.08,
           "first_seen": "2026-06-12T16:06:41.553127+00:00",
           "note": "held from a prior cycle \u2014 no fresh BUY intent this cycle"
         },
         {
           "ticker": "NUE",
-          "market_value": 827.32,
-          "unrealized_pl": 9.15,
+          "market_value": 829.73,
+          "unrealized_pl": 11.56,
           "first_seen": "2026-06-12T15:27:01.890044+00:00",
           "note": "held from a prior cycle \u2014 no fresh BUY intent this cycle"
         },
@@ -49,27 +74,27 @@
         }
       ],
       "totals": {
-        "intended": 0.0,
+        "intended": 1521.38,
         "submitted": 0.0,
-        "held": 3801.07,
-        "equity": 9602.63,
-        "deployment_gap": -3801.07
+        "held": 3805.49,
+        "equity": 9607.04,
+        "deployment_gap": -2284.11
       },
-      "narrative": "no fresh intents; riding 5 prior position(s) worth $3801.07"
+      "narrative": "wanted 2 name(s) ($1521): 0 filled+held, 0 pending, 1 gated, 1 deferred"
     },
     "HARVEST_3": {
       "account_id": "HARVEST_3",
       "mode": "consensus",
-      "cycle_at": "2026-06-15T12:25:51.057139+00:00",
+      "cycle_at": "2026-06-15T12:46:57.664420+00:00",
       "session_open": false,
       "composite_halt": false,
       "halt_reason": null,
       "has_cycle_intents": true,
       "rows": [
         {
-          "ticker": "VLO",
+          "ticker": "MOH",
           "signal": "BUY",
-          "conviction": 0.6624,
+          "conviction": 0.6177,
           "originated": false,
           "intended_notional": 958.79,
           "submitted": false,
@@ -79,9 +104,9 @@
           "reason": "submission deferred by market-closed gate (will retry during regular hours)"
         },
         {
-          "ticker": "IWM",
+          "ticker": "AIZ",
           "signal": "BUY",
-          "conviction": 0.726,
+          "conviction": 0.7203,
           "originated": false,
           "intended_notional": 958.79,
           "submitted": false,
@@ -104,82 +129,34 @@
     "HARVEST_5": {
       "account_id": "HARVEST_5",
       "mode": "wordsmith",
-      "cycle_at": "2026-06-15T12:25:51.450852+00:00",
+      "cycle_at": "2026-06-15T12:46:58.962725+00:00",
       "session_open": false,
       "composite_halt": false,
       "halt_reason": null,
       "has_cycle_intents": true,
       "rows": [
         {
-          "ticker": "XLM-USD",
-          "signal": "BUY",
-          "conviction": 0.6626,
-          "originated": true,
+          "ticker": "DXCM",
+          "signal": "STRONG_BUY",
+          "conviction": 0.941,
+          "originated": false,
           "intended_notional": 1159.36,
           "submitted": false,
           "order_status": null,
           "held_market_value": 0.0,
-          "verdict": "BLOCKED:blocked_signal_not_sell",
-          "reason": "signal HOLD is not SELL/STRONG_SELL"
-        },
-        {
-          "ticker": "NEE",
-          "signal": "BUY",
-          "conviction": 0.6626,
-          "originated": true,
-          "intended_notional": 1159.36,
-          "submitted": false,
-          "order_status": null,
-          "held_market_value": 0.0,
-          "verdict": "BLOCKED:blocked_signal_not_sell",
-          "reason": "signal HOLD is not SELL/STRONG_SELL"
-        },
-        {
-          "ticker": "LIN",
-          "signal": "BUY",
-          "conviction": 0.6626,
-          "originated": true,
-          "intended_notional": 1159.36,
-          "submitted": false,
-          "order_status": null,
-          "held_market_value": 0.0,
-          "verdict": "BLOCKED:blocked_signal_not_sell",
-          "reason": "signal HOLD is not SELL/STRONG_SELL"
-        },
-        {
-          "ticker": "OTIS",
-          "signal": "BUY",
-          "conviction": 0.6361,
-          "originated": true,
-          "intended_notional": 1159.36,
-          "submitted": false,
-          "order_status": null,
-          "held_market_value": 0.0,
-          "verdict": "BLOCKED:blocked_signal_not_sell",
-          "reason": "signal HOLD is not SELL/STRONG_SELL"
-        },
-        {
-          "ticker": "WM",
-          "signal": "BUY",
-          "conviction": 0.6273,
-          "originated": true,
-          "intended_notional": 1159.36,
-          "submitted": false,
-          "order_status": null,
-          "held_market_value": 0.0,
-          "verdict": "BLOCKED:blocked_signal_not_sell",
-          "reason": "signal HOLD is not SELL/STRONG_SELL"
+          "verdict": "DEFERRED",
+          "reason": "submission deferred by market-closed gate (will retry during regular hours)"
         }
       ],
       "held_no_intent": [],
       "totals": {
-        "intended": 5796.8,
+        "intended": 1159.36,
         "submitted": 0.0,
         "held": 0,
         "equity": 9661.36,
-        "deployment_gap": 5796.8
+        "deployment_gap": 1159.36
       },
-      "narrative": "wanted 5 name(s) ($5797): 0 filled+held, 0 pending, 5 gated, 0 deferred"
+      "narrative": "wanted 1 name(s) ($1159): 0 filled+held, 0 pending, 0 gated, 1 deferred"
     }
   },
   "note": "intended vs filled vs held, with the FIRST gate that stopped each name. Fills law: 'held' is broker positions_snapshot truth, never order acceptance."
