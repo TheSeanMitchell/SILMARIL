@@ -1,56 +1,78 @@
 {
   "version": "6.0",
-  "generated_at": "2026-06-15T16:27:27.918713+00:00",
+  "generated_at": "2026-06-15T16:47:56.469314+00:00",
   "tickers": {
-    "DXCM": {
-      "ticker": "DXCM",
+    "PAYX": {
+      "ticker": "PAYX",
       "use_limit_order": true,
-      "limit_buffer_bps": 46,
+      "limit_buffer_bps": 150,
       "defer_to_next_cycle": false,
-      "opening_volatility": 0.038,
-      "liquidity_score": 0.1934,
+      "opening_volatility": 0.0285,
+      "liquidity_score": 0.3796,
       "extension_warning": false,
-      "timing_window": "now is DXCM's typical daily-LOW window (12:00 ET) \u2014 historically favorable entry",
-      "rationale": "limit 46bps \u00b7 ATR/px 3.8% \u00b7 liq 0.19 \u00b7 now is DXCM's typical daily-LOW window (12:00 ET) \u2014 historically favorable entry"
+      "timing_window": "resting toward PAYX's ~98.46 floor (his low window is 09:30 ET) \u2014 limit 150bps below",
+      "rationale": "limit 150bps \u00b7 ATR/px 2.8% \u00b7 liq 0.38 \u00b7 resting toward PAYX's ~98.46 floor (his low window is 09:30 ET) \u2014 limit 150bps below"
     },
     "NEAR-USD": {
       "ticker": "NEAR-USD",
       "use_limit_order": true,
       "limit_buffer_bps": 150,
       "defer_to_next_cycle": true,
-      "opening_volatility": 0.098,
-      "liquidity_score": 0.7099,
+      "opening_volatility": 0.0906,
+      "liquidity_score": 0.3581,
       "extension_warning": false,
       "timing_window": "resting toward NEAR-USD's ~1.97 floor (his low window is 10:00 ET) \u2014 limit 150bps below",
-      "rationale": "DEFER: ATR/price 9.8% \u2265 9% \u2014 untradeable \u00b7 resting toward NEAR-USD's ~1.97 floor (his low window is 10:00 ET) \u2014 limit 150bps below"
+      "rationale": "DEFER: ATR/price 9.1% \u2265 9% \u2014 untradeable \u00b7 resting toward NEAR-USD's ~1.97 floor (his low window is 10:00 ET) \u2014 limit 150bps below"
     },
-    "MPWR": {
-      "ticker": "MPWR",
+    "GLW": {
+      "ticker": "GLW",
       "use_limit_order": true,
       "limit_buffer_bps": 150,
       "defer_to_next_cycle": false,
-      "opening_volatility": 0.0573,
-      "liquidity_score": 0.2619,
+      "opening_volatility": 0.0712,
+      "liquidity_score": 0.2553,
       "extension_warning": false,
-      "timing_window": "resting toward MPWR's ~1573.83 floor (his low window is 14:00 ET) \u2014 limit 150bps below",
-      "rationale": "limit 150bps \u00b7 ATR/px 5.7% \u00b7 liq 0.26 \u00b7 resting toward MPWR's ~1573.83 floor (his low window is 14:00 ET) \u2014 limit 150bps below"
+      "timing_window": "resting toward GLW's ~173.97 floor (his low window is 10:30 ET) \u2014 limit 150bps below",
+      "rationale": "limit 150bps \u00b7 ATR/px 7.1% \u00b7 liq 0.26 \u00b7 resting toward GLW's ~173.97 floor (his low window is 10:30 ET) \u2014 limit 150bps below"
     },
-    "CL": {
-      "ticker": "CL",
+    "NUE": {
+      "ticker": "NUE",
       "use_limit_order": true,
-      "limit_buffer_bps": 108,
+      "limit_buffer_bps": 45,
       "defer_to_next_cycle": false,
-      "opening_volatility": 0.0244,
-      "liquidity_score": 0.3366,
+      "opening_volatility": 0.0303,
+      "liquidity_score": 0.4907,
       "extension_warning": false,
-      "timing_window": "resting toward CL's ~88.11 floor (his low window is 10:00 ET) \u2014 limit 108bps below",
-      "rationale": "limit 108bps \u00b7 ATR/px 2.4% \u00b7 liq 0.34 \u00b7 resting toward CL's ~88.11 floor (his low window is 10:00 ET) \u2014 limit 108bps below"
+      "timing_window": "now is NUE's typical daily-HIGH window (12:30 ET) \u2014 limit only, refusing to market-buy its top",
+      "rationale": "limit 45bps \u00b7 ATR/px 3.0% \u00b7 liq 0.49 \u00b7 now is NUE's typical daily-HIGH window (12:30 ET) \u2014 limit only, refusing to market-buy its top"
+    },
+    "IWM": {
+      "ticker": "IWM",
+      "use_limit_order": true,
+      "limit_buffer_bps": 150,
+      "defer_to_next_cycle": false,
+      "opening_volatility": 0.0204,
+      "liquidity_score": 0.4306,
+      "extension_warning": false,
+      "timing_window": "resting toward IWM's ~281.8 floor (his low window is 11:30 ET) \u2014 limit 150bps below",
+      "rationale": "limit 150bps \u00b7 ATR/px 2.0% \u00b7 liq 0.43 \u00b7 resting toward IWM's ~281.8 floor (his low window is 11:30 ET) \u2014 limit 150bps below"
+    },
+    "VTI": {
+      "ticker": "VTI",
+      "use_limit_order": true,
+      "limit_buffer_bps": 150,
+      "defer_to_next_cycle": false,
+      "opening_volatility": 0.0135,
+      "liquidity_score": 0.5532,
+      "extension_warning": false,
+      "timing_window": "resting toward VTI's ~358.15 floor (his low window is 10:00 ET) \u2014 limit 150bps below",
+      "rationale": "limit 150bps \u00b7 ATR/px 1.4% \u00b7 liq 0.55 \u00b7 resting toward VTI's ~358.15 floor (his low window is 10:00 ET) \u2014 limit 150bps below"
     }
   },
   "summary": {
-    "tickers": 4,
+    "tickers": 6,
     "deferred": 1,
-    "limit_recommended": 4,
+    "limit_recommended": 6,
     "market_orders_ok": -1
   },
   "config": {
