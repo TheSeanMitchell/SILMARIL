@@ -2,54 +2,14 @@
   "version": "2.2",
   "enabled": true,
   "account": {
-    "equity": 9586.3,
-    "cash": 7681.68
+    "equity": 9584.97,
+    "cash": 6721.84
   },
   "principal_target": 10000.0,
   "savings": 0.0,
   "lifetime_realized_wins": 40,
-  "lifetime_realized_losses": 20,
+  "lifetime_realized_losses": 21,
   "position_meta": {
-    "MDLZ": {
-      "entry_price": 62.68,
-      "peak_price": 63.04,
-      "first_seen": "2026-06-12T14:26:13.732701+00:00",
-      "qty": 7.93696,
-      "snapshots_30m": [
-        {
-          "ts": "2026-06-15T11:05:32.116284+00:00",
-          "price": 62.83
-        },
-        {
-          "ts": "2026-06-15T11:44:28.724152+00:00",
-          "price": 62.83
-        },
-        {
-          "ts": "2026-06-15T12:25:50.428584+00:00",
-          "price": 62.75
-        },
-        {
-          "ts": "2026-06-15T13:07:08.322170+00:00",
-          "price": 62.75
-        },
-        {
-          "ts": "2026-06-15T13:40:19.921875+00:00",
-          "price": 62.4
-        },
-        {
-          "ts": "2026-06-15T14:27:42.719936+00:00",
-          "price": 62.21
-        },
-        {
-          "ts": "2026-06-15T15:07:51.032881+00:00",
-          "price": 61.81
-        },
-        {
-          "ts": "2026-06-15T15:46:53.871336+00:00",
-          "price": 61.77
-        }
-      ]
-    },
     "GLW": {
       "entry_price": 187.0,
       "peak_price": 187.53,
@@ -83,12 +43,28 @@
         {
           "ts": "2026-06-15T15:27:05.639744+00:00",
           "price": 260.04
+        },
+        {
+          "ts": "2026-06-15T16:07:26.564480+00:00",
+          "price": 259.72
+        }
+      ]
+    },
+    "IWM": {
+      "entry_price": 295.893083,
+      "peak_price": 296.03,
+      "first_seen": "2026-06-15T16:07:26.564738+00:00",
+      "qty": 3.243874412,
+      "snapshots_30m": [
+        {
+          "ts": "2026-06-15T16:07:26.564756+00:00",
+          "price": 296.03
         }
       ]
     }
   },
   "tickers_traded_this_cycle": [
-    "IWM"
+    "MDLZ"
   ],
   "recent_alpaca_tickers": [
     "MPWR",
@@ -98,7 +74,8 @@
     "NUE",
     "GLW",
     "AIZ",
-    "IWM"
+    "IWM",
+    "MDLZ"
   ],
   "orders": [
     {
@@ -4252,33 +4229,38 @@
       "submitted_at": "2026-06-15T15:46:54.369808764Z",
       "time": "2026-06-15T15:46:54.411712+00:00",
       "timestamp": "2026-06-15T15:46:54.411729+00:00"
+    },
+    {
+      "action": "CLOSE",
+      "symbol": "MDLZ",
+      "side": "sell",
+      "qty": 7.93696,
+      "trigger_reason": "TRAILING STOP: MDLZ -2.49% from peak $63.04 (eff 2.12%)",
+      "realized_pnl": -9.6,
+      "entry_price": 62.68,
+      "exit_price": 61.47,
+      "order_id": "7519eed6-d05e-48f6-86c2-d9d5c0784547",
+      "time": "2026-06-15T16:07:26.612708+00:00",
+      "timestamp": "2026-06-15T16:07:26.612717+00:00",
+      "session": "regular",
+      "is_extended": false
     }
   ],
   "orders_placed": [
     {
-      "action": "OPEN",
-      "symbol": "IWM",
-      "side": "buy",
-      "notional": 959.85,
-      "conviction": 0.8254,
-      "signal": "BUY",
-      "order_id": "b48f9ddb-9262-4100-a5a9-241ced6900b8",
-      "status": "pending_new",
-      "order_type": "market",
-      "submitted_qty": null,
-      "filled_qty": "0",
-      "filled_avg_price": null,
-      "limit_price": null,
-      "elite": false,
-      "use_limit": false,
-      "limit_buffer_bps": null,
+      "action": "CLOSE",
+      "symbol": "MDLZ",
+      "side": "sell",
+      "qty": 7.93696,
+      "trigger_reason": "TRAILING STOP: MDLZ -2.49% from peak $63.04 (eff 2.12%)",
+      "realized_pnl": -9.6,
+      "entry_price": 62.68,
+      "exit_price": 61.47,
+      "order_id": "7519eed6-d05e-48f6-86c2-d9d5c0784547",
+      "time": "2026-06-15T16:07:26.612708+00:00",
+      "timestamp": "2026-06-15T16:07:26.612717+00:00",
       "session": "regular",
-      "is_extended": false,
-      "sizing_rationale": "base $766.90 \u00d7 conv 1.36 \u00d7 urg 0.92 \u00d7 mkt 1.00 \u00d7 elite 1.00 \u00d7 pressure 1.00 \u00d7 vol 1.00 \u00d7 concentration 1.00 \u00d7 catalyst 1.00 \u00d7 urgency_boost 1.00 \u2192 $959.85",
-      "synthetic_from_rotation": null,
-      "submitted_at": "2026-06-15T15:46:54.369808764Z",
-      "time": "2026-06-15T15:46:54.411712+00:00",
-      "timestamp": "2026-06-15T15:46:54.411729+00:00"
+      "is_extended": false
     }
   ],
   "errors": [
@@ -4384,16 +4366,16 @@
     }
   ],
   "last_cycle_summary": {
-    "time": "2026-06-15T15:46:55.106648+00:00",
-    "timestamp": "2026-06-15T15:46:55.106660+00:00",
-    "closed": 0,
-    "opened": 1,
-    "open_after": 5,
-    "equity": 9586.3,
+    "time": "2026-06-15T16:07:28.196723+00:00",
+    "timestamp": "2026-06-15T16:07:28.196732+00:00",
+    "closed": 1,
+    "opened": 0,
+    "open_after": 4,
+    "equity": 9584.97,
     "savings": 0.0,
-    "total_value": 9586.3,
+    "total_value": 9584.97,
     "tickers_traded": [
-      "IWM"
+      "MDLZ"
     ],
     "bleed_exits_count": 0,
     "bleed_exits": [],
@@ -4413,9 +4395,9 @@
     "session": "regular",
     "is_extended": false
   },
-  "last_run": "2026-06-15T15:46:55.106889+00:00",
+  "last_run": "2026-06-15T16:07:28.197051+00:00",
   "grocery_pending_harvest": 2721.2685999999967,
-  "trading_capital": 9586.3,
+  "trading_capital": 9584.97,
   "realized_savings": 0.0,
   "account_id": "LEGACY",
   "genesis_at": "2026-05-11T05:08:46.083334+00:00",
@@ -4426,7 +4408,7 @@
         "qty": 4.5e-05,
         "market_value": 0.0045,
         "avg_entry_price": 100.5297,
-        "current_price": 100.5299,
+        "current_price": 100.5201,
         "unrealized_pl": 0.0
       }
     ],
@@ -4434,7 +4416,7 @@
     "primary_symbol": "SGOV",
     "primary_qty": 4.5e-05,
     "primary_market_value": 0.0045,
-    "checked_at": "2026-06-15T15:46:53.865689+00:00"
+    "checked_at": "2026-06-15T16:07:26.559228+00:00"
   },
   "sgov_sweep_last_cycle": {
     "attempted": false,
@@ -4480,7 +4462,7 @@
   ],
   "sweep_protection": {
     "version": "4.0",
-    "checked_at": "2026-06-15T15:46:58.365488+00:00",
+    "checked_at": "2026-06-15T16:07:29.062070+00:00",
     "market_mode": "ATTACK",
     "force_sweep_floor_resolved": 10500.0,
     "stale_close_age_days": 5,
@@ -4536,12 +4518,12 @@
       "symbol": "AIZ",
       "ticker": "AIZ",
       "qty": 3.532562059,
-      "current_price": 259.55,
+      "current_price": 259.72,
       "avg_entry_price": 261.28,
       "peak_price": 261.28,
-      "market_value": 916.88,
-      "unrealized_pl": -6.11,
-      "unrealized_plpc": -0.0066,
+      "market_value": 917.48,
+      "unrealized_pl": -5.51,
+      "unrealized_plpc": -0.006,
       "first_seen": "2026-06-15T14:47:37.723609+00:00",
       "scale_out_history": {},
       "stop_at_break_even": false,
@@ -4565,29 +4547,14 @@
     {
       "symbol": "IWM",
       "ticker": "IWM",
-      "qty": 1.0,
-      "current_price": 295.89,
-      "avg_entry_price": 295.9,
-      "peak_price": 295.89,
-      "market_value": 295.89,
-      "unrealized_pl": -0.01,
-      "unrealized_plpc": -0.0,
-      "first_seen": "",
-      "scale_out_history": {},
-      "stop_at_break_even": false,
-      "tightened_stop_pct": null
-    },
-    {
-      "symbol": "MDLZ",
-      "ticker": "MDLZ",
-      "qty": 7.93696,
-      "current_price": 61.77,
-      "avg_entry_price": 62.68,
-      "peak_price": 63.04,
-      "market_value": 490.27,
-      "unrealized_pl": -7.22,
-      "unrealized_plpc": -0.0145,
-      "first_seen": "2026-06-12T14:26:13.732701+00:00",
+      "qty": 3.243874412,
+      "current_price": 296.03,
+      "avg_entry_price": 295.893083,
+      "peak_price": 296.03,
+      "market_value": 960.28,
+      "unrealized_pl": 0.44,
+      "unrealized_plpc": 0.0005,
+      "first_seen": "2026-06-15T16:07:26.564738+00:00",
       "scale_out_history": {},
       "stop_at_break_even": false,
       "tightened_stop_pct": null
@@ -4734,51 +4701,14 @@
     "open_seen": 1
   },
   "cycle_intents": {
-    "at": "2026-06-15T15:46:55.106692+00:00",
+    "at": "2026-06-15T16:07:28.196793+00:00",
     "session": "regular",
     "session_open": true,
     "composite_halt": false,
     "halt_reason": null,
-    "plans_offered": 2,
-    "buy_intents": [
-      {
-        "ticker": "IWM",
-        "signal": "BUY",
-        "conviction": 0.8254,
-        "originated": false,
-        "outcome": "submitted",
-        "intended_notional": 959.85,
-        "order_id": "b48f9ddb-9262-4100-a5a9-241ced6900b8",
-        "order_status": "pending_new",
-        "filled_qty": "0"
-      },
-      {
-        "ticker": "GLW",
-        "signal": "BUY",
-        "conviction": 0.6722,
-        "originated": false,
-        "outcome": "blocked_correlation_book",
-        "intended_notional": 766.9,
-        "reason": "correlation cluster HIGH severity"
-      }
-    ],
-    "decisions_this_cycle": [
-      {
-        "ticker": "GLW",
-        "category": "blocked_correlation_book",
-        "reason": "correlation cluster HIGH severity"
-      },
-      {
-        "ticker": "IWM",
-        "category": "blocked_signal_not_sell",
-        "reason": "signal BUY is not SELL/STRONG_SELL"
-      },
-      {
-        "ticker": "GLW",
-        "category": "blocked_signal_not_sell",
-        "reason": "signal BUY is not SELL/STRONG_SELL"
-      }
-    ]
+    "plans_offered": 0,
+    "buy_intents": [],
+    "decisions_this_cycle": []
   },
   "stale_orders_cancelled": [
     {
