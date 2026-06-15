@@ -1,19 +1,19 @@
 {
   "version": "6.0",
-  "generated_at": "2026-06-15T09:26:14.357125+00:00",
-  "overall_status": "RED",
+  "generated_at": "2026-06-15T09:45:01.088953+00:00",
+  "overall_status": "YELLOW",
   "summary": {
-    "overall_status": "RED",
+    "overall_status": "YELLOW",
     "files_fresh": 24,
     "files_stale": 0,
     "files_missing": 0,
-    "wiring_intact": 3,
+    "wiring_intact": 4,
     "wiring_total": 4,
     "accounts_green": 0,
     "accounts_yellow": 3,
     "accounts_red": 0
   },
-  "rationale": "1 wiring gaps",
+  "rationale": "system green",
   "files": [
     {
       "module": "orchestrator",
@@ -53,7 +53,7 @@
     {
       "module": "policy_router",
       "file": "execution_policy.json",
-      "age_minutes": 0.0,
+      "age_minutes": 0.1,
       "threshold_min": 90,
       "status": "FRESH"
     },
@@ -67,14 +67,14 @@
     {
       "module": "risk_state",
       "file": "risk_state.json",
-      "age_minutes": 0.3,
+      "age_minutes": 0.4,
       "threshold_min": 90,
       "status": "FRESH"
     },
     {
       "module": "alpaca_LEGACY",
       "file": "alpaca_paper_state.json",
-      "age_minutes": 0.0,
+      "age_minutes": 0.1,
       "threshold_min": 90,
       "status": "FRESH"
     },
@@ -123,7 +123,7 @@
     {
       "module": "order_quality",
       "file": "order_quality.json",
-      "age_minutes": 0.0,
+      "age_minutes": 0.1,
       "threshold_min": 90,
       "status": "FRESH"
     },
@@ -137,14 +137,14 @@
     {
       "module": "agent_beliefs",
       "file": "agent_beliefs.json",
-      "age_minutes": 4.1,
+      "age_minutes": 2.7,
       "threshold_min": 1440,
       "status": "FRESH"
     },
     {
       "module": "agent_evolution_cards",
       "file": "agent_evolution_cards.json",
-      "age_minutes": 4.1,
+      "age_minutes": 2.7,
       "threshold_min": 1440,
       "status": "FRESH"
     },
@@ -158,28 +158,28 @@
     {
       "module": "senate_state",
       "file": "senate_state.json",
-      "age_minutes": 4.1,
+      "age_minutes": 2.7,
       "threshold_min": 20160,
       "status": "FRESH"
     },
     {
       "module": "senate_results",
       "file": "senate_results.json",
-      "age_minutes": 1465.5,
+      "age_minutes": 1484.3,
       "threshold_min": 20160,
       "status": "FRESH"
     },
     {
       "module": "run_health",
       "file": "run_health.json",
-      "age_minutes": 20.4,
+      "age_minutes": 18.7,
       "threshold_min": 90,
       "status": "FRESH"
     },
     {
       "module": "persistence_status",
       "file": "persistence_status.json",
-      "age_minutes": 0.3,
+      "age_minutes": 0.4,
       "threshold_min": 1440,
       "status": "FRESH"
     }
@@ -199,9 +199,9 @@
     },
     "sweep_cap_enforcement": {
       "accounts_audited": 3,
-      "over_swept_count": 1,
-      "wired": false,
-      "rationale": "1 accounts breached sweep cap"
+      "over_swept_count": 0,
+      "wired": true,
+      "rationale": "no over-sweeps"
     },
     "hard_stops": {
       "accounts_audited": 3,
@@ -214,16 +214,15 @@
   "accounts": [
     {
       "account_id": "LEGACY",
-      "live_equity": 9589.81,
+      "live_equity": 9590.92,
       "live_cash": 5703.2,
       "live_sgov": 98.35,
-      "deployed_ratio": 0.395,
+      "deployed_ratio": 0.3951,
       "status": "YELLOW",
       "flags": [
-        "BELOW_BASE",
-        "OVER_SWEPT"
+        "BELOW_BASE"
       ],
-      "rationale": "redeploy $98 from SGOV \u00b7 underdeployed 40% < 65% \u00b7 VIOLATIONS: OVER_SWEPT"
+      "rationale": "redeploy $98 from SGOV \u00b7 underdeployed 40% < 65%"
     },
     {
       "account_id": "HARVEST_3",
