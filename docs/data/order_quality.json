@@ -1,34 +1,45 @@
 {
   "version": "6.0",
-  "generated_at": "2026-06-15T19:26:55.767882+00:00",
+  "generated_at": "2026-06-15T19:47:04.485327+00:00",
   "tickers": {
-    "WMB": {
-      "ticker": "WMB",
+    "BWA": {
+      "ticker": "BWA",
+      "use_limit_order": true,
+      "limit_buffer_bps": 50,
+      "defer_to_next_cycle": false,
+      "opening_volatility": 0.0436,
+      "liquidity_score": 0.4093,
+      "extension_warning": false,
+      "timing_window": null,
+      "rationale": "limit 50bps \u00b7 ATR/px 4.4% \u00b7 liq 0.41"
+    },
+    "DXCM": {
+      "ticker": "DXCM",
+      "use_limit_order": true,
+      "limit_buffer_bps": 46,
+      "defer_to_next_cycle": false,
+      "opening_volatility": 0.0381,
+      "liquidity_score": 0.3585,
+      "extension_warning": false,
+      "timing_window": "now is DXCM's typical daily-HIGH window (15:30 ET) \u2014 limit only, refusing to market-buy its top",
+      "rationale": "limit 46bps \u00b7 ATR/px 3.8% \u00b7 liq 0.36 \u00b7 now is DXCM's typical daily-HIGH window (15:30 ET) \u2014 limit only, refusing to market-buy its top"
+    },
+    "PNC": {
+      "ticker": "PNC",
       "use_limit_order": false,
       "limit_buffer_bps": 30,
       "defer_to_next_cycle": false,
-      "opening_volatility": 0.0232,
-      "liquidity_score": 0.4251,
+      "opening_volatility": 0.0215,
+      "liquidity_score": 0.9546,
       "extension_warning": false,
       "timing_window": null,
-      "rationale": "clean entry \u00b7 ATR/px 2.3% \u00b7 liq 0.43"
-    },
-    "TXN": {
-      "ticker": "TXN",
-      "use_limit_order": true,
-      "limit_buffer_bps": 150,
-      "defer_to_next_cycle": false,
-      "opening_volatility": 0.0411,
-      "liquidity_score": 0.3414,
-      "extension_warning": false,
-      "timing_window": "resting toward TXN's ~282.1 floor (his low window is 11:30 ET) \u2014 limit 150bps below",
-      "rationale": "limit 150bps \u00b7 ATR/px 4.1% \u00b7 liq 0.34 \u00b7 resting toward TXN's ~282.1 floor (his low window is 11:30 ET) \u2014 limit 150bps below"
+      "rationale": "clean entry \u00b7 ATR/px 2.1% \u00b7 liq 0.95"
     }
   },
   "summary": {
-    "tickers": 2,
+    "tickers": 3,
     "deferred": 0,
-    "limit_recommended": 1,
+    "limit_recommended": 2,
     "market_orders_ok": 1
   },
   "config": {

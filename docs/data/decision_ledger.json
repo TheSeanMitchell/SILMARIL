@@ -2,33 +2,6 @@
   "version": "3.2",
   "rows": [
     {
-      "ts": "2026-06-15T08:44:33.706628+00:00",
-      "category": "blocked_signal_not_sell",
-      "ticker": "TON-USD",
-      "account_id": "LEGACY",
-      "reason": "signal BUY is not SELL/STRONG_SELL",
-      "detail": {
-        "signal": "BUY",
-        "conviction": 0.6859
-      }
-    },
-    {
-      "ts": "2026-06-15T08:44:33.956260+00:00",
-      "category": "blocked_not_equity_mission",
-      "ticker": "JTO-USD",
-      "account_id": "HARVEST_3",
-      "reason": "JTO-USD is not a traditional equity \u2014 valuables trade in their own zone, never this account",
-      "detail": {}
-    },
-    {
-      "ts": "2026-06-15T08:44:33.962230+00:00",
-      "category": "deferred_submit_market_closed",
-      "ticker": "TRGP",
-      "account_id": "HARVEST_3",
-      "reason": "submission deferred by market-closed gate (will retry during regular hours)",
-      "detail": {}
-    },
-    {
       "ts": "2026-06-15T08:44:33.967200+00:00",
       "category": "blocked_signal_not_sell",
       "ticker": "JTO-USD",
@@ -5220,6 +5193,42 @@
         "signal": "HOLD",
         "conviction": 0.0
       }
+    },
+    {
+      "ts": "2026-06-15T19:47:05.387949+00:00",
+      "category": "blocked_composite_halt",
+      "ticker": "*",
+      "account_id": "LEGACY",
+      "reason": "Halt: market_state: market_state=PRESERVATION: inside closing-bell window",
+      "detail": {
+        "halt_reasons": [
+          "market_state: market_state=PRESERVATION: inside closing-bell window"
+        ]
+      }
+    },
+    {
+      "ts": "2026-06-15T19:47:06.363833+00:00",
+      "category": "blocked_composite_halt",
+      "ticker": "*",
+      "account_id": "HARVEST_3",
+      "reason": "Halt: market_state: market_state=PRESERVATION: inside closing-bell window",
+      "detail": {
+        "halt_reasons": [
+          "market_state: market_state=PRESERVATION: inside closing-bell window"
+        ]
+      }
+    },
+    {
+      "ts": "2026-06-15T19:47:07.533094+00:00",
+      "category": "blocked_composite_halt",
+      "ticker": "*",
+      "account_id": "HARVEST_5",
+      "reason": "Halt: market_state: market_state=PRESERVATION: inside closing-bell window",
+      "detail": {
+        "halt_reasons": [
+          "market_state: market_state=PRESERVATION: inside closing-bell window"
+        ]
+      }
     }
   ],
   "by_category": {
@@ -5232,7 +5241,7 @@
     "blocked_policy_halt": 54,
     "blocked_negative_cash": 136,
     "sgov_sweep_cap_enforced": 22,
-    "blocked_composite_halt": 219,
+    "blocked_composite_halt": 222,
     "deferred_order_quality": 137,
     "blocked_correlation_book": 66,
     "rejected_by_three_month": 12,
@@ -5258,7 +5267,7 @@
     "INTC": 26,
     "LRCX": 166,
     "AMAT": 33,
-    "*": 273,
+    "*": 276,
     "TIA-USD": 4,
     "NEAR-USD": 136,
     "ROSE-USD": 2,
@@ -5473,5 +5482,5 @@
     "PAYX": 5,
     "EXR": 9
   },
-  "updated_at": "2026-06-15T19:26:56.363438+00:00"
+  "updated_at": "2026-06-15T19:47:07.533251+00:00"
 }
