@@ -1,17 +1,17 @@
 {
   "version": "6.0",
-  "generated_at": "2026-06-15T04:44:11.653909+00:00",
+  "generated_at": "2026-06-15T05:04:26.528140+00:00",
   "tickers": {
-    "IWM": {
-      "ticker": "IWM",
-      "use_limit_order": false,
-      "limit_buffer_bps": 30,
-      "defer_to_next_cycle": false,
-      "opening_volatility": 0.0209,
-      "liquidity_score": 1.0,
+    "JTO-USD": {
+      "ticker": "JTO-USD",
+      "use_limit_order": true,
+      "limit_buffer_bps": 97,
+      "defer_to_next_cycle": true,
+      "opening_volatility": 0.1101,
+      "liquidity_score": 0.5387,
       "extension_warning": false,
       "timing_window": null,
-      "rationale": "clean entry \u00b7 ATR/px 2.1% \u00b7 liq 1.00"
+      "rationale": "DEFER: ATR/price 11.0% \u2265 9% \u2014 untradeable"
     },
     "TON-USD": {
       "ticker": "TON-USD",
@@ -23,6 +23,28 @@
       "extension_warning": false,
       "timing_window": null,
       "rationale": "limit 40bps \u00b7 ATR/px 3.0% \u00b7 liq 0.12"
+    },
+    "IWM": {
+      "ticker": "IWM",
+      "use_limit_order": false,
+      "limit_buffer_bps": 30,
+      "defer_to_next_cycle": false,
+      "opening_volatility": 0.0209,
+      "liquidity_score": 1.0,
+      "extension_warning": false,
+      "timing_window": null,
+      "rationale": "clean entry \u00b7 ATR/px 2.1% \u00b7 liq 1.00"
+    },
+    "XLM-USD": {
+      "ticker": "XLM-USD",
+      "use_limit_order": true,
+      "limit_buffer_bps": 82,
+      "defer_to_next_cycle": false,
+      "opening_volatility": 0.0892,
+      "liquidity_score": 0.2424,
+      "extension_warning": false,
+      "timing_window": null,
+      "rationale": "limit 82bps \u00b7 ATR/px 8.9% \u00b7 liq 0.24"
     },
     "VLO": {
       "ticker": "VLO",
@@ -48,10 +70,10 @@
     }
   },
   "summary": {
-    "tickers": 4,
-    "deferred": 0,
-    "limit_recommended": 3,
-    "market_orders_ok": 1
+    "tickers": 6,
+    "deferred": 1,
+    "limit_recommended": 5,
+    "market_orders_ok": 0
   },
   "config": {
     "atr_defer_ratio": 0.05,

@@ -1,49 +1,65 @@
 {
   "version": "4.0",
-  "generated_at": "2026-06-15T04:44:11.645780+00:00",
+  "generated_at": "2026-06-15T05:04:26.519424+00:00",
   "assignments": [
+    {
+      "ticker": "JTO-USD",
+      "account": "HARVEST_3",
+      "score": 0.6812,
+      "is_elite": false,
+      "is_urgent": false,
+      "rationale": "BUY conv 0.68 \u2192 best fit HARVEST_3 (score 0.68) [cap\u00d71.00]"
+    },
     {
       "ticker": "TRGP",
       "account": "HARVEST_3",
-      "score": 0.8624,
+      "score": 0.9029,
       "is_elite": false,
       "is_urgent": false,
-      "rationale": "BUY conv 0.86 \u2192 best fit HARVEST_3 (score 0.86) [cap\u00d71.00]"
+      "rationale": "BUY conv 0.90 \u2192 best fit HARVEST_3 (score 0.90) [cap\u00d71.00]"
     },
     {
       "ticker": "VLO",
-      "account": "HARVEST_3",
-      "score": 0.8624,
+      "account": "LEGACY",
+      "score": 0.9029,
       "is_elite": false,
       "is_urgent": false,
-      "rationale": "BUY conv 0.86 \u2192 best fit HARVEST_3 (score 0.86) [cap\u00d71.00]"
+      "rationale": "BUY conv 0.90 \u2192 best fit LEGACY (score 0.90) [cap\u00d71.00]"
+    },
+    {
+      "ticker": "XLM-USD",
+      "account": "LEGACY",
+      "score": 0.9455,
+      "is_elite": false,
+      "is_urgent": false,
+      "rationale": "BUY conv 0.95 \u2192 best fit LEGACY (score 0.95) [cap\u00d71.00]"
     },
     {
       "ticker": "IWM",
       "account": "LEGACY",
-      "score": 0.7298,
+      "score": 0.7469,
       "is_elite": false,
       "is_urgent": false,
-      "rationale": "BUY conv 0.73 \u2192 best fit LEGACY (score 0.73) [cap\u00d71.00]"
-    },
-    {
-      "ticker": "TON-USD",
-      "account": "LEGACY",
-      "score": 0.7197,
-      "is_elite": false,
-      "is_urgent": false,
-      "rationale": "BUY conv 0.72 \u2192 best fit LEGACY (score 0.72) [cap\u00d71.00]"
+      "rationale": "BUY conv 0.75 \u2192 best fit LEGACY (score 0.75) [cap\u00d71.00]"
     }
   ],
-  "unassigned": [],
+  "unassigned": [
+    {
+      "ticker": "TON-USD",
+      "reason": "no enabled account meets fitness for this plan",
+      "plan_signal": "BUY",
+      "plan_conviction": 0.7296
+    }
+  ],
   "by_account_tickers": {
     "LEGACY": [
-      "IWM",
-      "TON-USD"
+      "VLO",
+      "XLM-USD",
+      "IWM"
     ],
     "HARVEST_3": [
-      "TRGP",
-      "VLO"
+      "JTO-USD",
+      "TRGP"
     ],
     "HARVEST_5": []
   },
@@ -53,7 +69,7 @@
     "HARVEST_5": 1
   },
   "used": {
-    "LEGACY": 2,
+    "LEGACY": 3,
     "HARVEST_3": 2,
     "HARVEST_5": 0
   },
