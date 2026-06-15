@@ -1,6 +1,6 @@
 {
   "version": "4.0",
-  "generated_at": "2026-06-15T00:44:22.477844+00:00",
+  "generated_at": "2026-06-15T01:05:17.416921+00:00",
   "market_session": "closed",
   "market_mode": "PRESERVATION",
   "extended_hours_active": false,
@@ -17,61 +17,12 @@
   "accounts": {
     "LEGACY": {
       "version": "4.0",
-      "checked_at": "2026-06-15T00:44:19.027026+00:00",
+      "checked_at": "2026-06-15T01:05:13.919539+00:00",
       "market_mode": "PRESERVATION",
       "force_sweep_floor_resolved": 10500.0,
       "stale_close_age_days": 3,
       "instant_sweeps": [],
-      "stale_closes": [
-        {
-          "action": "STALE_CLOSE",
-          "symbol": "ALGN",
-          "side": "sell",
-          "qty": 4.833247378,
-          "age_days": 3,
-          "trigger": "held 3d >= 3d without strong momentum",
-          "order_id": "8241b997-21d1-44b6-a130-7fdc9f7dbb66",
-          "mode": "regular_market",
-          "submitted_at": "2026-06-15T00:44:19.745895+00:00",
-          "ok": true
-        },
-        {
-          "action": "STALE_CLOSE",
-          "symbol": "MDLZ",
-          "side": "sell",
-          "qty": 7.93696,
-          "age_days": 3,
-          "trigger": "held 3d >= 3d without strong momentum",
-          "order_id": "d8d80da4-4243-42cf-818b-b68b93b896c6",
-          "mode": "regular_market",
-          "submitted_at": "2026-06-15T00:44:20.238401+00:00",
-          "ok": true
-        },
-        {
-          "action": "STALE_CLOSE",
-          "symbol": "MPWR",
-          "side": "sell",
-          "qty": 0.405357634,
-          "age_days": 3,
-          "trigger": "held 3d >= 3d without strong momentum",
-          "order_id": "f4e07958-81b5-42a2-a0e9-28faa160713a",
-          "mode": "regular_market",
-          "submitted_at": "2026-06-15T00:44:20.727223+00:00",
-          "ok": true
-        },
-        {
-          "action": "STALE_CLOSE",
-          "symbol": "NUE",
-          "side": "sell",
-          "qty": 3.050460254,
-          "age_days": 3,
-          "trigger": "held 3d >= 3d without strong momentum",
-          "order_id": "bb85eb48-1b76-4374-b370-c844a35da02b",
-          "mode": "regular_market",
-          "submitted_at": "2026-06-15T00:44:21.230817+00:00",
-          "ok": true
-        }
-      ],
+      "stale_closes": [],
       "news_boosts": [],
       "sgov_redeploys": [],
       "force_sweep": {
@@ -79,8 +30,68 @@
         "reason": ""
       },
       "evening_shield": {
-        "triggered": false,
-        "reason": "danger window overnight_thin \u2014 no positive unrealized on non-spared book; skip"
+        "triggered": true,
+        "reason": "danger window overnight_thin \u00b7 positive non-spared unrealized $13.63 (PRESERVATION)",
+        "equity_before": 9585.3,
+        "floor_used": 10500.0,
+        "spared_count": 0,
+        "orders": [
+          {
+            "action": "FORCE_SWEEP_SELL",
+            "symbol": "ALGN",
+            "side": "sell",
+            "qty": 4.833247378,
+            "trigger": "danger window: overnight_thin (PRESERVATION)",
+            "order_id": null,
+            "mode": "regular_market",
+            "submitted_at": "2026-06-15T01:05:14.650038+00:00",
+            "ok": false
+          },
+          {
+            "action": "FORCE_SWEEP_SELL",
+            "symbol": "MDLZ",
+            "side": "sell",
+            "qty": 7.93696,
+            "trigger": "danger window: overnight_thin (PRESERVATION)",
+            "order_id": null,
+            "mode": "regular_market",
+            "submitted_at": "2026-06-15T01:05:15.092692+00:00",
+            "ok": false
+          },
+          {
+            "action": "FORCE_SWEEP_SELL",
+            "symbol": "MPWR",
+            "side": "sell",
+            "qty": 0.405357634,
+            "trigger": "danger window: overnight_thin (PRESERVATION)",
+            "order_id": null,
+            "mode": "regular_market",
+            "submitted_at": "2026-06-15T01:05:15.520942+00:00",
+            "ok": false
+          },
+          {
+            "action": "FORCE_SWEEP_SELL",
+            "symbol": "NUE",
+            "side": "sell",
+            "qty": 3.050460254,
+            "trigger": "danger window: overnight_thin (PRESERVATION)",
+            "order_id": null,
+            "mode": "regular_market",
+            "submitted_at": "2026-06-15T01:05:15.962402+00:00",
+            "ok": false
+          },
+          {
+            "action": "FORCE_SWEEP_SELL",
+            "symbol": "UNP",
+            "side": "sell",
+            "qty": 3.581294738,
+            "trigger": "danger window: overnight_thin (PRESERVATION)",
+            "order_id": "55709f72-fec5-4ee4-be92-fc03745de6b7",
+            "mode": "regular_market",
+            "submitted_at": "2026-06-15T01:05:16.427094+00:00",
+            "ok": true
+          }
+        ]
       },
       "danger_carve_outs": {
         "elite": [],
@@ -90,7 +101,7 @@
     },
     "HARVEST_3": {
       "version": "4.0",
-      "checked_at": "2026-06-15T00:44:21.486690+00:00",
+      "checked_at": "2026-06-15T01:05:16.683234+00:00",
       "market_mode": "PRESERVATION",
       "force_sweep_floor_resolved": 10500.0,
       "stale_close_age_days": 3,
@@ -114,7 +125,7 @@
     },
     "HARVEST_5": {
       "version": "4.0",
-      "checked_at": "2026-06-15T00:44:21.987858+00:00",
+      "checked_at": "2026-06-15T01:05:17.055124+00:00",
       "market_mode": "PRESERVATION",
       "force_sweep_floor_resolved": 10500.0,
       "stale_close_age_days": 3,

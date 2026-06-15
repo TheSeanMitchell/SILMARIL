@@ -1,10 +1,10 @@
 {
   "version": "5.0",
-  "generated_at": "2026-06-15T00:44:22.497037+00:00",
+  "generated_at": "2026-06-15T01:05:17.434491+00:00",
   "cycles_observed": 60,
-  "dominant_narrative": "oil_rally",
-  "regime_shift": "ROTATION",
-  "regime_shift_confidence": 0.4231,
+  "dominant_narrative": "risk_on",
+  "regime_shift": "RISK_ON",
+  "regime_shift_confidence": 0.4,
   "narratives": {
     "risk_on": {
       "label": "Risk-on sentiment returning",
@@ -18,18 +18,24 @@
         "Consumer Staples",
         "Utilities"
       ],
-      "frequency": 1,
+      "frequency": 2,
       "persistence": 60,
-      "acceleration": -0.5,
-      "score": 0.425,
+      "acceleration": 1.0,
+      "score": 0.7,
       "phrases": [
-        "buying the dip"
+        "buying the dip",
+        "risk-on"
       ],
       "matched_articles": [
         {
           "ticker": "LTC-USD",
           "title": "Litecoin Whales Are Buying the Dip \u2014 Can LTC Price Reclaim $60?",
-          "source": "TradingView"
+          "source": "Coinpedia"
+        },
+        {
+          "ticker": "SOL-USD",
+          "title": "3 reasons XRP and Solana could lead the next risk-on phase",
+          "source": "AMBCrypto"
         }
       ]
     },
@@ -45,20 +51,14 @@
         "Technology",
         "Consumer Discretionary"
       ],
-      "frequency": 2,
+      "frequency": 1,
       "persistence": 60,
-      "acceleration": 0.0,
-      "score": 0.54,
+      "acceleration": -0.5,
+      "score": 0.425,
       "phrases": [
-        "risk off",
         "risk-off"
       ],
       "matched_articles": [
-        {
-          "ticker": "DOT-USD",
-          "title": "Polkadot (DOT) Volatility Explained: Broad Risk Off, Technical Selling",
-          "source": "CoinMarketCap"
-        },
         {
           "ticker": "HBAR-USD",
           "title": "Hedera (HBAR) Declines 3.3% Amid Broad Crypto Risk-Off",
@@ -102,9 +102,9 @@
       ],
       "sectors_out": [],
       "frequency": 1,
-      "persistence": 9,
-      "acceleration": 1.0,
-      "score": 0.625,
+      "persistence": 10,
+      "acceleration": 0.0,
+      "score": 0.465,
       "phrases": [
         "supply concerns"
       ],
@@ -220,25 +220,19 @@
     }
   },
   "sector_pressure": {
-    "Technology": -0.115,
-    "Energy": 0.585,
+    "Technology": 0.275,
+    "Energy": 0.425,
     "Industrials": 0.04,
-    "Health Care": 0.58,
+    "Health Care": 0.465,
     "Financials": 0.04,
-    "Consumer Discretionary": -0.115,
-    "Consumer Staples": 0.115,
-    "Communication Services": 0.425,
+    "Consumer Discretionary": 0.275,
+    "Consumer Staples": -0.275,
+    "Communication Services": 0.7,
     "Real Estate": 0.0,
-    "Utilities": 0.075,
+    "Utilities": -0.315,
     "Materials": 0.0
   },
   "history": [
-    {
-      "cycle_ts": "2026-06-14T05:04:06.547629+00:00",
-      "dominant_narrative": "risk_off",
-      "regime_shift": "RISK_OFF",
-      "score": 0.54
-    },
     {
       "cycle_ts": "2026-06-14T05:25:24.385309+00:00",
       "dominant_narrative": "risk_on",
@@ -592,7 +586,13 @@
       "dominant_narrative": "oil_rally",
       "regime_shift": "ROTATION",
       "score": 0.625
+    },
+    {
+      "cycle_ts": "2026-06-15T01:05:17.434491+00:00",
+      "dominant_narrative": "risk_on",
+      "regime_shift": "RISK_ON",
+      "score": 0.7
     }
   ],
-  "headline_count": 312
+  "headline_count": 314
 }
