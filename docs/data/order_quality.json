@@ -1,7 +1,40 @@
 {
   "version": "6.0",
-  "generated_at": "2026-06-15T10:05:14.389112+00:00",
+  "generated_at": "2026-06-15T10:26:05.437663+00:00",
   "tickers": {
+    "TSM": {
+      "ticker": "TSM",
+      "use_limit_order": true,
+      "limit_buffer_bps": 48,
+      "defer_to_next_cycle": false,
+      "opening_volatility": 0.0408,
+      "liquidity_score": 0.652,
+      "extension_warning": false,
+      "timing_window": null,
+      "rationale": "limit 48bps \u00b7 ATR/px 4.1% \u00b7 liq 0.65"
+    },
+    "ANET": {
+      "ticker": "ANET",
+      "use_limit_order": true,
+      "limit_buffer_bps": 56,
+      "defer_to_next_cycle": false,
+      "opening_volatility": 0.0517,
+      "liquidity_score": 0.4369,
+      "extension_warning": false,
+      "timing_window": null,
+      "rationale": "limit 56bps \u00b7 ATR/px 5.2% \u00b7 liq 0.44"
+    },
+    "PANW": {
+      "ticker": "PANW",
+      "use_limit_order": true,
+      "limit_buffer_bps": 52,
+      "defer_to_next_cycle": false,
+      "opening_volatility": 0.0471,
+      "liquidity_score": 0.6185,
+      "extension_warning": false,
+      "timing_window": null,
+      "rationale": "limit 52bps \u00b7 ATR/px 4.7% \u00b7 liq 0.62"
+    },
     "IWM": {
       "ticker": "IWM",
       "use_limit_order": false,
@@ -13,34 +46,34 @@
       "timing_window": null,
       "rationale": "clean entry \u00b7 ATR/px 2.1% \u00b7 liq 1.00"
     },
-    "VLO": {
-      "ticker": "VLO",
+    "NEAR-USD": {
+      "ticker": "NEAR-USD",
       "use_limit_order": true,
-      "limit_buffer_bps": 45,
-      "defer_to_next_cycle": false,
-      "opening_volatility": 0.0362,
-      "liquidity_score": 0.628,
+      "limit_buffer_bps": 92,
+      "defer_to_next_cycle": true,
+      "opening_volatility": 0.1033,
+      "liquidity_score": 0.5006,
       "extension_warning": false,
       "timing_window": null,
-      "rationale": "limit 45bps \u00b7 ATR/px 3.6% \u00b7 liq 0.63"
+      "rationale": "DEFER: ATR/price 10.3% \u2265 9% \u2014 untradeable"
     },
-    "TRGP": {
-      "ticker": "TRGP",
+    "TON-USD": {
+      "ticker": "TON-USD",
       "use_limit_order": true,
-      "limit_buffer_bps": 38,
+      "limit_buffer_bps": 40,
       "defer_to_next_cycle": false,
-      "opening_volatility": 0.0261,
-      "liquidity_score": 0.8512,
+      "opening_volatility": 0.0297,
+      "liquidity_score": 0.1221,
       "extension_warning": false,
       "timing_window": null,
-      "rationale": "limit 38bps \u00b7 ATR/px 2.6% \u00b7 liq 0.85"
+      "rationale": "limit 40bps \u00b7 ATR/px 3.0% \u00b7 liq 0.12"
     }
   },
   "summary": {
-    "tickers": 3,
-    "deferred": 0,
-    "limit_recommended": 2,
-    "market_orders_ok": 1
+    "tickers": 6,
+    "deferred": 1,
+    "limit_recommended": 5,
+    "market_orders_ok": 0
   },
   "config": {
     "atr_defer_ratio": 0.05,
