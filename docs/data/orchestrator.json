@@ -1,11 +1,11 @@
 {
   "version": "5.1",
-  "generated_at": "2026-06-15T08:04:16.966232+00:00",
+  "generated_at": "2026-06-15T08:26:23.592196+00:00",
   "directive": {
     "system_objective_today": "RECOVER_FROM_DRAWDOWN",
     "posture": "OFFENSIVE",
     "market_mode": "ATTACK",
-    "target_market_exposure_pct": 0.85,
+    "target_market_exposure_pct": 0.75,
     "max_sector_concentration_pct": 0.4,
     "max_position_concentration_pct": 0.15,
     "volatility_budget_pct": 0.05,
@@ -18,201 +18,202 @@
     ]
   },
   "current_state": {
-    "system_equity": 28841.04,
-    "system_deployed_ratio": 0.1314,
+    "system_equity": 28847.98,
+    "system_deployed_ratio": 0.1316,
     "system_sgov_ratio": 0.0,
-    "system_idle_ratio": 0.8686,
+    "system_idle_ratio": 0.8684,
     "active_regimes": [
-      "narrow_leadership"
+      "narrow_leadership",
+      "rotational_bull"
     ],
     "force_rotations_queued": 0,
     "watch_positions": 1,
     "violation_flags": [],
-    "regime_stability": 1.0
+    "regime_stability": 0.5
   },
   "sector_targets": {
-    "Staples": {
-      "target_pct": 0.0715,
-      "current_pct": 0.0173,
-      "gap": 0.0542,
-      "action": "add",
-      "flow_score": -0.1056
-    },
-    "Crypto": {
-      "target_pct": 0.0404,
+    "Health Care": {
+      "target_pct": 0.0947,
       "current_pct": 0.0,
-      "gap": 0.0404,
+      "gap": 0.0947,
+      "action": "add",
+      "flow_score": 0.1755
+    },
+    "Commodities": {
+      "target_pct": 0.0356,
+      "current_pct": 0.0,
+      "gap": 0.0356,
       "action": "add_slow",
       "flow_score": -0.35
     },
+    "Software": {
+      "target_pct": 0.0356,
+      "current_pct": 0.0,
+      "gap": 0.0356,
+      "action": "add_slow",
+      "flow_score": -0.35
+    },
+    "Communication": {
+      "target_pct": 0.0368,
+      "current_pct": 0.0,
+      "gap": 0.0368,
+      "action": "add_slow",
+      "flow_score": -0.3393
+    },
+    "Communications": {
+      "target_pct": 0.0356,
+      "current_pct": 0.0,
+      "gap": 0.0356,
+      "action": "add_slow",
+      "flow_score": -0.35
+    },
+    "Staples": {
+      "target_pct": 0.063,
+      "current_pct": 0.0172,
+      "gap": 0.0458,
+      "action": "add_slow",
+      "flow_score": -0.107
+    },
+    "Innovation": {
+      "target_pct": 0.0356,
+      "current_pct": 0.0,
+      "gap": 0.0356,
+      "action": "add_slow",
+      "flow_score": -0.35
+    },
+    "Rates": {
+      "target_pct": 0.0449,
+      "current_pct": 0.0,
+      "gap": 0.0449,
+      "action": "add_slow",
+      "flow_score": -0.2673
+    },
+    "Discretionary": {
+      "target_pct": 0.0699,
+      "current_pct": 0.0,
+      "gap": 0.0699,
+      "action": "add",
+      "flow_score": -0.0456
+    },
+    "Credit": {
+      "target_pct": 0.0446,
+      "current_pct": 0.0,
+      "gap": 0.0446,
+      "action": "add_slow",
+      "flow_score": -0.2699
+    },
+    "FX": {
+      "target_pct": 0.0372,
+      "current_pct": 0.0,
+      "gap": 0.0372,
+      "action": "add_slow",
+      "flow_score": -0.3362
+    },
+    "Financials": {
+      "target_pct": 0.0627,
+      "current_pct": 0.0,
+      "gap": 0.0627,
+      "action": "add",
+      "flow_score": -0.1094
+    },
+    "Communication Services": {
+      "target_pct": 0.1104,
+      "current_pct": 0.0,
+      "gap": 0.1104,
+      "action": "add",
+      "flow_score": 0.315
+    },
+    "Technology": {
+      "target_pct": 0.0577,
+      "current_pct": 0.0234,
+      "gap": 0.0343,
+      "action": "add_slow",
+      "flow_score": -0.1542
+    },
+    "Index": {
+      "target_pct": 0.0467,
+      "current_pct": 0.0,
+      "gap": 0.0467,
+      "action": "add_slow",
+      "flow_score": -0.252
+    },
     "Consumer Staples": {
-      "target_pct": 0.085,
+      "target_pct": 0.0573,
       "current_pct": 0.0,
-      "gap": 0.085,
+      "gap": 0.0573,
       "action": "add",
-      "flow_score": 0.0
+      "flow_score": -0.1575
     },
-    "Consumer Discretionary": {
-      "target_pct": 0.085,
-      "current_pct": 0.0,
-      "gap": 0.085,
-      "action": "add",
-      "flow_score": 0.0
+    "Healthcare": {
+      "target_pct": 0.0618,
+      "current_pct": 0.0293,
+      "gap": 0.0325,
+      "action": "add_slow",
+      "flow_score": -0.117
     },
-    "Real Estate": {
-      "target_pct": 0.0726,
-      "current_pct": 0.0,
-      "gap": 0.0726,
-      "action": "add",
-      "flow_score": -0.0976
+    "Materials": {
+      "target_pct": 0.0569,
+      "current_pct": 0.0278,
+      "gap": 0.0291,
+      "action": "add_slow",
+      "flow_score": -0.1609
     },
     "Token": {
-      "target_pct": 0.1296,
+      "target_pct": 0.1144,
       "current_pct": 0.0,
-      "gap": 0.1296,
+      "gap": 0.1144,
       "action": "add",
       "flow_score": 0.35
     },
-    "Communication": {
-      "target_pct": 0.0419,
+    "Real Estate": {
+      "target_pct": 0.0639,
       "current_pct": 0.0,
-      "gap": 0.0419,
-      "action": "add_slow",
-      "flow_score": -0.3379
-    },
-    "Materials": {
-      "target_pct": 0.0647,
-      "current_pct": 0.0278,
-      "gap": 0.0369,
-      "action": "add_slow",
-      "flow_score": -0.1595
+      "gap": 0.0639,
+      "action": "add",
+      "flow_score": -0.099
     },
     "Semiconductors": {
-      "target_pct": 0.0839,
+      "target_pct": 0.0738,
       "current_pct": 0.0,
-      "gap": 0.0839,
+      "gap": 0.0738,
       "action": "add",
-      "flow_score": -0.0088
+      "flow_score": -0.0103
     },
-    "Rates": {
-      "target_pct": 0.0511,
+    "Crypto": {
+      "target_pct": 0.0356,
       "current_pct": 0.0,
-      "gap": 0.0511,
-      "action": "add",
-      "flow_score": -0.2658
+      "gap": 0.0356,
+      "action": "add_slow",
+      "flow_score": -0.35
     },
-    "Discretionary": {
-      "target_pct": 0.0794,
+    "Utilities": {
+      "target_pct": 0.0273,
       "current_pct": 0.0,
-      "gap": 0.0794,
-      "action": "add",
-      "flow_score": -0.0442
+      "gap": 0.0273,
+      "action": "add_slow",
+      "flow_score": -0.4241
     },
-    "FX": {
+    "Consumer Discretionary": {
+      "target_pct": 0.0927,
+      "current_pct": 0.0,
+      "gap": 0.0927,
+      "action": "add",
+      "flow_score": 0.1575
+    },
+    "Energy": {
       "target_pct": 0.0423,
       "current_pct": 0.0,
       "gap": 0.0423,
       "action": "add_slow",
-      "flow_score": -0.3348
-    },
-    "Credit": {
-      "target_pct": 0.0508,
-      "current_pct": 0.0,
-      "gap": 0.0508,
-      "action": "add",
-      "flow_score": -0.2684
-    },
-    "Communications": {
-      "target_pct": 0.0404,
-      "current_pct": 0.0,
-      "gap": 0.0404,
-      "action": "add_slow",
-      "flow_score": -0.35
-    },
-    "Energy": {
-      "target_pct": 0.0504,
-      "current_pct": 0.0,
-      "gap": 0.0504,
-      "action": "add",
-      "flow_score": -0.2712
-    },
-    "Commodities": {
-      "target_pct": 0.0404,
-      "current_pct": 0.0,
-      "gap": 0.0404,
-      "action": "add_slow",
-      "flow_score": -0.35
-    },
-    "Index": {
-      "target_pct": 0.053,
-      "current_pct": 0.0,
-      "gap": 0.053,
-      "action": "add",
-      "flow_score": -0.2506
-    },
-    "Utilities": {
-      "target_pct": 0.0512,
-      "current_pct": 0.0,
-      "gap": 0.0512,
-      "action": "add",
-      "flow_score": -0.2652
-    },
-    "Communication Services": {
-      "target_pct": 0.1117,
-      "current_pct": 0.0,
-      "gap": 0.1117,
-      "action": "add",
-      "flow_score": 0.2093
-    },
-    "Software": {
-      "target_pct": 0.0404,
-      "current_pct": 0.0,
-      "gap": 0.0404,
-      "action": "add_slow",
-      "flow_score": -0.35
-    },
-    "Technology": {
-      "target_pct": 0.0454,
-      "current_pct": 0.0231,
-      "gap": 0.0223,
-      "action": "add_slow",
-      "flow_score": -0.3102
-    },
-    "Innovation": {
-      "target_pct": 0.0404,
-      "current_pct": 0.0,
-      "gap": 0.0404,
-      "action": "add_slow",
-      "flow_score": -0.35
-    },
-    "Healthcare": {
-      "target_pct": 0.0703,
-      "current_pct": 0.0293,
-      "gap": 0.041,
-      "action": "add_slow",
-      "flow_score": -0.1155
-    },
-    "Health Care": {
-      "target_pct": 0.114,
-      "current_pct": 0.0,
-      "gap": 0.114,
-      "action": "add",
-      "flow_score": 0.2273
-    },
-    "Financials": {
-      "target_pct": 0.0712,
-      "current_pct": 0.0,
-      "gap": 0.0712,
-      "action": "add",
-      "flow_score": -0.108
+      "flow_score": -0.291
     },
     "Industrials": {
-      "target_pct": 0.0723,
+      "target_pct": 0.0778,
       "current_pct": 0.0339,
-      "gap": 0.0384,
+      "gap": 0.0439,
       "action": "add_slow",
-      "flow_score": -0.0993
+      "flow_score": 0.0247
     }
   },
-  "rationale": "objective=RECOVER_FROM_DRAWDOWN \u00b7 posture=OFFENSIVE \u00b7 exposure target 85%"
+  "rationale": "objective=RECOVER_FROM_DRAWDOWN \u00b7 posture=OFFENSIVE \u00b7 exposure target 75%"
 }

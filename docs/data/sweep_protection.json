@@ -1,6 +1,6 @@
 {
   "version": "4.0",
-  "generated_at": "2026-06-15T08:04:16.875710+00:00",
+  "generated_at": "2026-06-15T08:26:23.500415+00:00",
   "market_session": "pre-market",
   "market_mode": "ATTACK",
   "extended_hours_active": true,
@@ -17,11 +17,35 @@
   "accounts": {
     "LEGACY": {
       "version": "4.0",
-      "checked_at": "2026-06-15T08:04:16.350327+00:00",
+      "checked_at": "2026-06-15T08:26:21.571531+00:00",
       "market_mode": "ATTACK",
       "force_sweep_floor_resolved": 10500.0,
       "stale_close_age_days": 5,
-      "instant_sweeps": [],
+      "instant_sweeps": [
+        {
+          "action": "INSTANT_SWEEP",
+          "symbol": "MPWR",
+          "side": "sell",
+          "notional": 32.78,
+          "trigger": "unrealized 5.10% >= 5.0%",
+          "unrealized_pl": 32.78,
+          "unrealized_plpc": 0.051,
+          "order_id": "440f36ee-9555-45c8-b988-efc88680b3bf",
+          "mode": "extended_limit",
+          "submitted_at": "2026-06-15T08:26:22.192561+00:00",
+          "ok": true
+        },
+        {
+          "action": "INSTANT_SWEEP_SGOV_BUY",
+          "symbol": "SGOV",
+          "side": "buy",
+          "notional": 32.78,
+          "order_id": "eb193b24-770e-475e-8651-e877b74a8c04",
+          "mode": "extended_limit",
+          "submitted_at": "2026-06-15T08:26:22.639029+00:00",
+          "ok": true
+        }
+      ],
       "stale_closes": [],
       "news_boosts": [],
       "sgov_redeploys": [],
@@ -41,7 +65,7 @@
     },
     "HARVEST_3": {
       "version": "4.0",
-      "checked_at": "2026-06-15T08:04:16.524871+00:00",
+      "checked_at": "2026-06-15T08:26:22.644529+00:00",
       "market_mode": "ATTACK",
       "force_sweep_floor_resolved": 10500.0,
       "stale_close_age_days": 5,
@@ -65,7 +89,7 @@
     },
     "HARVEST_5": {
       "version": "4.0",
-      "checked_at": "2026-06-15T08:04:16.699299+00:00",
+      "checked_at": "2026-06-15T08:26:23.080706+00:00",
       "market_mode": "ATTACK",
       "force_sweep_floor_resolved": 10500.0,
       "stale_close_age_days": 5,
