@@ -1,17 +1,17 @@
 {
   "version": "6.0",
-  "generated_at": "2026-06-15T01:44:01.268677+00:00",
+  "generated_at": "2026-06-15T02:04:57.380006+00:00",
   "tickers": {
     "JTO-USD": {
       "ticker": "JTO-USD",
       "use_limit_order": true,
-      "limit_buffer_bps": 99,
+      "limit_buffer_bps": 100,
       "defer_to_next_cycle": true,
-      "opening_volatility": 0.113,
-      "liquidity_score": 0.4561,
+      "opening_volatility": 0.1143,
+      "liquidity_score": 0.4641,
       "extension_warning": false,
       "timing_window": null,
-      "rationale": "DEFER: ATR/price 11.3% \u2265 9% \u2014 untradeable"
+      "rationale": "DEFER: ATR/price 11.4% \u2265 9% \u2014 untradeable"
     },
     "IWM": {
       "ticker": "IWM",
@@ -34,12 +34,34 @@
       "extension_warning": false,
       "timing_window": null,
       "rationale": "limit 40bps \u00b7 ATR/px 3.0% \u00b7 liq 0.12"
+    },
+    "VLO": {
+      "ticker": "VLO",
+      "use_limit_order": true,
+      "limit_buffer_bps": 45,
+      "defer_to_next_cycle": false,
+      "opening_volatility": 0.0362,
+      "liquidity_score": 0.628,
+      "extension_warning": false,
+      "timing_window": null,
+      "rationale": "limit 45bps \u00b7 ATR/px 3.6% \u00b7 liq 0.63"
+    },
+    "TRGP": {
+      "ticker": "TRGP",
+      "use_limit_order": true,
+      "limit_buffer_bps": 38,
+      "defer_to_next_cycle": false,
+      "opening_volatility": 0.0261,
+      "liquidity_score": 0.8512,
+      "extension_warning": false,
+      "timing_window": null,
+      "rationale": "limit 38bps \u00b7 ATR/px 2.6% \u00b7 liq 0.85"
     }
   },
   "summary": {
-    "tickers": 3,
+    "tickers": 5,
     "deferred": 1,
-    "limit_recommended": 2,
+    "limit_recommended": 4,
     "market_orders_ok": 0
   },
   "config": {
