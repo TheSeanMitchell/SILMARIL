@@ -1,10 +1,10 @@
 {
   "version": "5.0",
-  "generated_at": "2026-06-15T18:27:02.514207+00:00",
+  "generated_at": "2026-06-15T18:46:55.718265+00:00",
   "cycles_observed": 60,
-  "dominant_narrative": "ai_rally",
+  "dominant_narrative": "risk_on",
   "regime_shift": "RISK_ON",
-  "regime_shift_confidence": 0.5127,
+  "regime_shift_confidence": 0.5963,
   "narratives": {
     "risk_on": {
       "label": "Risk-on sentiment returning",
@@ -18,18 +18,24 @@
         "Consumer Staples",
         "Utilities"
       ],
-      "frequency": 1,
+      "frequency": 2,
       "persistence": 60,
-      "acceleration": -0.5,
-      "score": 0.425,
+      "acceleration": 1.0,
+      "score": 0.7,
       "phrases": [
-        "buying the dip"
+        "buying the dip",
+        "all-time high"
       ],
       "matched_articles": [
         {
           "ticker": "LTC-USD",
           "title": "Litecoin Whales Are Buying the Dip \u2014 Can LTC Price Reclaim $60?",
-          "source": "Coinpedia"
+          "source": "TradingView"
+        },
+        {
+          "ticker": "NFLX",
+          "title": "Buy, Hold, or Sell: Dropping 39% From Its All-Time High Under a Hawkish New Fed, Is Netflix an Absolute Buy at $81?",
+          "source": "Yahoo Finance"
         }
       ]
     },
@@ -67,24 +73,18 @@
         "Technology"
       ],
       "sectors_out": [],
-      "frequency": 2,
-      "persistence": 15,
-      "acceleration": 1.0,
-      "score": 0.7,
+      "frequency": 1,
+      "persistence": 16,
+      "acceleration": -0.5,
+      "score": 0.425,
       "phrases": [
-        "ai boom",
-        "ai capex"
+        "ai boom"
       ],
       "matched_articles": [
         {
           "ticker": "GLW",
           "title": "Corning Is Riding High on the AI Boom\u2014and Planning Ahead in Case It Goes Bust",
           "source": "WSJ"
-        },
-        {
-          "ticker": "STLD",
-          "title": "Steel Dynamics: AI Capex Falling Apart (Rating Downgrade) (NASDAQ:STLD)",
-          "source": "Seeking Alpha"
         }
       ]
     },
@@ -183,20 +183,12 @@
         "Real Estate",
         "Utilities"
       ],
-      "frequency": 1,
-      "persistence": 2,
-      "acceleration": 1.0,
-      "score": 0.3625,
-      "phrases": [
-        "rate hike"
-      ],
-      "matched_articles": [
-        {
-          "ticker": "PPL",
-          "title": "How A US$275 Million Rate Hike At PPL (PPL) Has Changed Its Investment Story",
-          "source": "simplywall.st"
-        }
-      ]
+      "frequency": 0,
+      "persistence": 1,
+      "acceleration": -1.0,
+      "score": 0.0437,
+      "phrases": [],
+      "matched_articles": []
     },
     "fed_dovish": {
       "label": "Fed dovish / rate-cut expectations",
@@ -228,25 +220,19 @@
     }
   },
   "sector_pressure": {
-    "Technology": 0.2975,
+    "Technology": 0.6163,
     "Energy": 0.0,
     "Industrials": 0.04,
     "Health Care": 0.505,
-    "Financials": 0.3625,
-    "Consumer Discretionary": -0.04,
-    "Consumer Staples": 0.04,
-    "Communication Services": 0.425,
-    "Real Estate": -0.3225,
-    "Utilities": -0.3225,
+    "Financials": 0.0437,
+    "Consumer Discretionary": 0.235,
+    "Consumer Staples": -0.235,
+    "Communication Services": 0.7,
+    "Real Estate": -0.0037,
+    "Utilities": -0.2787,
     "Materials": 0.0
   },
   "history": [
-    {
-      "cycle_ts": "2026-06-14T23:26:44.809436+00:00",
-      "dominant_narrative": "risk_on",
-      "regime_shift": "RISK_ON",
-      "score": 0.695
-    },
     {
       "cycle_ts": "2026-06-14T23:44:01.666964+00:00",
       "dominant_narrative": "risk_off",
@@ -600,7 +586,13 @@
       "dominant_narrative": "ai_rally",
       "regime_shift": "RISK_ON",
       "score": 0.7
+    },
+    {
+      "cycle_ts": "2026-06-15T18:46:55.718265+00:00",
+      "dominant_narrative": "risk_on",
+      "regime_shift": "RISK_ON",
+      "score": 0.7
     }
   ],
-  "headline_count": 522
+  "headline_count": 494
 }
