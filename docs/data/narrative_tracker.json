@@ -1,10 +1,10 @@
 {
   "version": "5.0",
-  "generated_at": "2026-06-15T12:04:39.074996+00:00",
+  "generated_at": "2026-06-15T12:25:51.984896+00:00",
   "cycles_observed": 60,
   "dominant_narrative": "risk_on",
   "regime_shift": "RISK_ON",
-  "regime_shift_confidence": 0.3652,
+  "regime_shift_confidence": 0.5731,
   "narratives": {
     "risk_on": {
       "label": "Risk-on sentiment returning",
@@ -18,14 +18,20 @@
         "Consumer Staples",
         "Utilities"
       ],
-      "frequency": 1,
+      "frequency": 2,
       "persistence": 60,
-      "acceleration": 0.0,
-      "score": 0.465,
+      "acceleration": 1.0,
+      "score": 0.7,
       "phrases": [
+        "all-time high",
         "buying the dip"
       ],
       "matched_articles": [
+        {
+          "ticker": "NUE",
+          "title": "Nucor Corp stock hits all-time high at 265.14 USD",
+          "source": "Investing.com"
+        },
         {
           "ticker": "LTC-USD",
           "title": "Litecoin Whales Are Buying the Dip \u2014 Can LTC Price Reclaim $60?",
@@ -62,11 +68,6 @@
           "ticker": "HBAR-USD",
           "title": "Hedera (HBAR) Declines 3.3% Amid Broad Crypto Risk-Off",
           "source": "CoinMarketCap"
-        },
-        {
-          "ticker": "CRO-USD",
-          "title": "Cronos (CRO) Declines 3.5% Amid Broad Crypto Risk-Off Phase",
-          "source": "CoinMarketCap"
         }
       ]
     },
@@ -77,12 +78,20 @@
         "Technology"
       ],
       "sectors_out": [],
-      "frequency": 0,
-      "persistence": 0,
-      "acceleration": 0.0,
-      "score": 0.04,
-      "phrases": [],
-      "matched_articles": []
+      "frequency": 1,
+      "persistence": 1,
+      "acceleration": 1.0,
+      "score": 0.3187,
+      "phrases": [
+        "ai boom"
+      ],
+      "matched_articles": [
+        {
+          "ticker": "GLW",
+          "title": "Corning Is Riding High on the AI Boom\u2014and Planning Ahead in Case It Goes Bust",
+          "source": "WSJ"
+        }
+      ]
     },
     "ai_cooldown": {
       "label": "AI rally cooling / stretched valuations",
@@ -119,20 +128,12 @@
       "sectors_out": [
         "Energy"
       ],
-      "frequency": 1,
-      "persistence": 2,
-      "acceleration": 0.0,
-      "score": 0.2025,
-      "phrases": [
-        "oil tumbles"
-      ],
-      "matched_articles": [
-        {
-          "ticker": "OP-USD",
-          "title": "US stock futures rise on Iran deal optimism; oil tumbles",
-          "source": "Yahoo Finance"
-        }
-      ]
+      "frequency": 0,
+      "persistence": 1,
+      "acceleration": -1.0,
+      "score": 0.0437,
+      "phrases": [],
+      "matched_articles": []
     },
     "defense_strength": {
       "label": "Defense / aerospace strengthening on geopolitical risk",
@@ -224,25 +225,19 @@
     }
   },
   "sector_pressure": {
-    "Technology": 0.0,
-    "Energy": -0.1625,
+    "Technology": 0.5137,
+    "Energy": -0.0037,
     "Industrials": 0.04,
     "Health Care": 0.505,
     "Financials": 0.04,
-    "Consumer Discretionary": 0.0,
-    "Consumer Staples": 0.0,
-    "Communication Services": 0.465,
+    "Consumer Discretionary": 0.235,
+    "Consumer Staples": -0.235,
+    "Communication Services": 0.7,
     "Real Estate": 0.0,
-    "Utilities": -0.04,
+    "Utilities": -0.275,
     "Materials": 0.0
   },
   "history": [
-    {
-      "cycle_ts": "2026-06-14T16:44:26.677030+00:00",
-      "dominant_narrative": "risk_off",
-      "regime_shift": "RISK_OFF",
-      "score": 0.54
-    },
     {
       "cycle_ts": "2026-06-14T17:04:16.704797+00:00",
       "dominant_narrative": "risk_off",
@@ -596,7 +591,13 @@
       "dominant_narrative": "risk_on",
       "regime_shift": "RISK_ON",
       "score": 0.465
+    },
+    {
+      "cycle_ts": "2026-06-15T12:25:51.984896+00:00",
+      "dominant_narrative": "risk_on",
+      "regime_shift": "RISK_ON",
+      "score": 0.7
     }
   ],
-  "headline_count": 311
+  "headline_count": 491
 }
