@@ -1,79 +1,46 @@
 {
   "version": "6.0",
-  "generated_at": "2026-06-15T16:47:56.469314+00:00",
+  "generated_at": "2026-06-15T17:07:18.659902+00:00",
   "tickers": {
-    "PAYX": {
-      "ticker": "PAYX",
+    "EXR": {
+      "ticker": "EXR",
       "use_limit_order": true,
-      "limit_buffer_bps": 150,
+      "limit_buffer_bps": 40,
       "defer_to_next_cycle": false,
-      "opening_volatility": 0.0285,
-      "liquidity_score": 0.3796,
+      "opening_volatility": 0.0223,
+      "liquidity_score": 0.2466,
       "extension_warning": false,
-      "timing_window": "resting toward PAYX's ~98.46 floor (his low window is 09:30 ET) \u2014 limit 150bps below",
-      "rationale": "limit 150bps \u00b7 ATR/px 2.8% \u00b7 liq 0.38 \u00b7 resting toward PAYX's ~98.46 floor (his low window is 09:30 ET) \u2014 limit 150bps below"
+      "timing_window": null,
+      "rationale": "limit 40bps \u00b7 ATR/px 2.2% \u00b7 liq 0.25"
     },
-    "NEAR-USD": {
-      "ticker": "NEAR-USD",
+    "BXP": {
+      "ticker": "BXP",
       "use_limit_order": true,
-      "limit_buffer_bps": 150,
-      "defer_to_next_cycle": true,
-      "opening_volatility": 0.0906,
-      "liquidity_score": 0.3581,
-      "extension_warning": false,
-      "timing_window": "resting toward NEAR-USD's ~1.97 floor (his low window is 10:00 ET) \u2014 limit 150bps below",
-      "rationale": "DEFER: ATR/price 9.1% \u2265 9% \u2014 untradeable \u00b7 resting toward NEAR-USD's ~1.97 floor (his low window is 10:00 ET) \u2014 limit 150bps below"
-    },
-    "GLW": {
-      "ticker": "GLW",
-      "use_limit_order": true,
-      "limit_buffer_bps": 150,
+      "limit_buffer_bps": 40,
       "defer_to_next_cycle": false,
-      "opening_volatility": 0.0712,
-      "liquidity_score": 0.2553,
+      "opening_volatility": 0.0235,
+      "liquidity_score": 0.2394,
       "extension_warning": false,
-      "timing_window": "resting toward GLW's ~173.97 floor (his low window is 10:30 ET) \u2014 limit 150bps below",
-      "rationale": "limit 150bps \u00b7 ATR/px 7.1% \u00b7 liq 0.26 \u00b7 resting toward GLW's ~173.97 floor (his low window is 10:30 ET) \u2014 limit 150bps below"
+      "timing_window": null,
+      "rationale": "limit 40bps \u00b7 ATR/px 2.3% \u00b7 liq 0.24"
     },
-    "NUE": {
-      "ticker": "NUE",
+    "DXCM": {
+      "ticker": "DXCM",
       "use_limit_order": true,
-      "limit_buffer_bps": 45,
+      "limit_buffer_bps": 46,
       "defer_to_next_cycle": false,
-      "opening_volatility": 0.0303,
-      "liquidity_score": 0.4907,
+      "opening_volatility": 0.0381,
+      "liquidity_score": 0.2181,
       "extension_warning": false,
-      "timing_window": "now is NUE's typical daily-HIGH window (12:30 ET) \u2014 limit only, refusing to market-buy its top",
-      "rationale": "limit 45bps \u00b7 ATR/px 3.0% \u00b7 liq 0.49 \u00b7 now is NUE's typical daily-HIGH window (12:30 ET) \u2014 limit only, refusing to market-buy its top"
-    },
-    "IWM": {
-      "ticker": "IWM",
-      "use_limit_order": true,
-      "limit_buffer_bps": 150,
-      "defer_to_next_cycle": false,
-      "opening_volatility": 0.0204,
-      "liquidity_score": 0.4306,
-      "extension_warning": false,
-      "timing_window": "resting toward IWM's ~281.8 floor (his low window is 11:30 ET) \u2014 limit 150bps below",
-      "rationale": "limit 150bps \u00b7 ATR/px 2.0% \u00b7 liq 0.43 \u00b7 resting toward IWM's ~281.8 floor (his low window is 11:30 ET) \u2014 limit 150bps below"
-    },
-    "VTI": {
-      "ticker": "VTI",
-      "use_limit_order": true,
-      "limit_buffer_bps": 150,
-      "defer_to_next_cycle": false,
-      "opening_volatility": 0.0135,
-      "liquidity_score": 0.5532,
-      "extension_warning": false,
-      "timing_window": "resting toward VTI's ~358.15 floor (his low window is 10:00 ET) \u2014 limit 150bps below",
-      "rationale": "limit 150bps \u00b7 ATR/px 1.4% \u00b7 liq 0.55 \u00b7 resting toward VTI's ~358.15 floor (his low window is 10:00 ET) \u2014 limit 150bps below"
+      "timing_window": null,
+      "rationale": "limit 46bps \u00b7 ATR/px 3.8% \u00b7 liq 0.22"
     }
   },
   "summary": {
-    "tickers": 6,
-    "deferred": 1,
-    "limit_recommended": 6,
-    "market_orders_ok": -1
+    "tickers": 3,
+    "deferred": 0,
+    "limit_recommended": 3,
+    "market_orders_ok": 0
   },
   "config": {
     "atr_defer_ratio": 0.05,
