@@ -1,11 +1,11 @@
 {
   "version": "intel-1.0",
-  "generated_at": "2026-06-15T07:25:10.804854+00:00",
+  "generated_at": "2026-06-15T07:43:49.515215+00:00",
   "thesis": "Words are predictive; numbers are reactive. Events and news set up the thesis; price triggers the entry/exit.",
   "summary": {
     "stocks_tracked": 535,
     "other_tracked": 58,
-    "names_in_news": 50
+    "names_in_news": 107
   },
   "event_calendar": {
     "dated": [
@@ -780,16 +780,6 @@
         "source": "feed"
       },
       {
-        "date": "2026-06-30",
-        "days_until": 15,
-        "type": "earnings",
-        "magnitude": "high",
-        "ticker": "PRGS",
-        "sector": "",
-        "note": "PRGS earnings EPS est $1.52 Rev est $0.25B",
-        "source": "feed"
-      },
-      {
         "date": "2026-07-03",
         "days_until": 18,
         "type": "bls_empl",
@@ -808,6 +798,16 @@
         "sector": "",
         "note": "Jobs report (BLS Employment Situation, Jun)",
         "source": "curated"
+      },
+      {
+        "date": "2026-07-14",
+        "days_until": 29,
+        "type": "earnings",
+        "magnitude": "high",
+        "ticker": "PLD",
+        "sector": "Real Estate",
+        "note": "PLD earnings EPS est $0.79 Rev est $2.27B",
+        "source": "feed"
       },
       {
         "date": "2026-07-15",
@@ -991,11 +991,569 @@
     "universe_count": 535,
     "baskets": [
       {
+        "basket": "Technology",
+        "sector": "Technology",
+        "etf": "XLK",
+        "members": 59,
+        "net_score": 0.339,
+        "stance": "bullish",
+        "signal_mix": {
+          "BUY": 30,
+          "HOLD": 26,
+          "SELL": 3
+        },
+        "news_states": {
+          "NORMAL": 59
+        },
+        "headline_count": 116,
+        "active_news": 0,
+        "top_members": [
+          {
+            "ticker": "MPWR",
+            "signal": "BUY",
+            "score": 1.0,
+            "headlines": 5,
+            "news_state": "NORMAL"
+          },
+          {
+            "ticker": "JBL",
+            "signal": "BUY",
+            "score": 1.0,
+            "headlines": 3,
+            "news_state": "NORMAL"
+          },
+          {
+            "ticker": "HPE",
+            "signal": "BUY",
+            "score": 1.0,
+            "headlines": 2,
+            "news_state": "NORMAL"
+          },
+          {
+            "ticker": "ADI",
+            "signal": "BUY",
+            "score": 0.891,
+            "headlines": 3,
+            "news_state": "NORMAL"
+          },
+          {
+            "ticker": "MCHP",
+            "signal": "BUY",
+            "score": 0.89,
+            "headlines": 5,
+            "news_state": "NORMAL"
+          },
+          {
+            "ticker": "FFIV",
+            "signal": "BUY",
+            "score": 0.812,
+            "headlines": 0,
+            "news_state": "NORMAL"
+          }
+        ]
+      },
+      {
+        "basket": "Financials",
+        "sector": "Financials",
+        "etf": "XLF",
+        "members": 64,
+        "net_score": 0.07,
+        "stance": "mixed",
+        "signal_mix": {
+          "BUY": 18,
+          "HOLD": 31,
+          "SELL": 15
+        },
+        "news_states": {
+          "NORMAL": 64
+        },
+        "headline_count": 83,
+        "active_news": 0,
+        "top_members": [
+          {
+            "ticker": "NTRS",
+            "signal": "BUY",
+            "score": 0.926,
+            "headlines": 5,
+            "news_state": "NORMAL"
+          },
+          {
+            "ticker": "AIZ",
+            "signal": "BUY",
+            "score": 0.861,
+            "headlines": 5,
+            "news_state": "NORMAL"
+          },
+          {
+            "ticker": "NDAQ",
+            "signal": "BUY",
+            "score": 0.821,
+            "headlines": 4,
+            "news_state": "NORMAL"
+          },
+          {
+            "ticker": "RF",
+            "signal": "BUY",
+            "score": 0.796,
+            "headlines": 2,
+            "news_state": "NORMAL"
+          },
+          {
+            "ticker": "CINF",
+            "signal": "BUY",
+            "score": 0.795,
+            "headlines": 4,
+            "news_state": "NORMAL"
+          },
+          {
+            "ticker": "AJG",
+            "signal": "BUY",
+            "score": 0.762,
+            "headlines": 4,
+            "news_state": "NORMAL"
+          }
+        ]
+      },
+      {
+        "basket": "Real Estate",
+        "sector": "Real Estate",
+        "etf": "XLRE",
+        "members": 32,
+        "net_score": 0.364,
+        "stance": "bullish",
+        "signal_mix": {
+          "BUY": 17,
+          "HOLD": 14,
+          "SELL": 1
+        },
+        "news_states": {
+          "NORMAL": 32
+        },
+        "headline_count": 27,
+        "active_news": 0,
+        "top_members": [
+          {
+            "ticker": "EQIX",
+            "signal": "BUY",
+            "score": 1.17,
+            "headlines": 4,
+            "news_state": "NORMAL"
+          },
+          {
+            "ticker": "PLD",
+            "signal": "BUY",
+            "score": 1.0,
+            "headlines": 4,
+            "news_state": "NORMAL"
+          },
+          {
+            "ticker": "CCI",
+            "signal": "BUY",
+            "score": 0.885,
+            "headlines": 4,
+            "news_state": "NORMAL"
+          },
+          {
+            "ticker": "AMT",
+            "signal": "BUY",
+            "score": 0.852,
+            "headlines": 5,
+            "news_state": "NORMAL"
+          },
+          {
+            "ticker": "IRM",
+            "signal": "BUY",
+            "score": 0.756,
+            "headlines": 0,
+            "news_state": "NORMAL"
+          },
+          {
+            "ticker": "EQR",
+            "signal": "BUY",
+            "score": 0.737,
+            "headlines": 0,
+            "news_state": "NORMAL"
+          }
+        ]
+      },
+      {
+        "basket": "Materials",
+        "sector": "Materials",
+        "etf": "XLB",
+        "members": 28,
+        "net_score": 0.174,
+        "stance": "bullish",
+        "signal_mix": {
+          "BUY": 9,
+          "HOLD": 17,
+          "SELL": 2
+        },
+        "news_states": {
+          "NORMAL": 28
+        },
+        "headline_count": 11,
+        "active_news": 0,
+        "top_members": [
+          {
+            "ticker": "PPG",
+            "signal": "BUY",
+            "score": 0.831,
+            "headlines": 2,
+            "news_state": "NORMAL"
+          },
+          {
+            "ticker": "DD",
+            "signal": "BUY",
+            "score": 0.739,
+            "headlines": 0,
+            "news_state": "NORMAL"
+          },
+          {
+            "ticker": "NUE",
+            "signal": "BUY",
+            "score": 0.6,
+            "headlines": 5,
+            "news_state": "NORMAL"
+          },
+          {
+            "ticker": "XLB",
+            "signal": "BUY",
+            "score": 0.598,
+            "headlines": 0,
+            "news_state": "NORMAL"
+          },
+          {
+            "ticker": "FCX",
+            "signal": "BUY",
+            "score": 0.598,
+            "headlines": 0,
+            "news_state": "NORMAL"
+          },
+          {
+            "ticker": "PKG",
+            "signal": "BUY",
+            "score": 0.598,
+            "headlines": 0,
+            "news_state": "NORMAL"
+          }
+        ]
+      },
+      {
+        "basket": "FX",
+        "sector": "FX",
+        "etf": "\u2014",
+        "members": 8,
+        "net_score": -0.066,
+        "stance": "mixed",
+        "signal_mix": {
+          "BUY": 1,
+          "HOLD": 4,
+          "SELL": 3
+        },
+        "news_states": {
+          "NORMAL": 8
+        },
+        "headline_count": 10,
+        "active_news": 0,
+        "top_members": [
+          {
+            "ticker": "UUP",
+            "signal": "BUY",
+            "score": 0.73,
+            "headlines": 0,
+            "news_state": "NORMAL"
+          },
+          {
+            "ticker": "FXY",
+            "signal": "SELL",
+            "score": -0.551,
+            "headlines": 0,
+            "news_state": "NORMAL"
+          },
+          {
+            "ticker": "FXF",
+            "signal": "SELL",
+            "score": -0.419,
+            "headlines": 3,
+            "news_state": "NORMAL"
+          },
+          {
+            "ticker": "FXA",
+            "signal": "SELL",
+            "score": -0.419,
+            "headlines": 3,
+            "news_state": "NORMAL"
+          },
+          {
+            "ticker": "FXC",
+            "signal": "HOLD",
+            "score": 0.135,
+            "headlines": 1,
+            "news_state": "NORMAL"
+          },
+          {
+            "ticker": "FXB",
+            "signal": "HOLD",
+            "score": 0.0,
+            "headlines": 3,
+            "news_state": "NORMAL"
+          }
+        ]
+      },
+      {
+        "basket": "Industrials",
+        "sector": "Industrials",
+        "etf": "XLI",
+        "members": 71,
+        "net_score": 0.187,
+        "stance": "bullish",
+        "signal_mix": {
+          "BUY": 25,
+          "HOLD": 43,
+          "SELL": 3
+        },
+        "news_states": {
+          "NORMAL": 71
+        },
+        "headline_count": 5,
+        "active_news": 0,
+        "top_members": [
+          {
+            "ticker": "CSX",
+            "signal": "BUY",
+            "score": 0.756,
+            "headlines": 0,
+            "news_state": "NORMAL"
+          },
+          {
+            "ticker": "AAL",
+            "signal": "BUY",
+            "score": 0.68,
+            "headlines": 0,
+            "news_state": "NORMAL"
+          },
+          {
+            "ticker": "CAT",
+            "signal": "BUY",
+            "score": 0.637,
+            "headlines": 0,
+            "news_state": "NORMAL"
+          },
+          {
+            "ticker": "FDX",
+            "signal": "BUY",
+            "score": 0.637,
+            "headlines": 0,
+            "news_state": "NORMAL"
+          },
+          {
+            "ticker": "ODFL",
+            "signal": "BUY",
+            "score": 0.637,
+            "headlines": 0,
+            "news_state": "NORMAL"
+          },
+          {
+            "ticker": "JBHT",
+            "signal": "BUY",
+            "score": 0.637,
+            "headlines": 0,
+            "news_state": "NORMAL"
+          }
+        ]
+      },
+      {
+        "basket": "Consumer Staples",
+        "sector": "Staples",
+        "etf": "XLP",
+        "members": 34,
+        "net_score": 0.113,
+        "stance": "mixed",
+        "signal_mix": {
+          "BUY": 8,
+          "HOLD": 23,
+          "SELL": 3
+        },
+        "news_states": {
+          "NORMAL": 34
+        },
+        "headline_count": 5,
+        "active_news": 0,
+        "top_members": [
+          {
+            "ticker": "ADM",
+            "signal": "BUY",
+            "score": 0.756,
+            "headlines": 0,
+            "news_state": "NORMAL"
+          },
+          {
+            "ticker": "MO",
+            "signal": "BUY",
+            "score": 0.746,
+            "headlines": 0,
+            "news_state": "NORMAL"
+          },
+          {
+            "ticker": "PM",
+            "signal": "BUY",
+            "score": 0.742,
+            "headlines": 0,
+            "news_state": "NORMAL"
+          },
+          {
+            "ticker": "CL",
+            "signal": "BUY",
+            "score": 0.735,
+            "headlines": 0,
+            "news_state": "NORMAL"
+          },
+          {
+            "ticker": "KO",
+            "signal": "BUY",
+            "score": 0.604,
+            "headlines": 0,
+            "news_state": "NORMAL"
+          },
+          {
+            "ticker": "KDP",
+            "signal": "BUY",
+            "score": 0.599,
+            "headlines": 0,
+            "news_state": "NORMAL"
+          }
+        ]
+      },
+      {
+        "basket": "Commodities (broad)",
+        "sector": "Commodities",
+        "etf": "DBC",
+        "members": 12,
+        "net_score": -0.106,
+        "stance": "mixed",
+        "signal_mix": {
+          "BUY": 1,
+          "HOLD": 10,
+          "SELL": 1
+        },
+        "news_states": {
+          "NORMAL": 12
+        },
+        "headline_count": 5,
+        "active_news": 0,
+        "top_members": [
+          {
+            "ticker": "CPER",
+            "signal": "BUY",
+            "score": 0.755,
+            "headlines": 0,
+            "news_state": "NORMAL"
+          },
+          {
+            "ticker": "GLD",
+            "signal": "SELL",
+            "score": -0.415,
+            "headlines": 0,
+            "news_state": "NORMAL"
+          },
+          {
+            "ticker": "PPLT",
+            "signal": "HOLD",
+            "score": -0.346,
+            "headlines": 0,
+            "news_state": "NORMAL"
+          },
+          {
+            "ticker": "PALL",
+            "signal": "HOLD",
+            "score": -0.346,
+            "headlines": 0,
+            "news_state": "NORMAL"
+          },
+          {
+            "ticker": "IAU",
+            "signal": "HOLD",
+            "score": -0.339,
+            "headlines": 2,
+            "news_state": "NORMAL"
+          },
+          {
+            "ticker": "GDXJ",
+            "signal": "HOLD",
+            "score": -0.291,
+            "headlines": 2,
+            "news_state": "NORMAL"
+          }
+        ]
+      },
+      {
+        "basket": "Health Care",
+        "sector": "Healthcare",
+        "etf": "XLV",
+        "members": 57,
+        "net_score": 0.102,
+        "stance": "mixed",
+        "signal_mix": {
+          "BUY": 14,
+          "HOLD": 37,
+          "SELL": 6
+        },
+        "news_states": {
+          "NORMAL": 57
+        },
+        "headline_count": 3,
+        "active_news": 0,
+        "top_members": [
+          {
+            "ticker": "ELV",
+            "signal": "BUY",
+            "score": 0.752,
+            "headlines": 0,
+            "news_state": "NORMAL"
+          },
+          {
+            "ticker": "ALGN",
+            "signal": "BUY",
+            "score": 0.739,
+            "headlines": 3,
+            "news_state": "NORMAL"
+          },
+          {
+            "ticker": "HUM",
+            "signal": "BUY",
+            "score": 0.637,
+            "headlines": 0,
+            "news_state": "NORMAL"
+          },
+          {
+            "ticker": "CNC",
+            "signal": "BUY",
+            "score": 0.637,
+            "headlines": 0,
+            "news_state": "NORMAL"
+          },
+          {
+            "ticker": "VTRS",
+            "signal": "BUY",
+            "score": 0.637,
+            "headlines": 0,
+            "news_state": "NORMAL"
+          },
+          {
+            "ticker": "UNH",
+            "signal": "BUY",
+            "score": 0.631,
+            "headlines": 0,
+            "news_state": "NORMAL"
+          }
+        ]
+      },
+      {
         "basket": "Index",
         "sector": "Index",
         "etf": "\u2014",
         "members": 7,
-        "net_score": 0.753,
+        "net_score": 0.73,
         "stance": "bullish",
         "signal_mix": {
           "BUY": 7
@@ -1009,42 +1567,42 @@
           {
             "ticker": "DIA",
             "signal": "BUY",
-            "score": 0.885,
+            "score": 0.881,
             "headlines": 0,
             "news_state": "NORMAL"
           },
           {
             "ticker": "IWM",
             "signal": "BUY",
-            "score": 0.862,
+            "score": 0.859,
             "headlines": 0,
             "news_state": "NORMAL"
           },
           {
             "ticker": "EEM",
             "signal": "BUY",
-            "score": 0.774,
+            "score": 0.75,
             "headlines": 0,
             "news_state": "NORMAL"
           },
           {
             "ticker": "SPY",
             "signal": "BUY",
-            "score": 0.766,
+            "score": 0.732,
             "headlines": 0,
             "news_state": "NORMAL"
           },
           {
             "ticker": "VTI",
             "signal": "BUY",
-            "score": 0.766,
+            "score": 0.732,
             "headlines": 0,
             "news_state": "NORMAL"
           },
           {
-            "ticker": "EFA",
+            "ticker": "QQQ",
             "signal": "BUY",
-            "score": 0.614,
+            "score": 0.584,
             "headlines": 0,
             "news_state": "NORMAL"
           }
@@ -1055,7 +1613,7 @@
         "sector": "Credit",
         "etf": "\u2014",
         "members": 2,
-        "net_score": 0.37,
+        "net_score": 0.365,
         "stance": "bullish",
         "signal_mix": {
           "BUY": 1,
@@ -1070,7 +1628,7 @@
           {
             "ticker": "HYG",
             "signal": "BUY",
-            "score": 0.74,
+            "score": 0.73,
             "headlines": 0,
             "news_state": "NORMAL"
           },
@@ -1088,7 +1646,7 @@
         "sector": "Discretionary",
         "etf": "XLY",
         "members": 56,
-        "net_score": 0.331,
+        "net_score": 0.334,
         "stance": "bullish",
         "signal_mix": {
           "BUY": 35,
@@ -1104,42 +1662,42 @@
           {
             "ticker": "BWA",
             "signal": "BUY",
-            "score": 0.76,
+            "score": 0.749,
             "headlines": 0,
             "news_state": "NORMAL"
           },
           {
             "ticker": "MAR",
             "signal": "BUY",
-            "score": 0.759,
+            "score": 0.749,
             "headlines": 0,
             "news_state": "NORMAL"
           },
           {
             "ticker": "MGM",
             "signal": "BUY",
-            "score": 0.758,
+            "score": 0.748,
             "headlines": 0,
             "news_state": "NORMAL"
           },
           {
             "ticker": "CZR",
             "signal": "BUY",
-            "score": 0.754,
+            "score": 0.744,
             "headlines": 0,
             "news_state": "NORMAL"
           },
           {
             "ticker": "LEN",
             "signal": "BUY",
-            "score": 0.634,
+            "score": 0.613,
             "headlines": 0,
             "news_state": "NORMAL"
           },
           {
             "ticker": "GM",
             "signal": "BUY",
-            "score": 0.623,
+            "score": 0.599,
             "headlines": 0,
             "news_state": "NORMAL"
           }
@@ -1150,7 +1708,7 @@
         "sector": "Semiconductors",
         "etf": "SMH",
         "members": 9,
-        "net_score": 0.321,
+        "net_score": 0.324,
         "stance": "bullish",
         "signal_mix": {
           "BUY": 7,
@@ -1166,166 +1724,42 @@
           {
             "ticker": "TSM",
             "signal": "BUY",
-            "score": 0.622,
+            "score": 0.614,
             "headlines": 0,
             "news_state": "NORMAL"
           },
           {
             "ticker": "AVGO",
             "signal": "SELL",
-            "score": -0.588,
+            "score": -0.541,
             "headlines": 0,
             "news_state": "NORMAL"
           },
           {
             "ticker": "SMH",
             "signal": "BUY",
-            "score": 0.475,
+            "score": 0.474,
             "headlines": 0,
             "news_state": "NORMAL"
           },
           {
             "ticker": "SOXX",
             "signal": "BUY",
-            "score": 0.475,
+            "score": 0.474,
             "headlines": 0,
             "news_state": "NORMAL"
           },
           {
             "ticker": "AMD",
             "signal": "BUY",
-            "score": 0.475,
+            "score": 0.474,
             "headlines": 0,
             "news_state": "NORMAL"
           },
           {
             "ticker": "INTC",
             "signal": "BUY",
-            "score": 0.475,
-            "headlines": 0,
-            "news_state": "NORMAL"
-          }
-        ]
-      },
-      {
-        "basket": "Real Estate",
-        "sector": "Real Estate",
-        "etf": "XLRE",
-        "members": 32,
-        "net_score": 0.276,
-        "stance": "bullish",
-        "signal_mix": {
-          "BUY": 15,
-          "HOLD": 15,
-          "SELL": 2
-        },
-        "news_states": {
-          "NORMAL": 32
-        },
-        "headline_count": 0,
-        "active_news": 0,
-        "top_members": [
-          {
-            "ticker": "IRM",
-            "signal": "BUY",
-            "score": 0.779,
-            "headlines": 0,
-            "news_state": "NORMAL"
-          },
-          {
-            "ticker": "EQR",
-            "signal": "BUY",
-            "score": 0.762,
-            "headlines": 0,
-            "news_state": "NORMAL"
-          },
-          {
-            "ticker": "AVB",
-            "signal": "BUY",
-            "score": 0.757,
-            "headlines": 0,
-            "news_state": "NORMAL"
-          },
-          {
-            "ticker": "CCI",
-            "signal": "BUY",
-            "score": 0.756,
-            "headlines": 0,
-            "news_state": "NORMAL"
-          },
-          {
-            "ticker": "HST",
-            "signal": "BUY",
-            "score": 0.66,
-            "headlines": 0,
-            "news_state": "NORMAL"
-          },
-          {
-            "ticker": "FRT",
-            "signal": "BUY",
-            "score": 0.647,
-            "headlines": 0,
-            "news_state": "NORMAL"
-          }
-        ]
-      },
-      {
-        "basket": "Technology",
-        "sector": "Technology",
-        "etf": "XLK",
-        "members": 59,
-        "net_score": 0.248,
-        "stance": "bullish",
-        "signal_mix": {
-          "BUY": 23,
-          "HOLD": 33,
-          "SELL": 3
-        },
-        "news_states": {
-          "NORMAL": 59
-        },
-        "headline_count": 0,
-        "active_news": 0,
-        "top_members": [
-          {
-            "ticker": "MPWR",
-            "signal": "BUY",
-            "score": 0.826,
-            "headlines": 0,
-            "news_state": "NORMAL"
-          },
-          {
-            "ticker": "FFIV",
-            "signal": "BUY",
-            "score": 0.826,
-            "headlines": 0,
-            "news_state": "NORMAL"
-          },
-          {
-            "ticker": "FTNT",
-            "signal": "BUY",
-            "score": 0.76,
-            "headlines": 0,
-            "news_state": "NORMAL"
-          },
-          {
-            "ticker": "MRVL",
-            "signal": "BUY",
-            "score": 0.76,
-            "headlines": 0,
-            "news_state": "NORMAL"
-          },
-          {
-            "ticker": "ADI",
-            "signal": "BUY",
-            "score": 0.76,
-            "headlines": 0,
-            "news_state": "NORMAL"
-          },
-          {
-            "ticker": "MCHP",
-            "signal": "BUY",
-            "score": 0.76,
+            "score": 0.474,
             "headlines": 0,
             "news_state": "NORMAL"
           }
@@ -1336,7 +1770,7 @@
         "sector": "Communications",
         "etf": "\u2014",
         "members": 4,
-        "net_score": -0.234,
+        "net_score": -0.21,
         "stance": "bearish",
         "signal_mix": {
           "HOLD": 2,
@@ -1351,14 +1785,14 @@
           {
             "ticker": "META",
             "signal": "SELL",
-            "score": -0.468,
+            "score": -0.421,
             "headlines": 0,
             "news_state": "NORMAL"
           },
           {
             "ticker": "NFLX",
             "signal": "SELL",
-            "score": -0.468,
+            "score": -0.421,
             "headlines": 0,
             "news_state": "NORMAL"
           },
@@ -1379,73 +1813,11 @@
         ]
       },
       {
-        "basket": "Industrials",
-        "sector": "Industrials",
-        "etf": "XLI",
-        "members": 71,
-        "net_score": 0.198,
-        "stance": "bullish",
-        "signal_mix": {
-          "BUY": 25,
-          "HOLD": 43,
-          "SELL": 3
-        },
-        "news_states": {
-          "NORMAL": 71
-        },
-        "headline_count": 0,
-        "active_news": 0,
-        "top_members": [
-          {
-            "ticker": "CSX",
-            "signal": "BUY",
-            "score": 0.761,
-            "headlines": 0,
-            "news_state": "NORMAL"
-          },
-          {
-            "ticker": "AAL",
-            "signal": "BUY",
-            "score": 0.721,
-            "headlines": 0,
-            "news_state": "NORMAL"
-          },
-          {
-            "ticker": "CAT",
-            "signal": "BUY",
-            "score": 0.66,
-            "headlines": 0,
-            "news_state": "NORMAL"
-          },
-          {
-            "ticker": "FDX",
-            "signal": "BUY",
-            "score": 0.66,
-            "headlines": 0,
-            "news_state": "NORMAL"
-          },
-          {
-            "ticker": "ODFL",
-            "signal": "BUY",
-            "score": 0.66,
-            "headlines": 0,
-            "news_state": "NORMAL"
-          },
-          {
-            "ticker": "JBHT",
-            "signal": "BUY",
-            "score": 0.66,
-            "headlines": 0,
-            "news_state": "NORMAL"
-          }
-        ]
-      },
-      {
         "basket": "Energy",
         "sector": "Energy",
         "etf": "XLE",
         "members": 32,
-        "net_score": 0.168,
+        "net_score": 0.165,
         "stance": "bullish",
         "signal_mix": {
           "BUY": 8,
@@ -1460,352 +1832,42 @@
           {
             "ticker": "SLB",
             "signal": "BUY",
-            "score": 0.834,
+            "score": 0.821,
             "headlines": 0,
             "news_state": "NORMAL"
           },
           {
             "ticker": "MPC",
             "signal": "BUY",
-            "score": 0.774,
+            "score": 0.764,
             "headlines": 0,
             "news_state": "NORMAL"
           },
           {
             "ticker": "VLO",
             "signal": "BUY",
-            "score": 0.774,
+            "score": 0.764,
             "headlines": 0,
             "news_state": "NORMAL"
           },
           {
             "ticker": "TRGP",
             "signal": "BUY",
-            "score": 0.774,
+            "score": 0.764,
             "headlines": 0,
             "news_state": "NORMAL"
           },
           {
             "ticker": "PSX",
             "signal": "BUY",
-            "score": 0.755,
+            "score": 0.739,
             "headlines": 0,
             "news_state": "NORMAL"
           },
           {
             "ticker": "OKE",
             "signal": "BUY",
-            "score": 0.755,
-            "headlines": 0,
-            "news_state": "NORMAL"
-          }
-        ]
-      },
-      {
-        "basket": "Commodities (broad)",
-        "sector": "Commodities",
-        "etf": "DBC",
-        "members": 12,
-        "net_score": -0.132,
-        "stance": "mixed",
-        "signal_mix": {
-          "BUY": 1,
-          "HOLD": 9,
-          "SELL": 2
-        },
-        "news_states": {
-          "NORMAL": 12
-        },
-        "headline_count": 0,
-        "active_news": 0,
-        "top_members": [
-          {
-            "ticker": "CPER",
-            "signal": "BUY",
-            "score": 0.765,
-            "headlines": 0,
-            "news_state": "NORMAL"
-          },
-          {
-            "ticker": "GLD",
-            "signal": "SELL",
-            "score": -0.44,
-            "headlines": 0,
-            "news_state": "NORMAL"
-          },
-          {
-            "ticker": "IAU",
-            "signal": "SELL",
-            "score": -0.44,
-            "headlines": 0,
-            "news_state": "NORMAL"
-          },
-          {
-            "ticker": "GDX",
-            "signal": "HOLD",
-            "score": -0.369,
-            "headlines": 0,
-            "news_state": "NORMAL"
-          },
-          {
-            "ticker": "GDXJ",
-            "signal": "HOLD",
-            "score": -0.369,
-            "headlines": 0,
-            "news_state": "NORMAL"
-          },
-          {
-            "ticker": "PPLT",
-            "signal": "HOLD",
-            "score": -0.369,
-            "headlines": 0,
-            "news_state": "NORMAL"
-          }
-        ]
-      },
-      {
-        "basket": "Materials",
-        "sector": "Materials",
-        "etf": "XLB",
-        "members": 28,
-        "net_score": 0.128,
-        "stance": "mixed",
-        "signal_mix": {
-          "BUY": 7,
-          "HOLD": 19,
-          "SELL": 2
-        },
-        "news_states": {
-          "NORMAL": 28
-        },
-        "headline_count": 0,
-        "active_news": 0,
-        "top_members": [
-          {
-            "ticker": "DD",
-            "signal": "BUY",
-            "score": 0.755,
-            "headlines": 0,
-            "news_state": "NORMAL"
-          },
-          {
-            "ticker": "XLB",
-            "signal": "BUY",
-            "score": 0.599,
-            "headlines": 0,
-            "news_state": "NORMAL"
-          },
-          {
-            "ticker": "FCX",
-            "signal": "BUY",
-            "score": 0.599,
-            "headlines": 0,
-            "news_state": "NORMAL"
-          },
-          {
-            "ticker": "PKG",
-            "signal": "BUY",
-            "score": 0.599,
-            "headlines": 0,
-            "news_state": "NORMAL"
-          },
-          {
-            "ticker": "IFF",
-            "signal": "BUY",
-            "score": 0.599,
-            "headlines": 0,
-            "news_state": "NORMAL"
-          },
-          {
-            "ticker": "EMN",
-            "signal": "BUY",
-            "score": 0.599,
-            "headlines": 0,
-            "news_state": "NORMAL"
-          }
-        ]
-      },
-      {
-        "basket": "Consumer Staples",
-        "sector": "Staples",
-        "etf": "XLP",
-        "members": 34,
-        "net_score": 0.121,
-        "stance": "mixed",
-        "signal_mix": {
-          "BUY": 8,
-          "HOLD": 23,
-          "SELL": 3
-        },
-        "news_states": {
-          "NORMAL": 34
-        },
-        "headline_count": 0,
-        "active_news": 0,
-        "top_members": [
-          {
-            "ticker": "ADM",
-            "signal": "BUY",
-            "score": 0.779,
-            "headlines": 0,
-            "news_state": "NORMAL"
-          },
-          {
-            "ticker": "MO",
-            "signal": "BUY",
-            "score": 0.771,
-            "headlines": 0,
-            "news_state": "NORMAL"
-          },
-          {
-            "ticker": "PM",
-            "signal": "BUY",
-            "score": 0.767,
-            "headlines": 0,
-            "news_state": "NORMAL"
-          },
-          {
-            "ticker": "CL",
-            "signal": "BUY",
-            "score": 0.761,
-            "headlines": 0,
-            "news_state": "NORMAL"
-          },
-          {
-            "ticker": "KO",
-            "signal": "BUY",
-            "score": 0.628,
-            "headlines": 0,
-            "news_state": "NORMAL"
-          },
-          {
-            "ticker": "KDP",
-            "signal": "BUY",
-            "score": 0.623,
-            "headlines": 0,
-            "news_state": "NORMAL"
-          }
-        ]
-      },
-      {
-        "basket": "FX",
-        "sector": "FX",
-        "etf": "\u2014",
-        "members": 8,
-        "net_score": -0.11,
-        "stance": "mixed",
-        "signal_mix": {
-          "BUY": 1,
-          "HOLD": 4,
-          "SELL": 3
-        },
-        "news_states": {
-          "NORMAL": 8
-        },
-        "headline_count": 0,
-        "active_news": 0,
-        "top_members": [
-          {
-            "ticker": "UUP",
-            "signal": "BUY",
-            "score": 0.74,
-            "headlines": 0,
-            "news_state": "NORMAL"
-          },
-          {
-            "ticker": "FXY",
-            "signal": "SELL",
-            "score": -0.531,
-            "headlines": 0,
-            "news_state": "NORMAL"
-          },
-          {
-            "ticker": "FXF",
-            "signal": "SELL",
-            "score": -0.531,
-            "headlines": 0,
-            "news_state": "NORMAL"
-          },
-          {
-            "ticker": "FXA",
-            "signal": "SELL",
-            "score": -0.531,
-            "headlines": 0,
-            "news_state": "NORMAL"
-          },
-          {
-            "ticker": "FXC",
-            "signal": "HOLD",
-            "score": -0.027,
-            "headlines": 0,
-            "news_state": "NORMAL"
-          },
-          {
-            "ticker": "FXE",
-            "signal": "HOLD",
-            "score": 0.0,
-            "headlines": 0,
-            "news_state": "NORMAL"
-          }
-        ]
-      },
-      {
-        "basket": "Health Care",
-        "sector": "Healthcare",
-        "etf": "XLV",
-        "members": 57,
-        "net_score": 0.093,
-        "stance": "mixed",
-        "signal_mix": {
-          "BUY": 13,
-          "HOLD": 38,
-          "SELL": 6
-        },
-        "news_states": {
-          "NORMAL": 57
-        },
-        "headline_count": 0,
-        "active_news": 0,
-        "top_members": [
-          {
-            "ticker": "ELV",
-            "signal": "BUY",
-            "score": 0.776,
-            "headlines": 0,
-            "news_state": "NORMAL"
-          },
-          {
-            "ticker": "HUM",
-            "signal": "BUY",
-            "score": 0.66,
-            "headlines": 0,
-            "news_state": "NORMAL"
-          },
-          {
-            "ticker": "CNC",
-            "signal": "BUY",
-            "score": 0.66,
-            "headlines": 0,
-            "news_state": "NORMAL"
-          },
-          {
-            "ticker": "VTRS",
-            "signal": "BUY",
-            "score": 0.66,
-            "headlines": 0,
-            "news_state": "NORMAL"
-          },
-          {
-            "ticker": "UNH",
-            "signal": "BUY",
-            "score": 0.654,
-            "headlines": 0,
-            "news_state": "NORMAL"
-          },
-          {
-            "ticker": "LLY",
-            "signal": "BUY",
-            "score": 0.639,
+            "score": 0.739,
             "headlines": 0,
             "news_state": "NORMAL"
           }
@@ -1816,7 +1878,7 @@
         "sector": "Communication",
         "etf": "XLC",
         "members": 18,
-        "net_score": 0.07,
+        "net_score": 0.072,
         "stance": "mixed",
         "signal_mix": {
           "BUY": 4,
@@ -1832,42 +1894,42 @@
           {
             "ticker": "FOXA",
             "signal": "BUY",
-            "score": 0.756,
+            "score": 0.73,
             "headlines": 0,
             "news_state": "NORMAL"
           },
           {
             "ticker": "FOX",
             "signal": "BUY",
-            "score": 0.755,
-            "headlines": 0,
-            "news_state": "NORMAL"
-          },
-          {
-            "ticker": "NWSA",
-            "signal": "SELL",
-            "score": -0.66,
-            "headlines": 0,
-            "news_state": "NORMAL"
-          },
-          {
-            "ticker": "NWS",
-            "signal": "SELL",
-            "score": -0.66,
+            "score": 0.729,
             "headlines": 0,
             "news_state": "NORMAL"
           },
           {
             "ticker": "LYV",
             "signal": "BUY",
-            "score": 0.62,
+            "score": 0.596,
+            "headlines": 0,
+            "news_state": "NORMAL"
+          },
+          {
+            "ticker": "NWSA",
+            "signal": "SELL",
+            "score": -0.593,
+            "headlines": 0,
+            "news_state": "NORMAL"
+          },
+          {
+            "ticker": "NWS",
+            "signal": "SELL",
+            "score": -0.593,
             "headlines": 0,
             "news_state": "NORMAL"
           },
           {
             "ticker": "SNAP",
             "signal": "BUY",
-            "score": 0.454,
+            "score": 0.433,
             "headlines": 0,
             "news_state": "NORMAL"
           }
@@ -1878,7 +1940,7 @@
         "sector": "Utilities",
         "etf": "XLU",
         "members": 29,
-        "net_score": 0.047,
+        "net_score": 0.045,
         "stance": "mixed",
         "signal_mix": {
           "BUY": 4,
@@ -1894,104 +1956,42 @@
           {
             "ticker": "D",
             "signal": "BUY",
-            "score": 0.626,
-            "headlines": 0,
-            "news_state": "NORMAL"
-          },
-          {
-            "ticker": "LNT",
-            "signal": "BUY",
-            "score": 0.614,
-            "headlines": 0,
-            "news_state": "NORMAL"
-          },
-          {
-            "ticker": "ES",
-            "signal": "BUY",
-            "score": 0.614,
-            "headlines": 0,
-            "news_state": "NORMAL"
-          },
-          {
-            "ticker": "ATO",
-            "signal": "SELL",
-            "score": -0.587,
+            "score": 0.602,
             "headlines": 0,
             "news_state": "NORMAL"
           },
           {
             "ticker": "EVRG",
             "signal": "BUY",
-            "score": 0.557,
+            "score": 0.576,
+            "headlines": 0,
+            "news_state": "NORMAL"
+          },
+          {
+            "ticker": "LNT",
+            "signal": "BUY",
+            "score": 0.573,
+            "headlines": 0,
+            "news_state": "NORMAL"
+          },
+          {
+            "ticker": "ES",
+            "signal": "BUY",
+            "score": 0.573,
+            "headlines": 0,
+            "news_state": "NORMAL"
+          },
+          {
+            "ticker": "ATO",
+            "signal": "SELL",
+            "score": -0.563,
             "headlines": 0,
             "news_state": "NORMAL"
           },
           {
             "ticker": "NRG",
             "signal": "SELL",
-            "score": -0.467,
-            "headlines": 0,
-            "news_state": "NORMAL"
-          }
-        ]
-      },
-      {
-        "basket": "Financials",
-        "sector": "Financials",
-        "etf": "XLF",
-        "members": 64,
-        "net_score": -0.036,
-        "stance": "mixed",
-        "signal_mix": {
-          "BUY": 10,
-          "HOLD": 37,
-          "SELL": 17
-        },
-        "news_states": {
-          "NORMAL": 64
-        },
-        "headline_count": 0,
-        "active_news": 0,
-        "top_members": [
-          {
-            "ticker": "BEN",
-            "signal": "BUY",
-            "score": 0.66,
-            "headlines": 0,
-            "news_state": "NORMAL"
-          },
-          {
-            "ticker": "MS",
-            "signal": "BUY",
-            "score": 0.655,
-            "headlines": 0,
-            "news_state": "NORMAL"
-          },
-          {
-            "ticker": "BK",
-            "signal": "BUY",
-            "score": 0.654,
-            "headlines": 0,
-            "news_state": "NORMAL"
-          },
-          {
-            "ticker": "GS",
-            "signal": "BUY",
-            "score": 0.65,
-            "headlines": 0,
-            "news_state": "NORMAL"
-          },
-          {
-            "ticker": "AIZ",
-            "signal": "BUY",
-            "score": 0.633,
-            "headlines": 0,
-            "news_state": "NORMAL"
-          },
-          {
-            "ticker": "V",
-            "signal": "BUY",
-            "score": 0.614,
+            "score": -0.442,
             "headlines": 0,
             "news_state": "NORMAL"
           }
@@ -2002,7 +2002,7 @@
         "sector": "Software",
         "etf": "IGV",
         "members": 9,
-        "net_score": -0.014,
+        "net_score": 0.003,
         "stance": "mixed",
         "signal_mix": {
           "BUY": 2,
@@ -2018,35 +2018,35 @@
           {
             "ticker": "CRWD",
             "signal": "BUY",
-            "score": 0.622,
+            "score": 0.614,
             "headlines": 0,
             "news_state": "NORMAL"
           },
           {
             "ticker": "PANW",
             "signal": "BUY",
-            "score": 0.475,
+            "score": 0.474,
             "headlines": 0,
             "news_state": "NORMAL"
           },
           {
             "ticker": "CRM",
             "signal": "SELL",
-            "score": -0.468,
+            "score": -0.421,
             "headlines": 0,
             "news_state": "NORMAL"
           },
           {
             "ticker": "PLTR",
             "signal": "SELL",
-            "score": -0.468,
+            "score": -0.421,
             "headlines": 0,
             "news_state": "NORMAL"
           },
           {
             "ticker": "ADBE",
             "signal": "HOLD",
-            "score": -0.283,
+            "score": -0.219,
             "headlines": 0,
             "news_state": "NORMAL"
           },
@@ -2124,7 +2124,158 @@
         ]
       }
     ],
-    "momentum": []
+    "momentum": [
+      {
+        "ticker": "MPWR",
+        "sector": "Technology",
+        "headlines": 5,
+        "signal": "BUY",
+        "score": 1.0,
+        "news_state": "NORMAL",
+        "momentum": 3.0,
+        "top_headline": "Monolithic Power Systems Announces Second Quarter 2026 Dividend"
+      },
+      {
+        "ticker": "NTRS",
+        "sector": "Financials",
+        "headlines": 5,
+        "signal": "BUY",
+        "score": 0.926,
+        "news_state": "NORMAL",
+        "momentum": 3.0,
+        "top_headline": "Here is Why Northern Trust Corp. (NTRS) is One of the Most Undervalued Quality Stocks to Invest In"
+      },
+      {
+        "ticker": "MCHP",
+        "sector": "Technology",
+        "headlines": 5,
+        "signal": "BUY",
+        "score": 0.89,
+        "news_state": "NORMAL",
+        "momentum": 3.0,
+        "top_headline": "Cramer's lightning round: Buy Microchip Technology"
+      },
+      {
+        "ticker": "AIZ",
+        "sector": "Financials",
+        "headlines": 5,
+        "signal": "BUY",
+        "score": 0.861,
+        "news_state": "NORMAL",
+        "momentum": 3.0,
+        "top_headline": "How The Assurant (AIZ) Investment Story Is Shifting With New Analyst Targets And Q1 Trends"
+      },
+      {
+        "ticker": "AMT",
+        "sector": "Real Estate",
+        "headlines": 5,
+        "signal": "BUY",
+        "score": 0.852,
+        "news_state": "NORMAL",
+        "momentum": 3.0,
+        "top_headline": "American Tower: Buy This Infrastructure REIT Before Growth Reaccelerates (NYSE:AMT)"
+      },
+      {
+        "ticker": "GLW",
+        "sector": "Technology",
+        "headlines": 5,
+        "signal": "BUY",
+        "score": 0.722,
+        "news_state": "NORMAL",
+        "momentum": 3.0,
+        "top_headline": "Corning Is Riding High on the AI Boom\u2014and Planning Ahead in Case It Goes Bust"
+      },
+      {
+        "ticker": "MSCI",
+        "sector": "Financials",
+        "headlines": 5,
+        "signal": "BUY",
+        "score": 0.619,
+        "news_state": "NORMAL",
+        "momentum": 3.0,
+        "top_headline": "World\u2019s Hottest Stock Market Turns Attention to MSCI Moment"
+      },
+      {
+        "ticker": "APH",
+        "sector": "Technology",
+        "headlines": 5,
+        "signal": "BUY",
+        "score": 0.61,
+        "news_state": "NORMAL",
+        "momentum": 3.0,
+        "top_headline": "Is Amphenol's Recent Stock Performance a Cause for Concern or an Opportunity"
+      },
+      {
+        "ticker": "CDW",
+        "sector": "Technology",
+        "headlines": 5,
+        "signal": "BUY",
+        "score": 0.61,
+        "news_state": "NORMAL",
+        "momentum": 3.0,
+        "top_headline": "CDW (CDW) Stock Price Jumps 29% Is The Valuation Story Changing?"
+      },
+      {
+        "ticker": "NUE",
+        "sector": "Materials",
+        "headlines": 5,
+        "signal": "BUY",
+        "score": 0.6,
+        "news_state": "NORMAL",
+        "momentum": 3.0,
+        "top_headline": "JPMorgan Raises Nucor (NUE) Forecast Ahead of Expected Strong Q2 Results"
+      },
+      {
+        "ticker": "NTAP",
+        "sector": "Technology",
+        "headlines": 5,
+        "signal": "BUY",
+        "score": 0.508,
+        "news_state": "NORMAL",
+        "momentum": 3.0,
+        "top_headline": "Is NetApp Stock Outperforming the Dow?"
+      },
+      {
+        "ticker": "UNP",
+        "sector": "Industrials",
+        "headlines": 5,
+        "signal": "BUY",
+        "score": 0.479,
+        "news_state": "NORMAL",
+        "momentum": 3.0,
+        "top_headline": "Eastbound Highway S to be closed at Union Pacific crossing on May 14"
+      },
+      {
+        "ticker": "MDLZ",
+        "sector": "Staples",
+        "headlines": 5,
+        "signal": "BUY",
+        "score": 0.456,
+        "news_state": "NORMAL",
+        "momentum": 3.0,
+        "top_headline": "Is Mondelez International, Inc. (MDLZ) A Good Stock To Buy Now?"
+      },
+      {
+        "ticker": "NXPI",
+        "sector": "Technology",
+        "headlines": 5,
+        "signal": "BUY",
+        "score": 0.436,
+        "news_state": "NORMAL",
+        "momentum": 3.0,
+        "top_headline": "NXP Semiconductors (NXPI) Stock Valuation After Strong Multi Year Momentum And Modest Overvaluation Signals"
+      },
+      {
+        "ticker": "QRVO",
+        "sector": "Technology",
+        "headlines": 5,
+        "signal": "BUY",
+        "score": 0.436,
+        "news_state": "NORMAL",
+        "momentum": 3.0,
+        "top_headline": "Skyworks Advances Qorvo Merger Plans And Expands AI And EV Power Reach"
+      }
+    ]
   },
   "other": {
     "universe_count": 58,
@@ -2134,17 +2285,17 @@
         "sector": "Crypto",
         "etf": "\u2014",
         "members": 45,
-        "net_score": 0.154,
-        "stance": "bullish",
+        "net_score": 0.085,
+        "stance": "mixed",
         "signal_mix": {
-          "BUY": 15,
-          "HOLD": 29,
-          "SELL": 1
+          "BUY": 10,
+          "HOLD": 33,
+          "SELL": 2
         },
         "news_states": {
           "NORMAL": 45
         },
-        "headline_count": 203,
+        "headline_count": 156,
         "active_news": 0,
         "top_members": [
           {
@@ -2157,36 +2308,36 @@
           {
             "ticker": "TON-USD",
             "signal": "BUY",
-            "score": 0.844,
+            "score": 0.863,
             "headlines": 5,
             "news_state": "NORMAL"
           },
           {
             "ticker": "XLM-USD",
             "signal": "BUY",
-            "score": 0.794,
+            "score": 0.774,
             "headlines": 3,
             "news_state": "NORMAL"
           },
           {
-            "ticker": "FET-USD",
+            "ticker": "XMR-USD",
             "signal": "BUY",
-            "score": 0.779,
-            "headlines": 3,
-            "news_state": "NORMAL"
-          },
-          {
-            "ticker": "TRX-USD",
-            "signal": "BUY",
-            "score": 0.568,
+            "score": 0.679,
             "headlines": 5,
             "news_state": "NORMAL"
           },
           {
-            "ticker": "LDO-USD",
-            "signal": "BUY",
-            "score": 0.562,
-            "headlines": 4,
+            "ticker": "DOGE-USD",
+            "signal": "SELL",
+            "score": -0.442,
+            "headlines": 0,
+            "news_state": "NORMAL"
+          },
+          {
+            "ticker": "RUNE-USD",
+            "signal": "SELL",
+            "score": -0.442,
+            "headlines": 0,
             "news_state": "NORMAL"
           }
         ]
@@ -2196,58 +2347,58 @@
         "sector": "Token",
         "etf": "\u2014",
         "members": 13,
-        "net_score": 0.102,
+        "net_score": -0.053,
         "stance": "mixed",
         "signal_mix": {
-          "BUY": 4,
-          "HOLD": 7,
-          "SELL": 2
+          "BUY": 1,
+          "HOLD": 9,
+          "SELL": 3
         },
         "news_states": {
           "NORMAL": 13
         },
-        "headline_count": 30,
+        "headline_count": 0,
         "active_news": 0,
         "top_members": [
           {
             "ticker": "JTO-USD",
             "signal": "BUY",
-            "score": 1.0,
-            "headlines": 5,
-            "news_state": "NORMAL"
-          },
-          {
-            "ticker": "STRK-USD",
-            "signal": "BUY",
-            "score": 0.619,
-            "headlines": 5,
-            "news_state": "NORMAL"
-          },
-          {
-            "ticker": "PYTH-USD",
-            "signal": "BUY",
-            "score": 0.509,
-            "headlines": 5,
-            "news_state": "NORMAL"
-          },
-          {
-            "ticker": "ENA-USD",
-            "signal": "BUY",
-            "score": 0.491,
-            "headlines": 5,
+            "score": 0.637,
+            "headlines": 0,
             "news_state": "NORMAL"
           },
           {
             "ticker": "BONK-USD",
             "signal": "SELL",
-            "score": -0.467,
+            "score": -0.442,
             "headlines": 0,
             "news_state": "NORMAL"
           },
           {
             "ticker": "PNUT-USD",
             "signal": "SELL",
-            "score": -0.467,
+            "score": -0.442,
+            "headlines": 0,
+            "news_state": "NORMAL"
+          },
+          {
+            "ticker": "TIA-USD",
+            "signal": "SELL",
+            "score": -0.442,
+            "headlines": 0,
+            "news_state": "NORMAL"
+          },
+          {
+            "ticker": "FLOKI-USD",
+            "signal": "HOLD",
+            "score": 0.0,
+            "headlines": 0,
+            "news_state": "NORMAL"
+          },
+          {
+            "ticker": "WIF-USD",
+            "signal": "HOLD",
+            "score": 0.0,
             "headlines": 0,
             "news_state": "NORMAL"
           }
@@ -2255,16 +2406,6 @@
       }
     ],
     "momentum": [
-      {
-        "ticker": "JTO-USD",
-        "sector": "Token",
-        "headlines": 5,
-        "signal": "BUY",
-        "score": 1.0,
-        "news_state": "NORMAL",
-        "momentum": 3.0,
-        "top_headline": "Beneito Clayton \"Jito\" Roman Obituary"
-      },
       {
         "ticker": "NEAR-USD",
         "sector": "Crypto",
@@ -2280,117 +2421,27 @@
         "sector": "Crypto",
         "headlines": 5,
         "signal": "BUY",
-        "score": 0.844,
+        "score": 0.863,
         "news_state": "NORMAL",
         "momentum": 3.0,
         "top_headline": "Binance Will Support the Toncoin (TON) Rebranding to Gram (GRAM)"
-      },
-      {
-        "ticker": "STRK-USD",
-        "sector": "Token",
-        "headlines": 5,
-        "signal": "BUY",
-        "score": 0.619,
-        "news_state": "NORMAL",
-        "momentum": 3.0,
-        "top_headline": "Starknet Reveals Shieldnet for Enhanced Privacy in DeFi"
-      },
-      {
-        "ticker": "TRX-USD",
-        "sector": "Crypto",
-        "headlines": 5,
-        "signal": "BUY",
-        "score": 0.568,
-        "news_state": "NORMAL",
-        "momentum": 3.0,
-        "top_headline": "Album Review: Genghis Tron \u2013 Signal Fire"
       },
       {
         "ticker": "XMR-USD",
         "sector": "Crypto",
         "headlines": 5,
         "signal": "BUY",
-        "score": 0.529,
+        "score": 0.679,
         "news_state": "NORMAL",
         "momentum": 3.0,
         "top_headline": "Monero price rockets 33% to $438 amid $120 million onchain laundering maze"
-      },
-      {
-        "ticker": "PYTH-USD",
-        "sector": "Token",
-        "headlines": 5,
-        "signal": "BUY",
-        "score": 0.509,
-        "news_state": "NORMAL",
-        "momentum": 3.0,
-        "top_headline": "Pyth Network Launches Proprietary 24/7 Index Products Across Metals, Oil, and U.S. Equities, Partners With Marketvector on Equity Index Futu"
-      },
-      {
-        "ticker": "AAVE-USD",
-        "sector": "Crypto",
-        "headlines": 5,
-        "signal": "BUY",
-        "score": 0.5,
-        "news_state": "NORMAL",
-        "momentum": 3.0,
-        "top_headline": "AAVE Rebounds 3% After Aave Bears $39M Compensation"
-      },
-      {
-        "ticker": "ENA-USD",
-        "sector": "Token",
-        "headlines": 5,
-        "signal": "BUY",
-        "score": 0.491,
-        "news_state": "NORMAL",
-        "momentum": 3.0,
-        "top_headline": "Securitize Expands Tokenized CLO Fund to Solana with $250 Million Ethena Commitment - Forward Guidance Trends"
-      },
-      {
-        "ticker": "XTZ-USD",
-        "sector": "Crypto",
-        "headlines": 5,
-        "signal": "BUY",
-        "score": 0.468,
-        "news_state": "NORMAL",
-        "momentum": 3.0,
-        "top_headline": "Tezos Proof of Palm 2026 NFT Event to End on May 31st"
-      },
-      {
-        "ticker": "ICP-USD",
-        "sector": "Crypto",
-        "headlines": 5,
-        "signal": "BUY",
-        "score": 0.458,
-        "news_state": "NORMAL",
-        "momentum": 3.0,
-        "top_headline": "Internet Computer Nears 300B Transactions\u2014Why Is ICP Price Still Stuck in a Bear Market?"
-      },
-      {
-        "ticker": "HBAR-USD",
-        "sector": "Crypto",
-        "headlines": 5,
-        "signal": "BUY",
-        "score": 0.447,
-        "news_state": "NORMAL",
-        "momentum": 3.0,
-        "top_headline": "Archax and Hedera Advance Tokenized Securities with Real-Time Streaming Cash Flows"
-      },
-      {
-        "ticker": "INJ-USD",
-        "sector": "Crypto",
-        "headlines": 5,
-        "signal": "BUY",
-        "score": 0.43,
-        "news_state": "NORMAL",
-        "momentum": 3.0,
-        "top_headline": "Injective (INJ) Drops 3.4% on Technical Rejection, Not News"
       },
       {
         "ticker": "ATOM-USD",
         "sector": "Crypto",
         "headlines": 5,
         "signal": "BUY",
-        "score": 0.427,
+        "score": 0.441,
         "news_state": "NORMAL",
         "momentum": 3.0,
         "top_headline": "NVIDIA Launches Cosmos 3, the Open Frontier Foundation Model for Physical AI"
@@ -2400,10 +2451,110 @@
         "sector": "Crypto",
         "headlines": 5,
         "signal": "BUY",
-        "score": 0.411,
+        "score": 0.435,
         "news_state": "NORMAL",
         "momentum": 3.0,
-        "top_headline": "Securitize Expands Tokenized CLO Fund to Solana With $250 Million Commitment From Ethena Labs - ROIC Trend Report"
+        "top_headline": "Toobit Boosts Solana Yields to 60% APR for Limited Time"
+      },
+      {
+        "ticker": "XTZ-USD",
+        "sector": "Crypto",
+        "headlines": 5,
+        "signal": "BUY",
+        "score": 0.418,
+        "news_state": "NORMAL",
+        "momentum": 3.0,
+        "top_headline": "Tezos Proof of Palm 2026 NFT Event to End on May 31st"
+      },
+      {
+        "ticker": "ICP-USD",
+        "sector": "Crypto",
+        "headlines": 5,
+        "signal": "BUY",
+        "score": 0.408,
+        "news_state": "NORMAL",
+        "momentum": 3.0,
+        "top_headline": "Internet Computer Nears 300B Transactions\u2014Why Is ICP Price Still Stuck in a Bear Market?"
+      },
+      {
+        "ticker": "HBAR-USD",
+        "sector": "Crypto",
+        "headlines": 5,
+        "signal": "BUY",
+        "score": 0.398,
+        "news_state": "NORMAL",
+        "momentum": 3.0,
+        "top_headline": "Archax and Hedera Advance Tokenized Securities with Real-Time Streaming Cash Flows"
+      },
+      {
+        "ticker": "ETH-USD",
+        "sector": "Crypto",
+        "headlines": 5,
+        "signal": "HOLD",
+        "score": 0.0,
+        "news_state": "NORMAL",
+        "momentum": 0.0,
+        "top_headline": "Why I'd Buy Ethereum Over Bitcoin Right Now"
+      },
+      {
+        "ticker": "XRP-USD",
+        "sector": "Crypto",
+        "headlines": 5,
+        "signal": "HOLD",
+        "score": 0.0,
+        "news_state": "NORMAL",
+        "momentum": 0.0,
+        "top_headline": "XRP climbs 4% above $1.18 as traders test next resistance zone"
+      },
+      {
+        "ticker": "BNB-USD",
+        "sector": "Crypto",
+        "headlines": 5,
+        "signal": "HOLD",
+        "score": 0.0,
+        "news_state": "NORMAL",
+        "momentum": 0.0,
+        "top_headline": "VanEck bets BNB\u2019s real-world usage can stand out in a crowded crypto ETF market"
+      },
+      {
+        "ticker": "ADA-USD",
+        "sector": "Crypto",
+        "headlines": 5,
+        "signal": "HOLD",
+        "score": 0.0,
+        "news_state": "NORMAL",
+        "momentum": 0.0,
+        "top_headline": "Wall Street Is Onboarding Cardano \u2014 Yet ADA Sits at a 5-Year Low"
+      },
+      {
+        "ticker": "DOT-USD",
+        "sector": "Crypto",
+        "headlines": 5,
+        "signal": "HOLD",
+        "score": 0.0,
+        "news_state": "NORMAL",
+        "momentum": 0.0,
+        "top_headline": "Is It Too Late to Buy Polkadot?"
+      },
+      {
+        "ticker": "LTC-USD",
+        "sector": "Crypto",
+        "headlines": 5,
+        "signal": "HOLD",
+        "score": 0.0,
+        "news_state": "NORMAL",
+        "momentum": 0.0,
+        "top_headline": "Is Litecoin a Better Buy Than Bitcoin Right Now?"
+      },
+      {
+        "ticker": "BCH-USD",
+        "sector": "Crypto",
+        "headlines": 5,
+        "signal": "HOLD",
+        "score": 0.0,
+        "news_state": "NORMAL",
+        "momentum": 0.0,
+        "top_headline": "Bitcoin Cash Surges 4.98% Amid Thin Liquidity and Volume Spike"
       }
     ]
   },
