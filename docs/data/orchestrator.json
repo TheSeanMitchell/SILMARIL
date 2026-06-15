@@ -1,6 +1,6 @@
 {
   "version": "5.1",
-  "generated_at": "2026-06-15T17:47:18.072252+00:00",
+  "generated_at": "2026-06-15T17:57:22.647705+00:00",
   "directive": {
     "system_objective_today": "RECOVER_FROM_DRAWDOWN",
     "posture": "OFFENSIVE",
@@ -18,16 +18,15 @@
     ]
   },
   "current_state": {
-    "system_equity": 28821.17,
-    "system_deployed_ratio": 0.5737,
+    "system_equity": 28808.24,
+    "system_deployed_ratio": 0.5735,
     "system_sgov_ratio": 0.0,
-    "system_idle_ratio": 0.4263,
+    "system_idle_ratio": 0.4265,
     "active_regimes": [
-      "narrow_leadership",
-      "rotational_bull"
+      "narrow_leadership"
     ],
     "force_rotations_queued": 0,
-    "watch_positions": 1,
+    "watch_positions": 5,
     "violation_flags": [
       "HARVEST_3:NEGATIVE_CASH",
       "HARVEST_3:MARGIN_USED_SEVERE"
@@ -35,89 +34,47 @@
     "regime_stability": 0.5
   },
   "sector_targets": {
-    "Software": {
+    "Communications": {
       "target_pct": 0.0356,
       "current_pct": 0.0,
       "gap": 0.0356,
       "action": "add_slow",
       "flow_score": -0.35
-    },
-    "Technology": {
-      "target_pct": 0.0447,
-      "current_pct": 0.1085,
-      "gap": -0.0638,
-      "action": "trim",
-      "flow_score": -0.2693
     },
     "Semiconductors": {
-      "target_pct": 0.1006,
+      "target_pct": 0.1014,
       "current_pct": 0.0,
-      "gap": 0.1006,
+      "gap": 0.1014,
       "action": "add",
-      "flow_score": 0.2275
+      "flow_score": 0.2349
+    },
+    "Rates": {
+      "target_pct": 0.0396,
+      "current_pct": 0.0,
+      "gap": 0.0396,
+      "action": "add_slow",
+      "flow_score": -0.3148
     },
     "Financials": {
-      "target_pct": 0.0696,
+      "target_pct": 0.0612,
       "current_pct": 0.0849,
-      "gap": -0.0153,
-      "action": "hold",
-      "flow_score": -0.0481
+      "gap": -0.0237,
+      "action": "trim_slow",
+      "flow_score": -0.1231
     },
-    "Crypto": {
-      "target_pct": 0.0356,
+    "Utilities": {
+      "target_pct": 0.0413,
       "current_pct": 0.0,
-      "gap": 0.0356,
+      "gap": 0.0413,
       "action": "add_slow",
-      "flow_score": -0.35
-    },
-    "Energy": {
-      "target_pct": 0.0356,
-      "current_pct": 0.0,
-      "gap": 0.0356,
-      "action": "add_slow",
-      "flow_score": -0.35
+      "flow_score": -0.2998
     },
     "Industrials": {
       "target_pct": 0.0653,
-      "current_pct": 0.0677,
-      "gap": -0.0024,
+      "current_pct": 0.0676,
+      "gap": -0.0023,
       "action": "hold",
-      "flow_score": -0.0859
-    },
-    "Rates": {
-      "target_pct": 0.0391,
-      "current_pct": 0.0,
-      "gap": 0.0391,
-      "action": "add_slow",
-      "flow_score": -0.3187
-    },
-    "Communication Services": {
-      "target_pct": 0.0965,
-      "current_pct": 0.0,
-      "gap": 0.0965,
-      "action": "add",
-      "flow_score": 0.1913
-    },
-    "Healthcare": {
-      "target_pct": 0.0515,
-      "current_pct": 0.029,
-      "gap": 0.0225,
-      "action": "add_slow",
-      "flow_score": -0.209
-    },
-    "Credit": {
-      "target_pct": 0.0397,
-      "current_pct": 0.0,
-      "gap": 0.0397,
-      "action": "add_slow",
-      "flow_score": -0.3134
-    },
-    "Commodities": {
-      "target_pct": 0.0356,
-      "current_pct": 0.0,
-      "gap": 0.0356,
-      "action": "add_slow",
-      "flow_score": -0.35
+      "flow_score": -0.0862
     },
     "FX": {
       "target_pct": 0.0356,
@@ -126,21 +83,77 @@
       "action": "add_slow",
       "flow_score": -0.35
     },
+    "Health Care": {
+      "target_pct": 0.0985,
+      "current_pct": 0.0,
+      "gap": 0.0985,
+      "action": "add",
+      "flow_score": 0.2093
+    },
     "Consumer Staples": {
-      "target_pct": 0.0889,
+      "target_pct": 0.073,
       "current_pct": 0.0,
-      "gap": 0.0889,
+      "gap": 0.073,
       "action": "add",
-      "flow_score": 0.1238
+      "flow_score": -0.018
     },
-    "Token": {
-      "target_pct": 0.1144,
+    "Materials": {
+      "target_pct": 0.0597,
       "current_pct": 0.0,
-      "gap": 0.1144,
+      "gap": 0.0597,
       "action": "add",
-      "flow_score": 0.35
+      "flow_score": -0.1356
     },
-    "Communications": {
+    "Credit": {
+      "target_pct": 0.0401,
+      "current_pct": 0.0,
+      "gap": 0.0401,
+      "action": "add_slow",
+      "flow_score": -0.3103
+    },
+    "Real Estate": {
+      "target_pct": 0.0451,
+      "current_pct": 0.102,
+      "gap": -0.0569,
+      "action": "trim",
+      "flow_score": -0.2654
+    },
+    "Communication Services": {
+      "target_pct": 0.0985,
+      "current_pct": 0.0,
+      "gap": 0.0985,
+      "action": "add",
+      "flow_score": 0.2093
+    },
+    "Consumer Discretionary": {
+      "target_pct": 0.077,
+      "current_pct": 0.0,
+      "gap": 0.077,
+      "action": "add",
+      "flow_score": 0.018
+    },
+    "Commodities": {
+      "target_pct": 0.0356,
+      "current_pct": 0.0,
+      "gap": 0.0356,
+      "action": "add_slow",
+      "flow_score": -0.35
+    },
+    "Technology": {
+      "target_pct": 0.0685,
+      "current_pct": 0.1084,
+      "gap": -0.0399,
+      "action": "trim_slow",
+      "flow_score": -0.058
+    },
+    "Innovation": {
+      "target_pct": 0.0595,
+      "current_pct": 0.0,
+      "gap": 0.0595,
+      "action": "add",
+      "flow_score": -0.138
+    },
+    "Crypto": {
       "target_pct": 0.0356,
       "current_pct": 0.0,
       "gap": 0.0356,
@@ -155,67 +168,53 @@
       "flow_score": -0.35
     },
     "Index": {
-      "target_pct": 0.0519,
+      "target_pct": 0.052,
       "current_pct": 0.0986,
-      "gap": -0.0467,
+      "gap": -0.0466,
       "action": "trim_slow",
-      "flow_score": -0.2054
+      "flow_score": -0.2047
     },
-    "Innovation": {
-      "target_pct": 0.0607,
-      "current_pct": 0.0,
-      "gap": 0.0607,
-      "action": "add",
-      "flow_score": -0.1273
-    },
-    "Consumer Discretionary": {
-      "target_pct": 0.0611,
-      "current_pct": 0.0,
-      "gap": 0.0611,
-      "action": "add",
-      "flow_score": -0.1238
-    },
-    "Utilities": {
-      "target_pct": 0.0486,
-      "current_pct": 0.0,
-      "gap": 0.0486,
+    "Healthcare": {
+      "target_pct": 0.0513,
+      "current_pct": 0.029,
+      "gap": 0.0223,
       "action": "add_slow",
-      "flow_score": -0.2349
-    },
-    "Materials": {
-      "target_pct": 0.0594,
-      "current_pct": 0.0,
-      "gap": 0.0594,
-      "action": "add",
-      "flow_score": -0.1388
-    },
-    "Health Care": {
-      "target_pct": 0.1125,
-      "current_pct": 0.0,
-      "gap": 0.1125,
-      "action": "add",
-      "flow_score": 0.333
-    },
-    "Staples": {
-      "target_pct": 0.0526,
-      "current_pct": 0.0292,
-      "gap": 0.0234,
-      "action": "add_slow",
-      "flow_score": -0.1991
-    },
-    "Real Estate": {
-      "target_pct": 0.0376,
-      "current_pct": 0.1021,
-      "gap": -0.0645,
-      "action": "trim",
-      "flow_score": -0.3322
+      "flow_score": -0.2108
     },
     "Discretionary": {
-      "target_pct": 0.069,
+      "target_pct": 0.0684,
       "current_pct": 0.0537,
-      "gap": 0.0153,
+      "gap": 0.0147,
       "action": "hold",
-      "flow_score": -0.0529
+      "flow_score": -0.0587
+    },
+    "Staples": {
+      "target_pct": 0.0527,
+      "current_pct": 0.0292,
+      "gap": 0.0235,
+      "action": "add_slow",
+      "flow_score": -0.1982
+    },
+    "Energy": {
+      "target_pct": 0.0356,
+      "current_pct": 0.0,
+      "gap": 0.0356,
+      "action": "add_slow",
+      "flow_score": -0.35
+    },
+    "Token": {
+      "target_pct": 0.1144,
+      "current_pct": 0.0,
+      "gap": 0.1144,
+      "action": "add",
+      "flow_score": 0.35
+    },
+    "Software": {
+      "target_pct": 0.0356,
+      "current_pct": 0.0,
+      "gap": 0.0356,
+      "action": "add_slow",
+      "flow_score": -0.35
     }
   },
   "rationale": "objective=RECOVER_FROM_DRAWDOWN \u00b7 posture=OFFENSIVE \u00b7 exposure target 75% \u00b7 2 violations"
