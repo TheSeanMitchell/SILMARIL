@@ -1,10 +1,10 @@
 {
   "version": "5.0",
-  "generated_at": "2026-06-15T02:05:04.232099+00:00",
+  "generated_at": "2026-06-15T02:26:01.702418+00:00",
   "cycles_observed": 60,
-  "dominant_narrative": "risk_off",
-  "regime_shift": "ROTATION",
-  "regime_shift_confidence": 0.3634,
+  "dominant_narrative": "risk_on",
+  "regime_shift": "RISK_ON",
+  "regime_shift_confidence": 0.4,
   "narratives": {
     "risk_on": {
       "label": "Risk-on sentiment returning",
@@ -18,14 +18,25 @@
         "Consumer Staples",
         "Utilities"
       ],
-      "frequency": 1,
+      "frequency": 2,
       "persistence": 60,
-      "acceleration": 0.0,
-      "score": 0.465,
+      "acceleration": 1.0,
+      "score": 0.7,
       "phrases": [
+        "all-time high",
         "buying the dip"
       ],
       "matched_articles": [
+        {
+          "ticker": "JBL",
+          "title": "Jabil Stock Hits All-Time Highs as Analysts Target $425. Here\u2019s Where the Stock Could Go",
+          "source": "TIKR.com"
+        },
+        {
+          "ticker": "NUE",
+          "title": "Nucor Corp stock hits all-time high at 265.14 USD",
+          "source": "Investing.com"
+        },
         {
           "ticker": "LTC-USD",
           "title": "Litecoin Whales Are Buying the Dip \u2014 Can LTC Price Reclaim $60?",
@@ -62,6 +73,11 @@
         {
           "ticker": "HBAR-USD",
           "title": "Hedera (HBAR) Declines 3.3% Amid Broad Crypto Risk-Off",
+          "source": "CoinMarketCap"
+        },
+        {
+          "ticker": "CRO-USD",
+          "title": "Cronos (CRO) Declines 3.5% Amid Broad Crypto Risk-Off Phase",
           "source": "CoinMarketCap"
         }
       ]
@@ -101,20 +117,12 @@
         "Energy"
       ],
       "sectors_out": [],
-      "frequency": 1,
-      "persistence": 11,
-      "acceleration": 0.0,
-      "score": 0.465,
-      "phrases": [
-        "supply concerns"
-      ],
-      "matched_articles": [
-        {
-          "ticker": "PYTH-USD",
-          "title": "Pyth Network expands into institutional data, boosting revenue amid token supply concerns.",
-          "source": "Pluang"
-        }
-      ]
+      "frequency": 0,
+      "persistence": 10,
+      "acceleration": -1.0,
+      "score": 0.35,
+      "phrases": [],
+      "matched_articles": []
     },
     "oil_weakness": {
       "label": "Oil / energy weakening",
@@ -220,25 +228,19 @@
     }
   },
   "sector_pressure": {
-    "Technology": -0.075,
-    "Energy": 0.425,
+    "Technology": 0.16,
+    "Energy": 0.31,
     "Industrials": 0.04,
     "Health Care": 0.58,
     "Financials": 0.04,
-    "Consumer Discretionary": -0.075,
-    "Consumer Staples": 0.075,
-    "Communication Services": 0.465,
+    "Consumer Discretionary": 0.16,
+    "Consumer Staples": -0.16,
+    "Communication Services": 0.7,
     "Real Estate": 0.0,
-    "Utilities": 0.035,
+    "Utilities": -0.2,
     "Materials": 0.0
   },
   "history": [
-    {
-      "cycle_ts": "2026-06-14T06:25:34.002148+00:00",
-      "dominant_narrative": "risk_on",
-      "regime_shift": "RISK_OFF",
-      "score": 0.7
-    },
     {
       "cycle_ts": "2026-06-14T06:44:05.773867+00:00",
       "dominant_narrative": "risk_off",
@@ -592,7 +594,13 @@
       "dominant_narrative": "risk_off",
       "regime_shift": "ROTATION",
       "score": 0.54
+    },
+    {
+      "cycle_ts": "2026-06-15T02:26:01.702418+00:00",
+      "dominant_narrative": "risk_on",
+      "regime_shift": "RISK_ON",
+      "score": 0.7
     }
   ],
-  "headline_count": 313
+  "headline_count": 564
 }
