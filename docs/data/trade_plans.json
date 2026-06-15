@@ -3,7 +3,7 @@
     "version": "2.2.0",
     "project": "SILMARIL",
     "run_type": "live",
-    "generated_at": "2026-06-15T20:02:23.692532+00:00",
+    "generated_at": "2026-06-15T20:22:14.708803+00:00",
     "alpha_2_0_features": {
       "learning_loop": true,
       "alpaca_paper": true,
@@ -15,7 +15,131 @@
   },
   "plans": [
     {
-      "plan_id": "plan_20260615_2006_DXCM",
+      "plan_id": "plan_20260615_2028_BXP",
+      "ticker": "BXP",
+      "name": "BXP",
+      "direction": "LONG",
+      "entry": 65.98,
+      "stop": 64.0,
+      "target": 68.95,
+      "shares": 30.3122,
+      "position_value": 2000.0,
+      "risk_amount": 60.0,
+      "risk_pct_of_portfolio": 0.006,
+      "reward_risk_ratio": 1.5,
+      "invalidation": "Close below $64.00 invalidates the thesis. Re-evaluate if consensus agreement drops below 50%.",
+      "backers": [
+        {
+          "agent": "SPECK",
+          "conviction": 0.534018436112055,
+          "rationale": "Low coverage (5 articles) but sentiment +0.84 and price above SMA-50 \u2014 small edge before crowd arrives."
+        },
+        {
+          "agent": "FABLEBOY_5",
+          "conviction": 0.749479715387113,
+          "rationale": "words +0.68 (5 arts); catalyst: analyst upgrade."
+        }
+      ],
+      "dissenters": [],
+      "consensus_signal": "BUY",
+      "portfolio_size": 10000.0,
+      "generated_at": "2026-06-15T20:28:03.956863+00:00",
+      "status": "ACTIVE",
+      "execution": {
+        "order_id": "SIM-20260615-202803-BXP-B",
+        "side": "BUY",
+        "ticker": "BXP",
+        "asset_class": "equity",
+        "exchange": "NYSE Arca",
+        "venue": "all-electronic ETF/options exchange",
+        "broker": "Interactive Brokers (simulated paper account)",
+        "order_type": "MARKET",
+        "time_in_force": "DAY",
+        "submitted_at_utc": "2026-06-15T20:28:03+00:00",
+        "filled_at_utc": "2026-06-15T20:28:05+00:00",
+        "settlement_date": "2026-06-16",
+        "account": {
+          "label": "EQUITY-CASH-SIM-001",
+          "type": "Cash Account",
+          "broker": "Interactive Brokers (simulated paper account)",
+          "funding_source": "ACH funding from simulated bank account (routed via broker cash sweep)",
+          "balance_before": 10000.0,
+          "balance_after": 7999.4
+        },
+        "fills": [
+          {
+            "shares": 30.312214,
+            "price": 65.98,
+            "timestamp": "2026-06-15T20:28:05+00:00",
+            "venue": "NYSE Arca"
+          }
+        ],
+        "avg_fill_price": 65.98,
+        "gross_notional": 2000.0,
+        "fees": {
+          "commission": 0.0,
+          "sec_section_31": 0.0,
+          "finra_taf": 0.0,
+          "spread_cost": 0.6,
+          "total": 0.6,
+          "notes": "Spread estimate: 3 bps. Zero commission (IBKR Lite/TD-class simulated)."
+        },
+        "net_cost": 2000.6,
+        "net_proceeds": null,
+        "disclaimer": "Simulated execution \u2014 no live orders were placed on any exchange. Fees modeled on US market structure: SEC Section 31 ($27.80/$1M of sale proceeds), FINRA Trading Activity Fee ($0.000166/share on sells, capped $9.30), Coinbase Advanced taker 0.40% for crypto. Spread cost estimated per ticker."
+      },
+      "three_month_return": 0.2791,
+      "three_month_signal": "uptrend",
+      "catalyst_strength": 0.45,
+      "catalyst_strength_label": "soft",
+      "catalyst_matched_keyword": null,
+      "override_applied": false,
+      "override_reason": "",
+      "regime_at_gate": "BALANCED",
+      "setup_archetype": "GENERIC",
+      "setup_lift": 1.0,
+      "setup_rationale": "no archetype match (signal=BUY)",
+      "brokers": [
+        {
+          "name": "Robinhood",
+          "url": "https://robinhood.com/stocks/BXP",
+          "fee_label": "$0 commission",
+          "key": "robinhood"
+        },
+        {
+          "name": "Fidelity",
+          "url": "https://digital.fidelity.com/prgw/digital/research/quote/dashboard/summary?symbol=BXP",
+          "fee_label": "$0 commission",
+          "key": "fidelity"
+        },
+        {
+          "name": "Schwab",
+          "url": "https://www.schwab.com/research/stocks/quotes?symbol=BXP",
+          "fee_label": "$0 commission",
+          "key": "schwab"
+        },
+        {
+          "name": "IBKR",
+          "url": "https://www.interactivebrokers.com/portal/?action=ACCT_MGMT_MAIN&symbol=BXP",
+          "fee_label": "$0\u20130.005/sh",
+          "key": "ibkr"
+        },
+        {
+          "name": "Webull",
+          "url": "https://www.webull.com/quote/BXP",
+          "fee_label": "$0 commission",
+          "key": "webull"
+        },
+        {
+          "name": "Alpaca",
+          "url": "https://app.alpaca.markets/",
+          "fee_label": "$0 commission",
+          "key": "alpaca"
+        }
+      ]
+    },
+    {
+      "plan_id": "plan_20260615_2028_DXCM",
       "ticker": "DXCM",
       "name": "DXCM",
       "direction": "LONG",
@@ -31,27 +155,27 @@
       "backers": [
         {
           "agent": "VEIL",
-          "conviction": 0.8012767992959576,
+          "conviction": 0.7603043072102725,
           "rationale": "Price down -1.6% but sentiment +0.92 \u2014 crowd has seen the turn the tape hasn't confirmed."
         },
         {
           "agent": "SPECK",
-          "conviction": 0.5948508114886972,
+          "conviction": 0.534018436112055,
           "rationale": "Low coverage (5 articles) but sentiment +0.92 and price above SMA-50 \u2014 small edge before crowd arrives."
         },
         {
           "agent": "FABLEBOY_5",
-          "conviction": 0.78170689323083,
+          "conviction": 0.7786802237788186,
           "rationale": "words +0.71 (5 arts); catalyst: FDA/trial win."
         }
       ],
       "dissenters": [],
       "consensus_signal": "BUY",
       "portfolio_size": 10000.0,
-      "generated_at": "2026-06-15T20:06:51.306616+00:00",
+      "generated_at": "2026-06-15T20:28:03.956942+00:00",
       "status": "ACTIVE",
       "execution": {
-        "order_id": "SIM-20260615-200651-DXCM-B",
+        "order_id": "SIM-20260615-202803-DXCM-B",
         "side": "BUY",
         "ticker": "DXCM",
         "asset_class": "equity",
@@ -60,8 +184,8 @@
         "broker": "Interactive Brokers (simulated paper account)",
         "order_type": "MARKET",
         "time_in_force": "DAY",
-        "submitted_at_utc": "2026-06-15T20:06:51+00:00",
-        "filled_at_utc": "2026-06-15T20:06:53+00:00",
+        "submitted_at_utc": "2026-06-15T20:28:03+00:00",
+        "filled_at_utc": "2026-06-15T20:28:05+00:00",
         "settlement_date": "2026-06-16",
         "account": {
           "label": "EQUITY-CASH-SIM-001",
@@ -75,7 +199,7 @@
           {
             "shares": 26.959628,
             "price": 74.185,
-            "timestamp": "2026-06-15T20:06:53+00:00",
+            "timestamp": "2026-06-15T20:28:05+00:00",
             "venue": "NYSE Arca"
           }
         ],
@@ -93,7 +217,7 @@
         "net_proceeds": null,
         "disclaimer": "Simulated execution \u2014 no live orders were placed on any exchange. Fees modeled on US market structure: SEC Section 31 ($27.80/$1M of sale proceeds), FINRA Trading Activity Fee ($0.000166/share on sells, capped $9.30), Coinbase Advanced taker 0.40% for crypto. Spread cost estimated per ticker."
       },
-      "three_month_return": 0.1183,
+      "three_month_return": 0.1188,
       "three_month_signal": "uptrend",
       "catalyst_strength": 0.45,
       "catalyst_strength_label": "soft",
@@ -144,58 +268,63 @@
       ]
     },
     {
-      "plan_id": "plan_20260615_2006_GNRC",
-      "ticker": "GNRC",
-      "name": "GNRC",
+      "plan_id": "plan_20260615_2028_GLW",
+      "ticker": "GLW",
+      "name": "GLW",
       "direction": "LONG",
-      "entry": 270.06,
-      "stop": 261.96,
-      "target": 282.22,
-      "shares": 7.4056,
+      "entry": 187.72,
+      "stop": 182.09,
+      "target": 196.17,
+      "shares": 10.6542,
       "position_value": 2000.0,
       "risk_amount": 60.0,
       "risk_pct_of_portfolio": 0.006,
       "reward_risk_ratio": 1.5,
-      "invalidation": "Close below $261.96 invalidates the thesis. Re-evaluate if consensus agreement drops below 50%.",
+      "invalidation": "Close below $182.09 invalidates the thesis. Re-evaluate if consensus agreement drops below 50%.",
       "backers": [
         {
           "agent": "AEGIS",
-          "conviction": 0.4740725512274023,
+          "conviction": 0.4562521285866963,
           "rationale": "Cautious constructive: clean uptrend with calm volatility, sentiment supportive."
         },
         {
           "agent": "ZENITH",
-          "conviction": 0.7785476960579132,
-          "rationale": "Perfect stack with 34.5% total separation, +39.1% 50d momentum \u2014 cosmic trend intact."
+          "conviction": 0.8443755123066845,
+          "rationale": "Perfect stack with 53.8% total separation, +27.1% 50d momentum \u2014 cosmic trend intact."
+        },
+        {
+          "agent": "SYNTH",
+          "conviction": 0.665741666066029,
+          "rationale": "Risk-on regime supports cyclical exposure."
         },
         {
           "agent": "SPECK",
-          "conviction": 0.5783271778362334,
-          "rationale": "Low coverage (5 articles) but sentiment +0.60 and price above SMA-50 \u2014 small edge before crowd arrives."
+          "conviction": 0.4746830543218268,
+          "rationale": "Low coverage (5 articles) but sentiment +0.40 and price above SMA-50 \u2014 small edge before crowd arrives."
         },
         {
           "agent": "FABLEBOY_5",
-          "conviction": 0.5569661614269662,
-          "rationale": "words +0.39 (5 arts)."
+          "conviction": 0.46720813426729113,
+          "rationale": "words +0.26 (5 arts)."
         }
       ],
       "dissenters": [],
       "consensus_signal": "BUY",
       "portfolio_size": 10000.0,
-      "generated_at": "2026-06-15T20:06:51.306716+00:00",
+      "generated_at": "2026-06-15T20:28:03.957023+00:00",
       "status": "ACTIVE",
       "execution": {
-        "order_id": "SIM-20260615-200651-GNRC-B",
+        "order_id": "SIM-20260615-202803-GLW-B",
         "side": "BUY",
-        "ticker": "GNRC",
+        "ticker": "GLW",
         "asset_class": "equity",
         "exchange": "NYSE Arca",
         "venue": "all-electronic ETF/options exchange",
         "broker": "Interactive Brokers (simulated paper account)",
         "order_type": "MARKET",
         "time_in_force": "DAY",
-        "submitted_at_utc": "2026-06-15T20:06:51+00:00",
-        "filled_at_utc": "2026-06-15T20:06:53+00:00",
+        "submitted_at_utc": "2026-06-15T20:28:03+00:00",
+        "filled_at_utc": "2026-06-15T20:28:05+00:00",
         "settlement_date": "2026-06-16",
         "account": {
           "label": "EQUITY-CASH-SIM-001",
@@ -207,13 +336,13 @@
         },
         "fills": [
           {
-            "shares": 7.405625,
-            "price": 270.065,
-            "timestamp": "2026-06-15T20:06:53+00:00",
+            "shares": 10.654166,
+            "price": 187.72,
+            "timestamp": "2026-06-15T20:28:05+00:00",
             "venue": "NYSE Arca"
           }
         ],
-        "avg_fill_price": 270.065,
+        "avg_fill_price": 187.72,
         "gross_notional": 2000.0,
         "fees": {
           "commission": 0.0,
@@ -227,11 +356,11 @@
         "net_proceeds": null,
         "disclaimer": "Simulated execution \u2014 no live orders were placed on any exchange. Fees modeled on US market structure: SEC Section 31 ($27.80/$1M of sale proceeds), FINRA Trading Activity Fee ($0.000166/share on sells, capped $9.30), Coinbase Advanced taker 0.40% for crypto. Spread cost estimated per ticker."
       },
-      "three_month_return": 0.3338,
+      "three_month_return": 0.425,
       "three_month_signal": "uptrend",
-      "catalyst_strength": 1.0,
-      "catalyst_strength_label": "strong",
-      "catalyst_matched_keyword": "acquires",
+      "catalyst_strength": 0.39,
+      "catalyst_strength_label": "soft",
+      "catalyst_matched_keyword": null,
       "override_applied": false,
       "override_reason": "",
       "regime_at_gate": "BALANCED",
@@ -241,165 +370,31 @@
       "brokers": [
         {
           "name": "Robinhood",
-          "url": "https://robinhood.com/stocks/GNRC",
+          "url": "https://robinhood.com/stocks/GLW",
           "fee_label": "$0 commission",
           "key": "robinhood"
         },
         {
           "name": "Fidelity",
-          "url": "https://digital.fidelity.com/prgw/digital/research/quote/dashboard/summary?symbol=GNRC",
+          "url": "https://digital.fidelity.com/prgw/digital/research/quote/dashboard/summary?symbol=GLW",
           "fee_label": "$0 commission",
           "key": "fidelity"
         },
         {
           "name": "Schwab",
-          "url": "https://www.schwab.com/research/stocks/quotes?symbol=GNRC",
+          "url": "https://www.schwab.com/research/stocks/quotes?symbol=GLW",
           "fee_label": "$0 commission",
           "key": "schwab"
         },
         {
           "name": "IBKR",
-          "url": "https://www.interactivebrokers.com/portal/?action=ACCT_MGMT_MAIN&symbol=GNRC",
+          "url": "https://www.interactivebrokers.com/portal/?action=ACCT_MGMT_MAIN&symbol=GLW",
           "fee_label": "$0\u20130.005/sh",
           "key": "ibkr"
         },
         {
           "name": "Webull",
-          "url": "https://www.webull.com/quote/GNRC",
-          "fee_label": "$0 commission",
-          "key": "webull"
-        },
-        {
-          "name": "Alpaca",
-          "url": "https://app.alpaca.markets/",
-          "fee_label": "$0 commission",
-          "key": "alpaca"
-        }
-      ]
-    },
-    {
-      "plan_id": "plan_20260615_2006_PWR",
-      "ticker": "PWR",
-      "name": "PWR",
-      "direction": "LONG",
-      "entry": 724.4,
-      "stop": 702.67,
-      "target": 757.0,
-      "shares": 2.7609,
-      "position_value": 2000.0,
-      "risk_amount": 60.0,
-      "risk_pct_of_portfolio": 0.006,
-      "reward_risk_ratio": 1.5,
-      "invalidation": "Close below $702.67 invalidates the thesis. Re-evaluate if consensus agreement drops below 50%.",
-      "backers": [
-        {
-          "agent": "AEGIS",
-          "conviction": 0.4740725512274023,
-          "rationale": "Cautious constructive: clean uptrend with calm volatility, sentiment supportive."
-        },
-        {
-          "agent": "ZENITH",
-          "conviction": 0.7785476960579132,
-          "rationale": "Perfect stack with 35.6% total separation, +29.2% 50d momentum \u2014 cosmic trend intact."
-        },
-        {
-          "agent": "SPECK",
-          "conviction": 0.5581270356960965,
-          "rationale": "Low coverage (3 articles) but sentiment +0.52 and price above SMA-50 \u2014 small edge before crowd arrives."
-        },
-        {
-          "agent": "FABLEBOY_5",
-          "conviction": 0.5178808167654249,
-          "rationale": "words +0.33 (3 arts)."
-        }
-      ],
-      "dissenters": [],
-      "consensus_signal": "BUY",
-      "portfolio_size": 10000.0,
-      "generated_at": "2026-06-15T20:06:51.306782+00:00",
-      "status": "ACTIVE",
-      "execution": {
-        "order_id": "SIM-20260615-200651-PWR-B",
-        "side": "BUY",
-        "ticker": "PWR",
-        "asset_class": "equity",
-        "exchange": "NYSE Arca",
-        "venue": "all-electronic ETF/options exchange",
-        "broker": "Interactive Brokers (simulated paper account)",
-        "order_type": "MARKET",
-        "time_in_force": "DAY",
-        "submitted_at_utc": "2026-06-15T20:06:51+00:00",
-        "filled_at_utc": "2026-06-15T20:06:53+00:00",
-        "settlement_date": "2026-06-16",
-        "account": {
-          "label": "EQUITY-CASH-SIM-001",
-          "type": "Cash Account",
-          "broker": "Interactive Brokers (simulated paper account)",
-          "funding_source": "ACH funding from simulated bank account (routed via broker cash sweep)",
-          "balance_before": 10000.0,
-          "balance_after": 7999.4
-        },
-        "fills": [
-          {
-            "shares": 2.760906,
-            "price": 724.4,
-            "timestamp": "2026-06-15T20:06:53+00:00",
-            "venue": "NYSE Arca"
-          }
-        ],
-        "avg_fill_price": 724.4,
-        "gross_notional": 2000.0,
-        "fees": {
-          "commission": 0.0,
-          "sec_section_31": 0.0,
-          "finra_taf": 0.0,
-          "spread_cost": 0.6,
-          "total": 0.6,
-          "notes": "Spread estimate: 3 bps. Zero commission (IBKR Lite/TD-class simulated)."
-        },
-        "net_cost": 2000.6,
-        "net_proceeds": null,
-        "disclaimer": "Simulated execution \u2014 no live orders were placed on any exchange. Fees modeled on US market structure: SEC Section 31 ($27.80/$1M of sale proceeds), FINRA Trading Activity Fee ($0.000166/share on sells, capped $9.30), Coinbase Advanced taker 0.40% for crypto. Spread cost estimated per ticker."
-      },
-      "three_month_return": 0.2622,
-      "three_month_signal": "uptrend",
-      "catalyst_strength": 0.98,
-      "catalyst_strength_label": "strong",
-      "catalyst_matched_keyword": "buyback",
-      "override_applied": false,
-      "override_reason": "",
-      "regime_at_gate": "BALANCED",
-      "setup_archetype": "GENERIC",
-      "setup_lift": 1.0,
-      "setup_rationale": "no archetype match (signal=BUY)",
-      "brokers": [
-        {
-          "name": "Robinhood",
-          "url": "https://robinhood.com/stocks/PWR",
-          "fee_label": "$0 commission",
-          "key": "robinhood"
-        },
-        {
-          "name": "Fidelity",
-          "url": "https://digital.fidelity.com/prgw/digital/research/quote/dashboard/summary?symbol=PWR",
-          "fee_label": "$0 commission",
-          "key": "fidelity"
-        },
-        {
-          "name": "Schwab",
-          "url": "https://www.schwab.com/research/stocks/quotes?symbol=PWR",
-          "fee_label": "$0 commission",
-          "key": "schwab"
-        },
-        {
-          "name": "IBKR",
-          "url": "https://www.interactivebrokers.com/portal/?action=ACCT_MGMT_MAIN&symbol=PWR",
-          "fee_label": "$0\u20130.005/sh",
-          "key": "ibkr"
-        },
-        {
-          "name": "Webull",
-          "url": "https://www.webull.com/quote/PWR",
+          "url": "https://www.webull.com/quote/GLW",
           "fee_label": "$0 commission",
           "key": "webull"
         },
