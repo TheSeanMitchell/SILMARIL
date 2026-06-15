@@ -5,14 +5,14 @@
   "account_id": "HARVEST_3",
   "label": "3% Disciplined Harvester",
   "account": {
-    "equity": 9563.73,
-    "cash": 8151.2
+    "equity": 9562.82,
+    "cash": 8086.7
   },
   "principal_target": 10000.0,
   "min_harvest_gain_pct": 0.03,
   "savings": 0.01,
   "realized_savings": 0.01,
-  "trading_capital": 9563.72,
+  "trading_capital": 9562.81,
   "lifetime_realized_wins": 15,
   "lifetime_realized_losses": 24,
   "position_meta": {
@@ -25,18 +25,36 @@
         {
           "ts": "2026-06-15T14:27:43.074814+00:00",
           "price": 1630.13
+        },
+        {
+          "ts": "2026-06-15T15:07:54.958046+00:00",
+          "price": 1621.14
+        }
+      ]
+    },
+    "BWA": {
+      "entry_price": 74.52,
+      "peak_price": 74.52,
+      "first_seen": "2026-06-15T15:07:54.957849+00:00",
+      "qty": 9.758555898,
+      "snapshots_30m": [
+        {
+          "ts": "2026-06-15T15:07:54.957885+00:00",
+          "price": 73.947
         }
       ]
     }
   },
   "tickers_traded_this_cycle": [
-    "BWA",
-    "STX"
+    "VTI",
+    "MAS"
   ],
   "recent_alpaca_tickers": [
     "MPWR",
     "STX",
-    "BWA"
+    "BWA",
+    "MAS",
+    "VTI"
   ],
   "orders": [
     {
@@ -5133,48 +5151,108 @@
       "submitted_at": "2026-06-15T14:47:41.363478182Z",
       "time": "2026-06-15T14:47:41.371462+00:00",
       "timestamp": "2026-06-15T14:47:41.371471+00:00"
-    }
-  ],
-  "orders_placed": [
-    {
-      "action": "CLOSE",
-      "symbol": "STX",
-      "side": "sell",
-      "qty": 0.661126491,
-      "trigger_reason": "Consensus turned bearish: SELL",
-      "realized_pnl": -9.49,
-      "entry_price": 1017.208,
-      "exit_price": 1002.855,
-      "order_id": "3658a896-9114-4efe-84cb-53be607c878f",
-      "time": "2026-06-15T14:47:39.766040+00:00",
-      "timestamp": "2026-06-15T14:47:39.766048+00:00",
-      "session": "regular",
-      "is_extended": false
     },
     {
       "action": "OPEN",
-      "symbol": "BWA",
+      "symbol": "MAS",
       "side": "buy",
-      "notional": 727.11,
-      "conviction": 0.6969,
-      "signal": "STRONG_BUY",
-      "order_id": "27fce0be-554e-4ac6-b238-449134c09c2f",
+      "notional": 927.5,
+      "conviction": 0.5975,
+      "signal": "BUY",
+      "order_id": "66ea6d81-9302-493b-b2d3-e0c0e8a2b817",
       "status": "pending_new",
       "order_type": "market",
-      "submitted_qty": "9.758555898",
+      "submitted_qty": "12.384004272",
       "filled_qty": "0",
       "filled_avg_price": null,
       "limit_price": null,
       "elite": false,
       "use_limit": true,
-      "limit_buffer_bps": 49,
+      "limit_buffer_bps": 108,
       "session": "regular",
       "is_extended": false,
-      "sizing_rationale": "base $956.37 \u00d7 conv 1.16 \u00d7 urg 0.87 \u00d7 mkt 1.00 \u00d7 elite 1.00 \u00d7 pressure 1.00 \u00d7 vol 0.75 \u00d7 concentration 1.00 \u00d7 catalyst 1.00 \u00d7 urgency_boost 1.00 \u2192 $727.11",
+      "sizing_rationale": "base $956.28 \u00d7 conv 1.01 \u00d7 urg 0.96 \u00d7 mkt 1.00 \u00d7 elite 1.00 \u00d7 pressure 1.00 \u00d7 vol 1.00 \u00d7 concentration 1.00 \u00d7 catalyst 1.00 \u00d7 urgency_boost 1.00 \u2192 $927.50",
       "synthetic_from_rotation": null,
-      "submitted_at": "2026-06-15T14:47:41.363478182Z",
-      "time": "2026-06-15T14:47:41.371462+00:00",
-      "timestamp": "2026-06-15T14:47:41.371471+00:00"
+      "submitted_at": "2026-06-15T15:07:54.999776827Z",
+      "time": "2026-06-15T15:07:55.006293+00:00",
+      "timestamp": "2026-06-15T15:07:55.006304+00:00"
+    },
+    {
+      "action": "OPEN",
+      "symbol": "VTI",
+      "side": "buy",
+      "notional": 1109.39,
+      "conviction": 0.7436,
+      "signal": "BUY",
+      "order_id": "a99d2d06-0bb7-47d4-b40c-ad173bea6a2d",
+      "status": "pending_new",
+      "order_type": "market",
+      "submitted_qty": "2.97698944",
+      "filled_qty": "0",
+      "filled_avg_price": null,
+      "limit_price": null,
+      "elite": false,
+      "use_limit": true,
+      "limit_buffer_bps": 45,
+      "session": "regular",
+      "is_extended": false,
+      "sizing_rationale": "base $956.28 \u00d7 conv 1.23 \u00d7 urg 0.90 \u00d7 mkt 1.00 \u00d7 elite 1.00 \u00d7 pressure 1.00 \u00d7 vol 1.05 \u00d7 concentration 1.00 \u00d7 catalyst 1.00 \u00d7 urgency_boost 1.00 \u2192 $1109.39",
+      "synthetic_from_rotation": null,
+      "submitted_at": "2026-06-15T15:07:55.07057214Z",
+      "time": "2026-06-15T15:07:55.101655+00:00",
+      "timestamp": "2026-06-15T15:07:55.101667+00:00"
+    }
+  ],
+  "orders_placed": [
+    {
+      "action": "OPEN",
+      "symbol": "MAS",
+      "side": "buy",
+      "notional": 927.5,
+      "conviction": 0.5975,
+      "signal": "BUY",
+      "order_id": "66ea6d81-9302-493b-b2d3-e0c0e8a2b817",
+      "status": "pending_new",
+      "order_type": "market",
+      "submitted_qty": "12.384004272",
+      "filled_qty": "0",
+      "filled_avg_price": null,
+      "limit_price": null,
+      "elite": false,
+      "use_limit": true,
+      "limit_buffer_bps": 108,
+      "session": "regular",
+      "is_extended": false,
+      "sizing_rationale": "base $956.28 \u00d7 conv 1.01 \u00d7 urg 0.96 \u00d7 mkt 1.00 \u00d7 elite 1.00 \u00d7 pressure 1.00 \u00d7 vol 1.00 \u00d7 concentration 1.00 \u00d7 catalyst 1.00 \u00d7 urgency_boost 1.00 \u2192 $927.50",
+      "synthetic_from_rotation": null,
+      "submitted_at": "2026-06-15T15:07:54.999776827Z",
+      "time": "2026-06-15T15:07:55.006293+00:00",
+      "timestamp": "2026-06-15T15:07:55.006304+00:00"
+    },
+    {
+      "action": "OPEN",
+      "symbol": "VTI",
+      "side": "buy",
+      "notional": 1109.39,
+      "conviction": 0.7436,
+      "signal": "BUY",
+      "order_id": "a99d2d06-0bb7-47d4-b40c-ad173bea6a2d",
+      "status": "pending_new",
+      "order_type": "market",
+      "submitted_qty": "2.97698944",
+      "filled_qty": "0",
+      "filled_avg_price": null,
+      "limit_price": null,
+      "elite": false,
+      "use_limit": true,
+      "limit_buffer_bps": 45,
+      "session": "regular",
+      "is_extended": false,
+      "sizing_rationale": "base $956.28 \u00d7 conv 1.23 \u00d7 urg 0.90 \u00d7 mkt 1.00 \u00d7 elite 1.00 \u00d7 pressure 1.00 \u00d7 vol 1.05 \u00d7 concentration 1.00 \u00d7 catalyst 1.00 \u00d7 urgency_boost 1.00 \u2192 $1109.39",
+      "synthetic_from_rotation": null,
+      "submitted_at": "2026-06-15T15:07:55.07057214Z",
+      "time": "2026-06-15T15:07:55.101655+00:00",
+      "timestamp": "2026-06-15T15:07:55.101667+00:00"
     }
   ],
   "errors": [
@@ -5286,7 +5364,7 @@
         "qty": 7.8e-05,
         "market_value": 0.0079,
         "avg_entry_price": 100.4887,
-        "current_price": 100.5274,
+        "current_price": 100.5299,
         "unrealized_pl": 0.0
       }
     ],
@@ -5294,23 +5372,23 @@
     "primary_symbol": "SGOV",
     "primary_qty": 7.8e-05,
     "primary_market_value": 0.0079,
-    "checked_at": "2026-06-15T14:47:39.717529+00:00"
+    "checked_at": "2026-06-15T15:07:54.957767+00:00"
   },
   "reason": "Live \u2014 configured; last run 2026-06-09T09:17:05",
   "seeded_at": "2026-05-11T05:00:26.087481+00:00",
   "genesis_at": "2026-05-11T05:08:52.354920+00:00",
   "last_cycle_summary": {
-    "time": "2026-06-15T14:47:41.422172+00:00",
-    "timestamp": "2026-06-15T14:47:41.422180+00:00",
-    "closed": 1,
-    "opened": 1,
-    "open_after": 3,
-    "equity": 9563.73,
+    "time": "2026-06-15T15:07:55.151297+00:00",
+    "timestamp": "2026-06-15T15:07:55.151305+00:00",
+    "closed": 0,
+    "opened": 2,
+    "open_after": 5,
+    "equity": 9562.82,
     "savings": 0.01,
-    "total_value": 9563.74,
+    "total_value": 9562.83,
     "tickers_traded": [
-      "BWA",
-      "STX"
+      "VTI",
+      "MAS"
     ],
     "bleed_exits_count": 0,
     "bleed_exits": [],
@@ -5330,10 +5408,10 @@
     "session": "regular",
     "is_extended": false
   },
-  "last_run": "2026-06-15T14:47:41.422410+00:00",
+  "last_run": "2026-06-15T15:07:55.151545+00:00",
   "sweep_protection": {
     "version": "4.0",
-    "checked_at": "2026-06-15T14:47:42.027267+00:00",
+    "checked_at": "2026-06-15T15:07:55.507882+00:00",
     "market_mode": "ATTACK",
     "force_sweep_floor_resolved": 10500.0,
     "stale_close_age_days": 5,
@@ -5409,15 +5487,30 @@
   ],
   "positions_snapshot": [
     {
+      "symbol": "BWA",
+      "ticker": "BWA",
+      "qty": 9.758555898,
+      "current_price": 73.947,
+      "avg_entry_price": 74.52,
+      "peak_price": 74.52,
+      "market_value": 721.62,
+      "unrealized_pl": -5.59,
+      "unrealized_plpc": -0.0077,
+      "first_seen": "2026-06-15T15:07:54.957849+00:00",
+      "scale_out_history": {},
+      "stop_at_break_even": false,
+      "tightened_stop_pct": null
+    },
+    {
       "symbol": "MPWR",
       "ticker": "MPWR",
       "qty": 0.46540961,
-      "current_price": 1610.4325,
+      "current_price": 1621.14,
       "avg_entry_price": 1641.944,
       "peak_price": 1641.944,
-      "market_value": 749.51,
-      "unrealized_pl": -14.67,
-      "unrealized_plpc": -0.0192,
+      "market_value": 754.49,
+      "unrealized_pl": -9.68,
+      "unrealized_plpc": -0.0127,
       "first_seen": "2026-06-15T14:27:43.074775+00:00",
       "scale_out_history": {},
       "stop_at_break_even": false,
@@ -5804,30 +5897,46 @@
     }
   ],
   "cycle_intents": {
-    "at": "2026-06-15T14:47:41.422207+00:00",
+    "at": "2026-06-15T15:07:55.151337+00:00",
     "session": "regular",
     "session_open": true,
     "composite_halt": false,
     "halt_reason": null,
-    "plans_offered": 1,
+    "plans_offered": 2,
     "buy_intents": [
       {
-        "ticker": "BWA",
-        "signal": "STRONG_BUY",
-        "conviction": 0.6969,
+        "ticker": "MAS",
+        "signal": "BUY",
+        "conviction": 0.5975,
         "originated": false,
         "outcome": "submitted",
-        "intended_notional": 727.11,
-        "order_id": "27fce0be-554e-4ac6-b238-449134c09c2f",
+        "intended_notional": 927.5,
+        "order_id": "66ea6d81-9302-493b-b2d3-e0c0e8a2b817",
+        "order_status": "pending_new",
+        "filled_qty": "0"
+      },
+      {
+        "ticker": "VTI",
+        "signal": "BUY",
+        "conviction": 0.7436,
+        "originated": false,
+        "outcome": "submitted",
+        "intended_notional": 1109.39,
+        "order_id": "a99d2d06-0bb7-47d4-b40c-ad173bea6a2d",
         "order_status": "pending_new",
         "filled_qty": "0"
       }
     ],
     "decisions_this_cycle": [
       {
-        "ticker": "BWA",
+        "ticker": "MAS",
         "category": "blocked_signal_not_sell",
-        "reason": "signal STRONG_BUY is not SELL/STRONG_SELL"
+        "reason": "signal BUY is not SELL/STRONG_SELL"
+      },
+      {
+        "ticker": "VTI",
+        "category": "blocked_signal_not_sell",
+        "reason": "signal BUY is not SELL/STRONG_SELL"
       }
     ]
   }
