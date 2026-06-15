@@ -1,39 +1,28 @@
 {
   "version": "6.0",
-  "generated_at": "2026-06-15T01:25:35.301497+00:00",
+  "generated_at": "2026-06-15T01:44:01.268677+00:00",
   "tickers": {
-    "TEL": {
-      "ticker": "TEL",
+    "JTO-USD": {
+      "ticker": "JTO-USD",
       "use_limit_order": true,
-      "limit_buffer_bps": 46,
-      "defer_to_next_cycle": false,
-      "opening_volatility": 0.0385,
-      "liquidity_score": 0.5817,
+      "limit_buffer_bps": 99,
+      "defer_to_next_cycle": true,
+      "opening_volatility": 0.113,
+      "liquidity_score": 0.4561,
       "extension_warning": false,
       "timing_window": null,
-      "rationale": "limit 46bps \u00b7 ATR/px 3.8% \u00b7 liq 0.58"
+      "rationale": "DEFER: ATR/price 11.3% \u2265 9% \u2014 untradeable"
     },
-    "VLO": {
-      "ticker": "VLO",
-      "use_limit_order": true,
-      "limit_buffer_bps": 45,
-      "defer_to_next_cycle": false,
-      "opening_volatility": 0.0362,
-      "liquidity_score": 0.628,
-      "extension_warning": false,
-      "timing_window": null,
-      "rationale": "limit 45bps \u00b7 ATR/px 3.6% \u00b7 liq 0.63"
-    },
-    "PLD": {
-      "ticker": "PLD",
+    "IWM": {
+      "ticker": "IWM",
       "use_limit_order": false,
       "limit_buffer_bps": 30,
       "defer_to_next_cycle": false,
-      "opening_volatility": 0.0197,
-      "liquidity_score": 0.6131,
+      "opening_volatility": 0.0209,
+      "liquidity_score": 1.0,
       "extension_warning": false,
       "timing_window": null,
-      "rationale": "clean entry \u00b7 ATR/px 2.0% \u00b7 liq 0.61"
+      "rationale": "clean entry \u00b7 ATR/px 2.1% \u00b7 liq 1.00"
     },
     "TON-USD": {
       "ticker": "TON-USD",
@@ -48,10 +37,10 @@
     }
   },
   "summary": {
-    "tickers": 4,
-    "deferred": 0,
-    "limit_recommended": 3,
-    "market_orders_ok": 1
+    "tickers": 3,
+    "deferred": 1,
+    "limit_recommended": 2,
+    "market_orders_ok": 0
   },
   "config": {
     "atr_defer_ratio": 0.05,

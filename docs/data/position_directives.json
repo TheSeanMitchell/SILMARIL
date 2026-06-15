@@ -1,33 +1,22 @@
 {
   "version": "5.1",
-  "generated_at": "2026-06-15T01:25:43.286396+00:00",
+  "generated_at": "2026-06-15T01:44:04.245493+00:00",
   "directives": [
-    {
-      "owner": "LEGACY",
-      "ticker": "MPWR",
-      "action": "SCALE_OUT",
-      "size_pct": 0.25,
-      "trigger": "unrealized_plpc\u22653%",
-      "rationale": "first target +3% reached; trim 25%",
-      "priority": 3,
-      "tag": "scale_out_3"
-    },
     {
       "owner": "LEGACY",
       "ticker": "MPWR",
       "action": "SCALE_IN",
       "size_pct": 0.2,
       "trigger": "unrealized_plpc\u22651.5% AND momentum\u22650.55 AND recommendation=HOLD",
-      "rationale": "healthy winner (3.0%, momentum 0.59); add 20% size",
+      "rationale": "healthy winner (3.3%, momentum 0.60); add 20% size",
       "priority": 5
     }
   ],
   "summary": {
-    "directives": 2,
+    "directives": 1,
     "by_action": {
-      "SCALE_OUT": 1,
       "SCALE_IN": 1
     }
   },
-  "rationale": "2 directives issued \u00b7 1 scale-outs \u00b7 1 scale-ins"
+  "rationale": "1 directives issued \u00b7 1 scale-ins"
 }

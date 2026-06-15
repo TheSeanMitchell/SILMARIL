@@ -2,7 +2,7 @@
   "version": "2.2",
   "enabled": true,
   "account": {
-    "equity": 9587.79,
+    "equity": 9589.36,
     "cash": 5801.54
   },
   "principal_target": 10000.0,
@@ -16,10 +16,6 @@
       "first_seen": "2026-06-11T19:34:55.273060+00:00",
       "qty": 3.581294738,
       "snapshots_30m": [
-        {
-          "ts": "2026-06-14T20:26:10.688235+00:00",
-          "price": 272.7
-        },
         {
           "ts": "2026-06-14T21:04:56.119963+00:00",
           "price": 272.7
@@ -47,6 +43,10 @@
         {
           "ts": "2026-06-15T01:05:11.818692+00:00",
           "price": 272.7
+        },
+        {
+          "ts": "2026-06-15T01:44:01.571162+00:00",
+          "price": 272.7
         }
       ]
     },
@@ -56,10 +56,6 @@
       "first_seen": "2026-06-12T14:26:13.732701+00:00",
       "qty": 7.93696,
       "snapshots_30m": [
-        {
-          "ts": "2026-06-14T20:26:10.687878+00:00",
-          "price": 62.99
-        },
         {
           "ts": "2026-06-14T21:04:56.119636+00:00",
           "price": 62.99
@@ -86,6 +82,10 @@
         },
         {
           "ts": "2026-06-15T01:05:11.816931+00:00",
+          "price": 62.99
+        },
+        {
+          "ts": "2026-06-15T01:44:01.569116+00:00",
           "price": 62.99
         }
       ]
@@ -132,7 +132,7 @@
     },
     "MPWR": {
       "entry_price": 1584.126,
-      "peak_price": 1626.0,
+      "peak_price": 1636.0,
       "first_seen": "2026-06-12T16:06:41.553127+00:00",
       "qty": 0.405357634,
       "snapshots_30m": [
@@ -170,7 +170,13 @@
         }
       ],
       "stop_at_break_even": true,
-      "stop_at_break_even_set_at": "2026-06-15T01:25:36.057392+00:00"
+      "stop_at_break_even_set_at": "2026-06-15T01:25:36.057392+00:00",
+      "scale_out_history": {
+        "scale_out_3": {
+          "time": "2026-06-15T01:44:01.567376+00:00",
+          "qty": 0.1013
+        }
+      }
     },
     "ALGN": {
       "entry_price": 175.03,
@@ -4162,19 +4168,7 @@
       "submitted": false
     }
   ],
-  "orders_placed": [
-    {
-      "action": "STOP_ADJUST",
-      "symbol": "MPWR",
-      "directive": "BREAK_EVEN_STOP",
-      "new_stop_pct": 0.0,
-      "trigger_reason": "move stop to entry \u2014 risk-free trade established",
-      "rationale": "move stop to entry \u2014 risk-free trade established",
-      "time": "2026-06-15T01:25:36.057399+00:00",
-      "timestamp": "2026-06-15T01:25:36.057401+00:00",
-      "submitted": false
-    }
-  ],
+  "orders_placed": [],
   "errors": [
     {
       "time": "2026-06-02T22:37:58.484205+00:00",
@@ -4278,14 +4272,14 @@
     }
   ],
   "last_cycle_summary": {
-    "time": "2026-06-15T01:25:37.967284+00:00",
-    "timestamp": "2026-06-15T01:25:37.967298+00:00",
+    "time": "2026-06-15T01:44:01.618375+00:00",
+    "timestamp": "2026-06-15T01:44:01.618384+00:00",
     "closed": 0,
     "opened": 0,
     "open_after": 6,
-    "equity": 9587.79,
+    "equity": 9589.36,
     "savings": 0.02,
-    "total_value": 9587.81,
+    "total_value": 9589.38,
     "tickers_traded": [],
     "bleed_exits_count": 0,
     "bleed_exits": [],
@@ -4299,15 +4293,15 @@
       "reason": "contract forbids sweep this cycle (max=$0)",
       "contract_max": 0.0
     },
-    "directives_consumed": 1,
+    "directives_consumed": 0,
     "rotations_executed": 0,
     "composite_halt": true,
     "session": "closed",
     "is_extended": false
   },
-  "last_run": "2026-06-15T01:25:37.967527+00:00",
-  "grocery_pending_harvest": 2402.364599999999,
-  "trading_capital": 9587.77,
+  "last_run": "2026-06-15T01:44:01.618590+00:00",
+  "grocery_pending_harvest": 2410.775599999999,
+  "trading_capital": 9589.34,
   "realized_savings": 0.02,
   "account_id": "LEGACY",
   "genesis_at": "2026-05-11T05:08:46.083334+00:00",
@@ -4318,7 +4312,7 @@
         "qty": 0.00016,
         "market_value": 0.0161,
         "avg_entry_price": 100.49,
-        "current_price": 100.53,
+        "current_price": 100.52,
         "unrealized_pl": 0.0
       }
     ],
@@ -4326,7 +4320,7 @@
     "primary_symbol": "SGOV",
     "primary_qty": 0.00016,
     "primary_market_value": 0.0161,
-    "checked_at": "2026-06-15T01:25:36.054683+00:00"
+    "checked_at": "2026-06-15T01:44:01.563520+00:00"
   },
   "sgov_sweep_last_cycle": {
     "attempted": false,
@@ -4369,7 +4363,7 @@
   ],
   "sweep_protection": {
     "version": "4.0",
-    "checked_at": "2026-06-15T01:25:39.737727+00:00",
+    "checked_at": "2026-06-15T01:44:02.173942+00:00",
     "market_mode": "PRESERVATION",
     "force_sweep_floor_resolved": 10500.0,
     "stale_close_age_days": 3,
@@ -4383,8 +4377,8 @@
     },
     "evening_shield": {
       "triggered": true,
-      "reason": "danger window overnight_thin \u00b7 positive non-spared unrealized $16.12 (PRESERVATION)",
-      "equity_before": 9587.79,
+      "reason": "danger window overnight_thin \u00b7 positive non-spared unrealized $17.69 (PRESERVATION)",
+      "equity_before": 9589.36,
       "floor_used": 10500.0,
       "spared_count": 0,
       "orders": [
@@ -4396,7 +4390,7 @@
           "trigger": "danger window: overnight_thin (PRESERVATION)",
           "order_id": null,
           "mode": "regular_market",
-          "submitted_at": "2026-06-15T01:25:40.358739+00:00",
+          "submitted_at": "2026-06-15T01:44:02.352792+00:00",
           "ok": false
         },
         {
@@ -4407,7 +4401,7 @@
           "trigger": "danger window: overnight_thin (PRESERVATION)",
           "order_id": null,
           "mode": "regular_market",
-          "submitted_at": "2026-06-15T01:25:40.816820+00:00",
+          "submitted_at": "2026-06-15T01:44:02.638557+00:00",
           "ok": false
         },
         {
@@ -4418,7 +4412,7 @@
           "trigger": "danger window: overnight_thin (PRESERVATION)",
           "order_id": null,
           "mode": "regular_market",
-          "submitted_at": "2026-06-15T01:25:41.279738+00:00",
+          "submitted_at": "2026-06-15T01:44:02.928094+00:00",
           "ok": false
         },
         {
@@ -4429,7 +4423,7 @@
           "trigger": "danger window: overnight_thin (PRESERVATION)",
           "order_id": null,
           "mode": "regular_market",
-          "submitted_at": "2026-06-15T01:25:41.740435+00:00",
+          "submitted_at": "2026-06-15T01:44:03.217009+00:00",
           "ok": false
         },
         {
@@ -4440,7 +4434,7 @@
           "trigger": "danger window: overnight_thin (PRESERVATION)",
           "order_id": null,
           "mode": "regular_market",
-          "submitted_at": "2026-06-15T01:25:42.184097+00:00",
+          "submitted_at": "2026-06-15T01:44:03.509310+00:00",
           "ok": false
         }
       ]
@@ -4515,14 +4509,19 @@
       "symbol": "MPWR",
       "ticker": "MPWR",
       "qty": 0.405357634,
-      "current_price": 1632.14,
+      "current_price": 1636.0,
       "avg_entry_price": 1584.126,
-      "peak_price": 1632.14,
-      "market_value": 661.6,
-      "unrealized_pl": 19.46,
-      "unrealized_plpc": 0.0303,
+      "peak_price": 1636.0,
+      "market_value": 663.17,
+      "unrealized_pl": 21.03,
+      "unrealized_plpc": 0.0327,
       "first_seen": "2026-06-12T16:06:41.553127+00:00",
-      "scale_out_history": {},
+      "scale_out_history": {
+        "scale_out_3": {
+          "time": "2026-06-15T01:44:01.567376+00:00",
+          "qty": 0.1013
+        }
+      },
       "stop_at_break_even": true,
       "tightened_stop_pct": null
     },
@@ -4688,12 +4687,12 @@
     }
   ],
   "last_stale_cancel": {
-    "at": "2026-06-15T01:25:35.630079+00:00",
+    "at": "2026-06-15T01:44:01.478372+00:00",
     "cancelled": 0,
     "open_seen": 5
   },
   "cycle_intents": {
-    "at": "2026-06-15T01:25:37.967314+00:00",
+    "at": "2026-06-15T01:44:01.618402+00:00",
     "session": "closed",
     "session_open": false,
     "composite_halt": true,
