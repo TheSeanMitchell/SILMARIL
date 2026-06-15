@@ -1,10 +1,10 @@
 {
   "version": "5.0",
-  "generated_at": "2026-06-15T04:25:37.187880+00:00",
+  "generated_at": "2026-06-15T04:44:13.744368+00:00",
   "cycles_observed": 60,
-  "dominant_narrative": "risk_on",
-  "regime_shift": "RISK_OFF",
-  "regime_shift_confidence": 0.3639,
+  "dominant_narrative": "risk_off",
+  "regime_shift": "ROTATION",
+  "regime_shift_confidence": 0.3986,
   "narratives": {
     "risk_on": {
       "label": "Risk-on sentiment returning",
@@ -18,20 +18,14 @@
         "Consumer Staples",
         "Utilities"
       ],
-      "frequency": 2,
+      "frequency": 1,
       "persistence": 60,
-      "acceleration": 1.0,
-      "score": 0.7,
+      "acceleration": -0.5,
+      "score": 0.425,
       "phrases": [
-        "all-time high",
         "buying the dip"
       ],
       "matched_articles": [
-        {
-          "ticker": "NUE",
-          "title": "Nucor Corp stock hits all-time high at 265.14 USD",
-          "source": "Investing.com"
-        },
         {
           "ticker": "LTC-USD",
           "title": "Litecoin Whales Are Buying the Dip \u2014 Can LTC Price Reclaim $60?",
@@ -51,17 +45,23 @@
         "Technology",
         "Consumer Discretionary"
       ],
-      "frequency": 1,
+      "frequency": 2,
       "persistence": 60,
-      "acceleration": 0.0,
-      "score": 0.465,
+      "acceleration": 1.0,
+      "score": 0.7,
       "phrases": [
-        "risk off"
+        "risk off",
+        "risk-off"
       ],
       "matched_articles": [
         {
           "ticker": "DOT-USD",
           "title": "Polkadot (DOT) Volatility Explained: Broad Risk Off, Technical Selling",
+          "source": "CoinMarketCap"
+        },
+        {
+          "ticker": "CRO-USD",
+          "title": "Cronos (CRO) Declines 3.5% Amid Broad Crypto Risk-Off Phase",
           "source": "CoinMarketCap"
         }
       ]
@@ -101,12 +101,20 @@
         "Energy"
       ],
       "sectors_out": [],
-      "frequency": 0,
-      "persistence": 10,
-      "acceleration": -1.0,
-      "score": 0.35,
-      "phrases": [],
-      "matched_articles": []
+      "frequency": 1,
+      "persistence": 11,
+      "acceleration": 1.0,
+      "score": 0.625,
+      "phrases": [
+        "supply concerns"
+      ],
+      "matched_articles": [
+        {
+          "ticker": "PYTH-USD",
+          "title": "Pyth Network expands into institutional data, boosting revenue amid token supply concerns.",
+          "source": "Pluang"
+        }
+      ]
     },
     "oil_weakness": {
       "label": "Oil / energy weakening",
@@ -175,20 +183,12 @@
         "Real Estate",
         "Utilities"
       ],
-      "frequency": 1,
-      "persistence": 1,
-      "acceleration": 1.0,
-      "score": 0.3187,
-      "phrases": [
-        "rate hike"
-      ],
-      "matched_articles": [
-        {
-          "ticker": "PPL",
-          "title": "How A US$275 Million Rate Hike At PPL (PPL) Has Changed Its Investment Story",
-          "source": "simplywall.st"
-        }
-      ]
+      "frequency": 0,
+      "persistence": 0,
+      "acceleration": -1.0,
+      "score": 0.0,
+      "phrases": [],
+      "matched_articles": []
     },
     "fed_dovish": {
       "label": "Fed dovish / rate-cut expectations",
@@ -220,25 +220,19 @@
     }
   },
   "sector_pressure": {
-    "Technology": -0.0437,
-    "Energy": 0.31,
+    "Technology": -0.235,
+    "Energy": 0.585,
     "Industrials": 0.04,
-    "Health Care": 0.505,
-    "Financials": 0.3187,
-    "Consumer Discretionary": 0.235,
-    "Consumer Staples": -0.235,
-    "Communication Services": 0.7,
-    "Real Estate": -0.2787,
-    "Utilities": -0.5537,
+    "Health Care": 0.74,
+    "Financials": 0.0,
+    "Consumer Discretionary": -0.275,
+    "Consumer Staples": 0.275,
+    "Communication Services": 0.425,
+    "Real Estate": 0.04,
+    "Utilities": 0.275,
     "Materials": 0.0
   },
   "history": [
-    {
-      "cycle_ts": "2026-06-14T08:44:12.870433+00:00",
-      "dominant_narrative": "risk_off",
-      "regime_shift": "RISK_OFF",
-      "score": 0.54
-    },
     {
       "cycle_ts": "2026-06-14T09:04:04.455253+00:00",
       "dominant_narrative": "risk_off",
@@ -592,7 +586,13 @@
       "dominant_narrative": "risk_on",
       "regime_shift": "RISK_OFF",
       "score": 0.7
+    },
+    {
+      "cycle_ts": "2026-06-15T04:44:13.744368+00:00",
+      "dominant_narrative": "risk_off",
+      "regime_shift": "ROTATION",
+      "score": 0.7
     }
   ],
-  "headline_count": 479
+  "headline_count": 313
 }
