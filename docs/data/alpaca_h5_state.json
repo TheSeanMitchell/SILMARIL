@@ -5,14 +5,14 @@
   "account_id": "HARVEST_5",
   "label": "Headlines-Only Book (Fableboy 5)",
   "account": {
-    "equity": 9659.57,
+    "equity": 9654.94,
     "cash": 8833.68
   },
   "principal_target": 10000.0,
   "min_harvest_gain_pct": 0.05,
   "savings": 0.0,
   "realized_savings": 0.0,
-  "trading_capital": 9659.57,
+  "trading_capital": 9654.94,
   "lifetime_realized_wins": 1,
   "lifetime_realized_losses": 3,
   "position_meta": {
@@ -482,20 +482,20 @@
     "primary_symbol": null,
     "primary_qty": 0.0,
     "primary_market_value": 0.0,
-    "checked_at": "2026-06-15T19:07:34.251991+00:00"
+    "checked_at": "2026-06-15T19:26:56.319145+00:00"
   },
   "reason": "Live \u2014 configured; last run 2026-06-09T09:17:06",
   "seeded_at": "2026-05-11T05:00:26.087739+00:00",
   "genesis_at": "2026-05-11T05:08:53.396920+00:00",
   "last_cycle_summary": {
-    "time": "2026-06-15T19:07:34.494356+00:00",
-    "timestamp": "2026-06-15T19:07:34.494403+00:00",
+    "time": "2026-06-15T19:26:56.413627+00:00",
+    "timestamp": "2026-06-15T19:26:56.413634+00:00",
     "closed": 0,
     "opened": 0,
     "open_after": 1,
-    "equity": 9659.57,
+    "equity": 9654.94,
     "savings": 0.0,
-    "total_value": 9659.57,
+    "total_value": 9654.94,
     "tickers_traded": [],
     "bleed_exits_count": 0,
     "bleed_exits": [],
@@ -507,7 +507,7 @@
     "session": "regular",
     "is_extended": false
   },
-  "last_run": "2026-06-15T19:07:34.494469+00:00",
+  "last_run": "2026-06-15T19:26:56.413687+00:00",
   "sgov_sweep_last_cycle": {
     "attempted": false,
     "reason": "below min sweep $5.00",
@@ -518,7 +518,7 @@
   ],
   "sweep_protection": {
     "version": "4.0",
-    "checked_at": "2026-06-15T19:07:35.422991+00:00",
+    "checked_at": "2026-06-15T19:26:56.936211+00:00",
     "market_mode": "ATTACK",
     "force_sweep_floor_resolved": 10500.0,
     "stale_close_age_days": 5,
@@ -565,12 +565,12 @@
       "symbol": "BWA",
       "ticker": "BWA",
       "qty": 11.162209616,
-      "current_price": 73.99,
+      "current_price": 73.575,
       "avg_entry_price": 74.15,
       "peak_price": 74.41,
-      "market_value": 825.89,
-      "unrealized_pl": -1.79,
-      "unrealized_plpc": -0.0022,
+      "market_value": 821.26,
+      "unrealized_pl": -6.42,
+      "unrealized_plpc": -0.0078,
       "first_seen": "2026-06-15T15:46:58.064267+00:00",
       "scale_out_history": {},
       "stop_at_break_even": false,
@@ -611,43 +611,148 @@
   "wordsmith": {
     "candidates": [
       {
-        "ticker": "EXR",
+        "ticker": "DXCM",
         "signal": "STRONG_BUY",
-        "conviction": 0.8022234955362187,
-        "why": "words +0.65 (4 arts); catalyst: positive catalyst."
+        "conviction": 0.9012457220345677,
+        "why": "words +0.75 (4 arts); catalyst: FDA/trial win.",
+        "originated": true
+      },
+      {
+        "ticker": "NEE",
+        "signal": "BUY",
+        "conviction": 0.9012457220345677,
+        "why": "words +0.75 (2 arts); catalyst: analyst upgrade.",
+        "originated": true
+      },
+      {
+        "ticker": "STX",
+        "signal": "BUY",
+        "conviction": 0.8902549205463414,
+        "why": "words +0.73 (2 arts); catalyst: analyst upgrade.",
+        "originated": true
+      },
+      {
+        "ticker": "FTNT",
+        "signal": "STRONG_BUY",
+        "conviction": 0.879264119058115,
+        "why": "words +0.71 (5 arts); catalyst: analyst upgrade.",
+        "originated": true
+      },
+      {
+        "ticker": "WMB",
+        "signal": "STRONG_BUY",
+        "conviction": 0.8682733175698885,
+        "why": "words +0.70 (4 arts); catalyst: analyst upgrade.",
+        "originated": true
       }
     ],
     "fed_debate_rows": 594,
     "note": "headlines-only book: entries require a FABLEBOY_5 BUY/STRONG_BUY; all safety rails unchanged"
   },
   "cycle_intents": {
-    "at": "2026-06-15T19:07:34.494437+00:00",
+    "at": "2026-06-15T19:26:56.413669+00:00",
     "session": "regular",
     "session_open": true,
     "composite_halt": false,
     "halt_reason": null,
-    "plans_offered": 1,
+    "plans_offered": 5,
     "buy_intents": [
       {
-        "ticker": "EXR",
+        "ticker": "WMB",
         "signal": "STRONG_BUY",
-        "conviction": 0.6397,
-        "originated": false,
-        "outcome": "blocked_correlation_book",
-        "intended_notional": 1159.15,
-        "reason": "correlation cluster HIGH severity"
+        "conviction": 0.8683,
+        "originated": true,
+        "outcome": "blocked_signal_not_sell",
+        "intended_notional": 1158.59,
+        "reason": "signal HOLD is not SELL/STRONG_SELL"
+      },
+      {
+        "ticker": "DXCM",
+        "signal": "STRONG_BUY",
+        "conviction": 0.9012,
+        "originated": true,
+        "outcome": "blocked_signal_not_sell",
+        "intended_notional": 1158.59,
+        "reason": "signal HOLD is not SELL/STRONG_SELL"
+      },
+      {
+        "ticker": "NEE",
+        "signal": "BUY",
+        "conviction": 0.9012,
+        "originated": true,
+        "outcome": "blocked_signal_not_sell",
+        "intended_notional": 1158.59,
+        "reason": "signal HOLD is not SELL/STRONG_SELL"
+      },
+      {
+        "ticker": "STX",
+        "signal": "BUY",
+        "conviction": 0.8903,
+        "originated": true,
+        "outcome": "blocked_signal_not_sell",
+        "intended_notional": 1158.59,
+        "reason": "signal HOLD is not SELL/STRONG_SELL"
+      },
+      {
+        "ticker": "FTNT",
+        "signal": "STRONG_BUY",
+        "conviction": 0.8793,
+        "originated": true,
+        "outcome": "blocked_signal_not_sell",
+        "intended_notional": 1158.59,
+        "reason": "signal HOLD is not SELL/STRONG_SELL"
       }
     ],
     "decisions_this_cycle": [
       {
-        "ticker": "EXR",
-        "category": "blocked_correlation_book",
-        "reason": "correlation cluster HIGH severity"
+        "ticker": "WMB",
+        "category": "blocked_signal_not_buy",
+        "reason": "signal HOLD is not BUY/STRONG_BUY"
       },
       {
-        "ticker": "EXR",
+        "ticker": "DXCM",
+        "category": "blocked_signal_not_buy",
+        "reason": "signal HOLD is not BUY/STRONG_BUY"
+      },
+      {
+        "ticker": "NEE",
+        "category": "blocked_signal_not_buy",
+        "reason": "signal HOLD is not BUY/STRONG_BUY"
+      },
+      {
+        "ticker": "STX",
+        "category": "blocked_signal_not_buy",
+        "reason": "signal HOLD is not BUY/STRONG_BUY"
+      },
+      {
+        "ticker": "FTNT",
+        "category": "blocked_signal_not_buy",
+        "reason": "signal HOLD is not BUY/STRONG_BUY"
+      },
+      {
+        "ticker": "WMB",
         "category": "blocked_signal_not_sell",
-        "reason": "signal STRONG_BUY is not SELL/STRONG_SELL"
+        "reason": "signal HOLD is not SELL/STRONG_SELL"
+      },
+      {
+        "ticker": "DXCM",
+        "category": "blocked_signal_not_sell",
+        "reason": "signal HOLD is not SELL/STRONG_SELL"
+      },
+      {
+        "ticker": "NEE",
+        "category": "blocked_signal_not_sell",
+        "reason": "signal HOLD is not SELL/STRONG_SELL"
+      },
+      {
+        "ticker": "STX",
+        "category": "blocked_signal_not_sell",
+        "reason": "signal HOLD is not SELL/STRONG_SELL"
+      },
+      {
+        "ticker": "FTNT",
+        "category": "blocked_signal_not_sell",
+        "reason": "signal HOLD is not SELL/STRONG_SELL"
       }
     ]
   }
