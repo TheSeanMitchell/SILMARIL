@@ -1,28 +1,17 @@
 {
   "version": "6.0",
-  "generated_at": "2026-06-15T17:07:18.659902+00:00",
+  "generated_at": "2026-06-15T17:20:49.102589+00:00",
   "tickers": {
-    "EXR": {
-      "ticker": "EXR",
+    "FTNT": {
+      "ticker": "FTNT",
       "use_limit_order": true,
-      "limit_buffer_bps": 40,
+      "limit_buffer_bps": 150,
       "defer_to_next_cycle": false,
-      "opening_volatility": 0.0223,
-      "liquidity_score": 0.2466,
+      "opening_volatility": 0.0383,
+      "liquidity_score": 0.2658,
       "extension_warning": false,
-      "timing_window": null,
-      "rationale": "limit 40bps \u00b7 ATR/px 2.2% \u00b7 liq 0.25"
-    },
-    "BXP": {
-      "ticker": "BXP",
-      "use_limit_order": true,
-      "limit_buffer_bps": 40,
-      "defer_to_next_cycle": false,
-      "opening_volatility": 0.0235,
-      "liquidity_score": 0.2394,
-      "extension_warning": false,
-      "timing_window": null,
-      "rationale": "limit 40bps \u00b7 ATR/px 2.3% \u00b7 liq 0.24"
+      "timing_window": "resting toward FTNT's ~135.81 floor (his low window is 09:30 ET) \u2014 limit 150bps below",
+      "rationale": "limit 150bps \u00b7 ATR/px 3.8% \u00b7 liq 0.27 \u00b7 resting toward FTNT's ~135.81 floor (his low window is 09:30 ET) \u2014 limit 150bps below"
     },
     "DXCM": {
       "ticker": "DXCM",
@@ -30,16 +19,38 @@
       "limit_buffer_bps": 46,
       "defer_to_next_cycle": false,
       "opening_volatility": 0.0381,
-      "liquidity_score": 0.2181,
+      "liquidity_score": 0.2299,
       "extension_warning": false,
-      "timing_window": null,
-      "rationale": "limit 46bps \u00b7 ATR/px 3.8% \u00b7 liq 0.22"
+      "timing_window": "now is DXCM's typical daily-LOW window (13:00 ET) \u2014 historically favorable entry",
+      "rationale": "limit 46bps \u00b7 ATR/px 3.8% \u00b7 liq 0.23 \u00b7 now is DXCM's typical daily-LOW window (13:00 ET) \u2014 historically favorable entry"
+    },
+    "CL": {
+      "ticker": "CL",
+      "use_limit_order": true,
+      "limit_buffer_bps": 150,
+      "defer_to_next_cycle": false,
+      "opening_volatility": 0.0243,
+      "liquidity_score": 0.4105,
+      "extension_warning": false,
+      "timing_window": "resting toward CL's ~88.11 floor (his low window is 10:00 ET) \u2014 limit 150bps below",
+      "rationale": "limit 150bps \u00b7 ATR/px 2.4% \u00b7 liq 0.41 \u00b7 resting toward CL's ~88.11 floor (his low window is 10:00 ET) \u2014 limit 150bps below"
+    },
+    "ANET": {
+      "ticker": "ANET",
+      "use_limit_order": true,
+      "limit_buffer_bps": 150,
+      "defer_to_next_cycle": false,
+      "opening_volatility": 0.0489,
+      "liquidity_score": 0.2371,
+      "extension_warning": false,
+      "timing_window": "resting toward ANET's ~149.24 floor (his low window is 09:30 ET) \u2014 limit 150bps below",
+      "rationale": "limit 150bps \u00b7 ATR/px 4.9% \u00b7 liq 0.24 \u00b7 resting toward ANET's ~149.24 floor (his low window is 09:30 ET) \u2014 limit 150bps below"
     }
   },
   "summary": {
-    "tickers": 3,
+    "tickers": 4,
     "deferred": 0,
-    "limit_recommended": 3,
+    "limit_recommended": 4,
     "market_orders_ok": 0
   },
   "config": {
