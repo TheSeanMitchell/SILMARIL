@@ -3,7 +3,7 @@
     "version": "2.2.0",
     "project": "SILMARIL",
     "run_type": "live",
-    "generated_at": "2026-06-15T11:42:06.259172+00:00",
+    "generated_at": "2026-06-15T12:02:09.274623+00:00",
     "alpha_2_0_features": {
       "learning_loop": true,
       "alpaca_paper": true,
@@ -15,7 +15,147 @@
   },
   "plans": [
     {
-      "plan_id": "plan_20260615_1144_IWM",
+      "plan_id": "plan_20260615_1204_JTO-USD",
+      "ticker": "JTO-USD",
+      "name": "JTO-USD",
+      "direction": "LONG",
+      "entry": 0.64,
+      "stop": 0.62,
+      "target": 0.67,
+      "shares": 3132.832,
+      "position_value": 2000.0,
+      "risk_amount": 60.0,
+      "risk_pct_of_portfolio": 0.006,
+      "reward_risk_ratio": 1.5,
+      "invalidation": "Close below $0.62 invalidates the thesis. Re-evaluate if consensus agreement drops below 50%.",
+      "backers": [
+        {
+          "agent": "AEGIS",
+          "conviction": 0.5055073856643536,
+          "rationale": "Cautious constructive: clean uptrend with calm volatility, sentiment supportive."
+        },
+        {
+          "agent": "ZENITH",
+          "conviction": 0.7590804794473929,
+          "rationale": "Perfect stack with 43.5% total separation, +80.0% 50d momentum \u2014 cosmic trend intact."
+        },
+        {
+          "agent": "SPECK",
+          "conviction": 0.6056083528829166,
+          "rationale": "Low coverage (5 articles) but sentiment +0.80 and price above SMA-50 \u2014 small edge before crowd arrives."
+        },
+        {
+          "agent": "FABLEBOY_5",
+          "conviction": 0.7453406050871595,
+          "rationale": "words +0.51 (5 arts)."
+        }
+      ],
+      "dissenters": [],
+      "consensus_signal": "BUY",
+      "portfolio_size": 10000.0,
+      "generated_at": "2026-06-15T12:04:10.719460+00:00",
+      "status": "ACTIVE",
+      "execution": {
+        "order_id": "SIM-20260615-120410-JTOUSD-B",
+        "side": "BUY",
+        "ticker": "JTO-USD",
+        "asset_class": "equity",
+        "exchange": "NYSE Arca",
+        "venue": "all-electronic ETF/options exchange",
+        "broker": "Interactive Brokers (simulated paper account)",
+        "order_type": "MARKET",
+        "time_in_force": "DAY",
+        "submitted_at_utc": "2026-06-15T12:04:10+00:00",
+        "filled_at_utc": "2026-06-15T12:04:12+00:00",
+        "settlement_date": "2026-06-16",
+        "account": {
+          "label": "EQUITY-CASH-SIM-001",
+          "type": "Cash Account",
+          "broker": "Interactive Brokers (simulated paper account)",
+          "funding_source": "ACH funding from simulated bank account (routed via broker cash sweep)",
+          "balance_before": 10000.0,
+          "balance_after": 7999.4
+        },
+        "fills": [
+          {
+            "shares": 3132.831991,
+            "price": 0.6384,
+            "timestamp": "2026-06-15T12:04:12+00:00",
+            "venue": "NYSE Arca"
+          }
+        ],
+        "avg_fill_price": 0.6384,
+        "gross_notional": 2000.0,
+        "fees": {
+          "commission": 0.0,
+          "sec_section_31": 0.0,
+          "finra_taf": 0.0,
+          "spread_cost": 0.6,
+          "total": 0.6,
+          "notes": "Spread estimate: 3 bps. Zero commission (IBKR Lite/TD-class simulated)."
+        },
+        "net_cost": 2000.6,
+        "net_proceeds": null,
+        "disclaimer": "Simulated execution \u2014 no live orders were placed on any exchange. Fees modeled on US market structure: SEC Section 31 ($27.80/$1M of sale proceeds), FINRA Trading Activity Fee ($0.000166/share on sells, capped $9.30), Coinbase Advanced taker 0.40% for crypto. Spread cost estimated per ticker."
+      },
+      "three_month_return": 0.9525,
+      "three_month_signal": "uptrend",
+      "catalyst_strength": 0.45,
+      "catalyst_strength_label": "soft",
+      "catalyst_matched_keyword": null,
+      "override_applied": false,
+      "override_reason": "",
+      "regime_at_gate": "BALANCED",
+      "setup_archetype": "GENERIC",
+      "setup_lift": 1.0,
+      "setup_rationale": "no archetype match (signal=BUY)",
+      "brokers": [
+        {
+          "name": "Robinhood",
+          "url": "https://robinhood.com/crypto/JTO",
+          "fee_label": "~30 bps spread",
+          "key": "robinhood"
+        },
+        {
+          "name": "Fidelity",
+          "url": "https://www.fidelity.com/crypto/overview",
+          "fee_label": "~1% spread",
+          "key": "fidelity"
+        },
+        {
+          "name": "IBKR",
+          "url": "https://www.interactivebrokers.com/en/trading/cryptocurrency.php",
+          "fee_label": "~18 bps",
+          "key": "ibkr"
+        },
+        {
+          "name": "Webull",
+          "url": "https://www.webull.com/crypto",
+          "fee_label": "~100 bps spread",
+          "key": "webull"
+        },
+        {
+          "name": "Coinbase",
+          "url": "https://www.coinbase.com/price/jto",
+          "fee_label": "~40 bps taker",
+          "key": "coinbase"
+        },
+        {
+          "name": "Kraken",
+          "url": "https://www.kraken.com/prices/jto",
+          "fee_label": "~26 bps maker / 40 bps taker",
+          "key": "kraken"
+        },
+        {
+          "name": "Alpaca",
+          "url": "https://app.alpaca.markets/",
+          "fee_label": "0%",
+          "key": "alpaca"
+        }
+      ]
+    },
+    {
+      "plan_id": "plan_20260615_1204_IWM",
       "ticker": "IWM",
       "name": "IWM",
       "direction": "LONG",
@@ -31,32 +171,32 @@
       "backers": [
         {
           "agent": "ZENITH",
-          "conviction": 0.7031195972151032,
+          "conviction": 0.6708931653702179,
           "rationale": "Perfect stack with 11.3% total separation, +17.4% 50d momentum \u2014 cosmic trend intact."
         },
         {
           "agent": "SYNTH",
-          "conviction": 0.5270038743212293,
+          "conviction": 0.5631491978115355,
           "rationale": "Risk-on regime supports cyclical exposure."
         },
         {
           "agent": "TALON",
-          "conviction": 0.49701139653391374,
+          "conviction": 0.753609298548252,
           "rationale": "Index structure intact: above both SMAs, 20d momentum +3.0%, VIX 18.0 calm \u2014 risk-on."
         },
         {
           "agent": "ATLAS",
-          "conviction": 0.5564963260805638,
+          "conviction": 0.5974005595003731,
           "rationale": "Constructive macro: stack aligned, 50d momentum +17.4%, VIX n/a."
         }
       ],
       "dissenters": [],
       "consensus_signal": "BUY",
       "portfolio_size": 10000.0,
-      "generated_at": "2026-06-15T11:44:07.727617+00:00",
+      "generated_at": "2026-06-15T12:04:10.719540+00:00",
       "status": "ACTIVE",
       "execution": {
-        "order_id": "SIM-20260615-114407-IWM-B",
+        "order_id": "SIM-20260615-120410-IWM-B",
         "side": "BUY",
         "ticker": "IWM",
         "asset_class": "etf",
@@ -65,8 +205,8 @@
         "broker": "Interactive Brokers (simulated paper account)",
         "order_type": "MARKET",
         "time_in_force": "DAY",
-        "submitted_at_utc": "2026-06-15T11:44:07+00:00",
-        "filled_at_utc": "2026-06-15T11:44:09+00:00",
+        "submitted_at_utc": "2026-06-15T12:04:10+00:00",
+        "filled_at_utc": "2026-06-15T12:04:12+00:00",
         "settlement_date": "2026-06-16",
         "account": {
           "label": "EQUITY-CASH-SIM-001",
@@ -80,7 +220,7 @@
           {
             "shares": 6.827104,
             "price": 292.95,
-            "timestamp": "2026-06-15T11:44:09+00:00",
+            "timestamp": "2026-06-15T12:04:12+00:00",
             "venue": "NYSE Arca"
           }
         ],
@@ -149,53 +289,53 @@
       ]
     },
     {
-      "plan_id": "plan_20260615_1144_TON-USD",
-      "ticker": "TON-USD",
-      "name": "TON-USD",
+      "plan_id": "plan_20260615_1204_SPY",
+      "ticker": "SPY",
+      "name": "SPY",
       "direction": "LONG",
-      "entry": 0.01,
-      "stop": 0.01,
-      "target": 0.01,
-      "shares": 235494.0739,
+      "entry": 751.47,
+      "stop": 728.92,
+      "target": 785.28,
+      "shares": 2.6615,
       "position_value": 2000.0,
       "risk_amount": 60.0,
       "risk_pct_of_portfolio": 0.006,
       "reward_risk_ratio": 1.5,
-      "invalidation": "Close below $0.01 invalidates the thesis. Re-evaluate if consensus agreement drops below 50%.",
+      "invalidation": "Close below $728.92 invalidates the thesis. Re-evaluate if consensus agreement drops below 50%.",
       "backers": [
-        {
-          "agent": "AEGIS",
-          "conviction": 0.497535142553788,
-          "rationale": "Cautious constructive: clean uptrend with calm volatility, sentiment supportive."
-        },
         {
           "agent": "ZENITH",
-          "conviction": 0.7877534949038973,
-          "rationale": "Perfect stack with 19.3% total separation, +39.0% 50d momentum \u2014 cosmic trend intact."
+          "conviction": 0.6451475813361033,
+          "rationale": "Perfect stack with 8.7% total separation, +14.7% 50d momentum \u2014 cosmic trend intact."
         },
         {
-          "agent": "SPECK",
-          "conviction": 0.515738194280665,
-          "rationale": "Low coverage (5 articles) but sentiment +0.20 and price above SMA-50 \u2014 small edge before crowd arrives."
+          "agent": "WEAVER",
+          "conviction": 0.5802053977473496,
+          "rationale": "Pullback to SMA-20 ($745.07) in uptrend"
+        },
+        {
+          "agent": "ATLAS",
+          "conviction": 0.5974005595003731,
+          "rationale": "Constructive macro: stack aligned, 50d momentum +14.7%, VIX n/a."
         }
       ],
       "dissenters": [],
       "consensus_signal": "BUY",
       "portfolio_size": 10000.0,
-      "generated_at": "2026-06-15T11:44:07.727709+00:00",
+      "generated_at": "2026-06-15T12:04:10.719616+00:00",
       "status": "ACTIVE",
       "execution": {
-        "order_id": "SIM-20260615-114407-TONUSD-B",
+        "order_id": "SIM-20260615-120410-SPY-B",
         "side": "BUY",
-        "ticker": "TON-USD",
-        "asset_class": "equity",
+        "ticker": "SPY",
+        "asset_class": "etf",
         "exchange": "NYSE Arca",
         "venue": "all-electronic ETF/options exchange",
         "broker": "Interactive Brokers (simulated paper account)",
         "order_type": "MARKET",
         "time_in_force": "DAY",
-        "submitted_at_utc": "2026-06-15T11:44:07+00:00",
-        "filled_at_utc": "2026-06-15T11:44:09+00:00",
+        "submitted_at_utc": "2026-06-15T12:04:10+00:00",
+        "filled_at_utc": "2026-06-15T12:04:12+00:00",
         "settlement_date": "2026-06-16",
         "account": {
           "label": "EQUITY-CASH-SIM-001",
@@ -203,34 +343,34 @@
           "broker": "Interactive Brokers (simulated paper account)",
           "funding_source": "ACH funding from simulated bank account (routed via broker cash sweep)",
           "balance_before": 10000.0,
-          "balance_after": 7999.4
+          "balance_after": 7999.8
         },
         "fills": [
           {
-            "shares": 235494.073948,
-            "price": 0.0085,
-            "timestamp": "2026-06-15T11:44:09+00:00",
+            "shares": 2.661468,
+            "price": 751.465,
+            "timestamp": "2026-06-15T12:04:12+00:00",
             "venue": "NYSE Arca"
           }
         ],
-        "avg_fill_price": 0.0085,
+        "avg_fill_price": 751.465,
         "gross_notional": 2000.0,
         "fees": {
           "commission": 0.0,
           "sec_section_31": 0.0,
           "finra_taf": 0.0,
-          "spread_cost": 0.6,
-          "total": 0.6,
-          "notes": "Spread estimate: 3 bps. Zero commission (IBKR Lite/TD-class simulated)."
+          "spread_cost": 0.2,
+          "total": 0.2,
+          "notes": "Spread estimate: 1 bps. Zero commission (IBKR Lite/TD-class simulated)."
         },
-        "net_cost": 2000.6,
+        "net_cost": 2000.2,
         "net_proceeds": null,
         "disclaimer": "Simulated execution \u2014 no live orders were placed on any exchange. Fees modeled on US market structure: SEC Section 31 ($27.80/$1M of sale proceeds), FINRA Trading Activity Fee ($0.000166/share on sells, capped $9.30), Coinbase Advanced taker 0.40% for crypto. Spread cost estimated per ticker."
       },
-      "three_month_return": 0.7602,
+      "three_month_return": 0.123,
       "three_month_signal": "uptrend",
-      "catalyst_strength": 0.27,
-      "catalyst_strength_label": "soft",
+      "catalyst_strength": 0.0,
+      "catalyst_strength_label": "none",
       "catalyst_matched_keyword": null,
       "override_applied": false,
       "override_reason": "",
@@ -241,180 +381,44 @@
       "brokers": [
         {
           "name": "Robinhood",
-          "url": "https://robinhood.com/crypto/TON",
-          "fee_label": "~30 bps spread",
+          "url": "https://robinhood.com/stocks/SPY",
+          "fee_label": "$0 commission",
           "key": "robinhood"
         },
         {
           "name": "Fidelity",
-          "url": "https://www.fidelity.com/crypto/overview",
-          "fee_label": "~1% spread",
+          "url": "https://digital.fidelity.com/prgw/digital/research/quote/dashboard/summary?symbol=SPY",
+          "fee_label": "$0 commission",
           "key": "fidelity"
         },
         {
+          "name": "Schwab",
+          "url": "https://www.schwab.com/research/stocks/quotes?symbol=SPY",
+          "fee_label": "$0 commission",
+          "key": "schwab"
+        },
+        {
           "name": "IBKR",
-          "url": "https://www.interactivebrokers.com/en/trading/cryptocurrency.php",
-          "fee_label": "~18 bps",
+          "url": "https://www.interactivebrokers.com/portal/?action=ACCT_MGMT_MAIN&symbol=SPY",
+          "fee_label": "$0\u20130.005/sh",
           "key": "ibkr"
         },
         {
           "name": "Webull",
-          "url": "https://www.webull.com/crypto",
-          "fee_label": "~100 bps spread",
+          "url": "https://www.webull.com/quote/SPY",
+          "fee_label": "$0 commission",
           "key": "webull"
-        },
-        {
-          "name": "Coinbase",
-          "url": "https://www.coinbase.com/price/ton",
-          "fee_label": "~40 bps taker",
-          "key": "coinbase"
-        },
-        {
-          "name": "Kraken",
-          "url": "https://www.kraken.com/prices/ton",
-          "fee_label": "~26 bps maker / 40 bps taker",
-          "key": "kraken"
         },
         {
           "name": "Alpaca",
           "url": "https://app.alpaca.markets/",
-          "fee_label": "0%",
+          "fee_label": "$0 commission",
           "key": "alpaca"
         }
       ]
     },
     {
-      "plan_id": "plan_20260615_1144_XLM-USD",
-      "ticker": "XLM-USD",
-      "name": "XLM-USD",
-      "direction": "LONG",
-      "entry": 0.2,
-      "stop": 0.19,
-      "target": 0.2,
-      "shares": 10252.8873,
-      "position_value": 2000.0,
-      "risk_amount": 60.0,
-      "risk_pct_of_portfolio": 0.006,
-      "reward_risk_ratio": 1.5,
-      "invalidation": "Close below $0.19 invalidates the thesis. Re-evaluate if consensus agreement drops below 50%.",
-      "backers": [
-        {
-          "agent": "SPECK",
-          "conviction": 0.6402267239346185,
-          "rationale": "Low coverage (4 articles) but sentiment +1.00 and price above SMA-50 \u2014 small edge before crowd arrives."
-        },
-        {
-          "agent": "FABLEBOY_5",
-          "conviction": 0.857755214290733,
-          "rationale": "words +0.64 (4 arts)."
-        }
-      ],
-      "dissenters": [],
-      "consensus_signal": "BUY",
-      "portfolio_size": 10000.0,
-      "generated_at": "2026-06-15T11:44:07.727763+00:00",
-      "status": "ACTIVE",
-      "execution": {
-        "order_id": "SIM-20260615-114407-XLMUSD-B",
-        "side": "BUY",
-        "ticker": "XLM-USD",
-        "asset_class": "equity",
-        "exchange": "NYSE Arca",
-        "venue": "all-electronic ETF/options exchange",
-        "broker": "Interactive Brokers (simulated paper account)",
-        "order_type": "MARKET",
-        "time_in_force": "DAY",
-        "submitted_at_utc": "2026-06-15T11:44:07+00:00",
-        "filled_at_utc": "2026-06-15T11:44:09+00:00",
-        "settlement_date": "2026-06-16",
-        "account": {
-          "label": "EQUITY-CASH-SIM-001",
-          "type": "Cash Account",
-          "broker": "Interactive Brokers (simulated paper account)",
-          "funding_source": "ACH funding from simulated bank account (routed via broker cash sweep)",
-          "balance_before": 10000.0,
-          "balance_after": 7999.4
-        },
-        "fills": [
-          {
-            "shares": 10252.887292,
-            "price": 0.1951,
-            "timestamp": "2026-06-15T11:44:09+00:00",
-            "venue": "NYSE Arca"
-          }
-        ],
-        "avg_fill_price": 0.1951,
-        "gross_notional": 2000.0,
-        "fees": {
-          "commission": 0.0,
-          "sec_section_31": 0.0,
-          "finra_taf": 0.0,
-          "spread_cost": 0.6,
-          "total": 0.6,
-          "notes": "Spread estimate: 3 bps. Zero commission (IBKR Lite/TD-class simulated)."
-        },
-        "net_cost": 2000.6,
-        "net_proceeds": null,
-        "disclaimer": "Simulated execution \u2014 no live orders were placed on any exchange. Fees modeled on US market structure: SEC Section 31 ($27.80/$1M of sale proceeds), FINRA Trading Activity Fee ($0.000166/share on sells, capped $9.30), Coinbase Advanced taker 0.40% for crypto. Spread cost estimated per ticker."
-      },
-      "three_month_return": 0.2482,
-      "three_month_signal": "uptrend",
-      "catalyst_strength": 0.38,
-      "catalyst_strength_label": "soft",
-      "catalyst_matched_keyword": null,
-      "override_applied": false,
-      "override_reason": "",
-      "regime_at_gate": "BALANCED",
-      "setup_archetype": "GENERIC",
-      "setup_lift": 1.0,
-      "setup_rationale": "no archetype match (signal=BUY)",
-      "brokers": [
-        {
-          "name": "Robinhood",
-          "url": "https://robinhood.com/crypto/XLM",
-          "fee_label": "~30 bps spread",
-          "key": "robinhood"
-        },
-        {
-          "name": "Fidelity",
-          "url": "https://www.fidelity.com/crypto/overview",
-          "fee_label": "~1% spread",
-          "key": "fidelity"
-        },
-        {
-          "name": "IBKR",
-          "url": "https://www.interactivebrokers.com/en/trading/cryptocurrency.php",
-          "fee_label": "~18 bps",
-          "key": "ibkr"
-        },
-        {
-          "name": "Webull",
-          "url": "https://www.webull.com/crypto",
-          "fee_label": "~100 bps spread",
-          "key": "webull"
-        },
-        {
-          "name": "Coinbase",
-          "url": "https://www.coinbase.com/price/xlm",
-          "fee_label": "~40 bps taker",
-          "key": "coinbase"
-        },
-        {
-          "name": "Kraken",
-          "url": "https://www.kraken.com/prices/xlm",
-          "fee_label": "~26 bps maker / 40 bps taker",
-          "key": "kraken"
-        },
-        {
-          "name": "Alpaca",
-          "url": "https://app.alpaca.markets/",
-          "fee_label": "0%",
-          "key": "alpaca"
-        }
-      ]
-    },
-    {
-      "plan_id": "plan_20260615_1144_VLO",
+      "plan_id": "plan_20260615_1204_VLO",
       "ticker": "VLO",
       "name": "VLO",
       "direction": "LONG",
@@ -430,22 +434,22 @@
       "backers": [
         {
           "agent": "OBSIDIAN",
-          "conviction": 0.6488857007851153,
+          "conviction": 0.6134693371588396,
           "rationale": "Commodity uptrend, RSI 57 not stretched \u2014 momentum continuation."
         },
         {
           "agent": "ZENITH",
-          "conviction": 0.7955430004264208,
+          "conviction": 0.7590804794473929,
           "rationale": "Perfect stack with 27.2% total separation, +7.6% 50d momentum \u2014 cosmic trend intact."
         }
       ],
       "dissenters": [],
       "consensus_signal": "BUY",
       "portfolio_size": 10000.0,
-      "generated_at": "2026-06-15T11:44:07.727816+00:00",
+      "generated_at": "2026-06-15T12:04:10.719684+00:00",
       "status": "ACTIVE",
       "execution": {
-        "order_id": "SIM-20260615-114407-VLO-B",
+        "order_id": "SIM-20260615-120410-VLO-B",
         "side": "BUY",
         "ticker": "VLO",
         "asset_class": "equity",
@@ -454,8 +458,8 @@
         "broker": "Interactive Brokers (simulated paper account)",
         "order_type": "MARKET",
         "time_in_force": "DAY",
-        "submitted_at_utc": "2026-06-15T11:44:07+00:00",
-        "filled_at_utc": "2026-06-15T11:44:09+00:00",
+        "submitted_at_utc": "2026-06-15T12:04:10+00:00",
+        "filled_at_utc": "2026-06-15T12:04:12+00:00",
         "settlement_date": "2026-06-16",
         "account": {
           "label": "EQUITY-CASH-SIM-001",
@@ -469,7 +473,7 @@
           {
             "shares": 7.731859,
             "price": 258.67,
-            "timestamp": "2026-06-15T11:44:09+00:00",
+            "timestamp": "2026-06-15T12:04:12+00:00",
             "venue": "NYSE Arca"
           }
         ],
@@ -538,7 +542,7 @@
       ]
     },
     {
-      "plan_id": "plan_20260615_1144_TRGP",
+      "plan_id": "plan_20260615_1204_TRGP",
       "ticker": "TRGP",
       "name": "TRGP",
       "direction": "LONG",
@@ -554,22 +558,22 @@
       "backers": [
         {
           "agent": "OBSIDIAN",
-          "conviction": 0.6488857007851153,
+          "conviction": 0.6134693371588396,
           "rationale": "Commodity uptrend, RSI 60 not stretched \u2014 momentum continuation."
         },
         {
           "agent": "ZENITH",
-          "conviction": 0.7955430004264208,
+          "conviction": 0.7590804794473929,
           "rationale": "Perfect stack with 30.2% total separation, +11.9% 50d momentum \u2014 cosmic trend intact."
         }
       ],
       "dissenters": [],
       "consensus_signal": "BUY",
       "portfolio_size": 10000.0,
-      "generated_at": "2026-06-15T11:44:07.727864+00:00",
+      "generated_at": "2026-06-15T12:04:10.719766+00:00",
       "status": "ACTIVE",
       "execution": {
-        "order_id": "SIM-20260615-114407-TRGP-B",
+        "order_id": "SIM-20260615-120410-TRGP-B",
         "side": "BUY",
         "ticker": "TRGP",
         "asset_class": "equity",
@@ -578,8 +582,8 @@
         "broker": "Interactive Brokers (simulated paper account)",
         "order_type": "MARKET",
         "time_in_force": "DAY",
-        "submitted_at_utc": "2026-06-15T11:44:07+00:00",
-        "filled_at_utc": "2026-06-15T11:44:09+00:00",
+        "submitted_at_utc": "2026-06-15T12:04:10+00:00",
+        "filled_at_utc": "2026-06-15T12:04:12+00:00",
         "settlement_date": "2026-06-16",
         "account": {
           "label": "EQUITY-CASH-SIM-001",
@@ -593,7 +597,7 @@
           {
             "shares": 7.336757,
             "price": 272.6,
-            "timestamp": "2026-06-15T11:44:09+00:00",
+            "timestamp": "2026-06-15T12:04:12+00:00",
             "venue": "NYSE Arca"
           }
         ],

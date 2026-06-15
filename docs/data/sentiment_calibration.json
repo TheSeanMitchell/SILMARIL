@@ -1,12 +1,12 @@
 {
   "version": "sentiment-ledger-1.0",
-  "generated_at": "2026-06-15T11:44:44.427860+00:00",
+  "generated_at": "2026-06-15T12:04:49.016935+00:00",
   "ledger_rows": 3710,
   "recorded_this_cycle": 0,
-  "graded_this_cycle": 0,
+  "graded_this_cycle": 38,
   "calibration": {
-    "graded_total": 1374,
-    "graded_clean": 1374,
+    "graded_total": 1412,
+    "graded_clean": 1412,
     "graded_stale": 0,
     "by_bin": [
       {
@@ -27,18 +27,18 @@
       },
       {
         "bin": "neutral",
-        "n": 1230,
-        "mean_return": 0.0803,
-        "hit_rate": 0.5431,
-        "t_stat": 1.566,
-        "verdict": "suggestive"
+        "n": 1267,
+        "mean_return": 0.1096,
+        "hit_rate": 0.5493,
+        "t_stat": 2.105,
+        "verdict": "significant"
       },
       {
         "bin": "pos",
-        "n": 71,
-        "mean_return": -1.5507,
-        "hit_rate": 0.493,
-        "t_stat": -1.221,
+        "n": 72,
+        "mean_return": -1.4842,
+        "hit_rate": 0.5,
+        "t_stat": -1.184,
         "verdict": "none"
       },
       {
@@ -60,21 +60,21 @@
     "by_realized_horizon": [
       {
         "horizon": "1d",
-        "n": 1374,
-        "mean_return": -0.0242,
-        "hit_rate": 0.5349,
-        "t_stat": -0.295,
+        "n": 1412,
+        "mean_return": 0.0072,
+        "hit_rate": 0.5411,
+        "t_stat": 0.089,
         "verdict": "none"
       }
     ],
-    "sentiment_return_correlation": -0.0375
+    "sentiment_return_correlation": -0.0364
   },
   "responsiveness_now": {
     "n_with_sentiment": 593,
-    "avg_sentiment_on_BUY_consensus": 0.0529,
-    "avg_sentiment_on_SELL_consensus": -0.0059,
-    "avg_sentiment_on_HOLD_ABSTAIN": 0.0092,
-    "sentiment_vs_consensus_score_corr": 0.1286
+    "avg_sentiment_on_BUY_consensus": 0.0511,
+    "avg_sentiment_on_SELL_consensus": -0.006,
+    "avg_sentiment_on_HOLD_ABSTAIN": 0.0072,
+    "sentiment_vs_consensus_score_corr": 0.1377
   },
   "deal_journal_proxy": {
     "news_vs_silence": {
@@ -87,8 +87,8 @@
       "silent": {
         "n": 53,
         "linked": 46,
-        "avg_return": 0.045,
-        "win_rate": 0.63
+        "avg_return": 0.103,
+        "win_rate": 0.587
       }
     },
     "by_catalyst_class": [
@@ -96,8 +96,8 @@
         "catalyst_class": "unknown",
         "n": 455,
         "linked": 91,
-        "avg_return": -0.202,
-        "win_rate": 0.495
+        "avg_return": -0.173,
+        "win_rate": 0.473
       },
       {
         "catalyst_class": "narrative_social",
@@ -118,9 +118,9 @@
     "deals_count": 582
   },
   "notes": [
-    "Sentiment is not yet predictive of realized return (r=-0.0375, 1374 clean).",
+    "Sentiment is not yet predictive of realized return (r=-0.0364, 1412 clean).",
     "Of 39 strongly-positive-sentiment names, 54% FELL (overhype) vs 46% rose (legit signal).",
-    "Live responsiveness: avg sentiment is 0.0529 on BUY consensus vs 0.0092 on HOLD/ABSTAIN \u2014 the news\u2192vote wire is active.",
-    "This cycle: recorded 0 ticker-day snapshots, graded 0 prior rows. Ledger holds 3710 rows."
+    "Live responsiveness: avg sentiment is 0.0511 on BUY consensus vs 0.0072 on HOLD/ABSTAIN \u2014 the news\u2192vote wire is active.",
+    "This cycle: recorded 0 ticker-day snapshots, graded 38 prior rows. Ledger holds 3710 rows."
   ]
 }
