@@ -1,10 +1,10 @@
 {
   "version": "5.0",
-  "generated_at": "2026-06-15T05:26:49.467422+00:00",
+  "generated_at": "2026-06-15T05:44:15.810107+00:00",
   "cycles_observed": 60,
-  "dominant_narrative": "risk_on",
-  "regime_shift": "RISK_ON",
-  "regime_shift_confidence": 0.4921,
+  "dominant_narrative": "oil_rally",
+  "regime_shift": "ROTATION",
+  "regime_shift_confidence": 0.4319,
   "narratives": {
     "risk_on": {
       "label": "Risk-on sentiment returning",
@@ -18,30 +18,18 @@
         "Consumer Staples",
         "Utilities"
       ],
-      "frequency": 3,
+      "frequency": 1,
       "persistence": 60,
-      "acceleration": 1.0,
-      "score": 0.775,
+      "acceleration": -0.6667,
+      "score": 0.425,
       "phrases": [
-        "all-time high",
-        "buying the dip",
-        "risk-on"
+        "buying the dip"
       ],
       "matched_articles": [
-        {
-          "ticker": "NUE",
-          "title": "Nucor Corp stock hits all-time high at 265.14 USD",
-          "source": "Investing.com"
-        },
         {
           "ticker": "LTC-USD",
           "title": "Litecoin Whales Are Buying the Dip \u2014 Can LTC Price Reclaim $60?",
           "source": "TradingView"
-        },
-        {
-          "ticker": "SOL-USD",
-          "title": "3 reasons XRP and Solana could lead the next risk-on phase",
-          "source": "AMBCrypto"
         }
       ]
     },
@@ -85,20 +73,12 @@
         "Technology"
       ],
       "sectors_out": [],
-      "frequency": 1,
-      "persistence": 1,
-      "acceleration": 1.0,
-      "score": 0.3187,
-      "phrases": [
-        "chip demand"
-      ],
-      "matched_articles": [
-        {
-          "ticker": "AMAT",
-          "title": "Applied Materials Invests $500 Million To Expand Singapore Manufacturing And R&D For AI Chip Demand",
-          "source": "Pulse 2.0"
-        }
-      ]
+      "frequency": 0,
+      "persistence": 0,
+      "acceleration": -1.0,
+      "score": 0.0,
+      "phrases": [],
+      "matched_articles": []
     },
     "ai_cooldown": {
       "label": "AI rally cooling / stretched valuations",
@@ -121,12 +101,20 @@
         "Energy"
       ],
       "sectors_out": [],
-      "frequency": 0,
-      "persistence": 11,
-      "acceleration": -1.0,
-      "score": 0.35,
-      "phrases": [],
-      "matched_articles": []
+      "frequency": 1,
+      "persistence": 12,
+      "acceleration": 1.0,
+      "score": 0.625,
+      "phrases": [
+        "supply concerns"
+      ],
+      "matched_articles": [
+        {
+          "ticker": "PYTH-USD",
+          "title": "Pyth Network expands into institutional data, boosting revenue amid token supply concerns.",
+          "source": "Pluang"
+        }
+      ]
     },
     "oil_weakness": {
       "label": "Oil / energy weakening",
@@ -232,25 +220,19 @@
     }
   },
   "sector_pressure": {
-    "Technology": 0.5137,
-    "Energy": 0.31,
+    "Technology": -0.155,
+    "Energy": 0.585,
     "Industrials": 0.04,
     "Health Care": 0.58,
     "Financials": 0.04,
-    "Consumer Discretionary": 0.235,
-    "Consumer Staples": -0.235,
-    "Communication Services": 0.775,
+    "Consumer Discretionary": -0.115,
+    "Consumer Staples": 0.115,
+    "Communication Services": 0.425,
     "Real Estate": 0.0,
-    "Utilities": -0.275,
+    "Utilities": 0.075,
     "Materials": 0.0
   },
   "history": [
-    {
-      "cycle_ts": "2026-06-14T09:44:33.565174+00:00",
-      "dominant_narrative": "risk_off",
-      "regime_shift": "RISK_OFF",
-      "score": 0.7
-    },
     {
       "cycle_ts": "2026-06-14T10:03:51.867854+00:00",
       "dominant_narrative": "risk_on",
@@ -604,7 +586,13 @@
       "dominant_narrative": "risk_on",
       "regime_shift": "RISK_ON",
       "score": 0.775
+    },
+    {
+      "cycle_ts": "2026-06-15T05:44:15.810107+00:00",
+      "dominant_narrative": "oil_rally",
+      "regime_shift": "ROTATION",
+      "score": 0.625
     }
   ],
-  "headline_count": 563
+  "headline_count": 313
 }

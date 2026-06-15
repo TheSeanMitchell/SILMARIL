@@ -17,10 +17,6 @@
       "qty": 3.581294738,
       "snapshots_30m": [
         {
-          "ts": "2026-06-15T00:26:07.910176+00:00",
-          "price": 272.7
-        },
-        {
           "ts": "2026-06-15T01:05:11.818692+00:00",
           "price": 272.7
         },
@@ -47,6 +43,10 @@
         {
           "ts": "2026-06-15T05:04:27.277354+00:00",
           "price": 272.7
+        },
+        {
+          "ts": "2026-06-15T05:44:13.907121+00:00",
+          "price": 272.7
         }
       ]
     },
@@ -56,10 +56,6 @@
       "first_seen": "2026-06-12T14:26:13.732701+00:00",
       "qty": 7.93696,
       "snapshots_30m": [
-        {
-          "ts": "2026-06-15T00:26:07.909846+00:00",
-          "price": 62.99
-        },
         {
           "ts": "2026-06-15T01:05:11.816931+00:00",
           "price": 62.99
@@ -86,6 +82,10 @@
         },
         {
           "ts": "2026-06-15T05:04:27.275193+00:00",
+          "price": 62.67
+        },
+        {
+          "ts": "2026-06-15T05:44:13.904956+00:00",
           "price": 62.67
         }
       ]
@@ -4272,8 +4272,8 @@
     }
   ],
   "last_cycle_summary": {
-    "time": "2026-06-15T05:26:45.957235+00:00",
-    "timestamp": "2026-06-15T05:26:45.957247+00:00",
+    "time": "2026-06-15T05:44:13.988439+00:00",
+    "timestamp": "2026-06-15T05:44:13.988449+00:00",
     "closed": 0,
     "opened": 0,
     "open_after": 6,
@@ -4299,8 +4299,8 @@
     "session": "closed",
     "is_extended": false
   },
-  "last_run": "2026-06-15T05:26:45.957379+00:00",
-  "grocery_pending_harvest": 2496.398099999999,
+  "last_run": "2026-06-15T05:44:13.988610+00:00",
+  "grocery_pending_harvest": 2505.295499999999,
   "trading_capital": 9608.58,
   "realized_savings": 0.02,
   "account_id": "LEGACY",
@@ -4320,7 +4320,7 @@
     "primary_symbol": "SGOV",
     "primary_qty": 0.00016,
     "primary_market_value": 0.0161,
-    "checked_at": "2026-06-15T05:26:45.730579+00:00"
+    "checked_at": "2026-06-15T05:44:13.899194+00:00"
   },
   "sgov_sweep_last_cycle": {
     "attempted": false,
@@ -4363,7 +4363,7 @@
   ],
   "sweep_protection": {
     "version": "4.0",
-    "checked_at": "2026-06-15T05:26:48.258847+00:00",
+    "checked_at": "2026-06-15T05:44:15.035960+00:00",
     "market_mode": "ATTACK",
     "force_sweep_floor_resolved": 10500.0,
     "stale_close_age_days": 5,
@@ -4632,31 +4632,50 @@
     "open_seen": 1
   },
   "cycle_intents": {
-    "at": "2026-06-15T05:26:45.957273+00:00",
+    "at": "2026-06-15T05:44:13.988505+00:00",
     "session": "closed",
     "session_open": false,
     "composite_halt": false,
     "halt_reason": null,
-    "plans_offered": 1,
+    "plans_offered": 2,
     "buy_intents": [
       {
-        "ticker": "PANW",
+        "ticker": "IWM",
         "signal": "BUY",
-        "conviction": 0.69,
+        "conviction": 0.7126,
         "originated": false,
         "outcome": "blocked_no_session_match",
         "intended_notional": 768.69,
         "reason": "no usable session for order"
+      },
+      {
+        "ticker": "TON-USD",
+        "signal": "BUY",
+        "conviction": 0.6969,
+        "originated": false,
+        "outcome": "blocked_not_equity_mission",
+        "intended_notional": 768.69,
+        "reason": "TON-USD is not a traditional equity \u2014 valuables trade in their own zone, never this account"
       }
     ],
     "decisions_this_cycle": [
       {
-        "ticker": "PANW",
+        "ticker": "IWM",
         "category": "blocked_no_session_match",
         "reason": "no usable session for order"
       },
       {
-        "ticker": "PANW",
+        "ticker": "TON-USD",
+        "category": "blocked_not_equity_mission",
+        "reason": "TON-USD is not a traditional equity \u2014 valuables trade in their own zone, never this account"
+      },
+      {
+        "ticker": "IWM",
+        "category": "blocked_signal_not_sell",
+        "reason": "signal BUY is not SELL/STRONG_SELL"
+      },
+      {
+        "ticker": "TON-USD",
         "category": "blocked_signal_not_sell",
         "reason": "signal BUY is not SELL/STRONG_SELL"
       }
