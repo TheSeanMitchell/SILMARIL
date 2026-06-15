@@ -1,0 +1,172 @@
+{
+  "generated_at": "2026-05-02T17:20:23.150818+00:00",
+  "sections": {
+    "signals": {
+      "total_debates": 335,
+      "buy_count": 143,
+      "strong_buy_count": 3,
+      "conviction_gte_060": 0,
+      "top_5_eligible": []
+    },
+    "trade_plans": {
+      "total_plans": 2,
+      "plans": [
+        {
+          "ticker": "AAPL",
+          "consensus_signal": "BUY",
+          "consensus_conviction": null,
+          "reward_risk_ratio": 1.5,
+          "entry": 280.14,
+          "would_pass_alpaca_filter": false
+        },
+        {
+          "ticker": "APD",
+          "consensus_signal": "BUY",
+          "consensus_conviction": null,
+          "reward_risk_ratio": 1.5,
+          "entry": 301.07,
+          "would_pass_alpaca_filter": false
+        }
+      ]
+    },
+    "risk_state": {
+      "safe_mode": false,
+      "frozen_count": 3,
+      "frozen_agents": [
+        "ZENITH",
+        "WEAVER",
+        "HEX"
+      ],
+      "kill_min_calls": 30
+    },
+    "alpaca_paper_state": {
+      "last_run": "2026-05-02T16:34:06.070817+00:00",
+      "enabled": true,
+      "reason": "",
+      "orders_placed_last_run": 0,
+      "open_positions": 5,
+      "position_symbols": [
+        "AAPL",
+        "DELL",
+        "GOOGL",
+        "LRCX",
+        "TXN"
+      ],
+      "errors": []
+    },
+    "alpaca_live": {
+      "equity": 100928.45,
+      "cash": 50449.37,
+      "n_positions": 5,
+      "available_slots": 10,
+      "positions": [
+        {
+          "symbol": "AAPL",
+          "side": "PositionSide.LONG",
+          "qty": 18.0
+        },
+        {
+          "symbol": "DELL",
+          "side": "PositionSide.LONG",
+          "qty": 48.0
+        },
+        {
+          "symbol": "GOOGL",
+          "side": "PositionSide.LONG",
+          "qty": 28.0
+        },
+        {
+          "symbol": "LRCX",
+          "side": "PositionSide.LONG",
+          "qty": 19.0
+        },
+        {
+          "symbol": "TXN",
+          "side": "PositionSide.LONG",
+          "qty": 70.0
+        }
+      ],
+      "can_place_orders": true
+    },
+    "agent_portfolios": {
+      "total_agents": 27,
+      "agents_with_positions": [
+        "AEGIS",
+        "FORGE",
+        "THUNDERHEAD",
+        "JADE",
+        "VEIL",
+        "KESTREL",
+        "OBSIDIAN",
+        "ZENITH",
+        "WEAVER",
+        "HEX",
+        "SYNTH",
+        "SPECK",
+        "VESPA",
+        "MAGUS",
+        "TALON",
+        "ATLAS"
+      ],
+      "agents_at_10k_cash": 11,
+      "sample_agent": {
+        "AEGIS": {
+          "cash": 9000.0,
+          "current_equity": 10000.0,
+          "current_position": {
+            "ticker": "VLO",
+            "qty": 4.050715031307498,
+            "entry_price": 246.8699951171875,
+            "signal": "BUY",
+            "opened_at": "2026-05-02T08:35:42.759468+00:00"
+          },
+          "inception_date": "2026-05-02"
+        },
+        "FORGE": {
+          "cash": 9000.0,
+          "current_equity": 10000.0,
+          "current_position": {
+            "ticker": "CSCO",
+            "qty": 10.887316457405841,
+            "entry_price": 91.8499984741211,
+            "signal": "BUY",
+            "opened_at": "2026-05-02T08:35:42.759881+00:00"
+          },
+          "inception_date": "2026-05-02"
+        },
+        "THUNDERHEAD": {
+          "cash": 9000.0,
+          "current_equity": 10000.0,
+          "current_position": {
+            "ticker": "AIG",
+            "qty": 12.695189064579239,
+            "entry_price": 78.7699966430664,
+            "signal": "BUY",
+            "opened_at": "2026-05-02T08:35:42.760259+00:00"
+          },
+          "inception_date": "2026-05-02"
+        }
+      }
+    },
+    "deployed_code": {
+      "cli.py": {
+        "file_exists": false
+      },
+      "silmaril/execution/alpaca_paper.py": {
+        "HOLD exit fix": false,
+        "all_debate_signals param": true
+      },
+      "silmaril/risk/engine.py": {
+        "corruption guard": true,
+        "kill_min_calls 30": true
+      },
+      "silmaril/scoring/outcomes.py": {
+        "date normalize fix": true
+      },
+      "silmaril/portfolios/agent_portfolio.py": {
+        "specialist fallback": false,
+        "is_specialist fix": false
+      }
+    }
+  }
+}

@@ -1,0 +1,300 @@
+{
+  "version": "4.0",
+  "generated_at": "2026-06-15T08:04:14.749105+00:00",
+  "market_mode": "ATTACK",
+  "winner_engine": "default",
+  "winner_action": "NORMAL",
+  "winner_precedence_name": "ADVISORY",
+  "halt_opens": false,
+  "halt_opens_reasons": [],
+  "force_close": {},
+  "elite_tickers": [],
+  "urgency_tickers": [],
+  "elite_suppressed": false,
+  "elite_suppression_reason": "",
+  "blocked_tickers": {},
+  "vulnerable_tickers": [],
+  "deployment_pressure": {
+    "score": 0.15,
+    "high": false,
+    "actions": [],
+    "components": {
+      "idle_cash": 0.0,
+      "sgov_exposure": 0.0,
+      "elite_pipeline": 0.0,
+      "market_mode_bias": 0.2,
+      "vulnerability_drag": -0.0
+    },
+    "totals": {
+      "trading_capital_total": 0.0,
+      "idle_cash_total": 0.0,
+      "sgov_value_total": 0.0,
+      "elite_count": 0,
+      "vulnerable_count": 0
+    },
+    "rationale": "mode=ATTACK \u00b7 score=0.15"
+  },
+  "sizing": {
+    "base_multiplier": 1.2,
+    "min_conviction_floor": 0.35,
+    "elite_multiplier": 1.5,
+    "elite_concentration_cap": 0.2,
+    "normal_concentration_cap": 0.12,
+    "deployment_pressure": 0.15,
+    "concentration_limits": {
+      "max_per_sector": 4,
+      "max_per_asset_class": 10,
+      "max_sector_book_pct": 0.4
+    }
+  },
+  "close_loop": {
+    "trail_tightness": 0.85,
+    "bleed_exit_enabled": true,
+    "stale_close_enabled": true,
+    "stale_close_age_days": 5,
+    "force_close_vulnerable_critical": true
+  },
+  "sweep": {
+    "aggression_multiplier": 0.8,
+    "instant_sweep_usd": 300.0,
+    "instant_sweep_pct": 0.05,
+    "news_boost_multiplier": 1.2,
+    "force_sweep_floor": 10500.0,
+    "redeploy_sgov": {
+      "recommended": false,
+      "amount_hint": 0.0,
+      "rationale": ""
+    }
+  },
+  "urgency_priority_order": [
+    "TRGP",
+    "VLO",
+    "IWM"
+  ],
+  "urgency_by_ticker": {
+    "IWM": {
+      "ticker": "IWM",
+      "score": 0.1158,
+      "urgent": false,
+      "threshold": 0.65,
+      "components": {
+        "momentum_acceleration": 0.0,
+        "breakout_velocity": 0.063,
+        "fresh_catalyst": 0.0,
+        "fresh_catalyst_raw": 0.0,
+        "intraday_thrust": 1.0,
+        "source_credibility": 0.0,
+        "narrative_persistence": 0.0
+      },
+      "decay_factor": 1.0,
+      "empirical_lift": 1.0,
+      "rationale": "intraday thrust 1.00"
+    },
+    "VLO": {
+      "ticker": "VLO",
+      "score": 0.23,
+      "urgent": false,
+      "threshold": 0.65,
+      "components": {
+        "momentum_acceleration": 0.4333,
+        "breakout_velocity": 0.0,
+        "fresh_catalyst": 0.0,
+        "fresh_catalyst_raw": 0.0,
+        "intraday_thrust": 1.0,
+        "source_credibility": 0.0,
+        "narrative_persistence": 0.0
+      },
+      "decay_factor": 1.0,
+      "empirical_lift": 1.0,
+      "rationale": "intraday thrust 1.00"
+    },
+    "TRGP": {
+      "ticker": "TRGP",
+      "score": 0.4,
+      "urgent": false,
+      "threshold": 0.65,
+      "components": {
+        "momentum_acceleration": 1.0,
+        "breakout_velocity": 0.0,
+        "fresh_catalyst": 0.0,
+        "fresh_catalyst_raw": 0.0,
+        "intraday_thrust": 1.0,
+        "source_credibility": 0.0,
+        "narrative_persistence": 0.0
+      },
+      "decay_factor": 1.0,
+      "empirical_lift": 1.0,
+      "rationale": "acceleration 1.00; intraday thrust 1.00"
+    }
+  },
+  "narrative": {
+    "dominant": "risk_on",
+    "regime_shift": "RISK_ON",
+    "confidence": 0.3254
+  },
+  "sector_rotation": {
+    "rationale": "Token (strengthening) vs Software (weakening)",
+    "top_pairs": [
+      {
+        "from": "Software",
+        "to": "Token",
+        "strength": 0.7,
+        "rationale": "Software -0.35 \u2192 Token +0.35"
+      },
+      {
+        "from": "Innovation",
+        "to": "Token",
+        "strength": 0.7,
+        "rationale": "Innovation -0.35 \u2192 Token +0.35"
+      },
+      {
+        "from": "Communications",
+        "to": "Token",
+        "strength": 0.7,
+        "rationale": "Communications -0.35 \u2192 Token +0.35"
+      }
+    ],
+    "sector_lift": {
+      "Credit": 0.9325,
+      "Utilities": 0.9333,
+      "Software": 0.9125,
+      "Consumer Discretionary": 1.0,
+      "FX": 0.9159,
+      "Semiconductors": 0.9974,
+      "Industrials": 0.9748,
+      "Communication Services": 1.0574,
+      "Innovation": 0.9125,
+      "Communications": 0.9125,
+      "Commodities": 0.9125,
+      "Healthcare": 0.9708,
+      "Health Care": 1.0628,
+      "Token": 1.105,
+      "Crypto": 0.9125,
+      "Index": 0.937,
+      "Real Estate": 0.9752,
+      "Materials": 0.9598,
+      "Technology": 0.9176,
+      "Staples": 0.9732,
+      "Consumer Staples": 1.0,
+      "Financials": 0.9727,
+      "Energy": 0.9371,
+      "Communication": 0.9152,
+      "Rates": 0.9332,
+      "Discretionary": 0.9886
+    },
+    "sector_tag": {
+      "Credit": "weakening",
+      "Utilities": "weakening",
+      "Software": "weakening",
+      "Consumer Discretionary": "neutral",
+      "FX": "weakening",
+      "Semiconductors": "neutral",
+      "Industrials": "neutral",
+      "Communication Services": "neutral",
+      "Innovation": "weakening",
+      "Communications": "weakening",
+      "Commodities": "weakening",
+      "Healthcare": "neutral",
+      "Health Care": "neutral",
+      "Token": "strengthening",
+      "Crypto": "weakening",
+      "Index": "weakening",
+      "Real Estate": "neutral",
+      "Materials": "neutral",
+      "Technology": "deteriorating",
+      "Staples": "neutral",
+      "Consumer Staples": "neutral",
+      "Financials": "neutral",
+      "Energy": "weakening",
+      "Communication": "weakening",
+      "Rates": "weakening",
+      "Discretionary": "neutral"
+    }
+  },
+  "deployment_floor": {
+    "LEGACY": {
+      "deployment_base": 10000.0,
+      "harvest_threshold": 10150.0,
+      "max_sweep_today": 0.0,
+      "redeploy_from_sgov_amount": 0.02,
+      "is_underdeployed": true,
+      "must_redeploy_today": true,
+      "objective_today": "REDEPLOY_FROM_SGOV",
+      "violation_flags": []
+    },
+    "HARVEST_3": {
+      "deployment_base": 10000.0,
+      "harvest_threshold": 10300.0,
+      "max_sweep_today": 0.0,
+      "redeploy_from_sgov_amount": 0.01,
+      "is_underdeployed": true,
+      "must_redeploy_today": true,
+      "objective_today": "REDEPLOY_FROM_SGOV",
+      "violation_flags": []
+    },
+    "HARVEST_5": {
+      "deployment_base": 10000.0,
+      "harvest_threshold": 10500.0,
+      "max_sweep_today": 0.0,
+      "redeploy_from_sgov_amount": 0.0,
+      "is_underdeployed": true,
+      "must_redeploy_today": true,
+      "objective_today": "REDEPLOY_FROM_SGOV",
+      "violation_flags": []
+    }
+  },
+  "orchestrator": {
+    "system_objective_today": "RECOVER_FROM_DRAWDOWN",
+    "posture": "OFFENSIVE",
+    "target_market_exposure_pct": 0.75,
+    "max_sector_concentration_pct": 0.4,
+    "max_position_concentration_pct": 0.15,
+    "deployment_pacing": "deploy_fast",
+    "account_priority_order": [
+      "HARVEST_3",
+      "HARVEST_5",
+      "LEGACY"
+    ]
+  },
+  "setup_classifications": {
+    "per_ticker": {
+      "IWM": {
+        "archetype": "GENERIC",
+        "setup_lift": 1.0
+      },
+      "TON-USD": {
+        "archetype": "GENERIC",
+        "setup_lift": 1.0
+      },
+      "VLO": {
+        "archetype": "GENERIC",
+        "setup_lift": 1.0
+      }
+    }
+  },
+  "capital_efficiency": {
+    "deployment_efficiency_score": 0.0,
+    "stale_holding_drag": 0.0,
+    "idle_capital_drag": 0.8679,
+    "rotation_recommendations": {
+      "HOLD": 5,
+      "WATCH": 0,
+      "ROTATE": 0,
+      "FORCE_ROTATE": 0
+    }
+  },
+  "position_directives": [
+    {
+      "owner": "LEGACY",
+      "ticker": "MPWR",
+      "action": "SCALE_IN",
+      "size_pct": 0.2,
+      "trigger": "unrealized_plpc\u22651.5% AND momentum\u22650.55 AND recommendation=HOLD",
+      "rationale": "healthy winner (3.6%, momentum 0.60); add 20% size",
+      "priority": 5
+    }
+  ],
+  "rationale": "mode=ATTACK",
+  "directives": [],
+  "global_directives": []
+}

@@ -1,0 +1,252 @@
+{
+  "version": "3.0",
+  "generated_at": "2026-06-15T08:04:17.076966+00:00",
+  "accounts": [
+    {
+      "account_id": "LEGACY",
+      "label": "1.5% Trench-Warfare Harvester (legacy)",
+      "configured": true,
+      "enabled": true,
+      "principal_target": 10000.0,
+      "equity": 9591.79,
+      "cash": 5801.54,
+      "trading_capital": 9591.77,
+      "unrealized_above_baseline": 0.0,
+      "verified_harvested": 0.02,
+      "verified_ledger_total": 0.0,
+      "live_vault": {
+        "market_value": 0.02,
+        "primary_symbol": "SGOV",
+        "primary_qty": 0.00016,
+        "holdings": [
+          {
+            "symbol": "SGOV",
+            "qty": 0.00016,
+            "market_value": 0.0161,
+            "avg_entry_price": 100.49,
+            "current_price": 100.525,
+            "unrealized_pl": 0.0
+          }
+        ],
+        "reconciled": true,
+        "delta": 0.02,
+        "mode": "live_verified"
+      },
+      "sgov_sweep": {
+        "attempted": false,
+        "reason": "below min sweep $25.00",
+        "cash_pending": 0.0
+      },
+      "open_positions": 6,
+      "oldest_position_age_days": 4,
+      "min_harvest_gain_pct": 0.015,
+      "last_cycle": {
+        "opened": 0,
+        "closed": 0,
+        "open_after": 6,
+        "tickers": [],
+        "time": "2026-06-15T08:04:15.393094+00:00"
+      },
+      "lifetime_wins": 37,
+      "lifetime_losses": 19,
+      "time_basis": {
+        "real_days": 39,
+        "market_days": 26,
+        "crypto_hours": 920,
+        "genesis_iso": "2026-05-07T23:09:35.961319+00:00"
+      },
+      "reason": "",
+      "errors": [
+        {
+          "time": "2026-06-04T11:17:24.687416+00:00",
+          "msg": "POST https://paper-api.alpaca.markets/v2/orders -> HTTP 422: {\"code\":42210000,\"message\":\"invalid limit_price 670.5323. sub-penny increment does not fulfill minimum pricing criteria\"}",
+          "status": 422
+        },
+        {
+          "time": "2026-06-04T11:17:24.730217+00:00",
+          "msg": "POST https://paper-api.alpaca.markets/v2/orders -> HTTP 422: {\"code\":42210000,\"message\":\"invalid limit_price 311.1908. sub-penny increment does not fulfill minimum pricing criteria\"}",
+          "status": 422
+        },
+        {
+          "time": "2026-06-04T21:57:31.347863+00:00",
+          "msg": "POST https://paper-api.alpaca.markets/v2/orders -> HTTP 422: {\"code\":42210000,\"message\":\"invalid limit_price 292.886. sub-penny increment does not fulfill minimum pricing criteria\"}",
+          "status": 422
+        },
+        {
+          "time": "2026-06-04T21:57:31.544660+00:00",
+          "msg": "POST https://paper-api.alpaca.markets/v2/orders -> HTTP 422: {\"code\":42210000,\"message\":\"invalid limit_price 1129.8836. sub-penny increment does not fulfill minimum pricing criteria\"}",
+          "status": 422
+        },
+        {
+          "time": "2026-06-04T22:14:34.156193+00:00",
+          "msg": "POST https://paper-api.alpaca.markets/v2/orders -> HTTP 422: {\"code\":42210000,\"message\":\"invalid limit_price 1129.8836. sub-penny increment does not fulfill minimum pricing criteria\"}",
+          "status": 422
+        }
+      ]
+    },
+    {
+      "account_id": "HARVEST_3",
+      "label": "3% Disciplined Harvester",
+      "configured": true,
+      "enabled": true,
+      "principal_target": 10000.0,
+      "equity": 9587.89,
+      "cash": 9587.88,
+      "trading_capital": 9587.88,
+      "unrealized_above_baseline": 0.0,
+      "verified_harvested": 0.01,
+      "verified_ledger_total": 0.0,
+      "live_vault": {
+        "market_value": 0.01,
+        "primary_symbol": "SGOV",
+        "primary_qty": 7.8e-05,
+        "holdings": [
+          {
+            "symbol": "SGOV",
+            "qty": 7.8e-05,
+            "market_value": 0.0079,
+            "avg_entry_price": 100.4887,
+            "current_price": 100.525,
+            "unrealized_pl": 0.0
+          }
+        ],
+        "reconciled": true,
+        "delta": 0.01,
+        "mode": "live_verified"
+      },
+      "sgov_sweep": {
+        "attempted": false,
+        "reason": "below min sweep $25.00",
+        "cash_pending": 0.0
+      },
+      "open_positions": 1,
+      "oldest_position_age_days": null,
+      "min_harvest_gain_pct": 0.03,
+      "last_cycle": {
+        "opened": 0,
+        "closed": 0,
+        "open_after": 1,
+        "tickers": [],
+        "time": "2026-06-15T08:04:15.936563+00:00"
+      },
+      "lifetime_wins": 15,
+      "lifetime_losses": 23,
+      "time_basis": {
+        "real_days": 35,
+        "market_days": 24,
+        "crypto_hours": 842,
+        "genesis_iso": "2026-05-11T05:08:52.782042+00:00"
+      },
+      "reason": "",
+      "errors": [
+        {
+          "time": "2026-06-12T14:26:15.780686+00:00",
+          "msg": "POST https://paper-api.alpaca.markets/v2/orders -> HTTP 403: {\"available\":\"1.695078349\",\"code\":40310000,\"existing_qty\":\"1.695078349\",\"held_for_orders\":\"0\",\"message\":\"insufficient qty available for order (requested: 1.6951, available: 1.695078349)\",\"symbol\":\"SGOV\"}",
+          "status": 403
+        },
+        {
+          "time": "2026-06-12T14:47:03.870256+00:00",
+          "msg": "POST https://paper-api.alpaca.markets/v2/orders -> HTTP 403: {\"available\":\"1.695078349\",\"code\":40310000,\"existing_qty\":\"1.695078349\",\"held_for_orders\":\"0\",\"message\":\"insufficient qty available for order (requested: 1.6951, available: 1.695078349)\",\"symbol\":\"SGOV\"}",
+          "status": 403
+        },
+        {
+          "time": "2026-06-12T15:03:21.523169+00:00",
+          "msg": "POST https://paper-api.alpaca.markets/v2/orders -> HTTP 403: {\"available\":\"1.695078349\",\"code\":40310000,\"existing_qty\":\"1.695078349\",\"held_for_orders\":\"0\",\"message\":\"insufficient qty available for order (requested: 1.6951, available: 1.695078349)\",\"symbol\":\"SGOV\"}",
+          "status": 403
+        },
+        {
+          "time": "2026-06-12T15:27:07.222066+00:00",
+          "msg": "POST https://paper-api.alpaca.markets/v2/orders -> HTTP 403: {\"available\":\"1.695078349\",\"code\":40310000,\"existing_qty\":\"1.695078349\",\"held_for_orders\":\"0\",\"message\":\"insufficient qty available for order (requested: 1.6951, available: 1.695078349)\",\"symbol\":\"SGOV\"}",
+          "status": 403
+        },
+        {
+          "time": "2026-06-12T15:47:17.756965+00:00",
+          "msg": "POST https://paper-api.alpaca.markets/v2/orders -> HTTP 403: {\"available\":\"1.695078349\",\"code\":40310000,\"existing_qty\":\"1.695078349\",\"held_for_orders\":\"0\",\"message\":\"insufficient qty available for order (requested: 1.6951, available: 1.695078349)\",\"symbol\":\"SGOV\"}",
+          "status": 403
+        }
+      ]
+    },
+    {
+      "account_id": "HARVEST_5",
+      "label": "Headlines-Only Book (Fableboy 5)",
+      "configured": true,
+      "enabled": true,
+      "principal_target": 10000.0,
+      "equity": 9661.36,
+      "cash": 9661.36,
+      "trading_capital": 9661.36,
+      "unrealized_above_baseline": 0.0,
+      "verified_harvested": 0.0,
+      "verified_ledger_total": 0.0,
+      "live_vault": {
+        "market_value": 0.0,
+        "primary_symbol": null,
+        "primary_qty": 0.0,
+        "holdings": [],
+        "reconciled": true,
+        "delta": 0.0,
+        "mode": "anchor_only"
+      },
+      "sgov_sweep": {
+        "attempted": false,
+        "reason": "below min sweep $5.00",
+        "cash_pending": 4.5696
+      },
+      "open_positions": 0,
+      "oldest_position_age_days": null,
+      "min_harvest_gain_pct": 0.05,
+      "last_cycle": {
+        "opened": 0,
+        "closed": 0,
+        "open_after": 0,
+        "tickers": [],
+        "time": "2026-06-15T08:04:16.345447+00:00"
+      },
+      "lifetime_wins": 1,
+      "lifetime_losses": 3,
+      "time_basis": {
+        "real_days": 35,
+        "market_days": 24,
+        "crypto_hours": 842,
+        "genesis_iso": "2026-05-11T05:08:53.781275+00:00"
+      },
+      "reason": "",
+      "errors": [
+        {
+          "time": "2026-05-12T05:57:40.803628+00:00",
+          "msg": "POST https://paper-api.alpaca.markets/v2/orders -> HTTP 403: {\"buying_power\":\"690.05\",\"code\":40310000,\"cost_basis\":\"1186.57\",\"message\":\"insufficient buying power\"}",
+          "status": 403
+        },
+        {
+          "time": "2026-05-12T05:57:40.901872+00:00",
+          "msg": "POST https://paper-api.alpaca.markets/v2/orders -> HTTP 403: {\"buying_power\":\"690.05\",\"code\":40310000,\"cost_basis\":\"1186.57\",\"message\":\"insufficient buying power\"}",
+          "status": 403
+        },
+        {
+          "time": "2026-05-12T05:57:40.984845+00:00",
+          "msg": "POST https://paper-api.alpaca.markets/v2/orders -> HTTP 403: {\"buying_power\":\"690.05\",\"code\":40310000,\"cost_basis\":\"1186.57\",\"message\":\"insufficient buying power\"}",
+          "status": 403
+        },
+        {
+          "time": "2026-05-12T08:35:25.778609+00:00",
+          "msg": "POST https://paper-api.alpaca.markets/v2/orders -> HTTP 403: {\"buying_power\":\"626.19\",\"code\":40310000,\"cost_basis\":\"1178.9\",\"message\":\"insufficient buying power\"}",
+          "status": 403
+        },
+        {
+          "time": "2026-06-04T00:19:24.288294+00:00",
+          "msg": "POST https://paper-api.alpaca.markets/v2/orders -> HTTP 422: {\"code\":42210000,\"message\":\"invalid limit_price 311.1908. sub-penny increment does not fulfill minimum pricing criteria\"}",
+          "status": 422
+        }
+      ]
+    }
+  ],
+  "totals": {
+    "equity_all": 28841.04,
+    "verified_all": 0.02,
+    "unrealized_all": 0.0,
+    "live_vault_all": 0.02,
+    "configured_accounts": 3,
+    "enabled_accounts": 3,
+    "total_accounts": 3
+  }
+}

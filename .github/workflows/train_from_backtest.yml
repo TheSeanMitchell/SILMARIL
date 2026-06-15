@@ -1,0 +1,136 @@
+name: Train From Backtest
+
+# Side-channel agent training: runs a fresh backtest over a date range,
+# converts each prediction to a weighted Bayesian observation, and
+# updates agent_beliefs.json. The senate elections will see this evidence
+# the same way they see live-run evidence — but discounted by `weight`
+# so backtest can't permanently dominate live signal.
+#
+# Idempotency: a hash of the backtest config (start/end/agents/tickers)
+# is stored in backtest_provenance.json. Re-running with the same config
+# is a no-op.
+#
+# Cap: backtest may not exceed 50% of any agent×regime's observation
+# count, so a young agent's beliefs can't be colonized by historic data.
+
+on:
+  workflow_dispatch:
+    inputs:
+      start:
+        description: 'Start date (YYYY-MM-DD). Empty = 2 years before end.'
+        required: false
+        default: ''
+      end:
+        description: 'End date (YYYY-MM-DD). Empty = today.'
+        required: false
+        default: ''
+      weight:
+        description: 'Per-call weight (live=1.0). Higher = more influence.'
+        required: false
+        default: '0.3'
+      mode:
+        description: 'What to do'
+        required: true
+        default: 'run_and_ingest'
+        type: choice
+        options:
+          - run_and_ingest        # fresh backtest, then update beliefs
+          - ingest_only           # use existing backtest_report.json
+          - dry_run               # run + ingest with NO writes (preview)
+
+permissions:
+  contents: write
+
+# Don't fight with the daily run for the same git ref; train_from_backtest
+# also commits to docs/data, so serialize against daily.
+concurrency:
+  group: silmaril-train
+  cancel-in-progress: false
+
+jobs:
+  train:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Compose CLI flags from inputs
+        id: flags
+        run: |
+          FLAGS=""
+          MODE="${{ github.event.inputs.mode }}"
+          if [ "$MODE" = "ingest_only" ]; then
+            FLAGS="$FLAGS --ingest-only"
+          fi
+          if [ "$MODE" = "dry_run" ]; then
+            FLAGS="$FLAGS --dry-run"
+          fi
+          if [ -n "${{ github.event.inputs.start }}" ]; then
+            FLAGS="$FLAGS --start ${{ github.event.inputs.start }}"
+          fi
+          if [ -n "${{ github.event.inputs.end }}" ]; then
+            FLAGS="$FLAGS --end ${{ github.event.inputs.end }}"
+          fi
+          if [ -n "${{ github.event.inputs.weight }}" ]; then
+            FLAGS="$FLAGS --weight ${{ github.event.inputs.weight }}"
+          fi
+          echo "flags=$FLAGS" >> $GITHUB_OUTPUT
+          echo "Flags: $FLAGS"
+
+      - name: Train from backtest
+        env:
+          ALPHA_VANTAGE_API_KEY:    ${{ secrets.ALPHA_VANTAGE_API_KEY }}
+          POLYGON_API_KEY:          ${{ secrets.POLYGON_API_KEY }}
+          TIINGO_API_KEY:           ${{ secrets.TIINGO_API_KEY }}
+          FINNHUB_API_KEY:          ${{ secrets.FINNHUB_API_KEY }}
+          FMP_API_KEY:              ${{ secrets.FMP_API_KEY }}
+          FRED_API_KEY:             ${{ secrets.FRED_API_KEY }}
+          OPENEXCHANGERATES_APP_ID: ${{ secrets.OPENEXCHANGERATES_APP_ID }}
+        run: python scripts/train_from_backtest.py ${{ steps.flags.outputs.flags }}
+
+      - name: Verify agent_beliefs.json still well-formed
+        if: github.event.inputs.mode != 'dry_run'
+        run: |
+          python -c "
+          import json
+          from pathlib import Path
+          p = Path('docs/data/agent_beliefs.json')
+          if not p.exists():
+              print('agent_beliefs.json missing — nothing to validate')
+          else:
+              data = json.loads(p.read_text())
+              n_agents = len(data)
+              total_obs = sum(sum(r.get('n', 0) for r in regimes.values()) for regimes in data.values())
+              print(f'agent_beliefs.json OK · {n_agents} agents · {total_obs} total observations')
+          "
+
+      - name: Commit
+        if: github.event.inputs.mode != 'dry_run'
+        run: |
+          git config user.name 'silmaril-trainer'
+          git config user.email 'silmaril-trainer@users.noreply.github.com'
+          git add docs/data/agent_beliefs.json docs/data/backtest_report.json docs/data/backtest_provenance.json 2>/dev/null || true
+          if git diff --staged --quiet; then
+            echo "nothing to commit (likely a re-run with same config)"
+            exit 0
+          fi
+          git commit -m "🧠 backtest training (weight=${{ github.event.inputs.weight }})"
+          for i in 1 2 3; do
+            git pull --rebase origin main && git push && break || true
+            echo "push attempt $i failed; sleeping 5s"
+            sleep 5
+          done

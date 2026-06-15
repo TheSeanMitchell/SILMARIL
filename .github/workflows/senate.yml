@@ -1,0 +1,55 @@
+name: Senate Elections (weekly)
+
+# ────────────────────────────────────────────────────────────────────
+# THE POKEMON LOOP, REVIVED. elections.py has been complete (and
+# stale-aware since Alpha 7.0 — stale_price_suspected outcomes are
+# excluded, so clean data alone decides careers) but NOTHING invoked it.
+# This workflow is the missing trigger the module's own docstring
+# promised: every Sunday 06:00 UTC, evaluate every agent's clean record:
+#   promote CANDIDATE→PROBATIONARY, graduate PROBATIONARY→VOTER,
+#   demote underperformers, retire EMERITUS.
+# FABLEBOY_5 and every future agent earn (or lose) their seat here, and
+# winners become breeding stock for hybrid offspring. stdlib-only.
+# ────────────────────────────────────────────────────────────────────
+
+on:
+  schedule:
+    - cron: "0 6 * * 0"   # Sundays 06:00 UTC, per elections.py docstring
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+concurrency:
+  group: silmaril-senate
+  cancel-in-progress: false
+
+jobs:
+  election:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Amnesty review — frozen agents re-judged on clean evidence
+        run: python -m silmaril.learning.agent_amnesty docs/data
+
+      - name: Run weekly Senate election (clean-data only)
+        run: python -m silmaril.senate.elections docs/data
+
+      - name: Commit results
+        run: |
+          git config user.name 'silmaril-bot'
+          git config user.email 'silmaril-bot@users.noreply.github.com'
+          git add docs/data/senate_state.json docs/data/senate_results.json docs/data/risk_state.json docs/data/archive 2>/dev/null || true
+          if git diff --staged --quiet; then
+            echo "nothing to commit"
+            exit 0
+          fi
+          git commit -m "🏛️ senate election $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          git pull --rebase origin main || true
+          git push

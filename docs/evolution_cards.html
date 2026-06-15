@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Agent Evolution Cards — SILMARIL</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+  body { background: #0a0e14; color: #d8e0e8; font-family: 'Inter', -apple-system, system-ui, sans-serif; margin: 0; padding: 24px; }
+  .container { max-width: 1200px; margin: 0 auto; }
+  h1 { color: #ffd166; font-weight: 600; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 16px; margin-top: 24px; }
+  .card {
+    background: linear-gradient(135deg, #11161e 0%, #1a1f2a 100%);
+    border: 1px solid #2c3441; border-radius: 12px; padding: 20px;
+    position: relative; overflow: hidden;
+  }
+  .card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px;
+    background: linear-gradient(90deg, #ffd166, #79b8ff);
+  }
+  .name { font-size: 18px; font-weight: 600; color: #ffd166; margin: 0 0 4px; }
+  .level { font-size: 11px; color: #95a4b3; text-transform: uppercase; letter-spacing: 0.1em; }
+  .lvl-num { font-size: 28px; font-weight: 700; color: #79b8ff; }
+  .stats { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 16px; font-size: 13px; }
+  .stat-label { color: #6c7886; font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .stat-val { color: #d8e0e8; font-weight: 500; font-variant-numeric: tabular-nums; }
+  .xp-bar { background: #1c2229; height: 6px; border-radius: 3px; overflow: hidden; margin-top: 12px; }
+  .xp-fill { background: linear-gradient(90deg, #ffd166, #79b8ff); height: 100%; transition: width 0.3s; }
+  .achievements { margin-top: 12px; display: flex; flex-wrap: wrap; gap: 4px; }
+  .badge { background: #1c2229; color: #ffd166; padding: 3px 8px; border-radius: 4px; font-size: 10px; }
+  .meta { color: #6c7886; font-size: 12px; margin-top: 32px; }
+  a { color: #79b8ff; }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>🎴 Agent Evolution Cards</h1>
+  <p style="color:#95a4b3;max-width:780px;line-height:1.6;">
+    Every agent earns experience on every call. Cards <strong>only grow</strong> —
+    they never reset, never decline, and survive every workflow. XP scales with
+    conviction (skin in the game). Lifetime stats tell the real story.
+  </p>
+  <div class="grid" id="cards"></div>
+  <p class="meta">
+    Loaded from <a href="data/agent_evolution_cards.json">data/agent_evolution_cards.json</a>.
+    Levels at: 100 / 300 / 700 / 1500 / 3000 / 6000 / 12000 / 25000 / 50000 / 100000 XP.
+  </p>
+</div>
+<script>
+const LEVEL_THRESHOLDS = [0, 100, 300, 700, 1500, 3000, 6000, 12000, 25000, 50000, 100000];
+function levelOf(xp) {
+  for (let i = 0; i < LEVEL_THRESHOLDS.length; i++) {
+    if (xp < LEVEL_THRESHOLDS[i]) return Math.max(1, i);
+  }
+  return LEVEL_THRESHOLDS.length + Math.floor((xp - 100000) / 50000);
+}
+function xpToNext(xp) {
+  const lvl = levelOf(xp);
+  if (lvl < LEVEL_THRESHOLDS.length) return LEVEL_THRESHOLDS[lvl] - xp;
+  return 50000 - ((xp - 100000) % 50000);
+}
+function pctToNext(xp) {
+  const lvl = levelOf(xp);
+  if (lvl < 2) return Math.min(100, xp / LEVEL_THRESHOLDS[1] * 100);
+  if (lvl >= LEVEL_THRESHOLDS.length) return 50;
+  const cur = LEVEL_THRESHOLDS[lvl - 1];
+  const next = LEVEL_THRESHOLDS[lvl];
+  return ((xp - cur) / (next - cur)) * 100;
+}
+fetch('data/agent_evolution_cards.json').then(r => r.json()).then(cards => {
+  const $ = document.getElementById('cards');
+  const entries = Object.entries(cards);
+  if (entries.length === 0) {
+    $.innerHTML = '<p style="color:#6c7886;">No evolution cards yet. Cards are created on the first scored outcome for each agent.</p>';
+    return;
+  }
+  entries.sort((a, b) => (b[1].xp || 0) - (a[1].xp || 0));
+  let html = '';
+  entries.forEach(([agent, c]) => {
+    const lvl = levelOf(c.xp || 0);
+    const pct = pctToNext(c.xp || 0);
+    const winRate = c.lifetime_calls ? (c.lifetime_wins / c.lifetime_calls * 100).toFixed(1) : '0.0';
+    const ach = (c.achievements_unlocked || []).slice(-6);
+    html += `<div class="card">
+      <div class="level">LEVEL</div>
+      <div style="display:flex;align-items:baseline;gap:8px;"><div class="lvl-num">${lvl}</div><div class="name">${agent}</div></div>
+      <div class="xp-bar"><div class="xp-fill" style="width:${pct}%"></div></div>
+      <div style="font-size:11px;color:#6c7886;margin-top:4px;">${c.xp || 0} XP • ${xpToNext(c.xp || 0)} to next</div>
+      <div class="stats">
+        <div><div class="stat-label">Lifetime calls</div><div class="stat-val">${c.lifetime_calls || 0}</div></div>
+        <div><div class="stat-label">Win rate</div><div class="stat-val">${winRate}%</div></div>
+        <div><div class="stat-label">Best streak</div><div class="stat-val">${c.best_win_streak || 0}</div></div>
+        <div><div class="stat-label">Dissent wins</div><div class="stat-val">${c.lifetime_dissent_wins || 0}</div></div>
+      </div>
+      <div class="achievements">
+        ${ach.map(a => `<span class="badge">${a}</span>`).join('')}
+      </div>
+    </div>`;
+  });
+  $.innerHTML = html;
+}).catch(err => {
+  document.getElementById('cards').innerHTML = '<p style="color:#6c7886;">No evolution cards data yet.</p>';
+});
+</script>
+</body>
+</html>

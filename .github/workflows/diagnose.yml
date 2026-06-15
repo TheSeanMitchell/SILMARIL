@@ -1,0 +1,244 @@
+name: Diagnose (pipeline health check)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install alpaca-py requests 2>/dev/null || true
+
+      - name: Run full diagnostic
+        env:
+          ALPACA_API_KEY:    ${{ secrets.ALPACA_API_KEY }}
+          ALPACA_API_SECRET: ${{ secrets.ALPACA_API_SECRET }}
+        run: |
+          python3 << 'EOF'
+          import json, os, sys
+          from pathlib import Path
+          from datetime import datetime, timezone
+
+          report = {
+              "generated_at": datetime.now(timezone.utc).isoformat(),
+              "sections": {}
+          }
+          data = Path("docs/data")
+
+          # ── 1. signals.json ──────────────────────────────────────────────
+          sig_path = data / "signals.json"
+          if sig_path.exists():
+              try:
+                  signals = json.loads(sig_path.read_text())
+                  debates = signals.get("debates", [])
+                  buys = [d for d in debates if d.get("consensus",{}).get("signal") in ("BUY","STRONG_BUY")]
+                  strong_buys = [d for d in debates if d.get("consensus",{}).get("signal") == "STRONG_BUY"]
+                  eligible = [d for d in buys if (d.get("consensus",{}).get("avg_conviction") or 0) >= 0.60]
+                  report["sections"]["signals"] = {
+                      "total_debates": len(debates),
+                      "buy_count": len(buys),
+                      "strong_buy_count": len(strong_buys),
+                      "conviction_gte_060": len(eligible),
+                      "top_5_eligible": [
+                          {"ticker": d["ticker"],
+                           "signal": d["consensus"]["signal"],
+                           "avg_conviction": d["consensus"].get("avg_conviction"),
+                           "score": d["consensus"].get("score"),
+                           "n_backers": len([v for v in d.get("verdicts",[]) if v.get("signal") in ("BUY","STRONG_BUY")])}
+                          for d in sorted(eligible, key=lambda x: x["consensus"].get("score",0), reverse=True)[:5]
+                      ]
+                  }
+                  print(f"signals.json: {len(debates)} debates, {len(eligible)} eligible for Alpaca")
+              except Exception as e:
+                  report["sections"]["signals"] = {"error": str(e)}
+          else:
+              report["sections"]["signals"] = {"error": "signals.json missing"}
+
+          # ── 2. trade_plans.json ──────────────────────────────────────────
+          plans_path = data / "trade_plans.json"
+          if plans_path.exists():
+              try:
+                  plans_data = json.loads(plans_path.read_text())
+                  plans = plans_data.get("plans", [])
+                  report["sections"]["trade_plans"] = {
+                      "total_plans": len(plans),
+                      "plans": [
+                          {"ticker": p.get("ticker"),
+                           "consensus_signal": p.get("consensus_signal"),
+                           "consensus_conviction": p.get("consensus_conviction"),
+                           "reward_risk_ratio": p.get("reward_risk_ratio"),
+                           "entry": p.get("entry"),
+                           "would_pass_alpaca_filter": (p.get("consensus_conviction") or 0) >= 0.60}
+                          for p in plans[:10]
+                      ]
+                  }
+                  passing = sum(1 for p in plans if (p.get("consensus_conviction") or 0) >= 0.60)
+                  print(f"trade_plans.json: {len(plans)} plans, {passing} pass 0.60 conviction filter")
+              except Exception as e:
+                  report["sections"]["trade_plans"] = {"error": str(e)}
+          else:
+              report["sections"]["trade_plans"] = {"error": "trade_plans.json missing"}
+
+          # ── 3. risk_state.json ───────────────────────────────────────────
+          risk_path = data / "risk_state.json"
+          if risk_path.exists():
+              try:
+                  risk = json.loads(risk_path.read_text())
+                  frozen = [a for a, v in risk.get("agents", {}).items() if v.get("frozen")]
+                  report["sections"]["risk_state"] = {
+                      "safe_mode": risk.get("system", {}).get("safe_mode"),
+                      "frozen_count": len(frozen),
+                      "frozen_agents": frozen,
+                      "kill_min_calls": risk.get("config", {}).get("kill_min_calls"),
+                  }
+                  print(f"risk_state.json: {len(frozen)} frozen, safe_mode={risk.get('system',{}).get('safe_mode')}")
+              except Exception as e:
+                  report["sections"]["risk_state"] = {"error": str(e)}
+
+          # ── 4. alpaca_paper_state.json ───────────────────────────────────
+          alpaca_path = data / "alpaca_paper_state.json"
+          if alpaca_path.exists():
+              try:
+                  alpaca = json.loads(alpaca_path.read_text())
+                  report["sections"]["alpaca_paper_state"] = {
+                      "last_run": alpaca.get("last_run"),
+                      "enabled": alpaca.get("enabled"),
+                      "reason": alpaca.get("reason", ""),
+                      "orders_placed_last_run": len(alpaca.get("orders_placed", [])),
+                      "open_positions": len(alpaca.get("positions", [])),
+                      "position_symbols": [p.get("symbol") for p in alpaca.get("positions", [])],
+                      "errors": alpaca.get("errors", []),
+                  }
+                  print(f"alpaca_paper_state: {len(alpaca.get('positions',[]))} open positions, "
+                        f"{len(alpaca.get('orders_placed',[]))} orders last run")
+              except Exception as e:
+                  report["sections"]["alpaca_paper_state"] = {"error": str(e)}
+
+          # ── 5. Live Alpaca account check ─────────────────────────────────
+          try:
+              from alpaca.trading.client import TradingClient
+              key = os.environ.get("ALPACA_API_KEY")
+              sec = os.environ.get("ALPACA_API_SECRET")
+              if key and sec:
+                  client = TradingClient(key, sec, paper=True)
+                  account = client.get_account()
+                  positions = list(client.get_all_positions())
+                  available_slots = max(0, 15 - len(positions))
+                  report["sections"]["alpaca_live"] = {
+                      "equity": float(account.equity),
+                      "cash": float(account.cash),
+                      "n_positions": len(positions),
+                      "available_slots": available_slots,
+                      "positions": [{"symbol": p.symbol, "side": str(p.side), "qty": float(p.qty)} for p in positions],
+                      "can_place_orders": available_slots > 0,
+                  }
+                  print(f"Alpaca LIVE: ${float(account.equity):.2f} equity, "
+                        f"{len(positions)} positions, {available_slots} slots available")
+                  if available_slots == 0:
+                      print("  >>> PROBLEM: 0 slots available — position cap hit, no new orders possible")
+              else:
+                  report["sections"]["alpaca_live"] = {"error": "API keys not set"}
+          except Exception as e:
+              report["sections"]["alpaca_live"] = {"error": str(e)}
+
+          # ── 6. agent_portfolios.json check ───────────────────────────────
+          port_path = data / "agent_portfolios.json"
+          if port_path.exists():
+              try:
+                  ports = json.loads(port_path.read_text())
+                  agent_map = ports.get("portfolios", ports)
+                  agents_with_positions = [a for a, p in agent_map.items() if p.get("current_position")]
+                  agents_with_cash_10k = [a for a, p in agent_map.items() if abs((p.get("cash") or p.get("balance") or 0) - 10000) < 1]
+                  report["sections"]["agent_portfolios"] = {
+                      "total_agents": len(agent_map),
+                      "agents_with_positions": agents_with_positions,
+                      "agents_at_10k_cash": len(agents_with_cash_10k),
+                      "sample_agent": {
+                          k: {f: agent_map[k].get(f) for f in ["cash","current_equity","current_position","inception_date"]}
+                          for k in list(agent_map.keys())[:3]
+                      }
+                  }
+                  print(f"agent_portfolios: {len(agent_map)} agents, "
+                        f"{len(agents_with_positions)} have positions, "
+                        f"{len(agents_with_cash_10k)} at $10K")
+              except Exception as e:
+                  report["sections"]["agent_portfolios"] = {"error": str(e)}
+
+          # ── 7. Check what code is actually deployed ──────────────────────
+          code_checks = {}
+          files_to_check = {
+              "cli.py": [
+                  ("all_debate_signals fix", "all_debate_signals"),
+                  ("published fix", "published_iso"),
+              ],
+              "silmaril/execution/alpaca_paper.py": [
+                  ("HOLD exit fix", '"HOLD"'),
+                  ("all_debate_signals param", "all_debate_signals"),
+              ],
+              "silmaril/risk/engine.py": [
+                  ("corruption guard", "CORRUPTION_FLOOR"),
+                  ("kill_min_calls 30", "kill_min_calls.*30"),
+              ],
+              "silmaril/scoring/outcomes.py": [
+                  ("date normalize fix", "_normalize_date"),
+              ],
+              "silmaril/portfolios/agent_portfolio.py": [
+                  ("specialist fallback", "PATH B"),
+                  ("is_specialist fix", "agent_appears_in_verdicts"),
+              ],
+          }
+          import re
+          for filepath, checks in files_to_check.items():
+              p = Path(filepath)
+              if p.exists():
+                  content = p.read_text()
+                  code_checks[filepath] = {
+                      label: bool(re.search(pattern, content))
+                      for label, pattern in checks
+                  }
+              else:
+                  code_checks[filepath] = {"file_exists": False}
+          report["sections"]["deployed_code"] = code_checks
+
+          # Write report
+          out = data / "diagnostic_report.json"
+          out.write_text(json.dumps(report, indent=2, default=str))
+          print(f"\nFull report written to docs/data/diagnostic_report.json")
+
+          # Print summary verdict
+          print("\n=== SUMMARY ===")
+          alpaca_live = report["sections"].get("alpaca_live", {})
+          if alpaca_live.get("available_slots", 1) == 0:
+              print("ROOT CAUSE: Alpaca position cap at 15. Zero slots. No new orders possible.")
+          plans_sec = report["sections"].get("trade_plans", {})
+          passing = sum(1 for p in plans_sec.get("plans", []) if p.get("would_pass_alpaca_filter"))
+          if passing == 0:
+              print("ROOT CAUSE: Zero plans pass the 0.60 conviction filter.")
+          code = report["sections"].get("deployed_code", {})
+          for f, checks in code.items():
+              for label, deployed in checks.items():
+                  if not deployed:
+                      print(f"NOT DEPLOYED: {f} — missing '{label}'")
+          EOF
+
+      - name: Commit diagnostic report
+        run: |
+          git config user.name 'silmaril-bot'
+          git config user.email 'silmaril-bot@users.noreply.github.com'
+          git add docs/data/diagnostic_report.json
+          git diff --staged --quiet || git commit -m "diagnostic report $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          git push

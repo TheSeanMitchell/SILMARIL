@@ -1,0 +1,169 @@
+name: Risk Unfreeze (preserve learning)
+
+# Manually triggered from Actions tab.
+# Resets risk_state.json and agent_portfolios.json to clean $10K baselines.
+# Clears all agent freezes and safe-mode.
+# ALSO purges corrupted scoring outcomes (entry_price == exit_price, 0% return)
+# so the track record kill switch stops firing on bad historical data.
+# Does NOT touch beliefs, evolution_cards, counterfactuals, or reflections.
+#
+# Use this when: agents are incorrectly frozen.
+# After running: trigger a fresh Daily Run to resume normal operation.
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirm:
+        description: 'Type UNFREEZE to confirm'
+        required: true
+        default: ''
+
+permissions:
+  contents: write
+
+jobs:
+  unfreeze:
+    runs-on: ubuntu-latest
+    if: github.event.inputs.confirm == 'UNFREEZE'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Reset risk state, portfolios, and purge corrupted scoring outcomes
+        run: |
+          python3 << 'EOF'
+          import json
+          from datetime import datetime, timezone
+          from pathlib import Path
+
+          out_dir = Path("docs/data")
+          out_dir.mkdir(parents=True, exist_ok=True)
+          now = datetime.now(timezone.utc).isoformat()
+          today = datetime.now(timezone.utc).date().isoformat()
+
+          AGENTS = [
+              "AEGIS", "FORGE", "THUNDERHEAD", "JADE", "VEIL", "KESTREL",
+              "OBSIDIAN", "ZENITH", "WEAVER", "HEX", "SYNTH", "SPECK",
+              "VESPA", "MAGUS", "TALON", "ATLAS", "NIGHTSHADE", "CICADA",
+              "SHEPHERD", "NOMAD", "BARNACLE", "KESTREL+",
+              "BARON", "STEADFAST", "SPORTS_BRO", "CONTRARIAN", "SHORT_ALPHA",
+          ]
+
+          # 1. risk_state.json
+          risk = {
+              "generated_at": now,
+              "_reset_note": (
+                  f"Reset by risk_unfreeze workflow on {today}. "
+                  "All freezes cleared. Peak equity $10,000. Learning untouched."
+              ),
+              "config": {
+                  "max_single_position_pct": 0.25,
+                  "min_cash_buffer_pct": 0.0,
+                  "daily_drawdown_freeze_pct": 0.08,
+                  "daily_drawdown_unfreeze_pct": 0.04,
+                  "kill_weight_threshold": 0.85,
+                  "kill_min_calls": 30,
+                  "cohort_dd_threshold": 0.05,
+                  "cohort_dd_min_runs": 5,
+                  "min_reward_risk": 1.5,
+                  "max_risk_per_plan_pct": 0.02,
+              },
+              "system": {
+                  "safe_mode": False,
+                  "safe_mode_reason": "",
+                  "safe_mode_since": None,
+                  "cohort_avg_return_pct": 0.0,
+                  "cohort_history": [],
+              },
+              "agents": {
+                  a: {
+                      "agent": a, "frozen": False, "frozen_reason": "",
+                      "frozen_since": "", "last_equity": 10000.0,
+                      "peak_equity": 10000.0, "drawdown_pct": 0.0,
+                  } for a in AGENTS
+              },
+              "summary": {"frozen_count": 0, "total_count": len(AGENTS), "safe_mode": False},
+          }
+          (out_dir / "risk_state.json").write_text(json.dumps(risk, indent=2, default=str))
+          print(f"risk_state.json: {len(AGENTS)} agents unfrozen at $10,000")
+
+          # 2. agent_portfolios.json
+          portfolios = {
+              a: {
+                  "agent": a, "starting_equity": 10000.0,
+                  "current_equity": 10000.0, "cash": 10000.0,
+                  "current_position": None, "history": [],
+                  "equity_curve": [], "inception_date": today,
+              } for a in AGENTS
+          }
+          (out_dir / "agent_portfolios.json").write_text(
+              json.dumps(portfolios, indent=2, default=str)
+          )
+          print(f"agent_portfolios.json: {len(AGENTS)} agents at $10,000 cash")
+
+          # 3. Purge corrupted scoring outcomes
+          # Corrupted outcomes: entry_price == exit_price AND return_pct == 0 AND
+          # correct == False. These were produced when outcomes.py scored a run
+          # against itself due to the ISO-timestamp date comparison bug.
+          scoring_path = out_dir / "scoring.json"
+          if scoring_path.exists():
+              try:
+                  scoring = json.loads(scoring_path.read_text())
+                  all_outcomes = scoring.get("outcomes", [])
+                  original_count = len(all_outcomes)
+
+                  def is_corrupted(o):
+                      if o.get("stale_price_suspected"):
+                          return True
+                      ep = o.get("entry_price", 0)
+                      xp = o.get("exit_price", 0)
+                      rp = o.get("return_pct", 0)
+                      correct = o.get("correct", True)
+                      if ep == xp and abs(rp) < 0.001 and not correct:
+                          return True
+                      return False
+
+                  clean_outcomes = [o for o in all_outcomes if not is_corrupted(o)]
+                  purged = original_count - len(clean_outcomes)
+                  scoring["outcomes"] = clean_outcomes
+                  scoring["generated_at"] = now
+                  scoring["_purge_note"] = (
+                      f"Purged {purged} corrupted outcomes on {today}. "
+                      f"{len(clean_outcomes)} clean outcomes retained."
+                  )
+                  scoring_path.write_text(json.dumps(scoring, indent=2, default=str))
+                  print(f"scoring.json: purged {purged} corrupted outcomes, "
+                        f"{len(clean_outcomes)} retained")
+              except Exception as e:
+                  print(f"scoring.json purge failed: {e}")
+          else:
+              print("scoring.json not found — will be created on first daily run")
+
+          # 4. Clear drift_state so dampeners reset cleanly
+          (out_dir / "drift_state.json").write_text(json.dumps(
+              {"generated_at": now, "drifting_agents": {},
+               "_note": f"Reset by risk_unfreeze on {today}"}, indent=2
+          ))
+          print("drift_state.json: cleared")
+          print()
+          print("Done. Trigger a Daily Run to resume.")
+          print("Kill switch only fires after 30+ clean live outcomes per agent.")
+          EOF
+
+      - name: Commit reset files
+        run: |
+          git config user.name 'silmaril-bot'
+          git config user.email 'silmaril-bot@users.noreply.github.com'
+          git add docs/data/risk_state.json \
+                  docs/data/agent_portfolios.json \
+                  docs/data/scoring.json \
+                  docs/data/drift_state.json
+          git diff --staged --quiet || git commit -m "unfreeze + scoring purge $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          git push

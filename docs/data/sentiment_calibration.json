@@ -1,0 +1,126 @@
+{
+  "version": "sentiment-ledger-1.0",
+  "generated_at": "2026-06-15T08:04:26.803809+00:00",
+  "ledger_rows": 3710,
+  "recorded_this_cycle": 0,
+  "graded_this_cycle": 0,
+  "calibration": {
+    "graded_total": 1373,
+    "graded_clean": 1373,
+    "graded_stale": 0,
+    "by_bin": [
+      {
+        "bin": "very_neg",
+        "n": 6,
+        "mean_return": 0.991,
+        "hit_rate": 0.5,
+        "t_stat": 0.736,
+        "verdict": "thin"
+      },
+      {
+        "bin": "neg",
+        "n": 28,
+        "mean_return": -0.916,
+        "hit_rate": 0.3929,
+        "t_stat": -3.216,
+        "verdict": "significant"
+      },
+      {
+        "bin": "neutral",
+        "n": 1229,
+        "mean_return": 0.0871,
+        "hit_rate": 0.5435,
+        "t_stat": 1.714,
+        "verdict": "suggestive"
+      },
+      {
+        "bin": "pos",
+        "n": 71,
+        "mean_return": -1.5507,
+        "hit_rate": 0.493,
+        "t_stat": -1.221,
+        "verdict": "none"
+      },
+      {
+        "bin": "very_pos",
+        "n": 39,
+        "mean_return": -0.0541,
+        "hit_rate": 0.4615,
+        "t_stat": -0.144,
+        "verdict": "none"
+      }
+    ],
+    "overhype": {
+      "strong_pos_n": 39,
+      "overhype_rate": 0.5385,
+      "legit_rate": 0.4615,
+      "strong_neg_n": 7,
+      "bad_news_confirmed_rate": 0.5714
+    },
+    "by_realized_horizon": [
+      {
+        "horizon": "1d",
+        "n": 1373,
+        "mean_return": -0.0181,
+        "hit_rate": 0.5353,
+        "t_stat": -0.222,
+        "verdict": "none"
+      }
+    ],
+    "sentiment_return_correlation": -0.0379
+  },
+  "responsiveness_now": {
+    "n_with_sentiment": 593,
+    "avg_sentiment_on_BUY_consensus": 0.0549,
+    "avg_sentiment_on_SELL_consensus": 0.0,
+    "avg_sentiment_on_HOLD_ABSTAIN": 0.0059,
+    "sentiment_vs_consensus_score_corr": 0.124
+  },
+  "deal_journal_proxy": {
+    "news_vs_silence": {
+      "news_backed": {
+        "n": 84,
+        "linked": 81,
+        "avg_return": -0.529,
+        "win_rate": 0.284
+      },
+      "silent": {
+        "n": 53,
+        "linked": 46,
+        "avg_return": 0.045,
+        "win_rate": 0.63
+      }
+    },
+    "by_catalyst_class": [
+      {
+        "catalyst_class": "unknown",
+        "n": 455,
+        "linked": 91,
+        "avg_return": -0.202,
+        "win_rate": 0.495
+      },
+      {
+        "catalyst_class": "narrative_social",
+        "n": 80,
+        "linked": 77,
+        "avg_return": -0.474,
+        "win_rate": 0.299
+      },
+      {
+        "catalyst_class": "ipo_related",
+        "n": 47,
+        "linked": 13,
+        "avg_return": -5.937,
+        "win_rate": 0.0
+      }
+    ],
+    "linked_count": 181,
+    "deals_count": 582
+  },
+  "notes": [
+    "Sentiment is not yet predictive of realized return (r=-0.0379, 1373 clean).",
+    "Of 39 strongly-positive-sentiment names, 54% FELL (overhype) vs 46% rose (legit signal).",
+    "Live responsiveness: avg sentiment is 0.0549 on BUY consensus vs 0.0059 on HOLD/ABSTAIN \u2014 the news\u2192vote wire is active.",
+    "This cycle: recorded 0 ticker-day snapshots, graded 0 prior rows. Ledger holds 3710 rows."
+  ]
+}

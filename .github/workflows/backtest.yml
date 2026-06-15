@@ -1,0 +1,74 @@
+name: Backtest (preserves learning)
+
+on:
+  workflow_dispatch:
+    inputs:
+      lookback_days:
+        description: 'Days to backtest'
+        required: false
+        default: '730'
+      mode:
+        description: 'walk_forward (recommended) or single_pass'
+        required: false
+        default: 'walk_forward'
+
+permissions:
+  contents: write
+
+jobs:
+  backtest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Snapshot learning state before backtest
+        run: |
+          python -c "
+          from pathlib import Path
+          from silmaril.learning.persistence_guard import backup_learning_state
+          archive = backup_learning_state(Path('docs/data'), Path('docs/data/_backups'), label='pre_backtest')
+          print('Snapshot:', archive)
+          "
+
+      - name: Run backtest
+        env:
+          ALPHA_VANTAGE_API_KEY:  ${{ secrets.ALPHA_VANTAGE_API_KEY }}
+          FINNHUB_API_KEY:        ${{ secrets.FINNHUB_API_KEY }}
+          FMP_API_KEY:            ${{ secrets.FMP_API_KEY }}
+          POLYGON_API_KEY:        ${{ secrets.POLYGON_API_KEY }}
+          TIINGO_API_KEY:         ${{ secrets.TIINGO_API_KEY }}
+        run: |
+          python -m silmaril.backtest --days ${{ github.event.inputs.lookback_days }} --mode ${{ github.event.inputs.mode }}
+
+      - name: Verify learning state intact
+        run: |
+          python -c "
+          from pathlib import Path
+          from silmaril.learning.persistence_guard import verify_persistence, PROTECTED_LEARNING_FILES
+          report = verify_persistence(Path('docs/data'))
+          assert len(report['present']) > 0, 'CRITICAL: Backtest wiped learning state'
+          print('OK: learning state intact (' + str(len(report['present'])) + ' protected files)')
+          "
+
+      - name: Commit results
+        run: |
+          git config user.name 'silmaril-bot'
+          git config user.email 'silmaril-bot@users.noreply.github.com'
+          git add docs/data/
+          git diff --staged --quiet || git commit -m "📊 backtest $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          git push

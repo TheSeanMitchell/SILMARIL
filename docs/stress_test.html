@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Adversarial Stress Test — SILMARIL</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+  body { background: #0a0e14; color: #d8e0e8; font-family: 'Inter', -apple-system, system-ui, sans-serif; margin: 0; padding: 24px; }
+  .container { max-width: 1100px; margin: 0 auto; }
+  h1 { color: #ffd166; font-weight: 600; letter-spacing: 0.02em; }
+  .verdict { padding: 16px 20px; border-radius: 8px; margin: 24px 0; font-size: 18px; font-weight: 500; }
+  .verdict.ROBUST { background: #073b3a; color: #7cf5d9; border: 1px solid #1d6e6b; }
+  .verdict.MODERATE { background: #3a3010; color: #ffd166; border: 1px solid #6e5a1f; }
+  .verdict.FRAGILE { background: #3b1212; color: #ff7a7a; border: 1px solid #6e2222; }
+  .verdict.NO_DATA { background: #1c2229; color: #95a4b3; border: 1px solid #2c3441; }
+  table { width: 100%; border-collapse: collapse; margin-top: 24px; font-size: 14px; }
+  th, td { padding: 10px 14px; text-align: left; border-bottom: 1px solid #1c2229; }
+  th { color: #95a4b3; font-weight: 500; text-transform: uppercase; letter-spacing: 0.05em; font-size: 11px; }
+  tr:hover td { background: #11161e; }
+  .num { text-align: right; font-variant-numeric: tabular-nums; }
+  .pos { color: #7cf5d9; }
+  .neg { color: #ff7a7a; }
+  .meta { color: #6c7886; font-size: 12px; margin-top: 32px; }
+  a { color: #79b8ff; }
+  .timeline { margin-top: 36px; }
+  .run { padding: 12px 16px; border-left: 3px solid #2c3441; margin-bottom: 8px; }
+  .run .ts { color: #6c7886; font-size: 12px; }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>🧪 Adversarial Stress Test</h1>
+  <p style="color:#95a4b3;max-width:780px;line-height:1.6;">
+    Re-runs recent signals through hostile-market scenarios where prices move against
+    consensus before fills. If the strategy still wins under aggressive front-running,
+    the edge is robust. If it craters, the edge is fragile and likely overfit to ideal fills.
+  </p>
+  <p style="color:#95a4b3;">
+    Trigger a fresh run via <strong>Actions → Adversarial Stress Test → Run workflow</strong>.
+  </p>
+  <div id="latest"></div>
+  <div class="timeline" id="timeline"></div>
+  <p class="meta">
+    Loaded from <a href="data/stress_test_results.json">data/stress_test_results.json</a>.
+    History preserved across runs (last 50). Source:
+    <a href="https://github.com/TheSeanMitchell/SILMARIL/blob/main/silmaril/learning/adversarial_stress.py">adversarial_stress.py</a>.
+  </p>
+</div>
+<script>
+fetch('data/stress_test_results.json').then(r => r.json()).then(d => {
+  const runs = (d.runs || []).slice().reverse();
+  const latest = runs[0];
+  const $ = document.getElementById('latest');
+  if (!latest) {
+    $.innerHTML = '<div class="verdict NO_DATA">No stress test runs yet. Trigger one from the Actions tab.</div>';
+    return;
+  }
+  const verdict = latest.robustness_verdict || 'NO_DATA';
+  const klass = verdict.split(' ')[0];
+  let html = `<div class="verdict ${klass}">Verdict: ${verdict}</div>`;
+  html += `<p style="color:#6c7886;font-size:12px;">Computed: ${latest.computed_at || ''}</p>`;
+  html += '<table><thead><tr><th>Scenario</th><th>Description</th><th class="num">Calls</th><th class="num">Win Rate</th><th class="num">Expectancy (bps)</th></tr></thead><tbody>';
+  for (const [name, s] of Object.entries(latest.scenarios || {})) {
+    const exp = s.expectancy_bps || 0;
+    const cls = exp > 0 ? 'pos' : exp < 0 ? 'neg' : '';
+    html += `<tr>
+      <td><strong>${name}</strong></td>
+      <td>${s.description || ''}</td>
+      <td class="num">${s.n_calls || 0}</td>
+      <td class="num">${((s.win_rate || 0) * 100).toFixed(1)}%</td>
+      <td class="num ${cls}">${exp.toFixed(1)}</td>
+    </tr>`;
+  }
+  html += '</tbody></table>';
+  $.innerHTML = html;
+
+  if (runs.length > 1) {
+    const tl = document.getElementById('timeline');
+    tl.innerHTML = '<h3 style="color:#95a4b3;font-weight:500;">Prior runs</h3>';
+    runs.slice(1, 11).forEach(r => {
+      const verdict = r.robustness_verdict || '?';
+      tl.innerHTML += `<div class="run">
+        <div class="ts">${r.computed_at || ''}</div>
+        <div>${verdict}</div>
+      </div>`;
+    });
+  }
+}).catch(err => {
+  document.getElementById('latest').innerHTML =
+    '<div class="verdict NO_DATA">No stress test results yet. Run the workflow from the Actions tab.</div>';
+});
+</script>
+</body>
+</html>

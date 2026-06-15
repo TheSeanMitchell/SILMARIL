@@ -1,0 +1,1564 @@
+{
+  "version": "opus-file-archive-1.2",
+  "generated_at": "2026-06-08T10:48:42.957231+00:00",
+  "totals": {
+    "files": 189,
+    "loc": 45742,
+    "wired": 174,
+    "orphans": 15
+  },
+  "orphans": [
+    "silmaril.agents.candidate_alpha",
+    "silmaril.agents.candidate_beta",
+    "silmaril.agents.candidate_gamma",
+    "silmaril.diagnostics.time_basis",
+    "silmaril.execution.status_emitter",
+    "silmaril.ingestion.market_hours",
+    "silmaril.learning.backtest_to_beliefs",
+    "silmaril.learning.integration",
+    "silmaril.portfolios.decision_authority",
+    "silmaril.portfolios.deployment_pressure",
+    "silmaril.portfolios.opportunity_urgency",
+    "silmaril.portfolios.preservation_intelligence",
+    "silmaril.portfolios.status_emitter",
+    "silmaril.senate.conclave",
+    "silmaril.senate.elections"
+  ],
+  "orphan_classification": {
+    "silmaril.agents.candidate_alpha": "candidate (Conclave-birthed)",
+    "silmaril.agents.candidate_beta": "candidate (Conclave-birthed)",
+    "silmaril.agents.candidate_gamma": "candidate (Conclave-birthed)",
+    "silmaril.diagnostics.time_basis": "lazy/dynamic reference",
+    "silmaril.execution.status_emitter": "DISCONNECTED",
+    "silmaril.ingestion.market_hours": "DISCONNECTED",
+    "silmaril.learning.backtest_to_beliefs": "DISCONNECTED",
+    "silmaril.learning.integration": "lazy/dynamic reference",
+    "silmaril.portfolios.decision_authority": "lazy/dynamic reference",
+    "silmaril.portfolios.deployment_pressure": "lazy/dynamic reference",
+    "silmaril.portfolios.opportunity_urgency": "lazy/dynamic reference",
+    "silmaril.portfolios.preservation_intelligence": "lazy/dynamic reference",
+    "silmaril.portfolios.status_emitter": "DISCONNECTED",
+    "silmaril.senate.conclave": "workflow-invoked",
+    "silmaril.senate.elections": "workflow-invoked"
+  },
+  "truly_disconnected": [
+    "silmaril.execution.status_emitter",
+    "silmaril.ingestion.market_hours",
+    "silmaril.learning.backtest_to_beliefs",
+    "silmaril.portfolios.status_emitter"
+  ],
+  "files": [
+    {
+      "module": "silmaril.__init__",
+      "path": "silmaril/__init__.py",
+      "loc": 2,
+      "imported_by": 0,
+      "wired": true,
+      "summary": "silmaril.agents package."
+    },
+    {
+      "module": "silmaril.__main__",
+      "path": "silmaril/__main__.py",
+      "loc": 6,
+      "imported_by": 0,
+      "wired": true,
+      "summary": "Entry point for `python -m silmaril`."
+    },
+    {
+      "module": "silmaril.agents.__init__",
+      "path": "silmaril/agents/__init__.py",
+      "loc": 2,
+      "imported_by": 0,
+      "wired": true,
+      "summary": "silmaril.agents package."
+    },
+    {
+      "module": "silmaril.agents._rename_map",
+      "path": "silmaril/agents/_rename_map.py",
+      "loc": 82,
+      "imported_by": 1,
+      "wired": true,
+      "summary": "silmaril.agents._rename_map \u2014 Single source of truth for agent names."
+    },
+    {
+      "module": "silmaril.agents.aegis",
+      "path": "silmaril/agents/aegis.py",
+      "loc": 192,
+      "imported_by": 1,
+      "wired": true,
+      "summary": "silmaril.agents.aegis \u2014 The Shield."
+    },
+    {
+      "module": "silmaril.agents.atlas",
+      "path": "silmaril/agents/atlas.py",
+      "loc": 133,
+      "imported_by": 1,
+      "wired": true,
+      "summary": "silmaril.agents.atlas \u2014 The Macro Strategist."
+    },
+    {
+      "module": "silmaril.agents.barnacle",
+      "path": "silmaril/agents/barnacle.py",
+      "loc": 114,
+      "imported_by": 1,
+      "wired": true,
+      "summary": "silmaril.agents.barnacle \u2014 The 13F Whale Follower."
+    },
+    {
+      "module": "silmaril.agents.baron",
+      "path": "silmaril/agents/baron.py",
+      "loc": 283,
+      "imported_by": 1,
+      "wired": true,
+      "summary": "silmaril.agents.baron \u2014 The Baron, oil-energy specialist."
+    },
+    {
+      "module": "silmaril.agents.base",
+      "path": "silmaril/agents/base.py",
+      "loc": 177,
+      "imported_by": 37,
+      "wired": true,
+      "summary": "silmaril.agents.base \u2014 The contract every SILMARIL agent honors."
+    },
+    {
+      "module": "silmaril.agents.bios",
+      "path": "silmaril/agents/bios.py",
+      "loc": 403,
+      "imported_by": 1,
+      "wired": true,
+      "summary": "silmaril.agents.bios \u2014 Rich biographical profiles for every agent."
+    },
+    {
+      "module": "silmaril.agents.candidate_alpha",
+      "path": "silmaril/agents/candidate_alpha.py",
+      "loc": 110,
+      "imported_by": 0,
+      "wired": false,
+      "summary": "silmaril.agents.candidate_alpha \u2014 ALPHA, the Insider Flow Tracker."
+    },
+    {
+      "module": "silmaril.agents.candidate_beta",
+      "path": "silmaril/agents/candidate_beta.py",
+      "loc": 131,
+      "imported_by": 0,
+      "wired": false,
+      "summary": "silmaril.agents.candidate_beta \u2014 BETA, the Short Squeeze Hunter."
+    },
+    {
+      "module": "silmaril.agents.candidate_gamma",
+      "path": "silmaril/agents/candidate_gamma.py",
+      "loc": 128,
+      "imported_by": 0,
+      "wired": false,
+      "summary": "silmaril.agents.candidate_gamma \u2014 GAMMA, the Macro Regime Reader."
+    },
+    {
+      "module": "silmaril.agents.cicada",
+      "path": "silmaril/agents/cicada.py",
+      "loc": 105,
+      "imported_by": 1,
+      "wired": true,
+      "summary": "silmaril.agents.cicada \u2014 The Earnings Whisperer."
+    },
+    {
+      "module": "silmaril.agents.contrarian",
+      "path": "silmaril/agents/contrarian.py",
+      "loc": 137,
+      "imported_by": 1,
+      "wired": true,
+      "summary": "silmaril.agents.contrarian \u2014 Crowded-Trade Fade Detector."
+    },
+    {
+      "module": "silmaril.agents.cryptobro",
+      "path": "silmaril/agents/cryptobro.py",
+      "loc": 406,
+      "imported_by": 1,
+      "wired": true,
+      "summary": "silmaril.agents.cryptobro \u2014 CryptoBro, the multi-trade crypto compounder."
+    },
+    {
+      "module": "silmaril.agents.fee_aware_rotation",
+      "path": "silmaril/agents/fee_aware_rotation.py",
+      "loc": 106,
+      "imported_by": 3,
+      "wired": true,
+      "summary": "silmaril.agents.fee_aware_rotation \u2014 Should we rotate or HODL?"
+    },
+    {
+      "module": "silmaril.agents.forge",
+      "path": "silmaril/agents/forge.py",
+      "loc": 213,
+      "imported_by": 1,
+      "wired": true,
+      "summary": "silmaril.agents.forge \u2014 The Forge."
+    },
+    {
+      "module": "silmaril.agents.hex_agent",
+      "path": "silmaril/agents/hex_agent.py",
+      "loc": 80,
+      "imported_by": 1,
+      "wired": true,
+      "summary": "silmaril.agents.hex \u2014 The Probabilist."
+    },
+    {
+      "module": "silmaril.agents.jade",
+      "path": "silmaril/agents/jade.py",
+      "loc": 79,
+      "imported_by": 1,
+      "wired": true,
+      "summary": "silmaril.agents.jade \u2014 The Rage-Buyer."
+    },
+    {
+      "module": "silmaril.agents.jrr_token",
+      "path": "silmaril/agents/jrr_token.py",
+      "loc": 422,
+      "imported_by": 1,
+      "wired": true,
+      "summary": "silmaril.agents.jrr_token \u2014 JRR Token, the penny-token compounder."
+    },
+    {
+      "module": "silmaril.agents.kestrel",
+      "path": "silmaril/agents/kestrel.py",
+      "loc": 87,
+      "imported_by": 1,
+      "wired": true,
+      "summary": "silmaril.agents.kestrel \u2014 The Patient Hunter."
+    },
+    {
+      "module": "silmaril.agents.kestrel_plus",
+      "path": "silmaril/agents/kestrel_plus.py",
+      "loc": 177,
+      "imported_by": 1,
+      "wired": true,
+      "summary": "silmaril.agents.kestrel_plus \u2014 The Hurst-Aware Mean Reverter."
+    },
+    {
+      "module": "silmaril.agents.magus",
+      "path": "silmaril/agents/magus.py",
+      "loc": 84,
+      "imported_by": 1,
+      "wired": true,
+      "summary": "silmaril.agents.magus \u2014 The Time Reader."
+    },
+    {
+      "module": "silmaril.agents.midas",
+      "path": "silmaril/agents/midas.py",
+      "loc": 333,
+      "imported_by": 1,
+      "wired": true,
+      "summary": "silmaril.agents.midas \u2014 King Midas, sovereign of hard currencies."
+    },
+    {
+      "module": "silmaril.agents.nightshade",
+      "path": "silmaril/agents/nightshade.py",
+      "loc": 98,
+      "imported_by": 1,
+      "wired": true,
+      "summary": "silmaril.agents.nightshade \u2014 The Insider Watcher."
+    },
+    {
+      "module": "silmaril.agents.nomad",
+      "path": "silmaril/agents/nomad.py",
+      "loc": 79,
+      "imported_by": 1,
+      "wired": true,
+      "summary": "silmaril.agents.nomad \u2014 The ADR Arbitrageur."
+    },
+    {
+      "module": "silmaril.agents.obsidian",
+      "path": "silmaril/agents/obsidian.py",
+      "loc": 125,
+      "imported_by": 1,
+      "wired": true,
+      "summary": "silmaril.agents.obsidian \u2014 The Resource King."
+    },
+    {
+      "module": "silmaril.agents.scrooge",
+      "path": "silmaril/agents/scrooge.py",
+      "loc": 279,
+      "imported_by": 1,
+      "wired": true,
+      "summary": "silmaril.agents.scrooge \u2014 The Saver."
+    },
+    {
+      "module": "silmaril.agents.shepherd",
+      "path": "silmaril/agents/shepherd.py",
+      "loc": 114,
+      "imported_by": 1,
+      "wired": true,
+      "summary": "silmaril.agents.shepherd \u2014 The Bond Yield Watcher."
+    },
+    {
+      "module": "silmaril.agents.short_alpha",
+      "path": "silmaril/agents/short_alpha.py",
+      "loc": 217,
+      "imported_by": 1,
+      "wired": true,
+      "summary": "silmaril.agents.short_alpha \u2014 Daily-move short specialist."
+    },
+    {
+      "module": "silmaril.agents.speck",
+      "path": "silmaril/agents/speck.py",
+      "loc": 82,
+      "imported_by": 1,
+      "wired": true,
+      "summary": "silmaril.agents.speck \u2014 The Small Thing."
+    },
+    {
+      "module": "silmaril.agents.sports_bro",
+      "path": "silmaril/agents/sports_bro.py",
+      "loc": 391,
+      "imported_by": 1,
+      "wired": true,
+      "summary": "silmaril.agents.sports_bro \u2014 Prediction-markets compounder. v2 with settle_expired_bets."
+    },
+    {
+      "module": "silmaril.agents.steadfast",
+      "path": "silmaril/agents/steadfast.py",
+      "loc": 180,
+      "imported_by": 1,
+      "wired": true,
+      "summary": "silmaril.agents.steadfast \u2014 STEADFAST, the blue-chip patriot."
+    },
+    {
+      "module": "silmaril.agents.synth",
+      "path": "silmaril/agents/synth.py",
+      "loc": 116,
+      "imported_by": 1,
+      "wired": true,
+      "summary": "silmaril.agents.synth \u2014 The Synthesist."
+    },
+    {
+      "module": "silmaril.agents.talon",
+      "path": "silmaril/agents/talon.py",
+      "loc": 103,
+      "imported_by": 1,
+      "wired": true,
+      "summary": "silmaril.agents.talon \u2014 The Overhead View."
+    },
+    {
+      "module": "silmaril.agents.thunderhead",
+      "path": "silmaril/agents/thunderhead.py",
+      "loc": 86,
+      "imported_by": 1,
+      "wired": true,
+      "summary": "silmaril.agents.thunderhead \u2014 The Storm."
+    },
+    {
+      "module": "silmaril.agents.veil",
+      "path": "silmaril/agents/veil.py",
+      "loc": 84,
+      "imported_by": 1,
+      "wired": true,
+      "summary": "silmaril.agents.veil \u2014 The Hidden Watcher."
+    },
+    {
+      "module": "silmaril.agents.vespa",
+      "path": "silmaril/agents/vespa.py",
+      "loc": 94,
+      "imported_by": 1,
+      "wired": true,
+      "summary": "silmaril.agents.vespa \u2014 The Catalyst Striker."
+    },
+    {
+      "module": "silmaril.agents.weaver",
+      "path": "silmaril/agents/weaver.py",
+      "loc": 79,
+      "imported_by": 1,
+      "wired": true,
+      "summary": "silmaril.agents.weaver \u2014 The Micro Scalper."
+    },
+    {
+      "module": "silmaril.agents.zenith",
+      "path": "silmaril/agents/zenith.py",
+      "loc": 142,
+      "imported_by": 1,
+      "wired": true,
+      "summary": "silmaril.agents.zenith \u2014 The Long Rider."
+    },
+    {
+      "module": "silmaril.alpha60",
+      "path": "silmaril/alpha60.py",
+      "loc": 216,
+      "imported_by": 1,
+      "wired": true,
+      "summary": "silmaril.alpha60 \u2014 Alpha 6.0 master wiring module."
+    },
+    {
+      "module": "silmaril.analytics.__init__",
+      "path": "silmaril/analytics/__init__.py",
+      "loc": 2,
+      "imported_by": 0,
+      "wired": true,
+      "summary": "silmaril.analytics package."
+    },
+    {
+      "module": "silmaril.analytics.regime",
+      "path": "silmaril/analytics/regime.py",
+      "loc": 62,
+      "imported_by": 1,
+      "wired": true,
+      "summary": "silmaril.analytics.regime \u2014 Market regime classifier."
+    },
+    {
+      "module": "silmaril.analytics.sentiment",
+      "path": "silmaril/analytics/sentiment.py",
+      "loc": 128,
+      "imported_by": 1,
+      "wired": true,
+      "summary": "silmaril.analytics.sentiment \u2014 Lexicon-based sentiment scoring."
+    },
+    {
+      "module": "silmaril.analytics.technicals",
+      "path": "silmaril/analytics/technicals.py",
+      "loc": 186,
+      "imported_by": 2,
+      "wired": true,
+      "summary": "silmaril.analytics.technicals \u2014 Pure-Python technical indicators."
+    },
+    {
+      "module": "silmaril.backtest.__init__",
+      "path": "silmaril/backtest/__init__.py",
+      "loc": 25,
+      "imported_by": 0,
+      "wired": true,
+      "summary": "silmaril.backtest \u2014 historical replay framework."
+    },
+    {
+      "module": "silmaril.backtest.__main__",
+      "path": "silmaril/backtest/__main__.py",
+      "loc": 250,
+      "imported_by": 0,
+      "wired": true,
+      "summary": "silmaril.backtest.__main__"
+    },
+    {
+      "module": "silmaril.backtest.data_loader",
+      "path": "silmaril/backtest/data_loader.py",
+      "loc": 171,
+      "imported_by": 2,
+      "wired": true,
+      "summary": "silmaril.backtest.data_loader"
+    },
+    {
+      "module": "silmaril.backtest.engine",
+      "path": "silmaril/backtest/engine.py",
+      "loc": 258,
+      "imported_by": 2,
+      "wired": true,
+      "summary": "silmaril.backtest.engine"
+    },
+    {
+      "module": "silmaril.backtest.metrics",
+      "path": "silmaril/backtest/metrics.py",
+      "loc": 292,
+      "imported_by": 3,
+      "wired": true,
+      "summary": "silmaril.backtest.metrics"
+    },
+    {
+      "module": "silmaril.backtest.replay",
+      "path": "silmaril/backtest/replay.py",
+      "loc": 288,
+      "imported_by": 2,
+      "wired": true,
+      "summary": "silmaril.backtest.replay"
+    },
+    {
+      "module": "silmaril.backtest.walk_forward",
+      "path": "silmaril/backtest/walk_forward.py",
+      "loc": 162,
+      "imported_by": 2,
+      "wired": true,
+      "summary": "silmaril.backtest.walk_forward"
+    },
+    {
+      "module": "silmaril.catalysts.__init__",
+      "path": "silmaril/catalysts/__init__.py",
+      "loc": 322,
+      "imported_by": 0,
+      "wired": true,
+      "summary": "silmaril.catalysts \u2014 Aggregator that writes the schema the dashboard expects."
+    },
+    {
+      "module": "silmaril.catalysts.crypto_unlocks",
+      "path": "silmaril/catalysts/crypto_unlocks.py",
+      "loc": 95,
+      "imported_by": 1,
+      "wired": true,
+      "summary": "silmaril.catalysts.crypto_unlocks"
+    },
+    {
+      "module": "silmaril.catalysts.earnings_calendar",
+      "path": "silmaril/catalysts/earnings_calendar.py",
+      "loc": 123,
+      "imported_by": 1,
+      "wired": true,
+      "summary": "silmaril.catalysts.earnings_calendar"
+    },
+    {
+      "module": "silmaril.catalysts.ex_dividend",
+      "path": "silmaril/catalysts/ex_dividend.py",
+      "loc": 90,
+      "imported_by": 1,
+      "wired": true,
+      "summary": "silmaril.catalysts.ex_dividend"
+    },
+    {
+      "module": "silmaril.catalysts.index_rebalance",
+      "path": "silmaril/catalysts/index_rebalance.py",
+      "loc": 122,
+      "imported_by": 1,
+      "wired": true,
+      "summary": "silmaril.catalysts.index_rebalance"
+    },
+    {
+      "module": "silmaril.catalysts.learning",
+      "path": "silmaril/catalysts/learning.py",
+      "loc": 373,
+      "imported_by": 1,
+      "wired": true,
+      "summary": "SILMARIL \u2014 Catalyst Learning & Predictiveness (deterministic, REAL data only)"
+    },
+    {
+      "module": "silmaril.catalysts.macro_releases",
+      "path": "silmaril/catalysts/macro_releases.py",
+      "loc": 104,
+      "imported_by": 1,
+      "wired": true,
+      "summary": "silmaril.catalysts.macro_releases"
+    },
+    {
+      "module": "silmaril.catalysts.opex",
+      "path": "silmaril/catalysts/opex.py",
+      "loc": 62,
+      "imported_by": 1,
+      "wired": true,
+      "summary": "silmaril.catalysts.opex"
+    },
+    {
+      "module": "silmaril.charts.__init__",
+      "path": "silmaril/charts/__init__.py",
+      "loc": 70,
+      "imported_by": 0,
+      "wired": true,
+      "summary": "silmaril.charts \u2014 price history bundles for chart rendering."
+    },
+    {
+      "module": "silmaril.cli",
+      "path": "silmaril/cli.py",
+      "loc": 2992,
+      "imported_by": 1,
+      "wired": true,
+      "summary": "silmaril.cli \u2014 The main runner. Alpha 2.0 \u2014 Full Learning Mode."
+    },
+    {
+      "module": "silmaril.debate.__init__",
+      "path": "silmaril/debate/__init__.py",
+      "loc": 2,
+      "imported_by": 0,
+      "wired": true,
+      "summary": "silmaril.debate package."
+    },
+    {
+      "module": "silmaril.debate.arbiter",
+      "path": "silmaril/debate/arbiter.py",
+      "loc": 322,
+      "imported_by": 1,
+      "wired": true,
+      "summary": "silmaril.debate.arbiter \u2014 Consensus engine."
+    },
+    {
+      "module": "silmaril.diagnostics.alerts",
+      "path": "silmaril/diagnostics/alerts.py",
+      "loc": 273,
+      "imported_by": 1,
+      "wired": true,
+      "summary": "silmaril.diagnostics.alerts \u2014 Alpha 3.2 operational alerts."
+    },
+    {
+      "module": "silmaril.diagnostics.drift_sentinel",
+      "path": "silmaril/diagnostics/drift_sentinel.py",
+      "loc": 241,
+      "imported_by": 1,
+      "wired": true,
+      "summary": "silmaril.diagnostics.drift_sentinel \u2014 Anti-drift invariant sentinel."
+    },
+    {
+      "module": "silmaril.diagnostics.harvest_accounts_status",
+      "path": "silmaril/diagnostics/harvest_accounts_status.py",
+      "loc": 219,
+      "imported_by": 1,
+      "wired": true,
+      "summary": "silmaril.diagnostics.harvest_accounts_status \u2014 Rollup for the new tab."
+    },
+    {
+      "module": "silmaril.diagnostics.run_health",
+      "path": "silmaril/diagnostics/run_health.py",
+      "loc": 265,
+      "imported_by": 1,
+      "wired": true,
+      "summary": "silmaril.diagnostics.run_health \u2014 One file, one source of truth."
+    },
+    {
+      "module": "silmaril.diagnostics.system_audit",
+      "path": "silmaril/diagnostics/system_audit.py",
+      "loc": 339,
+      "imported_by": 1,
+      "wired": true,
+      "summary": "silmaril.diagnostics.system_audit \u2014 Alpha 6.0 full-system audit emitter."
+    },
+    {
+      "module": "silmaril.diagnostics.time_basis",
+      "path": "silmaril/diagnostics/time_basis.py",
+      "loc": 174,
+      "imported_by": 0,
+      "wired": false,
+      "summary": "silmaril.diagnostics.time_basis \u2014 Unified day counting."
+    },
+    {
+      "module": "silmaril.execution.__init__",
+      "path": "silmaril/execution/__init__.py",
+      "loc": 2,
+      "imported_by": 0,
+      "wired": true,
+      "summary": "(no module docstring)"
+    },
+    {
+      "module": "silmaril.execution.alpaca_paper",
+      "path": "silmaril/execution/alpaca_paper.py",
+      "loc": 1277,
+      "imported_by": 2,
+      "wired": true,
+      "summary": "silmaril.execution.alpaca_paper \u2014 Alpha 6.0 wired executor."
+    },
+    {
+      "module": "silmaril.execution.attribution",
+      "path": "silmaril/execution/attribution.py",
+      "loc": 177,
+      "imported_by": 1,
+      "wired": true,
+      "summary": "silmaril.execution.attribution \u2014 Alpaca order tagging and reconciliation."
+    },
+    {
+      "module": "silmaril.execution.detail",
+      "path": "silmaril/execution/detail.py",
+      "loc": 252,
+      "imported_by": 8,
+      "wired": true,
+      "summary": "silmaril.execution.detail \u2014 Professional trade execution metadata."
+    },
+    {
+      "module": "silmaril.execution.directive_consumer",
+      "path": "silmaril/execution/directive_consumer.py",
+      "loc": 534,
+      "imported_by": 1,
+      "wired": true,
+      "summary": "silmaril.execution.directive_consumer \u2014 Alpha 6.0 brain-to-hands bridge."
+    },
+    {
+      "module": "silmaril.execution.fill_policy_governor",
+      "path": "silmaril/execution/fill_policy_governor.py",
+      "loc": 160,
+      "imported_by": 2,
+      "wired": true,
+      "summary": "silmaril.execution.fill_policy_governor \u2014 Alpha 6.3 P4.2 SHADOW governor."
+    },
+    {
+      "module": "silmaril.execution.fill_policy_telemetry",
+      "path": "silmaril/execution/fill_policy_telemetry.py",
+      "loc": 332,
+      "imported_by": 1,
+      "wired": true,
+      "summary": "silmaril.execution.fill_policy_telemetry \u2014 Alpha 6.3 P4.3 observational layer."
+    },
+    {
+      "module": "silmaril.execution.forensics",
+      "path": "silmaril/execution/forensics.py",
+      "loc": 377,
+      "imported_by": 1,
+      "wired": true,
+      "summary": "silmaril.execution.forensics \u2014 Alpha 6.3 P2 execution-quality forensics."
+    },
+    {
+      "module": "silmaril.execution.multi_account",
+      "path": "silmaril/execution/multi_account.py",
+      "loc": 328,
+      "imported_by": 2,
+      "wired": true,
+      "summary": "silmaril.execution.multi_account \u2014 Alpha 6.0 multi-account orchestrator."
+    },
+    {
+      "module": "silmaril.execution.position_manager",
+      "path": "silmaril/execution/position_manager.py",
+      "loc": 341,
+      "imported_by": 1,
+      "wired": true,
+      "summary": "silmaril.execution.position_manager \u2014 Alpha 5.1 active position management."
+    },
+    {
+      "module": "silmaril.execution.status_emitter",
+      "path": "silmaril/execution/status_emitter.py",
+      "loc": 151,
+      "imported_by": 0,
+      "wired": false,
+      "summary": "silmaril.portfolios.status_emitter \u2014 Compounder cycle status emitter."
+    },
+    {
+      "module": "silmaril.handoff.__init__",
+      "path": "silmaril/handoff/__init__.py",
+      "loc": 2,
+      "imported_by": 0,
+      "wired": true,
+      "summary": "silmaril.handoff package."
+    },
+    {
+      "module": "silmaril.handoff.blocks",
+      "path": "silmaril/handoff/blocks.py",
+      "loc": 292,
+      "imported_by": 1,
+      "wired": true,
+      "summary": "silmaril.handoff.blocks \u2014 Build Handoff Blocks from debate context."
+    },
+    {
+      "module": "silmaril.handoff.brokers",
+      "path": "silmaril/handoff/brokers.py",
+      "loc": 97,
+      "imported_by": 1,
+      "wired": true,
+      "summary": "silmaril.handoff.brokers \u2014 broker deeplinks for trade plans."
+    },
+    {
+      "module": "silmaril.handoff.deeplinks",
+      "path": "silmaril/handoff/deeplinks.py",
+      "loc": 130,
+      "imported_by": 2,
+      "wired": true,
+      "summary": "silmaril.handoff.deeplinks \u2014 One-click LLM handoffs."
+    },
+    {
+      "module": "silmaril.ingestion.__init__",
+      "path": "silmaril/ingestion/__init__.py",
+      "loc": 2,
+      "imported_by": 0,
+      "wired": true,
+      "summary": "silmaril.ingestion package."
+    },
+    {
+      "module": "silmaril.ingestion.cboe",
+      "path": "silmaril/ingestion/cboe.py",
+      "loc": 91,
+      "imported_by": 1,
+      "wired": true,
+      "summary": "silmaril.ingestion.cboe \u2014 CBOE daily put/call ratio."
+    },
+    {
+      "module": "silmaril.ingestion.finra_short",
+      "path": "silmaril/ingestion/finra_short.py",
+      "loc": 104,
+      "imported_by": 1,
+      "wired": true,
+      "summary": "silmaril.ingestion.finra_short \u2014 FINRA daily short volume data."
+    },
+    {
+      "module": "silmaril.ingestion.form4",
+      "path": "silmaril/ingestion/form4.py",
+      "loc": 120,
+      "imported_by": 1,
+      "wired": true,
+      "summary": "silmaril.ingestion.form4 \u2014 SEC EDGAR Form 4 insider purchase scoring."
+    },
+    {
+      "module": "silmaril.ingestion.fred",
+      "path": "silmaril/ingestion/fred.py",
+      "loc": 195,
+      "imported_by": 2,
+      "wired": true,
+      "summary": "silmaril.ingestion.fred \u2014 Federal Reserve Economic Data (FRED) macro signals."
+    },
+    {
+      "module": "silmaril.ingestion.market_hours",
+      "path": "silmaril/ingestion/market_hours.py",
+      "loc": 157,
+      "imported_by": 0,
+      "wired": false,
+      "summary": "silmaril.cache.market_hours \u2014 Market-hours aware fetch caching."
+    },
+    {
+      "module": "silmaril.ingestion.news",
+      "path": "silmaril/ingestion/news.py",
+      "loc": 228,
+      "imported_by": 1,
+      "wired": true,
+      "summary": "silmaril.ingestion.news \u2014 News ingestion via free RSS feeds."
+    },
+    {
+      "module": "silmaril.ingestion.price_format",
+      "path": "silmaril/ingestion/price_format.py",
+      "loc": 27,
+      "imported_by": 1,
+      "wired": true,
+      "summary": "Price formatting for sub-penny tokens. Fixes JRR Token $0.0000 bug."
+    },
+    {
+      "module": "silmaril.ingestion.prices",
+      "path": "silmaril/ingestion/prices.py",
+      "loc": 388,
+      "imported_by": 1,
+      "wired": true,
+      "summary": "silmaril.ingestion.prices \u2014 Price ingestion: yfinance history + keyed fresh quotes."
+    },
+    {
+      "module": "silmaril.ingestion.ticker_disambiguation",
+      "path": "silmaril/ingestion/ticker_disambiguation.py",
+      "loc": 384,
+      "imported_by": 2,
+      "wired": true,
+      "summary": "silmaril.ingestion.ticker_disambiguation \u2014 Stop SNOW=Snow College noise."
+    },
+    {
+      "module": "silmaril.intelligence.__init__",
+      "path": "silmaril/intelligence/__init__.py",
+      "loc": 8,
+      "imported_by": 0,
+      "wired": true,
+      "summary": "SILMARIL intelligence layer."
+    },
+    {
+      "module": "silmaril.intelligence.deal_journal",
+      "path": "silmaril/intelligence/deal_journal.py",
+      "loc": 302,
+      "imported_by": 1,
+      "wired": true,
+      "summary": "SILMARIL \u2014 Deal Journal (read-only, append-only, REAL data only)"
+    },
+    {
+      "module": "silmaril.intelligence.event_recorder",
+      "path": "silmaril/intelligence/event_recorder.py",
+      "loc": 254,
+      "imported_by": 1,
+      "wired": true,
+      "summary": "SILMARIL \u2014 Event Recorder (append-only, deterministic, REAL data only)"
+    },
+    {
+      "module": "silmaril.intelligence.ipo_analysis",
+      "path": "silmaril/intelligence/ipo_analysis.py",
+      "loc": 274,
+      "imported_by": 1,
+      "wired": true,
+      "summary": "SILMARIL \u2014 IPO Analysis & Learning (deterministic, REAL data only)"
+    },
+    {
+      "module": "silmaril.intelligence.ipo_calendar",
+      "path": "silmaril/intelligence/ipo_calendar.py",
+      "loc": 241,
+      "imported_by": 3,
+      "wired": true,
+      "summary": "SILMARIL \u2014 IPO Calendar & Pipeline (the self-rotating foundation)"
+    },
+    {
+      "module": "silmaril.intelligence.news_intelligence",
+      "path": "silmaril/intelligence/news_intelligence.py",
+      "loc": 365,
+      "imported_by": 1,
+      "wired": true,
+      "summary": "SILMARIL \u2014 News & Event Intelligence (Phase 1, deterministic / no LLM)"
+    },
+    {
+      "module": "silmaril.learning.__init__",
+      "path": "silmaril/learning/__init__.py",
+      "loc": 82,
+      "imported_by": 0,
+      "wired": true,
+      "summary": "silmaril.learning \u2014 Adaptive ensemble layer (Alpha 2.0 Full Learning Mode)."
+    },
+    {
+      "module": "silmaril.learning.adversarial_stress",
+      "path": "silmaril/learning/adversarial_stress.py",
+      "loc": 121,
+      "imported_by": 1,
+      "wired": true,
+      "summary": "silmaril.learning.adversarial_stress"
+    },
+    {
+      "module": "silmaril.learning.agent_evolution",
+      "path": "silmaril/learning/agent_evolution.py",
+      "loc": 359,
+      "imported_by": 1,
+      "wired": true,
+      "summary": "silmaril.learning.agent_evolution \u2014 Alpha 6.0 Pok\u00e9mon-style offspring."
+    },
+    {
+      "module": "silmaril.learning.anomaly_detector",
+      "path": "silmaril/learning/anomaly_detector.py",
+      "loc": 175,
+      "imported_by": 3,
+      "wired": true,
+      "summary": "silmaril.learning.anomaly_detector"
+    },
+    {
+      "module": "silmaril.learning.backtest_to_beliefs",
+      "path": "silmaril/learning/backtest_to_beliefs.py",
+      "loc": 233,
+      "imported_by": 0,
+      "wired": false,
+      "summary": "silmaril.learning.backtest_to_beliefs"
+    },
+    {
+      "module": "silmaril.learning.bayesian_winrate",
+      "path": "silmaril/learning/bayesian_winrate.py",
+      "loc": 126,
+      "imported_by": 6,
+      "wired": true,
+      "summary": "silmaril.learning.bayesian_winrate"
+    },
+    {
+      "module": "silmaril.learning.benchmarking",
+      "path": "silmaril/learning/benchmarking.py",
+      "loc": 341,
+      "imported_by": 1,
+      "wired": true,
+      "summary": "silmaril.learning.benchmarking \u2014 Alpha 5.1 reality-check / benchmarking."
+    },
+    {
+      "module": "silmaril.learning.correlation_matrix",
+      "path": "silmaril/learning/correlation_matrix.py",
+      "loc": 118,
+      "imported_by": 3,
+      "wired": true,
+      "summary": "silmaril.learning.correlation_matrix"
+    },
+    {
+      "module": "silmaril.learning.counterfactual",
+      "path": "silmaril/learning/counterfactual.py",
+      "loc": 86,
+      "imported_by": 3,
+      "wired": true,
+      "summary": "silmaril.learning.counterfactual"
+    },
+    {
+      "module": "silmaril.learning.cross_agent_learning",
+      "path": "silmaril/learning/cross_agent_learning.py",
+      "loc": 365,
+      "imported_by": 1,
+      "wired": true,
+      "summary": "silmaril.learning.cross_agent_learning \u2014 Alpha 6.0 collective learning."
+    },
+    {
+      "module": "silmaril.learning.dissent_digest",
+      "path": "silmaril/learning/dissent_digest.py",
+      "loc": 102,
+      "imported_by": 3,
+      "wired": true,
+      "summary": "silmaril.learning.dissent_digest"
+    },
+    {
+      "module": "silmaril.learning.drift_detector",
+      "path": "silmaril/learning/drift_detector.py",
+      "loc": 95,
+      "imported_by": 3,
+      "wired": true,
+      "summary": "silmaril.learning.drift_detector"
+    },
+    {
+      "module": "silmaril.learning.edge_study",
+      "path": "silmaril/learning/edge_study.py",
+      "loc": 222,
+      "imported_by": 1,
+      "wired": true,
+      "summary": "silmaril.learning.edge_study \u2014 Where is the edge, actually?"
+    },
+    {
+      "module": "silmaril.learning.evolution_cards",
+      "path": "silmaril/learning/evolution_cards.py",
+      "loc": 204,
+      "imported_by": 3,
+      "wired": true,
+      "summary": "silmaril.learning.evolution_cards \u2014 Gamified training cards."
+    },
+    {
+      "module": "silmaril.learning.expectancy_lab",
+      "path": "silmaril/learning/expectancy_lab.py",
+      "loc": 303,
+      "imported_by": 1,
+      "wired": true,
+      "summary": "silmaril.learning.expectancy_lab \u2014 Alpha 5.1 expectancy lab."
+    },
+    {
+      "module": "silmaril.learning.failure_attribution",
+      "path": "silmaril/learning/failure_attribution.py",
+      "loc": 324,
+      "imported_by": 1,
+      "wired": true,
+      "summary": "silmaril.learning.failure_attribution \u2014 Alpha 5.1 failure attribution."
+    },
+    {
+      "module": "silmaril.learning.hysteresis",
+      "path": "silmaril/learning/hysteresis.py",
+      "loc": 78,
+      "imported_by": 1,
+      "wired": true,
+      "summary": "silmaril.learning.hysteresis"
+    },
+    {
+      "module": "silmaril.learning.integration",
+      "path": "silmaril/learning/integration.py",
+      "loc": 287,
+      "imported_by": 0,
+      "wired": false,
+      "summary": "silmaril.learning.integration \u2014 One-call wiring for cli.py."
+    },
+    {
+      "module": "silmaril.learning.news_quality",
+      "path": "silmaril/learning/news_quality.py",
+      "loc": 138,
+      "imported_by": 1,
+      "wired": true,
+      "summary": "silmaril.learning.news_quality"
+    },
+    {
+      "module": "silmaril.learning.parameter_tuning",
+      "path": "silmaril/learning/parameter_tuning.py",
+      "loc": 541,
+      "imported_by": 4,
+      "wired": true,
+      "summary": "silmaril.learning.parameter_tuning \u2014 Alpha 4.0 self-tuning feedback."
+    },
+    {
+      "module": "silmaril.learning.persistence_guard",
+      "path": "silmaril/learning/persistence_guard.py",
+      "loc": 184,
+      "imported_by": 3,
+      "wired": true,
+      "summary": "silmaril.learning.persistence_guard \u2014 Protects learning state from wipes."
+    },
+    {
+      "module": "silmaril.learning.position_sizing",
+      "path": "silmaril/learning/position_sizing.py",
+      "loc": 79,
+      "imported_by": 1,
+      "wired": true,
+      "summary": "silmaril.learning.position_sizing \u2014 Volatility-targeted Kelly variant."
+    },
+    {
+      "module": "silmaril.learning.premortem",
+      "path": "silmaril/learning/premortem.py",
+      "loc": 149,
+      "imported_by": 2,
+      "wired": true,
+      "summary": "silmaril.learning.premortem"
+    },
+    {
+      "module": "silmaril.learning.reflection",
+      "path": "silmaril/learning/reflection.py",
+      "loc": 169,
+      "imported_by": 3,
+      "wired": true,
+      "summary": "silmaril.learning.reflection"
+    },
+    {
+      "module": "silmaril.learning.regime_bandit",
+      "path": "silmaril/learning/regime_bandit.py",
+      "loc": 73,
+      "imported_by": 3,
+      "wired": true,
+      "summary": "silmaril.learning.regime_bandit"
+    },
+    {
+      "module": "silmaril.learning.slippage",
+      "path": "silmaril/learning/slippage.py",
+      "loc": 109,
+      "imported_by": 2,
+      "wired": true,
+      "summary": "silmaril.learning.slippage \u2014 Realistic fill modeling."
+    },
+    {
+      "module": "silmaril.learning.thompson_arbiter",
+      "path": "silmaril/learning/thompson_arbiter.py",
+      "loc": 71,
+      "imported_by": 2,
+      "wired": true,
+      "summary": "silmaril.learning.thompson_arbiter \u2014 Thompson Sampling for arbiter weighting."
+    },
+    {
+      "module": "silmaril.learning.time_of_day",
+      "path": "silmaril/learning/time_of_day.py",
+      "loc": 103,
+      "imported_by": 3,
+      "wired": true,
+      "summary": "silmaril.learning.time_of_day"
+    },
+    {
+      "module": "silmaril.learning.transparency",
+      "path": "silmaril/learning/transparency.py",
+      "loc": 493,
+      "imported_by": 1,
+      "wired": true,
+      "summary": "silmaril.learning.transparency \u2014 Alpha 5.0 learning observability layer."
+    },
+    {
+      "module": "silmaril.portfolios.__init__",
+      "path": "silmaril/portfolios/__init__.py",
+      "loc": 2,
+      "imported_by": 0,
+      "wired": true,
+      "summary": "(no module docstring)"
+    },
+    {
+      "module": "silmaril.portfolios.agent_portfolio",
+      "path": "silmaril/portfolios/agent_portfolio.py",
+      "loc": 381,
+      "imported_by": 1,
+      "wired": true,
+      "summary": "silmaril.portfolios.agent_portfolio \u2014 v4.2 Alpha 2.3."
+    },
+    {
+      "module": "silmaril.portfolios.bills_leaderboard_v2",
+      "path": "silmaril/portfolios/bills_leaderboard_v2.py",
+      "loc": 180,
+      "imported_by": 1,
+      "wired": true,
+      "summary": "silmaril.portfolios.bills_leaderboard_v2 \u2014 Corrected per-account ranking."
+    },
+    {
+      "module": "silmaril.portfolios.bleed_exit",
+      "path": "silmaril/portfolios/bleed_exit.py",
+      "loc": 237,
+      "imported_by": 1,
+      "wired": true,
+      "summary": "silmaril.portfolios.bleed_exit \u2014 Alpha 3.2 narrow-window hold pruning."
+    },
+    {
+      "module": "silmaril.portfolios.capital_efficiency",
+      "path": "silmaril/portfolios/capital_efficiency.py",
+      "loc": 372,
+      "imported_by": 1,
+      "wired": true,
+      "summary": "silmaril.portfolios.capital_efficiency \u2014 Alpha 5.1 active-competition engine."
+    },
+    {
+      "module": "silmaril.portfolios.capital_flow",
+      "path": "silmaril/portfolios/capital_flow.py",
+      "loc": 394,
+      "imported_by": 1,
+      "wired": true,
+      "summary": "silmaril.portfolios.capital_flow \u2014 Alpha 5.0 capital-flow rollup."
+    },
+    {
+      "module": "silmaril.portfolios.conviction_engine",
+      "path": "silmaril/portfolios/conviction_engine.py",
+      "loc": 622,
+      "imported_by": 1,
+      "wired": true,
+      "summary": "silmaril.portfolios.conviction_engine \u2014 Alpha 4.0 opportunity ranker."
+    },
+    {
+      "module": "silmaril.portfolios.correlation_book",
+      "path": "silmaril/portfolios/correlation_book.py",
+      "loc": 301,
+      "imported_by": 1,
+      "wired": true,
+      "summary": "silmaril.portfolios.correlation_book \u2014 Alpha 6.0 portfolio-level correlation map."
+    },
+    {
+      "module": "silmaril.portfolios.correlation_control",
+      "path": "silmaril/portfolios/correlation_control.py",
+      "loc": 186,
+      "imported_by": 1,
+      "wired": true,
+      "summary": "silmaril.portfolios.correlation_control \u2014 Alpha 3.3 concentration caps."
+    },
+    {
+      "module": "silmaril.portfolios.decision_authority",
+      "path": "silmaril/portfolios/decision_authority.py",
+      "loc": 242,
+      "imported_by": 0,
+      "wired": false,
+      "summary": "silmaril.portfolios.decision_authority \u2014 Alpha 3.3 / 4.0 precedence hierarchy."
+    },
+    {
+      "module": "silmaril.portfolios.deployment_floor",
+      "path": "silmaril/portfolios/deployment_floor.py",
+      "loc": 292,
+      "imported_by": 2,
+      "wired": true,
+      "summary": "silmaril.portfolios.deployment_floor \u2014 Alpha 6.0 account contract."
+    },
+    {
+      "module": "silmaril.portfolios.deployment_pressure",
+      "path": "silmaril/portfolios/deployment_pressure.py",
+      "loc": 369,
+      "imported_by": 0,
+      "wired": false,
+      "summary": "silmaril.portfolios.deployment_pressure \u2014 Alpha 4.0 capital-deployment urgency engine."
+    },
+    {
+      "module": "silmaril.portfolios.dynamic_sizer",
+      "path": "silmaril/portfolios/dynamic_sizer.py",
+      "loc": 322,
+      "imported_by": 1,
+      "wired": true,
+      "summary": "silmaril.portfolios.dynamic_sizer \u2014 Alpha 3.3 / 4.0 adaptive sizing."
+    },
+    {
+      "module": "silmaril.portfolios.elite_mode",
+      "path": "silmaril/portfolios/elite_mode.py",
+      "loc": 209,
+      "imported_by": 1,
+      "wired": true,
+      "summary": "silmaril.portfolios.elite_mode \u2014 Alpha 3.3 elite opportunity escalation."
+    },
+    {
+      "module": "silmaril.portfolios.event_impact",
+      "path": "silmaril/portfolios/event_impact.py",
+      "loc": 439,
+      "imported_by": 1,
+      "wired": true,
+      "summary": "silmaril.portfolios.event_impact \u2014 Alpha 5.1 news \u2192 implications engine."
+    },
+    {
+      "module": "silmaril.portfolios.explainability",
+      "path": "silmaril/portfolios/explainability.py",
+      "loc": 159,
+      "imported_by": 2,
+      "wired": true,
+      "summary": "silmaril.portfolios.explainability \u2014 Alpha 3.2 decision ledger."
+    },
+    {
+      "module": "silmaril.portfolios.global_allocator",
+      "path": "silmaril/portfolios/global_allocator.py",
+      "loc": 353,
+      "imported_by": 1,
+      "wired": true,
+      "summary": "silmaril.portfolios.global_allocator \u2014 Alpha 3.3 / 4.0 cross-account coordinator."
+    },
+    {
+      "module": "silmaril.portfolios.grocery",
+      "path": "silmaril/portfolios/grocery.py",
+      "loc": 400,
+      "imported_by": 3,
+      "wired": true,
+      "summary": "silmaril.portfolios.grocery \u2014 The Grocery Money Engine."
+    },
+    {
+      "module": "silmaril.portfolios.market_clock",
+      "path": "silmaril/portfolios/market_clock.py",
+      "loc": 152,
+      "imported_by": 2,
+      "wired": true,
+      "summary": "silmaril.portfolios.market_clock \u2014 Market open/close reference clock."
+    },
+    {
+      "module": "silmaril.portfolios.market_state",
+      "path": "silmaril/portfolios/market_state.py",
+      "loc": 222,
+      "imported_by": 1,
+      "wired": true,
+      "summary": "silmaril.portfolios.market_state \u2014 Alpha 3.2 adaptive mode classifier."
+    },
+    {
+      "module": "silmaril.portfolios.momentum_exit",
+      "path": "silmaril/portfolios/momentum_exit.py",
+      "loc": 102,
+      "imported_by": 1,
+      "wired": true,
+      "summary": "Trailing stop + momentum stall exit logic for all agent portfolios."
+    },
+    {
+      "module": "silmaril.portfolios.move_attribution",
+      "path": "silmaril/portfolios/move_attribution.py",
+      "loc": 214,
+      "imported_by": 1,
+      "wired": true,
+      "summary": "silmaril.portfolios.move_attribution \u2014 Alpha 6.3 P3 measurable move attribution."
+    },
+    {
+      "module": "silmaril.portfolios.narrative_tracker",
+      "path": "silmaril/portfolios/narrative_tracker.py",
+      "loc": 591,
+      "imported_by": 1,
+      "wired": true,
+      "summary": "silmaril.portfolios.narrative_tracker \u2014 Alpha 5.0 deterministic narrative engine."
+    },
+    {
+      "module": "silmaril.portfolios.opportunity_urgency",
+      "path": "silmaril/portfolios/opportunity_urgency.py",
+      "loc": 384,
+      "imported_by": 0,
+      "wired": false,
+      "summary": "silmaril.portfolios.opportunity_urgency \u2014 Alpha 4.0 urgency scoring."
+    },
+    {
+      "module": "silmaril.portfolios.orchestrator",
+      "path": "silmaril/portfolios/orchestrator.py",
+      "loc": 386,
+      "imported_by": 1,
+      "wired": true,
+      "summary": "silmaril.portfolios.orchestrator \u2014 Alpha 5.1 portfolio-level central brain."
+    },
+    {
+      "module": "silmaril.portfolios.order_quality",
+      "path": "silmaril/portfolios/order_quality.py",
+      "loc": 235,
+      "imported_by": 1,
+      "wired": true,
+      "summary": "silmaril.portfolios.order_quality \u2014 Alpha 6.0 entry execution quality."
+    },
+    {
+      "module": "silmaril.portfolios.policy_router",
+      "path": "silmaril/portfolios/policy_router.py",
+      "loc": 748,
+      "imported_by": 2,
+      "wired": true,
+      "summary": "silmaril.portfolios.policy_router \u2014 Alpha 3.3 / 4.0 central execution authority."
+    },
+    {
+      "module": "silmaril.portfolios.position_health",
+      "path": "silmaril/portfolios/position_health.py",
+      "loc": 361,
+      "imported_by": 1,
+      "wired": true,
+      "summary": "silmaril.portfolios.position_health \u2014 Alpha 5.0 unified position health matrix."
+    },
+    {
+      "module": "silmaril.portfolios.preservation_intelligence",
+      "path": "silmaril/portfolios/preservation_intelligence.py",
+      "loc": 405,
+      "imported_by": 0,
+      "wired": false,
+      "summary": "silmaril.portfolios.preservation_intelligence \u2014 Alpha 3.3 / 4.0 smart preservation."
+    },
+    {
+      "module": "silmaril.portfolios.profit_protection",
+      "path": "silmaril/portfolios/profit_protection.py",
+      "loc": 276,
+      "imported_by": 1,
+      "wired": true,
+      "summary": "silmaril.portfolios.profit_protection \u2014 Alpha 3.2 profit-at-risk."
+    },
+    {
+      "module": "silmaril.portfolios.regime_memory",
+      "path": "silmaril/portfolios/regime_memory.py",
+      "loc": 398,
+      "imported_by": 1,
+      "wired": true,
+      "summary": "silmaril.portfolios.regime_memory \u2014 Alpha 5.1 rolling regime memory."
+    },
+    {
+      "module": "silmaril.portfolios.savings",
+      "path": "silmaril/portfolios/savings.py",
+      "loc": 54,
+      "imported_by": 1,
+      "wired": true,
+      "summary": "silmaril.portfolios.savings \u2014 Profit-harvest accounting."
+    },
+    {
+      "module": "silmaril.portfolios.sector_rotation",
+      "path": "silmaril/portfolios/sector_rotation.py",
+      "loc": 448,
+      "imported_by": 1,
+      "wired": true,
+      "summary": "silmaril.portfolios.sector_rotation \u2014 Alpha 5.0 sector flow engine."
+    },
+    {
+      "module": "silmaril.portfolios.setup_classifier",
+      "path": "silmaril/portfolios/setup_classifier.py",
+      "loc": 505,
+      "imported_by": 2,
+      "wired": true,
+      "summary": "silmaril.portfolios.setup_classifier \u2014 Alpha 5.1 setup archetype engine."
+    },
+    {
+      "module": "silmaril.portfolios.signal_validation",
+      "path": "silmaril/portfolios/signal_validation.py",
+      "loc": 407,
+      "imported_by": 1,
+      "wired": true,
+      "summary": "silmaril.portfolios.signal_validation \u2014 Alpha 4.0 empirical signal tracker."
+    },
+    {
+      "module": "silmaril.portfolios.staleness",
+      "path": "silmaril/portfolios/staleness.py",
+      "loc": 351,
+      "imported_by": 1,
+      "wired": true,
+      "summary": "silmaril.portfolios.staleness \u2014 Position-pruning advisory engine."
+    },
+    {
+      "module": "silmaril.portfolios.status_emitter",
+      "path": "silmaril/portfolios/status_emitter.py",
+      "loc": 151,
+      "imported_by": 0,
+      "wired": false,
+      "summary": "silmaril.portfolios.status_emitter \u2014 Compounder cycle status emitter."
+    },
+    {
+      "module": "silmaril.portfolios.sweep_protection",
+      "path": "silmaril/portfolios/sweep_protection.py",
+      "loc": 1091,
+      "imported_by": 4,
+      "wired": true,
+      "summary": "silmaril.portfolios.sweep_protection \u2014 Alpha 4.0 overnight/pre-market shield."
+    },
+    {
+      "module": "silmaril.portfolios.three_month_filter",
+      "path": "silmaril/portfolios/three_month_filter.py",
+      "loc": 497,
+      "imported_by": 1,
+      "wired": true,
+      "summary": "silmaril.portfolios.three_month_filter \u2014 Alpha 4.0 downtrend gate."
+    },
+    {
+      "module": "silmaril.portfolios.verified_harvest",
+      "path": "silmaril/portfolios/verified_harvest.py",
+      "loc": 269,
+      "imported_by": 3,
+      "wired": true,
+      "summary": "silmaril.portfolios.verified_harvest \u2014 The verified harvest ledger."
+    },
+    {
+      "module": "silmaril.risk.__init__",
+      "path": "silmaril/risk/__init__.py",
+      "loc": 2,
+      "imported_by": 0,
+      "wired": true,
+      "summary": "silmaril.risk package."
+    },
+    {
+      "module": "silmaril.risk.control",
+      "path": "silmaril/risk/control.py",
+      "loc": 119,
+      "imported_by": 2,
+      "wired": true,
+      "summary": "silmaril.risk.control \u2014 Alpha 6.3 Phase-2a generic control primitives."
+    },
+    {
+      "module": "silmaril.risk.engine",
+      "path": "silmaril/risk/engine.py",
+      "loc": 427,
+      "imported_by": 1,
+      "wired": true,
+      "summary": "silmaril.risk.engine \u2014 Hard risk constraints applied to every agent."
+    },
+    {
+      "module": "silmaril.risk.hard_stops",
+      "path": "silmaril/risk/hard_stops.py",
+      "loc": 275,
+      "imported_by": 1,
+      "wired": true,
+      "summary": "silmaril.risk.hard_stops \u2014 Alpha 6.0 per-account drawdown enforcement."
+    },
+    {
+      "module": "silmaril.scoring.__init__",
+      "path": "silmaril/scoring/__init__.py",
+      "loc": 2,
+      "imported_by": 0,
+      "wired": true,
+      "summary": "silmaril.scoring package."
+    },
+    {
+      "module": "silmaril.scoring.outcomes",
+      "path": "silmaril/scoring/outcomes.py",
+      "loc": 758,
+      "imported_by": 2,
+      "wired": true,
+      "summary": "silmaril.scoring.outcomes \u2014 Score yesterday's predictions against today's prices."
+    },
+    {
+      "module": "silmaril.scoring.regime_tags",
+      "path": "silmaril/scoring/regime_tags.py",
+      "loc": 114,
+      "imported_by": 1,
+      "wired": true,
+      "summary": "silmaril.scoring.regime_tags \u2014 Market-condition labels attached to every"
+    },
+    {
+      "module": "silmaril.senate.__init__",
+      "path": "silmaril/senate/__init__.py",
+      "loc": 2,
+      "imported_by": 0,
+      "wired": true,
+      "summary": "silmaril.senate \u2014 The Senate: self-governing agent system for Alpha 2.3."
+    },
+    {
+      "module": "silmaril.senate.candidates",
+      "path": "silmaril/senate/candidates.py",
+      "loc": 88,
+      "imported_by": 1,
+      "wired": true,
+      "summary": "silmaril.senate.candidates \u2014 Candidate agent registry and shadow-mode tagging."
+    },
+    {
+      "module": "silmaril.senate.conclave",
+      "path": "silmaril/senate/conclave.py",
+      "loc": 157,
+      "imported_by": 0,
+      "wired": false,
+      "summary": "silmaril.senate.conclave \u2014 The Conclave: bi-weekly agent birth."
+    },
+    {
+      "module": "silmaril.senate.elections",
+      "path": "silmaril/senate/elections.py",
+      "loc": 360,
+      "imported_by": 0,
+      "wired": false,
+      "summary": "silmaril.senate.elections \u2014 Weekly Senate elections."
+    },
+    {
+      "module": "silmaril.sports.__init__",
+      "path": "silmaril/sports/__init__.py",
+      "loc": 148,
+      "imported_by": 0,
+      "wired": true,
+      "summary": "silmaril.sports.markets \u2014 Polymarket and Kalshi public read-only clients."
+    },
+    {
+      "module": "silmaril.trade_engine.__init__",
+      "path": "silmaril/trade_engine/__init__.py",
+      "loc": 2,
+      "imported_by": 0,
+      "wired": true,
+      "summary": "silmaril.trade_engine package."
+    },
+    {
+      "module": "silmaril.trade_engine.case_file",
+      "path": "silmaril/trade_engine/case_file.py",
+      "loc": 872,
+      "imported_by": 1,
+      "wired": true,
+      "summary": "silmaril.trade_engine.case_file \u2014 THE canonical Trade Case File (Alpha 6.3, P1)."
+    },
+    {
+      "module": "silmaril.trade_engine.plans",
+      "path": "silmaril/trade_engine/plans.py",
+      "loc": 237,
+      "imported_by": 1,
+      "wired": true,
+      "summary": "silmaril.trade_engine.plans \u2014 Build full trade plans from debate output."
+    },
+    {
+      "module": "silmaril.universe.__init__",
+      "path": "silmaril/universe/__init__.py",
+      "loc": 2,
+      "imported_by": 0,
+      "wired": true,
+      "summary": "silmaril.universe package."
+    },
+    {
+      "module": "silmaril.universe.core",
+      "path": "silmaril/universe/core.py",
+      "loc": 244,
+      "imported_by": 6,
+      "wired": true,
+      "summary": "silmaril.universe.core \u2014 The permanent universe of tracked assets."
+    },
+    {
+      "module": "silmaril.universe.expanded",
+      "path": "silmaril/universe/expanded.py",
+      "loc": 415,
+      "imported_by": 1,
+      "wired": true,
+      "summary": "silmaril.universe.expanded \u2014 Universe expansion (Phase F)."
+    }
+  ]
+}

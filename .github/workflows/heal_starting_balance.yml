@@ -1,0 +1,39 @@
+name: Heal starting_balance fields
+
+# One-shot healer that backfills the `starting_balance` field into
+# all compounder + agent_portfolio JSON files without resetting any
+# balances. Run this once after deploying the leaderboard fix to
+# clear the +99,900% display artifact.
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  heal:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Run healer
+        run: python scripts/heal_starting_balance.py
+
+      - name: Commit
+        run: |
+          git config user.name 'silmaril-bot'
+          git config user.email 'silmaril-bot@users.noreply.github.com'
+          git add docs/data/
+          git diff --staged --quiet || git commit -m \
+            "🩹 Backfill starting_balance fields for leaderboard math"
+          git push || echo "nothing to push"

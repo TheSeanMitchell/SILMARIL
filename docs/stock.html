@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>💎</text></svg>">
+<title>SILMARIL · Stock Profile</title>
+<style>
+:root{--bg:#0b0f17;--card:#111827;--line:#1f2937;--txt:#e5e7eb;--muted:#9ca3af;--faint:#6b7280;--gold:#d4a843;--up:#34d399;--down:#f87171}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--txt);font:14px/1.5 ui-sans-serif,system-ui,Segoe UI,Roboto,Helvetica,Arial}
+.wrap{max-width:880px;margin:0 auto;padding:22px 16px 60px}
+h1{font-size:22px;margin:0 0 2px}.sub{color:var(--muted);font-size:12px;margin-bottom:18px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 16px;margin-bottom:14px}
+.k{color:var(--gold);font-size:12px;letter-spacing:.12em;text-transform:uppercase;margin-bottom:8px}
+.muted{color:var(--muted)}.faint{color:var(--faint);font-size:11px}
+.row{display:flex;gap:18px;flex-wrap:wrap}.big{font-size:20px;font-weight:700}
+.pill{border:1px solid var(--line);border-radius:6px;padding:2px 8px;font-size:12px;display:inline-block;margin:2px 6px 2px 0}
+a{color:var(--gold)}.hl{border-bottom:1px solid var(--line);padding:7px 0;font-size:13px}
+.up{color:var(--up)}.down{color:var(--down)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div><a href="index.html" style="font-size:12px">← briefing</a></div>
+  <h1 id="hdr">Loading…</h1>
+  <div class="sub" id="sub"></div>
+
+  <div class="card"><div class="k">The verdict desk</div><div id="cons" class="muted">—</div></div>
+  <div class="card"><div class="k">His clock — buy his low, sell his high</div><div id="clock" class="muted">—</div></div>
+  <div class="card"><div class="k">Tomorrow's expectation — the day, graphed</div><div id="expgraph" class="muted">—</div></div>
+  <div class="card"><div class="k">How he treats his news</div><div id="pers" class="muted">—</div></div>
+  <div class="card"><div class="k">Today's words (sources judged)</div><div id="news" class="muted">—</div></div>
+  <div class="card"><div class="k">Oracle &amp; report card appearances</div><div id="meta" class="muted">—</div></div>
+  <div class="faint">Every number on this page is the system's live, graded knowledge — clocks from 60d of bars + self-recorded sessions; source weights earned by each outlet's own predictive record; nothing curated by hand.</div>
+</div>
+<script>
+(async function(){
+  const q=new URLSearchParams(location.search); const T=(q.get("t")||"").toUpperCase();
+  const g=async u=>{try{return await (await fetch(u)).json()}catch(e){return null}};
+  const pct=v=>(v>=0?"+":"")+Number(v).toFixed(2)+"%";
+  document.getElementById("hdr").textContent=T||"No ticker";
+  if(!T) return;
+  const [sig,tf,sr,ds,rc]=await Promise.all([g("data/signals.json"),g("data/timing_fingerprint.json"),g("data/source_rankings.json"),g("data/dr_strange.json"),g("data/report_card.json")]);
+  const d=((sig||{}).debates||[]).find(x=>x.ticker===T)||{};
+  document.getElementById("hdr").textContent=`${T} · ${d.name||""}`;
+  document.getElementById("sub").textContent=`${d.sector||""} · last seen $${d.price??"?"} · generated ${(sig||{}).generated_at||""}`;
+  // consensus + Fableboy
+  const c=d.consensus||{}; const fb=(d.verdicts||[]).find(v=>v.agent==="FABLEBOY_5");
+  let ch=`<span class="big">${c.signal||"—"}</span> <span class="muted">score ${c.score??"?"}</span>`;
+  if(d.news_catalyst_label) ch+=` <span class="pill">⚡ ${d.news_catalyst_label}</span>`;
+  if(d.ipo_phase) ch+=` <span class="pill">IPO: ${d.ipo_phase}</span>`;
+  if(fb) ch+=`<div style="margin-top:6px;font-size:13px">FABLEBOY_5: <b>${fb.signal}</b> conv ${fb.conviction} <span class="muted">— ${(fb.rationale||"").slice(0,140)}</span></div>`;
+  document.getElementById("cons").innerHTML=ch;
+  // clock
+  const fp=(((tf||{}).fingerprints)||{})[T];
+  document.getElementById("clock").innerHTML = fp ? (fp.learning
+    ? `<span class="muted">still learning his rhythm (${fp.n_days||0} days recorded)</span>`
+    : `buy window <b>${fp.best_buy_window} ET</b> · sell window <b>${fp.best_sell_window} ET</b><br>
+       band: floor <b>$${fp.floor}</b> → ceiling <b>$${fp.ceiling}</b>`
+       +(fp.band_pos!=null?` · now at <b>${Math.round(fp.band_pos*100)}%</b> of his band`:"")
+       +`<div class="faint" style="margin-top:4px">${fp.note||fp.source||""}</div>`) : "no clock yet";
+  // expectation graph — full trading-terminal chrome (Yahoo/StockCharts/
+  // Coinbase style). PURE DISPLAY: same data inputs (fp.tod_curve, floor,
+  // ceiling, band_pos, best_buy/sell_window, d.price, Dr. Strange pick).
+  // No synthetic OHLC/volume is invented — only the real intraday rhythm
+  // is drawn; everything else is honest scaffolding (header, stat strip,
+  // timeframe label, axis pills, last-price tag, dense time axis).
+  (function(){
+    const el=document.getElementById("expgraph"); if(!el) return;
+    if(!fp || fp.learning || !fp.tod_curve){
+      el.innerHTML='<span class="muted">graph appears once his clock is learned ('+((fp||{}).n_days||0)+' days recorded)</span>';return;}
+    const pts=Object.entries(fp.tod_curve).sort((a,b)=>a[0]<b[0]?-1:1);
+    const n=pts.length;
+    const lo=fp.floor, hi=fp.ceiling;
+    const px=v=> (lo!=null&&hi!=null)? (lo + (hi-lo)*v) : null;
+    const last=(d&&d.price!=null)?d.price:(fp.band_pos!=null?px(fp.band_pos):null);
+    const dayLo=px(0), dayHi=px(1);
+    const bp=fp.band_pos!=null?Math.max(0,Math.min(1,fp.band_pos)):null;
+    // header price + change vs open (the day's first rhythm point as base$)
+    const openV=pts[0][1], open$=px(openV);
+    const chg=(last!=null&&open$!=null)?(last-open$):null;
+    const chgPct=(chg!=null&&open$)?(chg/open$*100):null;
+    const up=(chg==null)||chg>=0;
+    const accent=up?"#16c784":"#ea3943";
+    const fmt$=v=>v==null?"—":"$"+Number(v).toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2});
+    // ── chart geometry ──
+    const W=820,H=300,PL=10,PR=72,PT=16,PB=40, IW=W-PL-PR, IH=H-PT-PB;
+    const x=i=> PL + IW*i/(Math.max(1,n-1));
+    const y=v=> PT + IH*(1-Math.max(0,Math.min(1,v)));
+    const cid="exh_"+T.replace(/[^A-Za-z0-9]/g,"");
+    const P2=pts.map(([t,v],i)=>[x(i),y(v)]);
+    let dd="M"+P2[0][0].toFixed(1)+","+P2[0][1].toFixed(1);
+    for(let i=0;i<P2.length-1;i++){
+      const p0=P2[i-1]||P2[i],p1=P2[i],p2=P2[i+1],p3=P2[i+2]||p2;
+      dd+=`C${(p1[0]+(p2[0]-p0[0])/6).toFixed(1)},${(p1[1]+(p2[1]-p0[1])/6).toFixed(1)} ${(p2[0]-(p3[0]-p1[0])/6).toFixed(1)},${(p2[1]-(p3[1]-p1[1])/6).toFixed(1)} ${p2[0].toFixed(1)},${p2[1].toFixed(1)}`;
+    }
+    const area=dd+`L${x(n-1).toFixed(1)},${(PT+IH).toFixed(1)}L${PL.toFixed(1)},${(PT+IH).toFixed(1)}Z`;
+    // grids
+    let vgrid="",tlab="";
+    pts.forEach(([t],i)=>{
+      const gx=x(i);
+      vgrid+=`<line x1="${gx.toFixed(1)}" y1="${PT}" x2="${gx.toFixed(1)}" y2="${(PT+IH).toFixed(1)}" stroke="#15314f" stroke-width="1"/>`;
+      if(i%2===0||i===n-1) tlab+=`<text x="${gx.toFixed(1)}" y="${(PT+IH+22).toFixed(1)}" fill="#8fa6c0" font-size="10.5" text-anchor="middle">${t}</text>`;
+    });
+    let hgrid="",yax="";
+    for(let k=0;k<=4;k++){
+      const gy=PT+IH*k/4, vv=1-k/4, d$=px(vv);
+      hgrid+=`<line x1="${PL}" y1="${gy.toFixed(1)}" x2="${(PL+IW)}" y2="${gy.toFixed(1)}" stroke="#12283f" stroke-width="1"/>`;
+      yax+=`<text x="${(PL+IW+10)}" y="${(gy+3.5).toFixed(1)}" fill="#8fa6c0" font-size="10.5" text-anchor="start">${d$!=null?("$"+d$.toFixed(2)):Math.round(vv*100)+"%"}</text>`;
+    }
+    // open baseline
+    const oy=y(openV);
+    const baseline=`<line x1="${PL}" y1="${oy.toFixed(1)}" x2="${(PL+IW)}" y2="${oy.toFixed(1)}" stroke="#5a7fa6" stroke-width="1" stroke-dasharray="4 4" opacity="0.6"/>`;
+    // BUY/SELL window shading
+    const bi=pts.findIndex(([t])=>t===fp.best_buy_window);
+    const si=pts.findIndex(([t])=>t===fp.best_sell_window);
+    const half=IW/(Math.max(1,n-1))/2;
+    const band=(i,col,lab)=> i<0?"":
+      `<rect x="${(x(i)-half).toFixed(1)}" y="${PT}" width="${(half*2).toFixed(1)}" height="${IH}" fill="${col}" opacity="0.14"/>`+
+      `<rect x="${(x(i)-1).toFixed(1)}" y="${PT}" width="2" height="${IH}" fill="${col}" opacity="0.8"/>`+
+      `<rect x="${(x(i)-20).toFixed(1)}" y="${(PT+2).toFixed(1)}" width="40" height="14" rx="3" fill="${col}"/>`+
+      `<text x="${x(i).toFixed(1)}" y="${(PT+11.5).toFixed(1)}" fill="#04121f" font-size="9" font-weight="700" text-anchor="middle">${lab}</text>`;
+    // live marker + right-axis last-price TAG with dashed line
+    const my=bp!=null?y(bp):P2[P2.length-1][1];
+    const lastTag=last!=null?
+      `<line x1="${PL}" y1="${my.toFixed(1)}" x2="${(PL+IW)}" y2="${my.toFixed(1)}" stroke="${accent}" stroke-width="1" stroke-dasharray="2 3" opacity="0.55"/>`+
+      `<path d="M${(PL+IW).toFixed(1)},${my.toFixed(1)} l6,-8 H${(W-2)} v16 H${(PL+IW+6).toFixed(1)} Z" fill="${accent}"/>`+
+      `<text x="${(PL+IW+10)}" y="${(my+3.5).toFixed(1)}" fill="#04121f" font-size="10.5" font-weight="700">${last!=null?last.toFixed(2):""}</text>`:"";
+    const marker=bp!=null?
+      `<circle cx="${x(n-1).toFixed(1)}" cy="${my.toFixed(1)}" r="9" fill="${accent}" opacity="0.22"><animate attributeName="r" values="6;12;6" dur="2.6s" repeatCount="indefinite"/></circle>`+
+      `<circle cx="${x(n-1).toFixed(1)}" cy="${my.toFixed(1)}" r="4" fill="${accent}" stroke="#04121f" stroke-width="1.5"/>`:"";
+    const dsPick=(((ds||{}).picks)||[]).find(pk=>String(pk.ticker||"").toUpperCase()===T);
+    // ── timeframe tabs (the one real view is highlighted; others are the
+    //    honest label that this is his learned single-day rhythm) ──
+    const tabs=["1D","5D","1M","6M","YTD","1Y","MAX"].map(tk=>
+      `<span style="padding:3px 9px;border-radius:5px;font-size:11px;font-weight:600;${tk==="1D"?"background:#1b3a5c;color:#cfe6ff":"color:#5d7693"}">${tk}</span>`).join("");
+    // ── header block + OHLC stat strip (real values only) ──
+    const head=
+      `<div style="display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:2px">`+
+        `<span style="font-family:'Fraunces',serif;font-size:15px;color:#e6edf3;font-weight:600">${T} · expected day</span>`+
+        `<span style="font-size:22px;font-weight:700;color:#e6edf3;letter-spacing:-.5px">${fmt$(last)}</span>`+
+        (chg!=null?`<span style="font-size:13px;font-weight:700;color:${accent}">${up?"▲":"▼"} ${chg>=0?"+":""}${chg.toFixed(2)} (${chgPct>=0?"+":""}${chgPct.toFixed(2)}%)</span>`:"")+
+        `<span style="margin-left:auto;display:flex;gap:3px">${tabs}</span>`+
+      `</div>`+
+      `<div style="display:flex;gap:16px;flex-wrap:wrap;font-size:11px;color:#8fa6c0;margin-bottom:8px">`+
+        `<span>OPEN <b style="color:#cfe0f2">${fmt$(open$)}</b></span>`+
+        `<span>HIGH <b style="color:#16c784">${fmt$(dayHi)}</b></span>`+
+        `<span>LOW <b style="color:#ea3943">${fmt$(dayLo)}</b></span>`+
+        `<span>NOW <b style="color:#cfe0f2">${bp!=null?Math.round(bp*100)+"% of band":"—"}</b></span>`+
+        `<span>OBS <b style="color:#cfe0f2">${fp.n_obs||"?"}</b> over <b style="color:#cfe0f2">${fp.n_days||"?"}d</b></span>`+
+      `</div>`;
+    el.innerHTML=
+      head+
+      `<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto;display:block;font-family:inherit;border-radius:8px" preserveAspectRatio="xMidYMid meet">`+
+        `<defs>`+
+          `<linearGradient id="${cid}_bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#0a1f38"/><stop offset="100%" stop-color="#061425"/></linearGradient>`+
+          `<linearGradient id="${cid}_fill" x1="0" y1="0" x2="0" y2="1">`+
+            `<stop offset="0%" stop-color="${accent}" stop-opacity="0.5"/>`+
+            `<stop offset="50%" stop-color="${accent}" stop-opacity="0.16"/>`+
+            `<stop offset="100%" stop-color="${accent}" stop-opacity="0.01"/>`+
+          `</linearGradient>`+
+          `<filter id="${cid}_g" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="2.4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>`+
+        `</defs>`+
+        `<rect x="0" y="0" width="${W}" height="${H}" rx="8" fill="url(#${cid}_bg)"/>`+
+        hgrid+vgrid+yax+baseline+
+        band(bi,"#16c784","BUY")+band(si,"#ea3943","SELL")+
+        `<path d="${area}" fill="url(#${cid}_fill)"/>`+
+        `<path d="${dd}" fill="none" stroke="${accent}" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" filter="url(#${cid}_g)"/>`+
+        lastTag+marker+tlab+
+        `<line id="${cid}_cx" x1="0" y1="${PT}" x2="0" y2="${(PT+IH).toFixed(1)}" stroke="#9fb4cc" stroke-width="1" stroke-dasharray="3 3" opacity="0"/>`+
+        `<rect id="${cid}_cb" x="0" y="${(PT-2)}" width="78" height="15" rx="3" fill="#0a1b2e" stroke="${accent}" opacity="0"/>`+
+        `<text id="${cid}_ct" x="0" y="${(PT+8.5).toFixed(1)}" fill="#e6f6ff" font-size="10" font-weight="600" text-anchor="middle" opacity="0"></text>`+
+        `<rect id="${cid}_hit" x="${PL}" y="${PT}" width="${IW}" height="${IH}" fill="transparent" style="cursor:crosshair"/>`+
+      `</svg>`+
+      `<div class="faint" style="margin-top:6px">This is his <b>learned intraday rhythm</b> — the path he typically traces from open to close — not a live tape; the green/red bands are his best buy/sell windows and the tag on the right is his last seen price. Same engine for crypto and every valuable with a clock.`+
+      (dsPick?` · <b style="color:#c9a3ff">⮕ Dr. Strange has him picked tomorrow (conf ${dsPick.confidence??dsPick.conf??"?"})</b>`:"")+`</div>`;
+    const svg=el.querySelector("svg"), hit=el.querySelector("#"+cid+"_hit");
+    const cx=el.querySelector("#"+cid+"_cx"), cb=el.querySelector("#"+cid+"_cb"), ct=el.querySelector("#"+cid+"_ct");
+    if(hit){
+      hit.addEventListener("mousemove",e=>{
+        const r=svg.getBoundingClientRect();
+        const sx=(e.clientX-r.left)/r.width*W;
+        let i=Math.round((sx-PL)/(IW/Math.max(1,n-1))); i=Math.max(0,Math.min(n-1,i));
+        const gx=x(i), v=pts[i][1], d$=px(v);
+        cx.setAttribute("x1",gx);cx.setAttribute("x2",gx);cx.setAttribute("opacity","0.8");
+        const lx=Math.max(PL+40,Math.min(PL+IW-40,gx));
+        cb.setAttribute("x",lx-39);cb.setAttribute("opacity","1");
+        ct.setAttribute("x",lx);ct.textContent=pts[i][0]+(d$!=null?"  $"+d$.toFixed(2):"  "+Math.round(v*100)+"%");
+        ct.setAttribute("opacity","1");
+      });
+      hit.addEventListener("mouseleave",()=>{cx.setAttribute("opacity","0");cb.setAttribute("opacity","0");ct.setAttribute("opacity","0");});
+    }
+  })();
+  // personality
+  let ph="";
+  if(d.news_personality) ph+=`<b>${d.news_personality}</b>`+(d.news_best_horizon?` · best horizon ${d.news_best_horizon}d`:"");
+  else ph+=`<span class="muted">profiling — needs more signal days</span>`;
+  if(typeof d.sentiment_score==="number") ph+=`<div style="margin-top:4px">today's word read: <b class="${d.sentiment_score>=0?"up":"down"}">${d.sentiment_score>=0?"+":""}${d.sentiment_score}</b> across ${d.article_count||0} articles</div>`;
+  document.getElementById("pers").innerHTML=ph;
+  // headlines + source verdicts
+  const wmap={}; ((sr||{}).all||[]).forEach(b=>wmap[b.source]=b);
+  const hl=(d.recent_headlines||[]).slice(0,10).map(h=>{
+    const b=wmap[h.source]||{}; const vd=(b.verdict||"").split(" ")[0];
+    return `<div class="hl"><a href="${h.url||"#"}" target="_blank" rel="noopener">${(h.title||"").slice(0,110)}</a>
+      <div class="faint">${h.source||""}${b.weight?` · weight ${b.weight}x`:""}${vd?` · ${vd}`:""}${b.hit_rate!=null?` · ${Math.round(b.hit_rate*100)}% (${b.n})`:""}</div></div>`}).join("");
+  document.getElementById("news").innerHTML = hl || "no headlines this cycle";
+  // oracle + report card history
+  let mh="";
+  const op=((ds||{}).picks||[]).filter(p=>p.ticker===T).slice(-3);
+  if(op.length) mh+=op.map(p=>`Dr. Strange ${p.date}: <b>${p.direction}</b> ${Math.round((p.agreement||0)*100)}%`+(p.realized!=null?` → realized <b class="${p.realized>=0?"up":"down"}">${pct(p.realized*100)}</b>`:" → grading")).join("<br>");
+  const apps=((rc||{}).snapshots||[]).filter(s=>(s.picks||[]).some(p=>p.ticker===T)).slice(-3)
+    .map(s=>{const p=s.picks.find(p=>p.ticker===T);return `pick ${s.date} @$${p.price}`+(p.ret_pct!=null?` → <b class="${p.ret_pct>=0?"up":"down"}">${pct(p.ret_pct)}</b>`:"");});
+  if(apps.length) mh+=(mh?"<br>":"")+apps.join("<br>");
+  document.getElementById("meta").innerHTML=mh||"no oracle picks or report-card appearances yet";
+})();
+</script>
+</body>
+</html>

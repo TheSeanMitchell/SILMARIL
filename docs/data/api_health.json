@@ -1,0 +1,259 @@
+{
+  "version": "api-health-1.3",
+  "generated_at": "2026-06-15T08:04:21.516784+00:00",
+  "overall": "healthy",
+  "freshness": {
+    "ok": 12,
+    "total": 12,
+    "files": {
+      "signals.json": {
+        "status": "fresh",
+        "age_hours": 0.0,
+        "budget_hours": 24
+      },
+      "scoring.json": {
+        "status": "fresh",
+        "age_hours": 0.0,
+        "budget_hours": 24
+      },
+      "deal_journal.json": {
+        "status": "fresh",
+        "age_hours": 0.0,
+        "budget_hours": 24
+      },
+      "alpaca_paper_state.json": {
+        "status": "fresh",
+        "age_hours": 0.0,
+        "budget_hours": 24
+      },
+      "alpaca_h3_state.json": {
+        "status": "fresh",
+        "age_hours": 0.0,
+        "budget_hours": 24
+      },
+      "alpaca_h5_state.json": {
+        "status": "fresh",
+        "age_hours": 0.0,
+        "budget_hours": 24
+      },
+      "timing_fingerprint.json": {
+        "status": "fresh",
+        "age_hours": 0.0,
+        "budget_hours": 24
+      },
+      "news_fingerprint.json": {
+        "status": "fresh",
+        "age_hours": 0.0,
+        "budget_hours": 24
+      },
+      "drift_sentinel.json": {
+        "status": "fresh",
+        "age_hours": 0.0,
+        "budget_hours": 24
+      },
+      "catalyst_learning.json": {
+        "status": "fresh",
+        "age_hours": 0.0,
+        "budget_hours": 36
+      },
+      "market_leaders.json": {
+        "status": "fresh",
+        "age_hours": 0.3,
+        "budget_hours": 36
+      },
+      "debug_stream.json": {
+        "status": "fresh",
+        "age_hours": 0.3,
+        "budget_hours": 24
+      }
+    }
+  },
+  "news": {
+    "distinct_sources": 108,
+    "articles_in_cycle": 234,
+    "top_sources": {
+      "Yahoo Finance": 25,
+      "CoinMarketCap": 18,
+      "CoinDesk": 13,
+      "TradingView": 10,
+      "Coinpedia": 9,
+      "Binance": 8,
+      "CryptoRank": 7,
+      "The Motley Fool": 6,
+      "Crypto Briefing": 5,
+      "The Block": 5,
+      "Bitget": 4,
+      "AMBCrypto": 4
+    },
+    "gated_by_domain_clock": true,
+    "note": "Quota note: providers don't expose remaining minutes; delivery (sources x volume) is the real meter \u2014 a rate-limited feed collapses here first."
+  },
+  "prices": {
+    "coverage_pct": 100.0,
+    "priced": 593,
+    "universe": 593
+  },
+  "broker": {
+    "LEGACY": {
+      "configured": true,
+      "last_run_age_hours": 0.0,
+      "errors_logged": 20,
+      "errors_recent_48h": 0,
+      "last_error": "{'time': '2026-06-04T22:14:34.156193+00:00', 'msg': 'POST https://paper-api.alpaca.markets/v2/orders -> HTTP 422: {\"code\":42210000,\"message\":\"invalid limit_pric",
+      "last_error_age_hours": 249.8,
+      "errors_note": "all errors historic (none in 48h) \u2014 plumbing currently clean",
+      "equity": 9591.79
+    },
+    "HARVEST_3": {
+      "configured": true,
+      "last_run_age_hours": 0.0,
+      "errors_logged": 20,
+      "errors_recent_48h": 0,
+      "last_error": "{'time': '2026-06-12T15:47:17.756965+00:00', 'msg': 'POST https://paper-api.alpaca.markets/v2/orders -> HTTP 403: {\"available\":\"1.695078349\",\"code\":40310000,\"ex",
+      "last_error_age_hours": 64.3,
+      "errors_note": "all errors historic (none in 48h) \u2014 plumbing currently clean",
+      "equity": 9587.89
+    },
+    "HARVEST_5": {
+      "configured": true,
+      "last_run_age_hours": 0.0,
+      "errors_logged": 20,
+      "errors_recent_48h": 0,
+      "last_error": "{'time': '2026-06-04T00:19:24.288294+00:00', 'msg': 'POST https://paper-api.alpaca.markets/v2/orders -> HTTP 422: {\"code\":42210000,\"message\":\"invalid limit_pric",
+      "last_error_age_hours": 271.7,
+      "errors_note": "all errors historic (none in 48h) \u2014 plumbing currently clean",
+      "equity": 9661.36
+    }
+  },
+  "domain_clocks": {
+    "version": "domain-clock-1.0",
+    "checked_at": "2026-06-15T08:04:21.516784+00:00",
+    "domains": {
+      "stocks": {
+        "open": false,
+        "reason": "outside 08:30-16:30 ET Mon-Fri"
+      },
+      "stocks_news": {
+        "open": false,
+        "reason": "off-hours hourly news sweep \u2014 42 min since last"
+      },
+      "valuables": {
+        "open": true,
+        "reason": "always open \u2014 markets never close"
+      },
+      "social": {
+        "open": false,
+        "reason": "hourly cadence \u2014 20 min since last"
+      },
+      "edgar": {
+        "open": true,
+        "reason": "SPCX intensive window (through 2026-07-03)"
+      }
+    },
+    "last_allowed": {
+      "edgar": "2026-06-15T07:44:21.518597+00:00",
+      "social": "2026-06-15T07:44:21.777590+00:00",
+      "stocks_news": "2026-06-15T07:22:40.395105+00:00"
+    },
+    "today_budget": {
+      "stocks": {
+        "allowed": 0,
+        "skipped": 51
+      },
+      "stocks_news": {
+        "allowed": 8,
+        "skipped": 18
+      },
+      "edgar": {
+        "allowed": 25,
+        "skipped": 0
+      },
+      "social": {
+        "allowed": 8,
+        "skipped": 17
+      }
+    },
+    "spcx_intensive_until": "2026-07-03",
+    "note": "the cron may run 24/7: stock TRADING-adjacent fetches (earnings/ipo-cal) keep 08:30-16:30 ET Mon-Fri; equity NEWS runs every cycle in-window and hourly off-hours (information never sleeps); valuables always; social hourly; EDGAR every run through the SPCX window then 4h"
+  },
+  "storage": {
+    "repo_mb": 925.0,
+    "worktree_mb": 98.7,
+    "git_history_mb": 826.3,
+    "data_dir_mb": 93.7,
+    "archive_mb": 2.3,
+    "archive_share_pct": 2.5,
+    "status": "watch",
+    "note": "approaching the 1 GB Pages/repo comfort line \u2014 plan archive compaction",
+    "limits_reference": {
+      "pages_site_gb": 1,
+      "repo_recommended_gb": 1,
+      "repo_pushback_gb": 5
+    }
+  },
+  "cron_pressure": {
+    "runs_observed_today": 0,
+    "stock_window_runs_today": 0,
+    "providers": {
+      "marketaux": {
+        "est_calls_today": 0.0,
+        "free_per_day": 100,
+        "pct_of_budget": 0.0,
+        "status": "headroom"
+      },
+      "newsapi": {
+        "est_calls_today": 0.0,
+        "free_per_day": 100,
+        "pct_of_budget": 0.0,
+        "status": "headroom"
+      },
+      "finnhub": {
+        "est_calls_today": 0.0,
+        "free_per_day": 86400,
+        "pct_of_budget": 0.0,
+        "status": "headroom",
+        "note": "60/min limit, effectively per-day huge"
+      },
+      "alpha_vantage": {
+        "est_calls_today": 0.0,
+        "free_per_day": 25,
+        "pct_of_budget": 0.0,
+        "status": "headroom"
+      },
+      "fmp": {
+        "est_calls_today": 0.0,
+        "free_per_day": 250,
+        "pct_of_budget": 0.0,
+        "status": "headroom"
+      },
+      "twelve_data": {
+        "est_calls_today": 0.0,
+        "free_per_day": 800,
+        "pct_of_budget": 0.0,
+        "status": "headroom"
+      },
+      "tiingo": {
+        "est_calls_today": 0.0,
+        "free_per_day": 1000,
+        "pct_of_budget": 0.0,
+        "status": "headroom"
+      },
+      "coingecko": {
+        "est_calls_today": 0.0,
+        "free_per_day": 10000,
+        "pct_of_budget": 0.0,
+        "status": "headroom"
+      },
+      "alpaca_paper": {
+        "est_calls_today": 0.0,
+        "free_per_day": 288000,
+        "pct_of_budget": 0.0,
+        "status": "headroom",
+        "note": "200/min \u2014 never the binding constraint"
+      }
+    },
+    "overall": "headroom",
+    "doctrine": "ride the limit, never cross it: push cadence until a provider reads 'riding', and treat 'over' + a delivery collapse in the news block as the back-off signal",
+    "estimates_note": "per-cycle call counts are engineering estimates until per-provider instrumentation lands (roadmap C)"
+  }
+}

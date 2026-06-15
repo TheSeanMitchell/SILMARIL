@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  SILMARIL_BOOTSTRAP_ALPHA_0.001.xml
+  Canonical session-bootstrap substrate. Paste at the start of any AI session
+  so the assistant begins grounded in the TRUE state of the project — not the
+  aspirational one. This file supersedes all prior bootstraps (v6.3 etc.).
+  Rule: this describes reality. If code and this file disagree, read the code
+  and update this file. Never let it drift into wishful thinking.
+-->
+<silmaril_bootstrap version="alpha-0.001" reborn="2026-06-05" supersedes="v6.3">
+
+  <mission priority="absolute">
+    Find a durable, real, measurable edge in US EQUITIES using a multi-agent
+    system that trades on Alpaca paper, scores itself on CLEAN data, and adapts.
+    The system must surface honestly when no edge exists. "Remain observational —
+    no demonstrated edge" is an acceptable, honest outcome, not a failure.
+  </mission>
+
+  <scope>
+    <in>US equities and equity ETFs. Real Alpaca paper execution. News-driven and
+        technical-driven stock signals. Self-scoring, learning, and adaptation.</in>
+    <out>Crypto, micro-cap tokens, prediction markets / sports betting. As of
+         Alpha 0.001 these are OUT OF SCOPE. Any agent that cannot trade a real
+         US-equity order through Alpaca is disabled or removed. Nothing synthetic
+         is generated or displayed.</out>
+  </scope>
+
+  <non_negotiables>
+    <rule id="read-first">Never edit a file without reading its actual current
+      contents in full. Patch-without-reading has caused every major regression
+      (the Alpha 5.0 dashboard wipeout, the alpaca_paper SyntaxError bridge
+      failure, cascading indentation breaks). Read first. Always.</rule>
+    <rule id="complete-files">Deliver complete, drag-and-drop whole-file
+      replacements suitable for GitHub web-UI upload. No diffs, no partial files,
+      no "paste this snippet at line N". Git commands are optional reference only.</rule>
+    <rule id="track-classification">Classify every change: Track A (safe now:
+      read-only / additive / reversible), Track B (behavioral: changes trading or
+      scoring), Track C (future). Never resolve classification silently.</rule>
+    <rule id="honesty">Honest "it doesn't work / no edge yet" beats a flattering
+      story. The dashboard is a window into reality and a control deck — never a
+      Potemkin display. No fabricated, simulated, or internally-compounded numbers.</rule>
+    <rule id="profit-over-correctness">Optimize for realized money, not win-rate.
+      Win-rate is not profit (see ATLAS: 80% win, -$2.90 realized).</rule>
+    <rule id="teeth">Give capital-control authority ("teeth") only to intelligence
+      that has demonstrated value on clean data. Advisory analytics that don't
+      change a trade are either wired in or cut — not left as decoration.</rule>
+  </non_negotiables>
+
+  <verified_state asof="2026-06-05" confidence="high">
+    <accounts broker="alpaca-paper" principal_each="10000">
+      <account id="LEGACY"   alias="Silmaril"   equity="~9554" note="active"/>
+      <account id="HARVEST_3"                    equity="~9780" note="active"/>
+      <account id="HARVEST_5"                    equity="~9656" note="active; was intermittently flat"/>
+      <note>All three are UNDER principal (~2-4% down). The harvest sweep is
+        therefore capped to $0 and is NOT currently draining capital.</note>
+    </accounts>
+
+    <benchmark source="benchmarking.json" verdict="behind buy-and-hold">
+      <window span="1mo" silmaril="-0.84%" spy="+0.87%" alpha_vs_spy="-1.71%"/>
+      <window span="1w"  silmaril="+0.75%" spy="+0.33%" alpha_vs_spy="+0.42%"/>
+      <truth>Over a month the elaborate system trails SPY. This is THE scoreboard.
+        It belongs on the cockpit, front and center.</truth>
+    </benchmark>
+
+    <scoring source="scoring.json" verdict="now trustworthy">
+      <clean_rate>~99% clean (was ~11% — i.e. 88.9% stale).</clean_rate>
+      <how_fixed>Keyed fresh-quote price overlay (prices.py) + clean-evidence gate
+        in scoring (stale excluded from win-rate/EV/weights) + one-time prune +
+        non-trading-day scoring gate.</how_fixed>
+      <caveat>Clean data is new and thin per-agent. No agent has yet proven a real
+        edge. WEAVER currently tops the board at ~75% on ~44 clean calls.</caveat>
+    </scoring>
+
+    <execution verdict="fixed">
+      <fixed>HTTP 422 "sub-penny increment": limit prices now rounded to $0.01 for
+        stocks >= $1 (was 4dp, rejected). Extended-hours limit orders now fill.</fixed>
+      <fixed>Cross-workflow broker lock: daily.yml + evening_prep.yml share one
+        concurrency group (no more concurrent-order race).</fixed>
+    </execution>
+  </verified_state>
+
+  <what_has_teeth note="actually changes stock trades">
+    <item>Agent votes -> debate/arbiter -> consensus -> plans.</item>
+    <item>Thompson conviction multipliers: each agent's vote is scaled by its
+      Bayesian per-regime win rate. This is the live learn->trade feedback loop.</item>
+    <item>Risk filter (filter_plans_by_risk) and 3-month trend filter.</item>
+    <item>Regime classification (SPY/VIX) — feeds context and regime-specific learning.</item>
+    <item>News sentiment — indirectly, via the ~17 agents that read sentiment_score.</item>
+    <item>Kill-switch weight — freezes chronically low-scoring agents.</item>
+  </what_has_teeth>
+
+  <what_has_no_teeth note="computed and displayed, but change no trade — wire in or cut">
+    <item>sector_rotation (write-only)</item>
+    <item>conviction_engine ranking (write-only)</item>
+    <item>capital_efficiency (write-only)</item>
+    <item>narrative_tracker (write-only)</item>
+    <item>policy_router / global_allocator / opportunity_urgency (advisory)</item>
+  </what_has_no_teeth>
+
+  <known_broken priority="high">
+    <item id="breeder">The senate "breeds new agents like Pokemon" only on paper:
+      offspring are PROPOSED as cards but never instantiated as voting agents.
+      Training of EXISTING agents works (Thompson + kill-switch); creation of NEW
+      agents does not. Fix path: evolve PARAMETERS of existing agents (tractable)
+      rather than instantiate new classes.</item>
+    <item id="win-not-profit">Scoring rewards directional correctness, not realized
+      P&L. Agents can win often and lose money. Fold realized P&L into scoring.</item>
+    <item id="roster-drift">Roster counts disagree: portfolios=31, risk_state=31,
+      scoring=20, hardcoded reset=27, agents-dir=39. Establish one source of truth.</item>
+    <item id="configured-flag">H3/H5 state files say configured:false while actively
+      trading — a state-write ordering bug, cosmetic (accounts are on).</item>
+    <item id="under-deployed">Accounts hold high cash; partly a pre-cycle snapshot
+      artifact, partly the consensus-conviction threshold gating opens.</item>
+  </known_broken>
+
+  <untapped_resources note="keys present in workflow, referenced in ZERO code — no new signup needed">
+    <key name="MARKETAUX_API_KEY"   use="real per-entity news sentiment (server-side NLP)"/>
+    <key name="NEWSAPI_API_KEY"     use="structured financial news beyond free Google RSS"/>
+    <key name="POLYGON_API_KEY"     use="aggregates / richer quote + bar data"/>
+    <key name="ALPHA_VANTAGE_API_KEY" use="fundamentals + technical indicators"/>
+    <in_use>FMP, Tiingo, TwelveData, Finnhub (prices + earnings), FRED (macro), Alpaca (exec).</in_use>
+    <truth>The constraint is NEVER data access. It is wiring the data already paid for.</truth>
+  </untapped_resources>
+
+  <news_pipeline verdict="wired but crudely labeled">
+    <ingest>Live via free Google News RSS (feedparser). NewsAPI/Marketaux unused.</ingest>
+    <label>Finance lexicon with 2-word negation window + magnitude weighting
+      (Alpha 7.3). Headlines + summaries. Ceiling: verb-phrase negation
+      ("failed to deliver growth") still misreads. Real upgrade: Marketaux.</label>
+    <use>Consumed by ~17 agents and bucketed as a regime tag in learning.</use>
+    <unmeasured>Whether sentiment actually PREDICTS outcomes — now testable on
+      clean data. Do this before trusting it further.</unmeasured>
+  </news_pipeline>
+
+  <roadmap order="strict; stock-edge first">
+    <step n="1">Reward profit, not just correctness (scoring/outcomes.py).</step>
+    <step n="2">Wire Marketaux entity sentiment + score article summaries into
+      agent decisions; then MEASURE sentiment's predictive lift on clean data.</step>
+    <step n="3">Give teeth to advisory analytics that prove out (regime/sector
+      gating or sizing) — or cut them.</step>
+    <step n="4">Make "breeding" real via parameter-evolution of existing agents.</step>
+    <step n="5">Unify the roster; put the SPY benchmark on the cockpit; retire
+      dead/synthetic surfaces; make the cockpit the front door.</step>
+  </roadmap>
+
+  <platform_truth>
+    Trading hours are set by the exchange and Alpaca — NOT by the compute host.
+    Migrating off GitHub Actions buys reliability/scheduling-precision/latency, not
+    market hours. US equities never trade nights/weekends regardless of platform.
+  </platform_truth>
+
+  <delivery_protocol>
+    Go dark and deliver. Read every touched file fully. Ship complete files +
+    a release note (root cause + rollback). Validate (compile/parse/proof) before
+    declaring done. Pause for approval between behavioral (Track B) units.
+  </delivery_protocol>
+
+</silmaril_bootstrap>

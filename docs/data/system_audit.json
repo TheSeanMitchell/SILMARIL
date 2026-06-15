@@ -1,0 +1,252 @@
+{
+  "version": "6.0",
+  "generated_at": "2026-06-15T08:04:17.017214+00:00",
+  "overall_status": "YELLOW",
+  "summary": {
+    "overall_status": "YELLOW",
+    "files_fresh": 24,
+    "files_stale": 0,
+    "files_missing": 0,
+    "wiring_intact": 4,
+    "wiring_total": 4,
+    "accounts_green": 0,
+    "accounts_yellow": 3,
+    "accounts_red": 0
+  },
+  "rationale": "system green",
+  "files": [
+    {
+      "module": "orchestrator",
+      "file": "orchestrator.json",
+      "age_minutes": 0.0,
+      "threshold_min": 90,
+      "status": "FRESH"
+    },
+    {
+      "module": "deployment_floor",
+      "file": "deployment_floor.json",
+      "age_minutes": 0.0,
+      "threshold_min": 90,
+      "status": "FRESH"
+    },
+    {
+      "module": "capital_efficiency",
+      "file": "capital_efficiency.json",
+      "age_minutes": 0.0,
+      "threshold_min": 90,
+      "status": "FRESH"
+    },
+    {
+      "module": "position_directives",
+      "file": "position_directives.json",
+      "age_minutes": 0.0,
+      "threshold_min": 90,
+      "status": "FRESH"
+    },
+    {
+      "module": "conviction_ranking",
+      "file": "conviction_ranking.json",
+      "age_minutes": 0.0,
+      "threshold_min": 90,
+      "status": "FRESH"
+    },
+    {
+      "module": "policy_router",
+      "file": "execution_policy.json",
+      "age_minutes": 0.0,
+      "threshold_min": 90,
+      "status": "FRESH"
+    },
+    {
+      "module": "hard_stops",
+      "file": "hard_stops.json",
+      "age_minutes": 0.0,
+      "threshold_min": 90,
+      "status": "FRESH"
+    },
+    {
+      "module": "risk_state",
+      "file": "risk_state.json",
+      "age_minutes": 0.4,
+      "threshold_min": 90,
+      "status": "FRESH"
+    },
+    {
+      "module": "alpaca_LEGACY",
+      "file": "alpaca_paper_state.json",
+      "age_minutes": 0.0,
+      "threshold_min": 90,
+      "status": "FRESH"
+    },
+    {
+      "module": "alpaca_HARVEST_3",
+      "file": "alpaca_h3_state.json",
+      "age_minutes": 0.0,
+      "threshold_min": 90,
+      "status": "FRESH"
+    },
+    {
+      "module": "alpaca_HARVEST_5",
+      "file": "alpaca_h5_state.json",
+      "age_minutes": 0.0,
+      "threshold_min": 90,
+      "status": "FRESH"
+    },
+    {
+      "module": "market_state",
+      "file": "market_state.json",
+      "age_minutes": 0.0,
+      "threshold_min": 90,
+      "status": "FRESH"
+    },
+    {
+      "module": "narrative_tracker",
+      "file": "narrative_tracker.json",
+      "age_minutes": 0.0,
+      "threshold_min": 90,
+      "status": "FRESH"
+    },
+    {
+      "module": "sector_rotation",
+      "file": "sector_rotation.json",
+      "age_minutes": 0.0,
+      "threshold_min": 90,
+      "status": "FRESH"
+    },
+    {
+      "module": "correlation_book",
+      "file": "correlation_book.json",
+      "age_minutes": 0.0,
+      "threshold_min": 90,
+      "status": "FRESH"
+    },
+    {
+      "module": "order_quality",
+      "file": "order_quality.json",
+      "age_minutes": 0.0,
+      "threshold_min": 90,
+      "status": "FRESH"
+    },
+    {
+      "module": "cross_agent_learning",
+      "file": "cross_agent_learning.json",
+      "age_minutes": 0.0,
+      "threshold_min": 1440,
+      "status": "FRESH"
+    },
+    {
+      "module": "agent_beliefs",
+      "file": "agent_beliefs.json",
+      "age_minutes": 2.7,
+      "threshold_min": 1440,
+      "status": "FRESH"
+    },
+    {
+      "module": "agent_evolution_cards",
+      "file": "agent_evolution_cards.json",
+      "age_minutes": 2.7,
+      "threshold_min": 1440,
+      "status": "FRESH"
+    },
+    {
+      "module": "expectancy_lab",
+      "file": "expectancy_lab.json",
+      "age_minutes": 0.0,
+      "threshold_min": 1440,
+      "status": "FRESH"
+    },
+    {
+      "module": "senate_state",
+      "file": "senate_state.json",
+      "age_minutes": 2.7,
+      "threshold_min": 20160,
+      "status": "FRESH"
+    },
+    {
+      "module": "senate_results",
+      "file": "senate_results.json",
+      "age_minutes": 1383.6,
+      "threshold_min": 20160,
+      "status": "FRESH"
+    },
+    {
+      "module": "run_health",
+      "file": "run_health.json",
+      "age_minutes": 20.0,
+      "threshold_min": 90,
+      "status": "FRESH"
+    },
+    {
+      "module": "persistence_status",
+      "file": "persistence_status.json",
+      "age_minutes": 0.4,
+      "threshold_min": 1440,
+      "status": "FRESH"
+    }
+  ],
+  "wiring": {
+    "directive_flow": {
+      "directives_emitted_this_cycle": 1,
+      "directives_consumed_24h": 75,
+      "wired": true,
+      "rationale": "1 emitted, 75 consumed in last 24h"
+    },
+    "forced_rotation_flow": {
+      "emitted_this_cycle": 0,
+      "consumed_24h": 0,
+      "wired": true,
+      "rationale": "0 forced-rotations queued; 0 executed"
+    },
+    "sweep_cap_enforcement": {
+      "accounts_audited": 3,
+      "over_swept_count": 0,
+      "wired": true,
+      "rationale": "no over-sweeps"
+    },
+    "hard_stops": {
+      "accounts_audited": 3,
+      "halted": [],
+      "system_safe_mode": false,
+      "wired": true,
+      "rationale": "clear"
+    }
+  },
+  "accounts": [
+    {
+      "account_id": "LEGACY",
+      "live_equity": 9591.79,
+      "live_cash": 5801.54,
+      "live_sgov": 0.02,
+      "deployed_ratio": 0.3952,
+      "status": "YELLOW",
+      "flags": [
+        "BELOW_BASE"
+      ],
+      "rationale": "redeploy $0 from SGOV \u00b7 underdeployed 40% < 65%"
+    },
+    {
+      "account_id": "HARVEST_3",
+      "live_equity": 9587.89,
+      "live_cash": 9587.88,
+      "live_sgov": 0.01,
+      "deployed_ratio": 0.0,
+      "status": "YELLOW",
+      "flags": [
+        "BELOW_BASE"
+      ],
+      "rationale": "redeploy $0 from SGOV \u00b7 underdeployed 0% < 65%"
+    },
+    {
+      "account_id": "HARVEST_5",
+      "live_equity": 9661.36,
+      "live_cash": 9661.36,
+      "live_sgov": 0.0,
+      "deployed_ratio": 0.0,
+      "status": "YELLOW",
+      "flags": [
+        "BELOW_BASE"
+      ],
+      "rationale": "underdeployed 0% < 70%"
+    }
+  ]
+}

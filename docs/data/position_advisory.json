@@ -1,0 +1,547 @@
+{
+  "generated_at": "2026-06-15T08:04:17.083558+00:00",
+  "advisory_only": true,
+  "note": "Advisory only \u2014 recommendations are NOT auto-executed in Alpha 3.0. Existing trailing-stop / momentum-exit logic still does the actual closing.",
+  "summary": {
+    "total": 20,
+    "hold": 19,
+    "trim": 1,
+    "exit": 0
+  },
+  "by_owner": {
+    "LEGACY": [
+      {
+        "ticker": "MPWR",
+        "recommendation": "TRIM",
+        "score": 0.6927,
+        "rationale": "flat from entry, -4.0% off peak \u00b7 score 0.69 @ aggression 0.50"
+      },
+      {
+        "ticker": "NUE",
+        "recommendation": "HOLD",
+        "score": 0.5538,
+        "rationale": "position stable \u00b7 score 0.55 @ aggression 0.50"
+      },
+      {
+        "ticker": "UNP",
+        "recommendation": "HOLD",
+        "score": 0.5385,
+        "rationale": "position stable \u00b7 score 0.54 @ aggression 0.50"
+      },
+      {
+        "ticker": "ALGN",
+        "recommendation": "HOLD",
+        "score": 0.5126,
+        "rationale": "flat from entry \u00b7 score 0.51 @ aggression 0.50"
+      },
+      {
+        "ticker": "MDLZ",
+        "recommendation": "HOLD",
+        "score": 0.4952,
+        "rationale": "flat from entry \u00b7 score 0.50 @ aggression 0.50"
+      }
+    ],
+    "ZENITH": [
+      {
+        "ticker": "DIA",
+        "recommendation": "HOLD",
+        "score": 0.5568,
+        "rationale": "momentum decaying \u00b7 score 0.56 @ aggression 0.50"
+      }
+    ],
+    "MAGUS": [
+      {
+        "ticker": "DIA",
+        "recommendation": "HOLD",
+        "score": 0.5568,
+        "rationale": "momentum decaying \u00b7 score 0.56 @ aggression 0.50"
+      }
+    ],
+    "TALON": [
+      {
+        "ticker": "DIA",
+        "recommendation": "HOLD",
+        "score": 0.5568,
+        "rationale": "momentum decaying \u00b7 score 0.56 @ aggression 0.50"
+      }
+    ],
+    "ATLAS": [
+      {
+        "ticker": "DIA",
+        "recommendation": "HOLD",
+        "score": 0.5568,
+        "rationale": "momentum decaying \u00b7 score 0.56 @ aggression 0.50"
+      }
+    ],
+    "THUNDERHEAD": [
+      {
+        "ticker": "HYG",
+        "recommendation": "HOLD",
+        "score": 0.5036,
+        "rationale": "flat from entry \u00b7 score 0.50 @ aggression 0.50"
+      }
+    ],
+    "KESTREL": [
+      {
+        "ticker": "HYG",
+        "recommendation": "HOLD",
+        "score": 0.5036,
+        "rationale": "flat from entry \u00b7 score 0.50 @ aggression 0.50"
+      }
+    ],
+    "HEX": [
+      {
+        "ticker": "SNAP",
+        "recommendation": "HOLD",
+        "score": 0.4607,
+        "rationale": "flat from entry \u00b7 score 0.46 @ aggression 0.50"
+      }
+    ],
+    "VEIL": [
+      {
+        "ticker": "PANW",
+        "recommendation": "HOLD",
+        "score": 0.4461,
+        "rationale": "held 5d, +7.3% from entry, momentum decaying \u00b7 score 0.45 @ aggression 0.50"
+      }
+    ],
+    "OBSIDIAN": [
+      {
+        "ticker": "SLB",
+        "recommendation": "HOLD",
+        "score": 0.4179,
+        "rationale": "flat from entry \u00b7 score 0.42 @ aggression 0.50"
+      }
+    ],
+    "WEAVER": [
+      {
+        "ticker": "DIA",
+        "recommendation": "HOLD",
+        "score": 0.4179,
+        "rationale": "flat from entry \u00b7 score 0.42 @ aggression 0.50"
+      }
+    ],
+    "AEGIS": [
+      {
+        "ticker": "LRCX",
+        "recommendation": "HOLD",
+        "score": 0.3643,
+        "rationale": "held 5d, +12.1% from entry, momentum decaying \u00b7 score 0.36 @ aggression 0.50"
+      }
+    ],
+    "FABLEBOY_5": [
+      {
+        "ticker": "LRCX",
+        "recommendation": "HOLD",
+        "score": 0.3643,
+        "rationale": "held 5d, +12.1% from entry, momentum decaying \u00b7 score 0.36 @ aggression 0.50"
+      }
+    ],
+    "SYNTH": [
+      {
+        "ticker": "MRVL",
+        "recommendation": "HOLD",
+        "score": 0.3394,
+        "rationale": "+10.7% from entry, momentum decaying \u00b7 score 0.34 @ aggression 0.50"
+      }
+    ],
+    "SPECK": [
+      {
+        "ticker": "LRCX",
+        "recommendation": "HOLD",
+        "score": 0.3214,
+        "rationale": "+14.0% from entry, momentum decaying \u00b7 score 0.32 @ aggression 0.50"
+      }
+    ],
+    "GOLDSMITH": [
+      {
+        "ticker": "SOL-USD",
+        "recommendation": "HOLD",
+        "score": 0.2725,
+        "rationale": "+6.6% from entry \u00b7 score 0.27 @ aggression 0.50"
+      }
+    ]
+  },
+  "advisories": [
+    {
+      "owner": "LEGACY",
+      "ticker": "MPWR",
+      "recommendation": "TRIM",
+      "score": 0.6927,
+      "rationale": "flat from entry, -4.0% off peak \u00b7 score 0.69 @ aggression 0.50",
+      "components": {
+        "age": 0.4286,
+        "drift_flat": 0.957,
+        "peak_giveback": 0.7995,
+        "decay": 0.5,
+        "illiquidity": 1.0
+      },
+      "aggression": 0.5,
+      "hold_age_days": 3.0,
+      "intraday_drift_pct": -0.0043,
+      "peak_drop_pct": -0.04,
+      "advisory_only": true
+    },
+    {
+      "owner": "ZENITH",
+      "ticker": "DIA",
+      "recommendation": "HOLD",
+      "score": 0.5568,
+      "rationale": "momentum decaying \u00b7 score 0.56 @ aggression 0.50",
+      "components": {
+        "age": 0.4286,
+        "drift_flat": 0.9274,
+        "peak_giveback": 0.0,
+        "decay": 1.0,
+        "illiquidity": 0.9278
+      },
+      "aggression": 0.5,
+      "hold_age_days": 3.0,
+      "intraday_drift_pct": 0.0073,
+      "peak_drop_pct": 0.0,
+      "advisory_only": true
+    },
+    {
+      "owner": "MAGUS",
+      "ticker": "DIA",
+      "recommendation": "HOLD",
+      "score": 0.5568,
+      "rationale": "momentum decaying \u00b7 score 0.56 @ aggression 0.50",
+      "components": {
+        "age": 0.4286,
+        "drift_flat": 0.9274,
+        "peak_giveback": 0.0,
+        "decay": 1.0,
+        "illiquidity": 0.9278
+      },
+      "aggression": 0.5,
+      "hold_age_days": 3.0,
+      "intraday_drift_pct": 0.0073,
+      "peak_drop_pct": 0.0,
+      "advisory_only": true
+    },
+    {
+      "owner": "TALON",
+      "ticker": "DIA",
+      "recommendation": "HOLD",
+      "score": 0.5568,
+      "rationale": "momentum decaying \u00b7 score 0.56 @ aggression 0.50",
+      "components": {
+        "age": 0.4286,
+        "drift_flat": 0.9274,
+        "peak_giveback": 0.0,
+        "decay": 1.0,
+        "illiquidity": 0.9278
+      },
+      "aggression": 0.5,
+      "hold_age_days": 3.0,
+      "intraday_drift_pct": 0.0073,
+      "peak_drop_pct": 0.0,
+      "advisory_only": true
+    },
+    {
+      "owner": "ATLAS",
+      "ticker": "DIA",
+      "recommendation": "HOLD",
+      "score": 0.5568,
+      "rationale": "momentum decaying \u00b7 score 0.56 @ aggression 0.50",
+      "components": {
+        "age": 0.4286,
+        "drift_flat": 0.9274,
+        "peak_giveback": 0.0,
+        "decay": 1.0,
+        "illiquidity": 0.9278
+      },
+      "aggression": 0.5,
+      "hold_age_days": 3.0,
+      "intraday_drift_pct": 0.0073,
+      "peak_drop_pct": 0.0,
+      "advisory_only": true
+    },
+    {
+      "owner": "LEGACY",
+      "ticker": "NUE",
+      "recommendation": "HOLD",
+      "score": 0.5538,
+      "rationale": "position stable \u00b7 score 0.55 @ aggression 0.50",
+      "components": {
+        "age": 0.4286,
+        "drift_flat": 0.9307,
+        "peak_giveback": 0.2704,
+        "decay": 0.5,
+        "illiquidity": 1.0
+      },
+      "aggression": 0.5,
+      "hold_age_days": 3.0,
+      "intraday_drift_pct": -0.0069,
+      "peak_drop_pct": -0.0135,
+      "advisory_only": true
+    },
+    {
+      "owner": "LEGACY",
+      "ticker": "UNP",
+      "recommendation": "HOLD",
+      "score": 0.5385,
+      "rationale": "position stable \u00b7 score 0.54 @ aggression 0.50",
+      "components": {
+        "age": 0.5714,
+        "drift_flat": 0.8939,
+        "peak_giveback": 0.0745,
+        "decay": 0.5,
+        "illiquidity": 1.0
+      },
+      "aggression": 0.5,
+      "hold_age_days": 4.0,
+      "intraday_drift_pct": 0.0106,
+      "peak_drop_pct": -0.0037,
+      "advisory_only": true
+    },
+    {
+      "owner": "LEGACY",
+      "ticker": "ALGN",
+      "recommendation": "HOLD",
+      "score": 0.5126,
+      "rationale": "flat from entry \u00b7 score 0.51 @ aggression 0.50",
+      "components": {
+        "age": 0.4286,
+        "drift_flat": 0.9891,
+        "peak_giveback": 0.0468,
+        "decay": 0.5,
+        "illiquidity": 1.0
+      },
+      "aggression": 0.5,
+      "hold_age_days": 3.0,
+      "intraday_drift_pct": -0.0011,
+      "peak_drop_pct": -0.0023,
+      "advisory_only": true
+    },
+    {
+      "owner": "THUNDERHEAD",
+      "ticker": "HYG",
+      "recommendation": "HOLD",
+      "score": 0.5036,
+      "rationale": "flat from entry \u00b7 score 0.50 @ aggression 0.50",
+      "components": {
+        "age": 0.4286,
+        "drift_flat": 1.0,
+        "peak_giveback": 0.0,
+        "decay": 0.5,
+        "illiquidity": 1.0
+      },
+      "aggression": 0.5,
+      "hold_age_days": 3.0,
+      "intraday_drift_pct": 0.0,
+      "peak_drop_pct": 0.0,
+      "advisory_only": true
+    },
+    {
+      "owner": "KESTREL",
+      "ticker": "HYG",
+      "recommendation": "HOLD",
+      "score": 0.5036,
+      "rationale": "flat from entry \u00b7 score 0.50 @ aggression 0.50",
+      "components": {
+        "age": 0.4286,
+        "drift_flat": 1.0,
+        "peak_giveback": 0.0,
+        "decay": 0.5,
+        "illiquidity": 1.0
+      },
+      "aggression": 0.5,
+      "hold_age_days": 3.0,
+      "intraday_drift_pct": 0.0,
+      "peak_drop_pct": 0.0,
+      "advisory_only": true
+    },
+    {
+      "owner": "LEGACY",
+      "ticker": "MDLZ",
+      "recommendation": "HOLD",
+      "score": 0.4952,
+      "rationale": "flat from entry \u00b7 score 0.50 @ aggression 0.50",
+      "components": {
+        "age": 0.4286,
+        "drift_flat": 0.9505,
+        "peak_giveback": 0.0159,
+        "decay": 0.5,
+        "illiquidity": 1.0
+      },
+      "aggression": 0.5,
+      "hold_age_days": 3.0,
+      "intraday_drift_pct": 0.0049,
+      "peak_drop_pct": -0.0008,
+      "advisory_only": true
+    },
+    {
+      "owner": "HEX",
+      "ticker": "SNAP",
+      "recommendation": "HOLD",
+      "score": 0.4607,
+      "rationale": "flat from entry \u00b7 score 0.46 @ aggression 0.50",
+      "components": {
+        "age": 0.2857,
+        "drift_flat": 1.0,
+        "peak_giveback": 0.0,
+        "decay": 0.5,
+        "illiquidity": 1.0
+      },
+      "aggression": 0.5,
+      "hold_age_days": 2.0,
+      "intraday_drift_pct": 0.0,
+      "peak_drop_pct": 0.0,
+      "advisory_only": true
+    },
+    {
+      "owner": "VEIL",
+      "ticker": "PANW",
+      "recommendation": "HOLD",
+      "score": 0.4461,
+      "rationale": "held 5d, +7.3% from entry, momentum decaying \u00b7 score 0.45 @ aggression 0.50",
+      "components": {
+        "age": 0.7143,
+        "drift_flat": 0.2669,
+        "peak_giveback": 0.0,
+        "decay": 1.0,
+        "illiquidity": 0.3021
+      },
+      "aggression": 0.5,
+      "hold_age_days": 5.0,
+      "intraday_drift_pct": 0.0733,
+      "peak_drop_pct": 0.0,
+      "advisory_only": true
+    },
+    {
+      "owner": "OBSIDIAN",
+      "ticker": "SLB",
+      "recommendation": "HOLD",
+      "score": 0.4179,
+      "rationale": "flat from entry \u00b7 score 0.42 @ aggression 0.50",
+      "components": {
+        "age": 0.1429,
+        "drift_flat": 1.0,
+        "peak_giveback": 0.0,
+        "decay": 0.5,
+        "illiquidity": 1.0
+      },
+      "aggression": 0.5,
+      "hold_age_days": 1.0,
+      "intraday_drift_pct": 0.0,
+      "peak_drop_pct": 0.0,
+      "advisory_only": true
+    },
+    {
+      "owner": "WEAVER",
+      "ticker": "DIA",
+      "recommendation": "HOLD",
+      "score": 0.4179,
+      "rationale": "flat from entry \u00b7 score 0.42 @ aggression 0.50",
+      "components": {
+        "age": 0.1429,
+        "drift_flat": 1.0,
+        "peak_giveback": 0.0,
+        "decay": 0.5,
+        "illiquidity": 1.0
+      },
+      "aggression": 0.5,
+      "hold_age_days": 1.0,
+      "intraday_drift_pct": 0.0,
+      "peak_drop_pct": 0.0,
+      "advisory_only": true
+    },
+    {
+      "owner": "AEGIS",
+      "ticker": "LRCX",
+      "recommendation": "HOLD",
+      "score": 0.3643,
+      "rationale": "held 5d, +12.1% from entry, momentum decaying \u00b7 score 0.36 @ aggression 0.50",
+      "components": {
+        "age": 0.7143,
+        "drift_flat": 0.0,
+        "peak_giveback": 0.0,
+        "decay": 1.0,
+        "illiquidity": 0.0
+      },
+      "aggression": 0.5,
+      "hold_age_days": 5.0,
+      "intraday_drift_pct": 0.1212,
+      "peak_drop_pct": 0.0,
+      "advisory_only": true
+    },
+    {
+      "owner": "FABLEBOY_5",
+      "ticker": "LRCX",
+      "recommendation": "HOLD",
+      "score": 0.3643,
+      "rationale": "held 5d, +12.1% from entry, momentum decaying \u00b7 score 0.36 @ aggression 0.50",
+      "components": {
+        "age": 0.7143,
+        "drift_flat": 0.0,
+        "peak_giveback": 0.0,
+        "decay": 1.0,
+        "illiquidity": 0.0
+      },
+      "aggression": 0.5,
+      "hold_age_days": 5.0,
+      "intraday_drift_pct": 0.1212,
+      "peak_drop_pct": 0.0,
+      "advisory_only": true
+    },
+    {
+      "owner": "SYNTH",
+      "ticker": "MRVL",
+      "recommendation": "HOLD",
+      "score": 0.3394,
+      "rationale": "+10.7% from entry, momentum decaying \u00b7 score 0.34 @ aggression 0.50",
+      "components": {
+        "age": 0.5714,
+        "drift_flat": 0.0,
+        "peak_giveback": 0.072,
+        "decay": 1.0,
+        "illiquidity": 0.0
+      },
+      "aggression": 0.5,
+      "hold_age_days": 4.0,
+      "intraday_drift_pct": 0.1073,
+      "peak_drop_pct": -0.0036,
+      "advisory_only": true
+    },
+    {
+      "owner": "SPECK",
+      "ticker": "LRCX",
+      "recommendation": "HOLD",
+      "score": 0.3214,
+      "rationale": "+14.0% from entry, momentum decaying \u00b7 score 0.32 @ aggression 0.50",
+      "components": {
+        "age": 0.5714,
+        "drift_flat": 0.0,
+        "peak_giveback": 0.0,
+        "decay": 1.0,
+        "illiquidity": 0.0
+      },
+      "aggression": 0.5,
+      "hold_age_days": 4.0,
+      "intraday_drift_pct": 0.1399,
+      "peak_drop_pct": 0.0,
+      "advisory_only": true
+    },
+    {
+      "owner": "GOLDSMITH",
+      "ticker": "SOL-USD",
+      "recommendation": "HOLD",
+      "score": 0.2725,
+      "rationale": "+6.6% from entry \u00b7 score 0.27 @ aggression 0.50",
+      "components": {
+        "age": 0.2857,
+        "drift_flat": 0.344,
+        "peak_giveback": 0.0337,
+        "decay": 0.5,
+        "illiquidity": 0.3472
+      },
+      "aggression": 0.5,
+      "hold_age_days": 2.0,
+      "intraday_drift_pct": 0.0656,
+      "peak_drop_pct": -0.0017,
+      "advisory_only": true
+    }
+  ]
+}

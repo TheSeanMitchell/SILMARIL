@@ -1,0 +1,40 @@
+{
+  "version": "market-truth-1.0",
+  "generated_at": "2026-06-15T08:04:25.680408+00:00",
+  "date": "2026-06-15",
+  "axes": {
+    "market_regime": "NEUTRAL",
+    "volatility_regime": {
+      "level": "UNKNOWN",
+      "direction": "UNKNOWN"
+    },
+    "breadth_regime": "UNKNOWN",
+    "liquidity_regime": {
+      "level": "UNKNOWN",
+      "proxy": true
+    },
+    "defensive_rotation": {
+      "active": false,
+      "spread_bps": 0.0
+    },
+    "composite": "CONSTRUCTIVE",
+    "version": "regime-2.0"
+  },
+  "log_days": 4,
+  "warming_note": "sma50/200 + breadth need history: day 1 logs prices, day 2 breadth goes live, day 50/200 the trend axes sharpen \u2014 UNKNOWN until then, by law",
+  "catalyst_taxonomy": {
+    "canonical": [
+      "earnings",
+      "guidance",
+      "ipo",
+      "macro",
+      "analyst",
+      "product_launch",
+      "regulatory",
+      "ma",
+      "unknown"
+    ],
+    "note": "canonical_catalyst() maps every observed label into exactly one bucket; study layers pivot on this closed vocabulary, joined to learning rows by date"
+  },
+  "join_key": "date"
+}

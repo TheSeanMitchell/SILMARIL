@@ -1,0 +1,166 @@
+name: Daily Run (single efficient cadence)
+
+# ────────────────────────────────────────────────────────────────────
+# SINGLE RUNNER — this is now the ONE scheduled trading workflow.
+# evening_prep.yml has been RETIRED: the full --live cycle already runs
+# the post-cycle protection sidecar every run (sweep_protection,
+# write_clock, build_leaderboard_v2 — see cli.py ~line 1681), so a
+# separate "protection pass" was 100% redundant and only burned quota.
+#
+# CADENCE PHILOSOPHY — efficient, trading-hours-first:
+#   The live book is US equities (3 Alpaca paper accounts). Equities do not
+#   trade overnight or on weekends, and scoring is gated to trading days, so
+#   dense off-hours runs produced no clean data and only consumed price-API
+#   quota. We now run densely DURING the session and touch off-hours just
+#   once a day for the 24/7 SIMULATED compounders (CryptoBro / JRR / Sports
+#   Bro) and overnight news.
+#
+#   US equity windows (Eastern; EDT in summer):
+#     Regular hours 09:30–16:00 ET = 13:30–20:00 UTC  → dense (every 15 min)
+#     Pre-market    ~08:00 ET       = ~12:00 UTC       → 2 warm-up runs
+#     Off-hours / weekend                              → 1 light run/day
+#
+#   GitHub Actions cron is best-effort (can slip 15–60 min under load), so
+#   the session uses every-15-min rather than a single tick — if one fires
+#   late, the next still lands inside the window.
+#
+#   Approx volume: ~34 runs/weekday + 1/day off-hours  (was ~90/weekday +
+#   ~32/weekend-day). Large quota reduction, same clean-data coverage.
+# ────────────────────────────────────────────────────────────────────
+
+on:
+  schedule:
+    # Regular US session — every 15 min, weekdays. 13:00–20:45 UTC spans the
+    # session across both EDT (13:30–20:00) and EST (14:30–21:00) with a short
+    # pre-open and post-close tail. Live equity orders + clean intraday
+    # scoring data happen here.
+    - cron: '*/15 13-20 * * 1-5'
+    # Pre-market warm-up (news ingest + analytics prep), weekdays: 2 light runs.
+    - cron: '0,40 12 * * 1-5'
+    # One off-hours sample per day, EVERY day (incl. weekends), for the 24/7
+    # simulated compounders and overnight news. The live equity book is closed
+    # here, so a single daily touch is enough — no dense overnight/weekend
+    # cadence (that only burned API quota for no clean data).
+    - cron: '0 1 * * *'
+  workflow_dispatch:
+    inputs:
+      reason:
+        description: 'Why are you running manually?'
+        required: false
+        default: 'manual trigger'
+
+permissions:
+  contents: write
+
+# Keep cancel-in-progress=false so a partially-done run isn't killed mid-write
+# (which could corrupt JSON state files). The shared "silmaril-broker" group
+# means at most one broker-touching workflow runs at a time across the repo;
+# any other (e.g. a manually-triggered reset) queues behind it. With ~7-min
+# runs there is ample headroom now that the cadence is slim.
+concurrency:
+  group: silmaril-broker
+  cancel-in-progress: false
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run live mode
+        env:
+          ALPHA_VANTAGE_API_KEY:    ${{ secrets.ALPHA_VANTAGE_API_KEY }}
+          BIRDEYE_API_KEY:          ${{ secrets.BIRDEYE_API_KEY }}
+          COINGECKO_API_KEY:        ${{ secrets.COINGECKO_API_KEY }}
+          EIA_API_KEY:              ${{ secrets.EIA_API_KEY }}
+          FINNHUB_API_KEY:          ${{ secrets.FINNHUB_API_KEY }}
+          FMP_API_KEY:              ${{ secrets.FMP_API_KEY }}
+          FRED_API_KEY:             ${{ secrets.FRED_API_KEY }}
+          OPENEXCHANGERATES_APP_ID: ${{ secrets.OPENEXCHANGERATES_APP_ID }}
+          POLYGON_API_KEY:          ${{ secrets.POLYGON_API_KEY }}
+          TIINGO_API_KEY:           ${{ secrets.TIINGO_API_KEY }}
+          ALPACA_API_KEY:           ${{ secrets.ALPACA_API_KEY }}
+          ALPACA_API_SECRET:        ${{ secrets.ALPACA_API_SECRET }}
+          # Two extra paper accounts, both $10k baseline.
+          # H3 = 3% disciplined harvester (skips TINY tier).
+          # H5 = 5% conviction harvester (skips TINY + MINI).
+          # If either pair of secrets is unset, that account is skipped
+          # gracefully by silmaril/execution/multi_account.py.
+          ALPACA_API_KEY_H3:        ${{ secrets.ALPACA_API_KEY_H3 }}
+          ALPACA_API_SECRET_H3:     ${{ secrets.ALPACA_API_SECRET_H3 }}
+          ALPACA_API_KEY_H5:        ${{ secrets.ALPACA_API_KEY_H5 }}
+          ALPACA_API_SECRET_H5:     ${{ secrets.ALPACA_API_SECRET_H5 }}
+          # NOTE: ALPACA_BASE_URL secret is read but IGNORED by the
+          # alpaca_paper module — it hardcodes paper-api.alpaca.markets.
+          # Safe to delete the secret entirely.
+          ALPACA_BASE_URL:          ${{ secrets.ALPACA_BASE_URL }}
+          MARKETAUX_API_KEY:        ${{ secrets.MARKETAUX_API_KEY }}
+          NEWSAPI_KEY:              ${{ secrets.NEWSAPI_KEY }}
+          SEC_USER_AGENT_EMAIL:     ${{ secrets.SEC_USER_AGENT_EMAIL }}
+          TWELVEDATA_API_KEY:       ${{ secrets.TWELVEDATA_API_KEY }}
+        run: |
+          python -m silmaril --live
+
+      # ── Post-cycle analytics (read-only, additive) ──────────────────
+      # Runs the new sentiment-calibration ledger, the brutally-honest agent
+      # scorecard, the Alpaca-vs-truth broker reconciliation, and the unified
+      # debug stream over the data the cycle just wrote. Every step is wrapped
+      # and the suite always exits 0, so analytics can NEVER fail the trade run.
+      # Outputs (sentiment_calibration.json, agent_scorecard.json,
+      # broker_reconciliation.json, debug_stream.json) are committed by the
+      # existing "git add docs/data/" step below.
+      - name: Post-cycle analytics suite
+        if: always()
+        env:
+          # market_leaders ingestion (key-first, all optional — degrades gracefully)
+          FMP_API_KEY:           ${{ secrets.FMP_API_KEY }}
+          ALPHA_VANTAGE_API_KEY: ${{ secrets.ALPHA_VANTAGE_API_KEY }}
+          POLYGON_API_KEY:       ${{ secrets.POLYGON_API_KEY }}
+        run: |
+          python -m silmaril.analytics.suite --output docs/data || true
+
+      - name: Verify learning state preserved
+        run: |
+          python -c "
+          from pathlib import Path
+          from silmaril.learning.persistence_guard import verify_persistence
+          report = verify_persistence(Path('docs/data'))
+          print('Protected files present:', len(report['present']), '/', report['total_protected'])
+          if report['missing']:
+              print('Missing (will be created on next run):', report['missing'][:5])
+          "
+
+      - name: Commit results
+        # Pull-rebase before push so a concurrent manual workflow commit doesn't
+        # cause a non-fast-forward push rejection (which would leave docs/data
+        # stale until the next run).
+        run: |
+          git config user.name 'silmaril-bot'
+          git config user.email 'silmaril-bot@users.noreply.github.com'
+          git add docs/data/ docs/index.html docs/*.html 2>/dev/null || true
+          if git diff --staged --quiet; then
+            echo "nothing to commit"
+            exit 0
+          fi
+          git commit -m "🤖 daily run $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          # Retry push up to 3 times with rebase if a concurrent commit landed
+          for i in 1 2 3; do
+            git pull --rebase origin main && git push && break || true
+            echo "push attempt $i failed; sleeping 5s"
+            sleep 5
+          done

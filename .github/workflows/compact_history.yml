@@ -1,0 +1,64 @@
+name: Compact Git History (storage cure)
+
+# THE 733MB PROBLEM, SOLVED PERMANENTLY (June 12, 2026).
+# The worktree is ~85MB; the other ~650MB is .git history — the compound
+# interest of committing large JSONs every 20 minutes. This workflow,
+# run manually whenever api_health.storage reads "watch" or worse,
+# snapshots the CURRENT state onto a fresh orphan commit and force-pushes
+# it as the new main. The full pre-compaction history is preserved first
+# as a tagged backup branch (additive law: nothing is destroyed — the
+# old history remains fetchable via its tag until you prune it
+# deliberately). Pages rebuilds from the same files; nothing user-facing
+# changes. Expected result: repo shrinks to roughly the worktree size.
+#
+# Cadence guidance: monthly, or whenever git_history_mb > 500.
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirm:
+        description: 'Type COMPACT to proceed (safety interlock)'
+        required: true
+
+permissions:
+  contents: write
+
+jobs:
+  compact:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Safety interlock
+        run: |
+          if [ "${{ github.event.inputs.confirm }}" != "COMPACT" ]; then
+            echo "Interlock: input was not COMPACT — refusing."; exit 1
+          fi
+
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Preserve full history as a tagged backup ref
+        run: |
+          STAMP=$(date -u +%Y%m%d)
+          git tag "history-backup-$STAMP" HEAD
+          git push origin "history-backup-$STAMP"
+          echo "Old history preserved at tag history-backup-$STAMP"
+
+      - name: Orphan snapshot of current state
+        run: |
+          git config user.name  "silmaril-compactor"
+          git config user.email "actions@users.noreply.github.com"
+          git checkout --orphan compacted
+          git add -A
+          git commit -m "history compaction snapshot $(date -u +%F) — worktree preserved byte-for-byte; prior history at history-backup-* tag"
+
+      - name: Replace main with the compacted snapshot
+        run: |
+          git branch -M compacted main
+          git push --force origin main
+          echo "main is now a single-commit snapshot. Run 'git fetch --prune' locally."
+
+      - name: Report
+        run: |
+          du -sh .git || true
+          echo "Done. api_health.storage.git_history_mb should collapse on the next cycle."

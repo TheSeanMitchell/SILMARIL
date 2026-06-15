@@ -1,0 +1,115 @@
+name: "Alpha 3.0 Migration"
+
+# Manually-triggered one-shot migration for SILMARIL Alpha 3.0.
+#
+# What this does (verified by reading scripts/migrate_to_alpha_3_0.py):
+#   1. Runs the migration script which creates up to 5 new files under
+#      docs/data/  (alpaca_h3_state.json, alpaca_h5_state.json,
+#      agent_staleness_params.json, verified_harvest_ledger.json,
+#      harvest_accounts.json). Each one is skipped if it already exists.
+#      The script is ADDITIVE ONLY — it never modifies or deletes
+#      existing state. Pure stdlib, no Alpaca calls, no env vars read.
+#   2. Commits whatever new files appeared under docs/data/.
+#   3. Pushes back to main.
+#
+# Idempotent — safe to re-run any number of times. Does NOT self-archive,
+# because the underlying script is itself idempotent and there are
+# legitimate reasons to re-run later (e.g. accidentally deleted seed).
+#
+# Trigger:
+#   Actions tab → "Alpha 3.0 Migration" → "Run workflow" → type CONFIRM.
+#   Toggle `dry_run` first to preview without writing anything.
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirm:
+        description: "Type CONFIRM to run the migration"
+        required: true
+        default: ""
+      dry_run:
+        description: "Dry run only (preview, no writes, no commits)"
+        required: false
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+jobs:
+  migrate:
+    runs-on: ubuntu-latest
+    if: github.event.inputs.confirm == 'CONFIRM'
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      # NOTE: the migration script is stdlib-only (argparse, json, sys,
+      # datetime, pathlib) — no pip install needed. We skip dependency
+      # installation entirely to keep this fast and isolated.
+
+      - name: Sanity-check migration script is present
+        run: |
+          if [ ! -f scripts/migrate_to_alpha_3_0.py ]; then
+            echo "✗ FATAL: scripts/migrate_to_alpha_3_0.py is missing."
+            echo "  Drop the Alpha 3.0 zip into the repo first, commit,"
+            echo "  then re-run this workflow."
+            exit 1
+          fi
+          echo "✓ Found scripts/migrate_to_alpha_3_0.py"
+
+      - name: Run Alpha 3.0 migration
+        run: |
+          set -euo pipefail
+          if [ "${{ github.event.inputs.dry_run }}" = "true" ]; then
+            echo "=== DRY RUN MODE — no files will be written ==="
+            python scripts/migrate_to_alpha_3_0.py --dry-run
+          else
+            echo "=== LIVE MIGRATION ==="
+            python scripts/migrate_to_alpha_3_0.py
+          fi
+
+      - name: Show what changed
+        if: github.event.inputs.dry_run != 'true'
+        run: |
+          echo "=== git status under docs/data/ ==="
+          git status --short docs/data/ || true
+
+      - name: Commit new seed files
+        if: github.event.inputs.dry_run != 'true'
+        run: |
+          set -euo pipefail
+          git config user.name 'silmaril-bot'
+          git config user.email 'silmaril-bot@users.noreply.github.com'
+          # Script only writes to docs/data/. Stage precisely that.
+          git add docs/data/ || true
+          if git diff --staged --quiet; then
+            echo "Nothing to commit — migration was a no-op (already applied?)"
+            exit 0
+          fi
+          git commit -m "Alpha 3.0 migration: seed verified-harvest + accounts state"
+          for i in 1 2 3; do
+            git pull --rebase origin main && git push && break || true
+            echo "push attempt $i failed; sleeping 5s"
+            sleep 5
+          done
+
+      - name: Final summary
+        run: |
+          if [ "${{ github.event.inputs.dry_run }}" = "true" ]; then
+            echo "✓ Dry run complete. No files written."
+            echo "  Re-run with dry_run=false to apply."
+          else
+            echo "✓ Alpha 3.0 migration complete."
+            echo "  Next: the next Daily Run cron picks everything up."
+            echo "  Visit the HARVEST · ACCOUNTS tab to verify."
+          fi
