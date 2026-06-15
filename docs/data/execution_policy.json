@@ -1,6 +1,6 @@
 {
   "version": "4.0",
-  "generated_at": "2026-06-15T21:45:24.567740+00:00",
+  "generated_at": "2026-06-15T22:05:43.251184+00:00",
   "market_mode": "ATTACK",
   "winner_engine": "default",
   "winner_action": "NORMAL",
@@ -67,6 +67,7 @@
     }
   },
   "urgency_priority_order": [
+    "JTO-USD",
     "NEAR-USD",
     "QRVO"
   ],
@@ -88,6 +89,24 @@
       "decay_factor": 1.0,
       "empirical_lift": 1.0,
       "rationale": "acceleration 1.00; intraday thrust 1.00; 3 sources"
+    },
+    "JTO-USD": {
+      "ticker": "JTO-USD",
+      "score": 0.7,
+      "urgent": true,
+      "threshold": 0.65,
+      "components": {
+        "momentum_acceleration": 1.0,
+        "breakout_velocity": 1.0,
+        "fresh_catalyst": 0.0,
+        "fresh_catalyst_raw": 0.0,
+        "intraday_thrust": 1.0,
+        "source_credibility": 1.0,
+        "narrative_persistence": 0.0
+      },
+      "decay_factor": 1.0,
+      "empirical_lift": 1.0,
+      "rationale": "breakout 1.00; acceleration 1.00; intraday thrust 1.00; 5 sources"
     },
     "QRVO": {
       "ticker": "QRVO",
@@ -111,97 +130,85 @@
   "narrative": {
     "dominant": "risk_on",
     "regime_shift": "RISK_ON",
-    "confidence": 0.562
+    "confidence": 0.564
   },
   "sector_rotation": {
-    "rationale": "Token (strengthening) vs Utilities (deteriorating)",
+    "rationale": "Token (strengthening) vs Crypto (weakening)",
     "top_pairs": [
       {
-        "from": "Utilities",
-        "to": "Token",
-        "strength": 0.8468,
-        "rationale": "Utilities -0.50 \u2192 Token +0.35"
-      },
-      {
-        "from": "Utilities",
-        "to": "Communication Services",
-        "strength": 0.8118,
-        "rationale": "Utilities -0.50 \u2192 Communication Services +0.32"
-      },
-      {
-        "from": "Real Estate",
-        "to": "Token",
-        "strength": 0.7089,
-        "rationale": "Real Estate -0.36 \u2192 Token +0.35"
-      },
-      {
-        "from": "Communications",
+        "from": "Crypto",
         "to": "Token",
         "strength": 0.7,
-        "rationale": "Communications -0.35 \u2192 Token +0.35"
+        "rationale": "Crypto -0.35 \u2192 Token +0.35"
       },
       {
-        "from": "Real Estate",
-        "to": "Communication Services",
-        "strength": 0.6739,
-        "rationale": "Real Estate -0.36 \u2192 Communication Services +0.32"
+        "from": "Software",
+        "to": "Token",
+        "strength": 0.7,
+        "rationale": "Software -0.35 \u2192 Token +0.35"
+      },
+      {
+        "from": "Communication",
+        "to": "Token",
+        "strength": 0.7,
+        "rationale": "Communication -0.35 \u2192 Token +0.35"
       }
     ],
     "sector_lift": {
-      "Industrials": 0.9745,
-      "Rates": 0.9263,
-      "Materials": 0.9598,
-      "Discretionary": 0.9847,
-      "Real Estate": 0.9103,
-      "Communications": 0.9125,
-      "Health Care": 1.0682,
-      "Communication": 0.9125,
-      "Energy": 0.9125,
-      "Commodities": 0.9125,
+      "Financials": 0.9556,
+      "Health Care": 1.0527,
+      "Technology": 0.9926,
+      "Healthcare": 0.9554,
+      "Semiconductors": 1.071,
       "Crypto": 0.9125,
-      "Healthcare": 0.9553,
-      "Semiconductors": 1.0692,
-      "Staples": 0.9534,
-      "Credit": 0.9264,
       "Software": 0.9125,
-      "Communication Services": 1.0945,
-      "Technology": 1.0061,
-      "Innovation": 0.9721,
-      "Consumer Discretionary": 1.0317,
-      "Utilities": 0.8758,
       "Token": 1.105,
-      "Index": 0.9534,
-      "Financials": 0.9913,
+      "Communication": 0.9125,
+      "Industrials": 0.9747,
+      "Discretionary": 0.9849,
+      "Consumer Staples": 0.9916,
+      "Communication Services": 1.0574,
+      "Communications": 0.9125,
+      "Utilities": 0.9299,
+      "Energy": 0.9125,
+      "Credit": 0.9267,
+      "Index": 0.9536,
       "FX": 0.9125,
-      "Consumer Staples": 0.9736
+      "Materials": 0.96,
+      "Real Estate": 0.9464,
+      "Staples": 0.9537,
+      "Commodities": 0.9125,
+      "Rates": 0.9265,
+      "Consumer Discretionary": 1.0101,
+      "Innovation": 0.9724
     },
     "sector_tag": {
-      "Industrials": "neutral",
-      "Rates": "weakening",
-      "Materials": "neutral",
-      "Discretionary": "neutral",
-      "Real Estate": "weakening",
-      "Communications": "weakening",
+      "Financials": "neutral",
       "Health Care": "neutral",
-      "Communication": "weakening",
-      "Energy": "weakening",
-      "Commodities": "weakening",
-      "Crypto": "weakening",
+      "Technology": "neutral",
       "Healthcare": "neutral",
       "Semiconductors": "neutral",
-      "Staples": "neutral",
-      "Credit": "weakening",
+      "Crypto": "weakening",
       "Software": "weakening",
-      "Communication Services": "strengthening",
-      "Technology": "neutral",
-      "Innovation": "neutral",
-      "Consumer Discretionary": "neutral",
-      "Utilities": "deteriorating",
       "Token": "strengthening",
+      "Communication": "weakening",
+      "Industrials": "neutral",
+      "Discretionary": "neutral",
+      "Consumer Staples": "neutral",
+      "Communication Services": "neutral",
+      "Communications": "weakening",
+      "Utilities": "weakening",
+      "Energy": "weakening",
+      "Credit": "weakening",
       "Index": "neutral",
-      "Financials": "neutral",
       "FX": "weakening",
-      "Consumer Staples": "neutral"
+      "Materials": "neutral",
+      "Real Estate": "neutral",
+      "Staples": "neutral",
+      "Commodities": "weakening",
+      "Rates": "weakening",
+      "Consumer Discretionary": "neutral",
+      "Innovation": "neutral"
     }
   },
   "deployment_floor": {
@@ -254,11 +261,11 @@
   },
   "setup_classifications": {
     "per_ticker": {
-      "BXP": {
+      "NEAR-USD": {
         "archetype": "GENERIC",
         "setup_lift": 1.0
       },
-      "DXCM": {
+      "QRVO": {
         "archetype": "GENERIC",
         "setup_lift": 1.0
       }
@@ -266,16 +273,26 @@
   },
   "capital_efficiency": {
     "deployment_efficiency_score": 0.0,
-    "stale_holding_drag": 0.381,
-    "idle_capital_drag": 0.3989,
+    "stale_holding_drag": 0.3333,
+    "idle_capital_drag": 0.3936,
     "rotation_recommendations": {
-      "HOLD": 13,
-      "WATCH": 8,
+      "HOLD": 14,
+      "WATCH": 7,
       "ROTATE": 0,
       "FORCE_ROTATE": 0
     }
   },
-  "position_directives": [],
+  "position_directives": [
+    {
+      "owner": "LEGACY",
+      "ticker": "DXCM",
+      "action": "SCALE_IN",
+      "size_pct": 0.2,
+      "trigger": "unrealized_plpc\u22651.5% AND momentum\u22650.55 AND recommendation=HOLD",
+      "rationale": "healthy winner (1.8%, momentum 0.56); add 20% size",
+      "priority": 5
+    }
+  ],
   "rationale": "mode=ATTACK",
   "directives": [],
   "global_directives": []
