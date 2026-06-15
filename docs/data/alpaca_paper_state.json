@@ -3,10 +3,10 @@
   "enabled": true,
   "account": {
     "equity": 9598.73,
-    "cash": 5801.54
+    "cash": 5768.76
   },
   "principal_target": 10000.0,
-  "savings": 0.02,
+  "savings": 32.79,
   "lifetime_realized_wins": 37,
   "lifetime_realized_losses": 19,
   "position_meta": {
@@ -176,7 +176,9 @@
           "time": "2026-06-15T01:44:01.567376+00:00",
           "qty": 0.1013
         }
-      }
+      },
+      "tightened_stop_pct": 0.025,
+      "tightened_stop_set_at": "2026-06-15T08:44:32.117420+00:00"
     },
     "ALGN": {
       "entry_price": 175.03,
@@ -184,10 +186,6 @@
       "first_seen": "2026-06-12T18:46:03.524318+00:00",
       "qty": 4.833247378,
       "snapshots_30m": [
-        {
-          "ts": "2026-06-15T03:25:52.622619+00:00",
-          "price": 174.84
-        },
         {
           "ts": "2026-06-15T04:04:27.657135+00:00",
           "price": 174.84
@@ -214,6 +212,10 @@
         },
         {
           "ts": "2026-06-15T08:04:15.289012+00:00",
+          "price": 174.84
+        },
+        {
+          "ts": "2026-06-15T08:44:33.677062+00:00",
           "price": 174.84
         }
       ]
@@ -4166,9 +4168,32 @@
       "time": "2026-06-15T01:25:36.057399+00:00",
       "timestamp": "2026-06-15T01:25:36.057401+00:00",
       "submitted": false
+    },
+    {
+      "action": "STOP_ADJUST",
+      "symbol": "MPWR",
+      "directive": "TIGHTEN_STOP",
+      "new_stop_pct": 0.025,
+      "trigger_reason": "+5% reached; tighten trailing stop to 2.5% below peak",
+      "rationale": "+5% reached; tighten trailing stop to 2.5% below peak",
+      "time": "2026-06-15T08:44:32.117430+00:00",
+      "timestamp": "2026-06-15T08:44:32.117434+00:00",
+      "submitted": false
     }
   ],
-  "orders_placed": [],
+  "orders_placed": [
+    {
+      "action": "STOP_ADJUST",
+      "symbol": "MPWR",
+      "directive": "TIGHTEN_STOP",
+      "new_stop_pct": 0.025,
+      "trigger_reason": "+5% reached; tighten trailing stop to 2.5% below peak",
+      "rationale": "+5% reached; tighten trailing stop to 2.5% below peak",
+      "time": "2026-06-15T08:44:32.117430+00:00",
+      "timestamp": "2026-06-15T08:44:32.117434+00:00",
+      "submitted": false
+    }
+  ],
   "errors": [
     {
       "time": "2026-06-02T22:37:58.484205+00:00",
@@ -4272,14 +4297,14 @@
     }
   ],
   "last_cycle_summary": {
-    "time": "2026-06-15T08:26:19.864306+00:00",
-    "timestamp": "2026-06-15T08:26:19.864320+00:00",
+    "time": "2026-06-15T08:44:33.764958+00:00",
+    "timestamp": "2026-06-15T08:44:33.764969+00:00",
     "closed": 0,
     "opened": 0,
     "open_after": 6,
     "equity": 9598.73,
-    "savings": 0.02,
-    "total_value": 9598.75,
+    "savings": 32.79,
+    "total_value": 9631.52,
     "tickers_traded": [],
     "bleed_exits_count": 0,
     "bleed_exits": [],
@@ -4293,34 +4318,34 @@
       "reason": "contract forbids sweep this cycle (max=$0)",
       "contract_max": 0.0
     },
-    "directives_consumed": 0,
+    "directives_consumed": 1,
     "rotations_executed": 0,
     "composite_halt": false,
     "session": "pre-market",
     "is_extended": true
   },
-  "last_run": "2026-06-15T08:26:19.864543+00:00",
+  "last_run": "2026-06-15T08:44:33.765217+00:00",
   "grocery_pending_harvest": 2591.631099999998,
-  "trading_capital": 9598.71,
-  "realized_savings": 0.02,
+  "trading_capital": 9565.94,
+  "realized_savings": 32.79,
   "account_id": "LEGACY",
   "genesis_at": "2026-05-11T05:08:46.083334+00:00",
   "savings_vault": {
     "holdings": [
       {
         "symbol": "SGOV",
-        "qty": 0.00016,
-        "market_value": 0.0161,
-        "avg_entry_price": 100.49,
-        "current_price": 100.525,
-        "unrealized_pl": 0.0
+        "qty": 0.326249,
+        "market_value": 32.7948,
+        "avg_entry_price": 100.5297,
+        "current_price": 100.5209,
+        "unrealized_pl": -0.0029
       }
     ],
-    "total_market_value": 0.0161,
+    "total_market_value": 32.7948,
     "primary_symbol": "SGOV",
-    "primary_qty": 0.00016,
-    "primary_market_value": 0.0161,
-    "checked_at": "2026-06-15T08:26:19.634999+00:00"
+    "primary_qty": 0.326249,
+    "primary_market_value": 32.7948,
+    "checked_at": "2026-06-15T08:44:32.113372+00:00"
   },
   "sgov_sweep_last_cycle": {
     "attempted": false,
@@ -4363,7 +4388,7 @@
   ],
   "sweep_protection": {
     "version": "4.0",
-    "checked_at": "2026-06-15T08:26:21.571531+00:00",
+    "checked_at": "2026-06-15T08:44:34.322206+00:00",
     "market_mode": "ATTACK",
     "force_sweep_floor_resolved": 10500.0,
     "stale_close_age_days": 5,
@@ -4376,9 +4401,9 @@
         "trigger": "unrealized 5.10% >= 5.0%",
         "unrealized_pl": 32.78,
         "unrealized_plpc": 0.051,
-        "order_id": "440f36ee-9555-45c8-b988-efc88680b3bf",
+        "order_id": "cb70147a-f96f-436d-b328-34ed820f213b",
         "mode": "extended_limit",
-        "submitted_at": "2026-06-15T08:26:22.192561+00:00",
+        "submitted_at": "2026-06-15T08:44:34.620489+00:00",
         "ok": true
       },
       {
@@ -4386,9 +4411,9 @@
         "symbol": "SGOV",
         "side": "buy",
         "notional": 32.78,
-        "order_id": "eb193b24-770e-475e-8651-e877b74a8c04",
+        "order_id": "9f13b80d-79f9-43cf-8cdb-60e50a8d447d",
         "mode": "extended_limit",
-        "submitted_at": "2026-06-15T08:26:22.639029+00:00",
+        "submitted_at": "2026-06-15T08:44:34.941971+00:00",
         "ok": true
       }
     ],
@@ -4420,7 +4445,7 @@
     "force_close_targets": [],
     "blocked_count": 0,
     "vulnerable_count": 0,
-    "position_directives_count": 1,
+    "position_directives_count": 2,
     "forced_rotations_count": 0,
     "orch_objective": "RECOVER_FROM_DRAWDOWN",
     "deployment_floor_objective": "REDEPLOY_FROM_SGOV",
@@ -4487,7 +4512,7 @@
         }
       },
       "stop_at_break_even": true,
-      "tightened_stop_pct": null
+      "tightened_stop_pct": 0.025
     },
     {
       "symbol": "NUE",
@@ -4651,33 +4676,71 @@
     }
   ],
   "last_stale_cancel": {
-    "at": "2026-06-15T05:26:45.073231+00:00",
-    "cancelled": 1,
+    "at": "2026-06-15T08:44:32.000095+00:00",
+    "cancelled": 0,
     "open_seen": 1
   },
   "cycle_intents": {
-    "at": "2026-06-15T08:26:19.864351+00:00",
+    "at": "2026-06-15T08:44:33.765005+00:00",
     "session": "pre-market",
     "session_open": false,
     "composite_halt": false,
     "halt_reason": null,
-    "plans_offered": 1,
+    "plans_offered": 3,
     "buy_intents": [
+      {
+        "ticker": "VLO",
+        "signal": "BUY",
+        "conviction": 0.8981,
+        "originated": false,
+        "outcome": "deferred_submit_market_closed",
+        "intended_notional": 765.27,
+        "reason": "submission deferred by market-closed gate (will retry during regular hours)"
+      },
+      {
+        "ticker": "IWM",
+        "signal": "BUY",
+        "conviction": 0.7111,
+        "originated": false,
+        "outcome": "deferred_submit_market_closed",
+        "intended_notional": 765.27,
+        "reason": "submission deferred by market-closed gate (will retry during regular hours)"
+      },
       {
         "ticker": "TON-USD",
         "signal": "BUY",
-        "conviction": 0.7269,
+        "conviction": 0.6859,
         "originated": false,
         "outcome": "blocked_not_equity_mission",
-        "intended_notional": 767.9,
+        "intended_notional": 765.27,
         "reason": "TON-USD is not a traditional equity \u2014 valuables trade in their own zone, never this account"
       }
     ],
     "decisions_this_cycle": [
       {
+        "ticker": "VLO",
+        "category": "deferred_submit_market_closed",
+        "reason": "submission deferred by market-closed gate (will retry during regular hours)"
+      },
+      {
+        "ticker": "IWM",
+        "category": "deferred_submit_market_closed",
+        "reason": "submission deferred by market-closed gate (will retry during regular hours)"
+      },
+      {
         "ticker": "TON-USD",
         "category": "blocked_not_equity_mission",
         "reason": "TON-USD is not a traditional equity \u2014 valuables trade in their own zone, never this account"
+      },
+      {
+        "ticker": "VLO",
+        "category": "blocked_signal_not_sell",
+        "reason": "signal BUY is not SELL/STRONG_SELL"
+      },
+      {
+        "ticker": "IWM",
+        "category": "blocked_signal_not_sell",
+        "reason": "signal BUY is not SELL/STRONG_SELL"
       },
       {
         "ticker": "TON-USD",

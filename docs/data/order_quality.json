@@ -1,28 +1,17 @@
 {
   "version": "6.0",
-  "generated_at": "2026-06-15T08:26:18.699126+00:00",
+  "generated_at": "2026-06-15T08:44:31.925090+00:00",
   "tickers": {
-    "BWA": {
-      "ticker": "BWA",
+    "JTO-USD": {
+      "ticker": "JTO-USD",
       "use_limit_order": true,
-      "limit_buffer_bps": 50,
-      "defer_to_next_cycle": false,
-      "opening_volatility": 0.0433,
-      "liquidity_score": 0.4217,
+      "limit_buffer_bps": 96,
+      "defer_to_next_cycle": true,
+      "opening_volatility": 0.1094,
+      "liquidity_score": 0.6837,
       "extension_warning": false,
       "timing_window": null,
-      "rationale": "limit 50bps \u00b7 ATR/px 4.3% \u00b7 liq 0.42"
-    },
-    "MOH": {
-      "ticker": "MOH",
-      "use_limit_order": true,
-      "limit_buffer_bps": 47,
-      "defer_to_next_cycle": false,
-      "opening_volatility": 0.0392,
-      "liquidity_score": 1.0,
-      "extension_warning": false,
-      "timing_window": null,
-      "rationale": "limit 47bps \u00b7 ATR/px 3.9% \u00b7 liq 1.00"
+      "rationale": "DEFER: ATR/price 10.9% \u2265 9% \u2014 untradeable"
     },
     "TON-USD": {
       "ticker": "TON-USD",
@@ -45,13 +34,35 @@
       "extension_warning": false,
       "timing_window": null,
       "rationale": "clean entry \u00b7 ATR/px 2.1% \u00b7 liq 1.00"
+    },
+    "VLO": {
+      "ticker": "VLO",
+      "use_limit_order": true,
+      "limit_buffer_bps": 45,
+      "defer_to_next_cycle": false,
+      "opening_volatility": 0.0362,
+      "liquidity_score": 0.628,
+      "extension_warning": false,
+      "timing_window": null,
+      "rationale": "limit 45bps \u00b7 ATR/px 3.6% \u00b7 liq 0.63"
+    },
+    "TRGP": {
+      "ticker": "TRGP",
+      "use_limit_order": true,
+      "limit_buffer_bps": 38,
+      "defer_to_next_cycle": false,
+      "opening_volatility": 0.0261,
+      "liquidity_score": 0.8512,
+      "extension_warning": false,
+      "timing_window": null,
+      "rationale": "limit 38bps \u00b7 ATR/px 2.6% \u00b7 liq 0.85"
     }
   },
   "summary": {
-    "tickers": 4,
-    "deferred": 0,
-    "limit_recommended": 3,
-    "market_orders_ok": 1
+    "tickers": 5,
+    "deferred": 1,
+    "limit_recommended": 4,
+    "market_orders_ok": 0
   },
   "config": {
     "atr_defer_ratio": 0.05,

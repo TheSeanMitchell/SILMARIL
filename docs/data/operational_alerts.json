@@ -1,23 +1,23 @@
 {
   "version": "3.2",
-  "generated_at": "2026-06-15T08:26:23.516799+00:00",
+  "generated_at": "2026-06-15T08:44:35.525213+00:00",
   "in_danger_window": false,
   "alerts": [
     {
-      "id": "idle_cash:LEGACY:*:2026-06-15T08:26",
+      "id": "idle_cash:LEGACY:*:2026-06-15T08:44",
       "severity": "info",
       "category": "idle_cash",
       "owner": "LEGACY",
       "ticker": null,
-      "summary": "$5,801.54 cash idle in LEGACY (60.4% of book) \u2014 consider deploying",
+      "summary": "$5,768.76 cash idle in LEGACY (60.3% of book) \u2014 consider deploying",
       "detail": {
-        "cash": 5801.54,
-        "trading_capital": 9598.71
+        "cash": 5768.76,
+        "trading_capital": 9565.94
       },
-      "last_seen": "2026-06-15T08:26:23.511996+00:00"
+      "last_seen": "2026-06-15T08:44:35.520603+00:00"
     },
     {
-      "id": "failed_order:LEGACY:*:2026-06-15T08:26",
+      "id": "failed_order:LEGACY:*:2026-06-15T08:44",
       "severity": "warning",
       "category": "failed_order",
       "owner": "LEGACY",
@@ -42,10 +42,10 @@
           }
         ]
       },
-      "last_seen": "2026-06-15T08:26:23.512012+00:00"
+      "last_seen": "2026-06-15T08:44:35.520619+00:00"
     },
     {
-      "id": "idle_cash:HARVEST_3:*:2026-06-15T08:26",
+      "id": "idle_cash:HARVEST_3:*:2026-06-15T08:44",
       "severity": "info",
       "category": "idle_cash",
       "owner": "HARVEST_3",
@@ -55,10 +55,10 @@
         "cash": 9587.88,
         "trading_capital": 9587.88
       },
-      "last_seen": "2026-06-15T08:26:23.512028+00:00"
+      "last_seen": "2026-06-15T08:44:35.520635+00:00"
     },
     {
-      "id": "failed_order:HARVEST_3:*:2026-06-15T08:26",
+      "id": "failed_order:HARVEST_3:*:2026-06-15T08:44",
       "severity": "warning",
       "category": "failed_order",
       "owner": "HARVEST_3",
@@ -83,10 +83,10 @@
           }
         ]
       },
-      "last_seen": "2026-06-15T08:26:23.512041+00:00"
+      "last_seen": "2026-06-15T08:44:35.520646+00:00"
     },
     {
-      "id": "idle_cash:HARVEST_5:*:2026-06-15T08:26",
+      "id": "idle_cash:HARVEST_5:*:2026-06-15T08:44",
       "severity": "info",
       "category": "idle_cash",
       "owner": "HARVEST_5",
@@ -96,10 +96,10 @@
         "cash": 9661.36,
         "trading_capital": 9661.36
       },
-      "last_seen": "2026-06-15T08:26:23.512053+00:00"
+      "last_seen": "2026-06-15T08:44:35.520657+00:00"
     },
     {
-      "id": "failed_order:HARVEST_5:*:2026-06-15T08:26",
+      "id": "failed_order:HARVEST_5:*:2026-06-15T08:44",
       "severity": "warning",
       "category": "failed_order",
       "owner": "HARVEST_5",
@@ -124,16 +124,31 @@
           }
         ]
       },
-      "last_seen": "2026-06-15T08:26:23.512064+00:00"
+      "last_seen": "2026-06-15T08:44:35.520666+00:00"
+    },
+    {
+      "id": "sgov_mismatch:LEGACY:SGOV:2026-06-15T08:44",
+      "severity": "warning",
+      "category": "sgov_mismatch",
+      "owner": "LEGACY",
+      "ticker": "SGOV",
+      "summary": "SGOV live mark $32.79 \u2260 ledger verified $0.00 (\u0394 $+32.79)",
+      "detail": {
+        "live": 32.79,
+        "ledger_verified": 0.0,
+        "delta": 32.79
+      },
+      "last_seen": "2026-06-15T08:44:35.525204+00:00"
     }
   ],
   "counts_by_severity": {
     "critical": 0,
-    "warning": 3,
+    "warning": 4,
     "info": 3
   },
   "counts_by_category": {
     "idle_cash": 3,
-    "failed_order": 3
+    "failed_order": 3,
+    "sgov_mismatch": 1
   }
 }

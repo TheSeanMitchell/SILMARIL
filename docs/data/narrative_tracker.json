@@ -1,10 +1,10 @@
 {
   "version": "5.0",
-  "generated_at": "2026-06-15T08:26:23.520726+00:00",
+  "generated_at": "2026-06-15T08:44:35.528992+00:00",
   "cycles_observed": 60,
-  "dominant_narrative": "risk_on",
-  "regime_shift": "RISK_ON",
-  "regime_shift_confidence": 0.4194,
+  "dominant_narrative": "risk_off",
+  "regime_shift": "RISK_OFF",
+  "regime_shift_confidence": 0.4441,
   "narratives": {
     "risk_on": {
       "label": "Risk-on sentiment returning",
@@ -18,20 +18,14 @@
         "Consumer Staples",
         "Utilities"
       ],
-      "frequency": 2,
+      "frequency": 1,
       "persistence": 60,
-      "acceleration": 1.0,
-      "score": 0.7,
+      "acceleration": -0.5,
+      "score": 0.425,
       "phrases": [
-        "all-time high",
         "buying the dip"
       ],
       "matched_articles": [
-        {
-          "ticker": "NUE",
-          "title": "Nucor Corp stock hits all-time high at 265.14 USD",
-          "source": "Investing.com"
-        },
         {
           "ticker": "LTC-USD",
           "title": "Litecoin Whales Are Buying the Dip \u2014 Can LTC Price Reclaim $60?",
@@ -51,12 +45,20 @@
         "Technology",
         "Consumer Discretionary"
       ],
-      "frequency": 0,
-      "persistence": 59,
-      "acceleration": -1.0,
-      "score": 0.35,
-      "phrases": [],
-      "matched_articles": []
+      "frequency": 1,
+      "persistence": 60,
+      "acceleration": 1.0,
+      "score": 0.625,
+      "phrases": [
+        "risk off"
+      ],
+      "matched_articles": [
+        {
+          "ticker": "DOT-USD",
+          "title": "Polkadot (DOT) Volatility Explained: Broad Risk Off, Technical Selling",
+          "source": "CoinMarketCap"
+        }
+      ]
     },
     "ai_rally": {
       "label": "AI / Tech rally accelerating",
@@ -94,9 +96,9 @@
       ],
       "sectors_out": [],
       "frequency": 0,
-      "persistence": 3,
+      "persistence": 2,
       "acceleration": 0.0,
-      "score": 0.1712,
+      "score": 0.1275,
       "phrases": [],
       "matched_articles": []
     },
@@ -121,20 +123,12 @@
         "Industrials"
       ],
       "sectors_out": [],
-      "frequency": 1,
-      "persistence": 1,
-      "acceleration": 1.0,
-      "score": 0.3187,
-      "phrases": [
-        "geopolitical tension"
-      ],
-      "matched_articles": [
-        {
-          "ticker": "KR",
-          "title": "Here\u2019s Why The Kroger Co. (KR) is a Defensive Stock to Buy Amid Geopolitical Tensions",
-          "source": "Yahoo Finance"
-        }
-      ]
+      "frequency": 0,
+      "persistence": 0,
+      "acceleration": -1.0,
+      "score": 0.0,
+      "phrases": [],
+      "matched_articles": []
     },
     "biotech_breakout": {
       "label": "Biotech / pharma breakout",
@@ -212,25 +206,19 @@
     }
   },
   "sector_pressure": {
-    "Technology": 0.35,
-    "Energy": 0.1312,
-    "Industrials": 0.3187,
-    "Health Care": 0.39,
+    "Technology": -0.2,
+    "Energy": 0.0875,
+    "Industrials": 0.0,
+    "Health Care": 0.665,
     "Financials": 0.04,
-    "Consumer Discretionary": 0.35,
-    "Consumer Staples": -0.35,
-    "Communication Services": 0.7,
+    "Consumer Discretionary": -0.2,
+    "Consumer Staples": 0.2,
+    "Communication Services": 0.425,
     "Real Estate": 0.0,
-    "Utilities": -0.39,
+    "Utilities": 0.16,
     "Materials": 0.0
   },
   "history": [
-    {
-      "cycle_ts": "2026-06-14T13:04:20.919537+00:00",
-      "dominant_narrative": "risk_off",
-      "regime_shift": "RISK_OFF",
-      "score": 0.54
-    },
     {
       "cycle_ts": "2026-06-14T13:25:17.320751+00:00",
       "dominant_narrative": "risk_on",
@@ -584,7 +572,13 @@
       "dominant_narrative": "risk_on",
       "regime_shift": "RISK_ON",
       "score": 0.7
+    },
+    {
+      "cycle_ts": "2026-06-15T08:44:35.528992+00:00",
+      "dominant_narrative": "risk_off",
+      "regime_shift": "RISK_OFF",
+      "score": 0.625
     }
   ],
-  "headline_count": 610
+  "headline_count": 311
 }
