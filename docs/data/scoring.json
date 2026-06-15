@@ -1,48 +1,6 @@
 {
-  "generated_at": "2026-06-15T00:25:41.408324+00:00",
+  "generated_at": "2026-06-15T00:43:52.329919+00:00",
   "outcomes": [
-    {
-      "agent": "AEGIS",
-      "ticker": "BNO",
-      "signal": "HOLD",
-      "conviction": 0.471,
-      "predicted_at": "2026-06-08",
-      "scored_at": "2026-06-09",
-      "entry_price": 51.89,
-      "exit_price": 50.205,
-      "return_pct": -3.247,
-      "correct": false,
-      "reward": -2.6473,
-      "tags": {
-        "market_regime": "RISK_ON",
-        "trend_state": "UNCLEAR",
-        "vol_state": "HIGH_VOL",
-        "news_state": "NORMAL",
-        "liquidity_state": "LIQUID"
-      },
-      "stale_price_suspected": false
-    },
-    {
-      "agent": "OBSIDIAN",
-      "ticker": "BNO",
-      "signal": "HOLD",
-      "conviction": 0.307,
-      "predicted_at": "2026-06-08",
-      "scored_at": "2026-06-09",
-      "entry_price": 51.89,
-      "exit_price": 50.205,
-      "return_pct": -3.247,
-      "correct": false,
-      "reward": -2.6473,
-      "tags": {
-        "market_regime": "RISK_ON",
-        "trend_state": "UNCLEAR",
-        "vol_state": "HIGH_VOL",
-        "news_state": "NORMAL",
-        "liquidity_state": "LIQUID"
-      },
-      "stale_price_suspected": false
-    },
     {
       "agent": "KESTREL+",
       "ticker": "BNO",
@@ -63000,10 +62958,52 @@
         "liquidity_state": "THIN"
       },
       "stale_price_suspected": false
+    },
+    {
+      "agent": "AEGIS",
+      "ticker": "PYTH-USD",
+      "signal": "HOLD",
+      "conviction": 0.642,
+      "predicted_at": "2026-06-14",
+      "scored_at": "2026-06-15",
+      "entry_price": 0.0393,
+      "exit_price": 0.039,
+      "return_pct": -0.763,
+      "correct": false,
+      "reward": -0.1634,
+      "tags": {
+        "market_regime": "RISK_ON",
+        "trend_state": "TRENDING",
+        "vol_state": "HIGH_VOL",
+        "news_state": "NORMAL",
+        "liquidity_state": "LIQUID"
+      },
+      "stale_price_suspected": false
+    },
+    {
+      "agent": "FABLEBOY_5",
+      "ticker": "PYTH-USD",
+      "signal": "BUY",
+      "conviction": 0.667,
+      "predicted_at": "2026-06-14",
+      "scored_at": "2026-06-15",
+      "entry_price": 0.0393,
+      "exit_price": 0.039,
+      "return_pct": -0.763,
+      "correct": false,
+      "reward": -0.7634,
+      "tags": {
+        "market_regime": "RISK_ON",
+        "trend_state": "TRENDING",
+        "vol_state": "HIGH_VOL",
+        "news_state": "NORMAL",
+        "liquidity_state": "LIQUID"
+      },
+      "stale_price_suspected": false
     }
   ],
   "summary": {
-    "generated_at": "2026-06-15T00:25:41.408114+00:00",
+    "generated_at": "2026-06-15T00:43:52.329710+00:00",
     "total_scored_calls": 3000,
     "total_clean_calls": 3000,
     "agents_with_track_record": 21,
@@ -63831,29 +63831,29 @@
       },
       {
         "agent": "OBSIDIAN",
-        "scored_calls": 127,
-        "clean_calls": 127,
+        "scored_calls": 126,
+        "clean_calls": 126,
         "wins": 54,
-        "losses": 73,
-        "win_rate": 0.425,
-        "expected_value": -0.397,
+        "losses": 72,
+        "win_rate": 0.429,
+        "expected_value": -0.379,
         "max_drawdown_pct": -5.43,
         "best_call_pct": 2.44,
         "worst_call_pct": -5.43,
-        "avg_conviction": 0.366,
+        "avg_conviction": 0.367,
         "by_regime": {
           "market_regime": {
             "RISK_ON": {
-              "n": 127,
-              "win_rate": 0.425,
-              "ev": -0.397
+              "n": 126,
+              "win_rate": 0.429,
+              "ev": -0.379
             }
           },
           "trend_state": {
             "UNCLEAR": {
-              "n": 85,
-              "win_rate": 0.353,
-              "ev": -0.574
+              "n": 84,
+              "win_rate": 0.357,
+              "ev": -0.549
             },
             "TRENDING": {
               "n": 42,
@@ -63862,28 +63862,28 @@
             }
           },
           "vol_state": {
-            "HIGH_VOL": {
-              "n": 34,
-              "win_rate": 0.294,
-              "ev": -1.365
-            },
             "NORMAL": {
               "n": 93,
               "win_rate": 0.473,
               "ev": -0.044
+            },
+            "HIGH_VOL": {
+              "n": 33,
+              "win_rate": 0.303,
+              "ev": -1.326
             }
           },
           "news_state": {
             "NORMAL": {
-              "n": 127,
-              "win_rate": 0.425,
-              "ev": -0.397
+              "n": 126,
+              "win_rate": 0.429,
+              "ev": -0.379
             }
           }
         },
         "weight_multiplier": 1.0,
-        "weight_explanation": "PROFIT-GATED: strong win-rate in TRENDING (57%) but overall EV is -0.40 \u2014 loses money per call on average. Amplification removed: weight held at 1.00\u00d7 (not killed, not boosted). Win-rate is not profit.",
-        "global_weight": 0.913,
+        "weight_explanation": "PROFIT-GATED: strong win-rate in TRENDING (57%) but overall EV is -0.38 \u2014 loses money per call on average. Amplification removed: weight held at 1.00\u00d7 (not killed, not boosted). Win-rate is not profit.",
+        "global_weight": 0.917,
         "regime_aware_weight": 1.0,
         "best_regime": {
           "dimension": "trend_state",
@@ -63898,12 +63898,12 @@
       },
       {
         "agent": "AEGIS",
-        "scored_calls": 906,
-        "clean_calls": 906,
+        "scored_calls": 905,
+        "clean_calls": 905,
         "wins": 398,
-        "losses": 508,
-        "win_rate": 0.439,
-        "expected_value": -0.462,
+        "losses": 507,
+        "win_rate": 0.44,
+        "expected_value": -0.46,
         "max_drawdown_pct": -89.39,
         "best_call_pct": 8.36,
         "worst_call_pct": -89.39,
@@ -63911,16 +63911,16 @@
         "by_regime": {
           "market_regime": {
             "RISK_ON": {
-              "n": 906,
-              "win_rate": 0.439,
-              "ev": -0.462
+              "n": 905,
+              "win_rate": 0.44,
+              "ev": -0.46
             }
           },
           "trend_state": {
             "UNCLEAR": {
-              "n": 389,
-              "win_rate": 0.38,
-              "ev": -0.719
+              "n": 388,
+              "win_rate": 0.381,
+              "ev": -0.714
             },
             "TRENDING": {
               "n": 433,
@@ -63934,15 +63934,15 @@
             }
           },
           "vol_state": {
-            "HIGH_VOL": {
-              "n": 177,
-              "win_rate": 0.237,
-              "ev": -1.56
-            },
             "NORMAL": {
               "n": 706,
               "win_rate": 0.472,
               "ev": -0.216
+            },
+            "HIGH_VOL": {
+              "n": 176,
+              "win_rate": 0.239,
+              "ev": -1.554
             },
             "LOW_VOL": {
               "n": 23,
@@ -63952,9 +63952,9 @@
           },
           "news_state": {
             "NORMAL": {
-              "n": 906,
-              "win_rate": 0.439,
-              "ev": -0.462
+              "n": 905,
+              "win_rate": 0.44,
+              "ev": -0.46
             }
           }
         },

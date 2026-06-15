@@ -1,15 +1,15 @@
 {
   "version": "4.0",
-  "generated_at": "2026-06-15T00:26:10.662273+00:00",
+  "generated_at": "2026-06-15T00:44:22.477844+00:00",
   "market_session": "closed",
-  "market_mode": "ATTACK",
+  "market_mode": "PRESERVATION",
   "extended_hours_active": false,
   "sweep_switch_triggered": false,
   "sweep_switch_reason": "",
   "in_closing_bell": false,
-  "in_danger_window": false,
-  "danger_window_label": "",
-  "stale_close_age_days": 5,
+  "in_danger_window": true,
+  "danger_window_label": "overnight_thin",
+  "stale_close_age_days": 3,
   "elite_carve_outs": [],
   "urgent_carve_outs": [],
   "strong_catalyst_carve_outs": [],
@@ -17,12 +17,61 @@
   "accounts": {
     "LEGACY": {
       "version": "4.0",
-      "checked_at": "2026-06-15T00:26:09.797030+00:00",
-      "market_mode": "ATTACK",
+      "checked_at": "2026-06-15T00:44:19.027026+00:00",
+      "market_mode": "PRESERVATION",
       "force_sweep_floor_resolved": 10500.0,
-      "stale_close_age_days": 5,
+      "stale_close_age_days": 3,
       "instant_sweeps": [],
-      "stale_closes": [],
+      "stale_closes": [
+        {
+          "action": "STALE_CLOSE",
+          "symbol": "ALGN",
+          "side": "sell",
+          "qty": 4.833247378,
+          "age_days": 3,
+          "trigger": "held 3d >= 3d without strong momentum",
+          "order_id": "8241b997-21d1-44b6-a130-7fdc9f7dbb66",
+          "mode": "regular_market",
+          "submitted_at": "2026-06-15T00:44:19.745895+00:00",
+          "ok": true
+        },
+        {
+          "action": "STALE_CLOSE",
+          "symbol": "MDLZ",
+          "side": "sell",
+          "qty": 7.93696,
+          "age_days": 3,
+          "trigger": "held 3d >= 3d without strong momentum",
+          "order_id": "d8d80da4-4243-42cf-818b-b68b93b896c6",
+          "mode": "regular_market",
+          "submitted_at": "2026-06-15T00:44:20.238401+00:00",
+          "ok": true
+        },
+        {
+          "action": "STALE_CLOSE",
+          "symbol": "MPWR",
+          "side": "sell",
+          "qty": 0.405357634,
+          "age_days": 3,
+          "trigger": "held 3d >= 3d without strong momentum",
+          "order_id": "f4e07958-81b5-42a2-a0e9-28faa160713a",
+          "mode": "regular_market",
+          "submitted_at": "2026-06-15T00:44:20.727223+00:00",
+          "ok": true
+        },
+        {
+          "action": "STALE_CLOSE",
+          "symbol": "NUE",
+          "side": "sell",
+          "qty": 3.050460254,
+          "age_days": 3,
+          "trigger": "held 3d >= 3d without strong momentum",
+          "order_id": "bb85eb48-1b76-4374-b370-c844a35da02b",
+          "mode": "regular_market",
+          "submitted_at": "2026-06-15T00:44:21.230817+00:00",
+          "ok": true
+        }
+      ],
       "news_boosts": [],
       "sgov_redeploys": [],
       "force_sweep": {
@@ -31,7 +80,7 @@
       },
       "evening_shield": {
         "triggered": false,
-        "reason": ""
+        "reason": "danger window overnight_thin \u2014 no positive unrealized on non-spared book; skip"
       },
       "danger_carve_outs": {
         "elite": [],
@@ -41,10 +90,10 @@
     },
     "HARVEST_3": {
       "version": "4.0",
-      "checked_at": "2026-06-15T00:26:10.112890+00:00",
-      "market_mode": "ATTACK",
+      "checked_at": "2026-06-15T00:44:21.486690+00:00",
+      "market_mode": "PRESERVATION",
       "force_sweep_floor_resolved": 10500.0,
-      "stale_close_age_days": 5,
+      "stale_close_age_days": 3,
       "instant_sweeps": [],
       "stale_closes": [],
       "news_boosts": [],
@@ -55,7 +104,7 @@
       },
       "evening_shield": {
         "triggered": false,
-        "reason": ""
+        "reason": "danger window overnight_thin \u2014 no positive unrealized on non-spared book; skip"
       },
       "danger_carve_outs": {
         "elite": [],
@@ -65,10 +114,10 @@
     },
     "HARVEST_5": {
       "version": "4.0",
-      "checked_at": "2026-06-15T00:26:10.400789+00:00",
-      "market_mode": "ATTACK",
+      "checked_at": "2026-06-15T00:44:21.987858+00:00",
+      "market_mode": "PRESERVATION",
       "force_sweep_floor_resolved": 10500.0,
-      "stale_close_age_days": 5,
+      "stale_close_age_days": 3,
       "instant_sweeps": [],
       "stale_closes": [],
       "news_boosts": [],
@@ -79,7 +128,7 @@
       },
       "evening_shield": {
         "triggered": false,
-        "reason": ""
+        "reason": "danger window overnight_thin \u2014 no positive unrealized on non-spared book; skip"
       },
       "danger_carve_outs": {
         "elite": [],
