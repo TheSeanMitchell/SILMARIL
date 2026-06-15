@@ -1,6 +1,6 @@
 {
   "version": "api-health-1.3",
-  "generated_at": "2026-06-15T16:07:34.217316+00:00",
+  "generated_at": "2026-06-15T16:27:34.808033+00:00",
   "overall": "healthy",
   "freshness": {
     "ok": 12,
@@ -69,29 +69,29 @@
     }
   },
   "news": {
-    "distinct_sources": 151,
-    "articles_in_cycle": 401,
+    "distinct_sources": 194,
+    "articles_in_cycle": 460,
     "top_sources": {
-      "Yahoo Finance": 74,
-      "simplywall.st": 35,
-      "TradingView": 16,
-      "MarketBeat": 15,
-      "CoinMarketCap": 13,
-      "CoinDesk": 10,
-      "The Motley Fool": 9,
-      "Seeking Alpha": 8,
-      "Stock Titan": 8,
-      "marketscreener.com": 6,
-      "Investing.com": 6,
-      "PR Newswire": 5
+      "Yahoo Finance": 71,
+      "simplywall.st": 29,
+      "MarketWatch": 15,
+      "PR Newswire": 13,
+      "Stock Titan": 12,
+      "CoinMarketCap": 12,
+      "TradingView": 10,
+      "GuruFocus": 10,
+      "MarketBeat": 9,
+      "CoinDesk": 9,
+      "Barchart.com": 9,
+      "Coinpedia": 7
     },
     "gated_by_domain_clock": false,
     "note": "Quota note: providers don't expose remaining minutes; delivery (sources x volume) is the real meter \u2014 a rate-limited feed collapses here first."
   },
   "prices": {
     "coverage_pct": 100.0,
-    "priced": 593,
-    "universe": 593
+    "priced": 594,
+    "universe": 594
   },
   "broker": {
     "LEGACY": {
@@ -100,9 +100,9 @@
       "errors_logged": 20,
       "errors_recent_48h": 0,
       "last_error": "{'time': '2026-06-04T22:14:34.156193+00:00', 'msg': 'POST https://paper-api.alpaca.markets/v2/orders -> HTTP 422: {\"code\":42210000,\"message\":\"invalid limit_pric",
-      "last_error_age_hours": 257.9,
+      "last_error_age_hours": 258.2,
       "errors_note": "all errors historic (none in 48h) \u2014 plumbing currently clean",
-      "equity": 9584.97
+      "equity": 9584.94
     },
     "HARVEST_3": {
       "configured": true,
@@ -110,9 +110,9 @@
       "errors_logged": 20,
       "errors_recent_48h": 0,
       "last_error": "{'time': '2026-06-12T15:47:17.756965+00:00', 'msg': 'POST https://paper-api.alpaca.markets/v2/orders -> HTTP 403: {\"available\":\"1.695078349\",\"code\":40310000,\"ex",
-      "last_error_age_hours": 72.3,
+      "last_error_age_hours": 72.7,
       "errors_note": "all errors historic (none in 48h) \u2014 plumbing currently clean",
-      "equity": 9576.55
+      "equity": 9594.24
     },
     "HARVEST_5": {
       "configured": true,
@@ -120,14 +120,14 @@
       "errors_logged": 20,
       "errors_recent_48h": 0,
       "last_error": "{'time': '2026-06-04T00:19:24.288294+00:00', 'msg': 'POST https://paper-api.alpaca.markets/v2/orders -> HTTP 422: {\"code\":42210000,\"message\":\"invalid limit_pric",
-      "last_error_age_hours": 279.8,
+      "last_error_age_hours": 280.1,
       "errors_note": "all errors historic (none in 48h) \u2014 plumbing currently clean",
-      "equity": 9660.91
+      "equity": 9662.86
     }
   },
   "domain_clocks": {
     "version": "domain-clock-1.0",
-    "checked_at": "2026-06-15T16:07:34.217316+00:00",
+    "checked_at": "2026-06-15T16:27:34.808033+00:00",
     "domains": {
       "stocks": {
         "open": true,
@@ -142,8 +142,8 @@
         "reason": "always open \u2014 markets never close"
       },
       "social": {
-        "open": true,
-        "reason": "hourly cadence \u2014 59 min since last"
+        "open": false,
+        "reason": "hourly cadence \u2014 20 min since last"
       },
       "edgar": {
         "open": true,
@@ -151,25 +151,25 @@
       }
     },
     "last_allowed": {
-      "edgar": "2026-06-15T15:47:07.305718+00:00",
-      "social": "2026-06-15T15:08:04.315656+00:00",
-      "stocks_news": "2026-06-15T16:03:29.609831+00:00"
+      "edgar": "2026-06-15T16:07:37.064845+00:00",
+      "social": "2026-06-15T16:07:37.173627+00:00",
+      "stocks_news": "2026-06-15T16:23:27.335883+00:00"
     },
     "today_budget": {
       "stocks": {
-        "allowed": 21,
+        "allowed": 23,
         "skipped": 78
       },
       "stocks_news": {
-        "allowed": 24,
+        "allowed": 25,
         "skipped": 26
       },
       "edgar": {
-        "allowed": 49,
+        "allowed": 50,
         "skipped": 0
       },
       "social": {
-        "allowed": 15,
+        "allowed": 16,
         "skipped": 34
       }
     },
@@ -177,10 +177,10 @@
     "note": "the cron may run 24/7: stock TRADING-adjacent fetches (earnings/ipo-cal) keep 08:30-16:30 ET Mon-Fri; equity NEWS runs every cycle in-window and hourly off-hours (information never sleeps); valuables always; social hourly; EDGAR every run through the SPCX window then 4h"
   },
   "storage": {
-    "repo_mb": 311.7,
-    "worktree_mb": 101.0,
-    "git_history_mb": 210.7,
-    "data_dir_mb": 96.0,
+    "repo_mb": 312.8,
+    "worktree_mb": 101.1,
+    "git_history_mb": 211.7,
+    "data_dir_mb": 96.2,
     "archive_mb": 3.1,
     "archive_share_pct": 3.2,
     "status": "ok",
@@ -193,18 +193,18 @@
   },
   "cron_pressure": {
     "runs_observed_today": 0,
-    "stock_window_runs_today": 21,
+    "stock_window_runs_today": 23,
     "providers": {
       "marketaux": {
-        "est_calls_today": 42.0,
+        "est_calls_today": 46.0,
         "free_per_day": 100,
-        "pct_of_budget": 42.0,
+        "pct_of_budget": 46.0,
         "status": "headroom"
       },
       "newsapi": {
-        "est_calls_today": 42.0,
+        "est_calls_today": 46.0,
         "free_per_day": 100,
-        "pct_of_budget": 42.0,
+        "pct_of_budget": 46.0,
         "status": "headroom"
       },
       "finnhub": {
@@ -215,15 +215,15 @@
         "note": "60/min limit, effectively per-day huge"
       },
       "alpha_vantage": {
-        "est_calls_today": 4.2,
+        "est_calls_today": 4.6,
         "free_per_day": 25,
-        "pct_of_budget": 16.8,
+        "pct_of_budget": 18.4,
         "status": "headroom"
       },
       "fmp": {
-        "est_calls_today": 42.0,
+        "est_calls_today": 46.0,
         "free_per_day": 250,
-        "pct_of_budget": 16.8,
+        "pct_of_budget": 18.4,
         "status": "headroom"
       },
       "twelve_data": {
