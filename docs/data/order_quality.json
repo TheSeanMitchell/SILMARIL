@@ -1,35 +1,57 @@
 {
   "version": "6.0",
-  "generated_at": "2026-06-15T13:40:16.920000+00:00",
+  "generated_at": "2026-06-15T14:07:54.500922+00:00",
   "tickers": {
-    "YUM": {
-      "ticker": "YUM",
-      "use_limit_order": true,
-      "limit_buffer_bps": 40,
-      "defer_to_next_cycle": true,
-      "opening_volatility": 0.0205,
-      "liquidity_score": 0.0389,
-      "extension_warning": false,
-      "timing_window": "now is YUM's typical daily-LOW window (09:30 ET) \u2014 historically favorable entry",
-      "rationale": "DEFER: liquidity 5% < 10% of 30d avg \u2014 illiquid \u00b7 now is YUM's typical daily-LOW window (09:30 ET) \u2014 historically favorable entry"
-    },
-    "HLT": {
-      "ticker": "HLT",
+    "EQIX": {
+      "ticker": "EQIX",
       "use_limit_order": true,
       "limit_buffer_bps": 150,
       "defer_to_next_cycle": true,
-      "opening_volatility": 0.0225,
-      "liquidity_score": 0.017,
+      "opening_volatility": 0.0201,
+      "liquidity_score": 0.0776,
       "extension_warning": false,
-      "timing_window": "resting toward HLT's ~336.49 floor (his low window is 12:30 ET) \u2014 limit 150bps below",
-      "rationale": "DEFER: liquidity 2% < 10% of 30d avg \u2014 illiquid \u00b7 resting toward HLT's ~336.49 floor (his low window is 12:30 ET) \u2014 limit 150bps below"
+      "timing_window": "resting toward EQIX's ~1034.38 floor (his low window is 14:00 ET) \u2014 limit 150bps below",
+      "rationale": "DEFER: liquidity 9% < 10% of 30d avg \u2014 illiquid \u00b7 resting toward EQIX's ~1034.38 floor (his low window is 14:00 ET) \u2014 limit 150bps below"
+    },
+    "MPWR": {
+      "ticker": "MPWR",
+      "use_limit_order": true,
+      "limit_buffer_bps": 150,
+      "defer_to_next_cycle": false,
+      "opening_volatility": 0.0575,
+      "liquidity_score": 0.0856,
+      "extension_warning": false,
+      "timing_window": "resting toward MPWR's ~1573.83 floor (his low window is 14:00 ET) \u2014 limit 150bps below",
+      "rationale": "limit 150bps \u00b7 ATR/px 5.8% \u00b7 liq 0.09 \u00b7 resting toward MPWR's ~1573.83 floor (his low window is 14:00 ET) \u2014 limit 150bps below"
+    },
+    "TON-USD": {
+      "ticker": "TON-USD",
+      "use_limit_order": true,
+      "limit_buffer_bps": 39,
+      "defer_to_next_cycle": false,
+      "opening_volatility": 0.0276,
+      "liquidity_score": 0.1221,
+      "extension_warning": false,
+      "timing_window": null,
+      "rationale": "limit 39bps \u00b7 ATR/px 2.8% \u00b7 liq 0.12"
+    },
+    "GLW": {
+      "ticker": "GLW",
+      "use_limit_order": true,
+      "limit_buffer_bps": 150,
+      "defer_to_next_cycle": false,
+      "opening_volatility": 0.0712,
+      "liquidity_score": 0.1094,
+      "extension_warning": false,
+      "timing_window": "resting toward GLW's ~173.97 floor (his low window is 09:30 ET) \u2014 limit 150bps below",
+      "rationale": "limit 150bps \u00b7 ATR/px 7.1% \u00b7 liq 0.11 \u00b7 resting toward GLW's ~173.97 floor (his low window is 09:30 ET) \u2014 limit 150bps below"
     }
   },
   "summary": {
-    "tickers": 2,
-    "deferred": 2,
-    "limit_recommended": 2,
-    "market_orders_ok": -2
+    "tickers": 4,
+    "deferred": 1,
+    "limit_recommended": 4,
+    "market_orders_ok": -1
   },
   "config": {
     "atr_defer_ratio": 0.05,

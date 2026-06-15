@@ -1,6 +1,6 @@
 {
   "version": "broker-reconciliation-1.0",
-  "generated_at": "2026-06-15T13:40:38.846327+00:00",
+  "generated_at": "2026-06-15T14:08:15.113694+00:00",
   "summary": {
     "accounts_live": 3,
     "accounts_total": 3,
@@ -11,37 +11,28 @@
     {
       "account_id": "LEGACY",
       "configured": true,
-      "trading_capital": 9534.92,
+      "trading_capital": 9613.56,
       "principal_target": 10000.0,
-      "drawdown_pct": -4.65,
+      "drawdown_pct": -3.86,
       "counts": {
-        "meta": 3,
-        "snapshot": 5,
-        "matched": 3,
+        "meta": 2,
+        "snapshot": 2,
+        "matched": 2,
         "phantom_in_meta": 0,
-        "missing_meta": 2,
-        "orders": 276
+        "missing_meta": 0,
+        "orders": 279
       },
       "phantom_in_meta": [],
-      "missing_meta": [
-        "ALGN",
-        "UNP"
-      ],
-      "last_order_at": "2026-06-15T13:40:22.900333+00:00",
-      "last_run": "2026-06-15T13:40:23.141458+00:00",
+      "missing_meta": [],
+      "last_order_at": "2026-06-15T14:07:59.293874401Z",
+      "last_run": "2026-06-15T14:07:59.577777+00:00",
       "dormant_days": 0,
       "lifetime": {
         "wins": 39,
-        "losses": 19
+        "losses": 20
       },
-      "in_sync": false,
-      "flags": [
-        {
-          "level": "INFO",
-          "code": "MISSING_META",
-          "detail": "2 held symbols have no memo: ALGN, UNP"
-        }
-      ]
+      "in_sync": true,
+      "flags": []
     },
     {
       "account_id": "HARVEST_3",
@@ -51,27 +42,29 @@
       "drawdown_pct": -4.12,
       "counts": {
         "meta": 0,
-        "snapshot": 0,
+        "snapshot": 1,
         "matched": 0,
         "phantom_in_meta": 0,
-        "missing_meta": 0,
-        "orders": 346
+        "missing_meta": 1,
+        "orders": 347
       },
       "phantom_in_meta": [],
-      "missing_meta": [],
-      "last_order_at": "2026-06-12T19:46:34.984894+00:00",
-      "last_run": "2026-06-15T13:40:24.248503+00:00",
-      "dormant_days": 2,
+      "missing_meta": [
+        "MPWR"
+      ],
+      "last_order_at": "2026-06-15T14:08:00.427407235Z",
+      "last_run": "2026-06-15T14:08:00.791284+00:00",
+      "dormant_days": 0,
       "lifetime": {
         "wins": 15,
         "losses": 23
       },
-      "in_sync": true,
+      "in_sync": false,
       "flags": [
         {
-          "level": "WARN",
-          "code": "DORMANT",
-          "detail": "No order in ~2d (last 2026-06-12). If unintended, confirm this account's Alpaca secrets are set in the repo."
+          "level": "INFO",
+          "code": "MISSING_META",
+          "detail": "1 held symbols have no memo: MPWR"
         }
       ]
     },
@@ -92,7 +85,7 @@
       "phantom_in_meta": [],
       "missing_meta": [],
       "last_order_at": "2026-06-12T17:26:31.777369508Z",
-      "last_run": "2026-06-15T13:40:25.127755+00:00",
+      "last_run": "2026-06-15T14:08:01.694807+00:00",
       "dormant_days": 2,
       "lifetime": {
         "wins": 1,
@@ -112,6 +105,6 @@
   "notes": [
     "3/3 accounts show trading activity: LEGACY, HARVEST_3, HARVEST_5.",
     "Out of sync: 0 phantom memo entries across accounts (see PRUNE_META_TO_SNAPSHOT). Dashboards reading positions_snapshot are already correct; the memo dict is the stale layer.",
-    "Dormant \u22652d (likely unset secrets): HARVEST_3, HARVEST_5."
+    "Dormant \u22652d (likely unset secrets): HARVEST_5."
   ]
 }
