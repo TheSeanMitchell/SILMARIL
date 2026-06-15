@@ -1,10 +1,10 @@
 {
   "version": "5.0",
-  "generated_at": "2026-06-15T21:05:23.273625+00:00",
+  "generated_at": "2026-06-15T21:26:24.233944+00:00",
   "cycles_observed": 60,
   "dominant_narrative": "risk_on",
   "regime_shift": "RISK_ON",
-  "regime_shift_confidence": 0.5327,
+  "regime_shift_confidence": 0.562,
   "narratives": {
     "risk_on": {
       "label": "Risk-on sentiment returning",
@@ -18,14 +18,20 @@
         "Consumer Staples",
         "Utilities"
       ],
-      "frequency": 1,
+      "frequency": 2,
       "persistence": 60,
-      "acceleration": 0.0,
-      "score": 0.465,
+      "acceleration": 1.0,
+      "score": 0.7,
       "phrases": [
+        "all-time high",
         "buying the dip"
       ],
       "matched_articles": [
+        {
+          "ticker": "DELL",
+          "title": "Dell Technologies (DELL) Wins $10B Govt Contract, Hits All-Time High",
+          "source": "Yahoo Finance"
+        },
         {
           "ticker": "LTC-USD",
           "title": "Litecoin Whales Are Buying the Dip \u2014 Can LTC Price Reclaim $60?",
@@ -67,12 +73,20 @@
         "Technology"
       ],
       "sectors_out": [],
-      "frequency": 0,
-      "persistence": 18,
-      "acceleration": 0.0,
-      "score": 0.39,
-      "phrases": [],
-      "matched_articles": []
+      "frequency": 1,
+      "persistence": 19,
+      "acceleration": 1.0,
+      "score": 0.625,
+      "phrases": [
+        "ai boom"
+      ],
+      "matched_articles": [
+        {
+          "ticker": "GLW",
+          "title": "Corning Is Riding High on the AI Boom\u2014and Planning Ahead in Case It Goes Bust",
+          "source": "WSJ"
+        }
+      ]
     },
     "ai_cooldown": {
       "label": "AI rally cooling / stretched valuations",
@@ -169,12 +183,20 @@
         "Real Estate",
         "Utilities"
       ],
-      "frequency": 0,
-      "persistence": 0,
-      "acceleration": 0.0,
-      "score": 0.04,
-      "phrases": [],
-      "matched_articles": []
+      "frequency": 1,
+      "persistence": 1,
+      "acceleration": 1.0,
+      "score": 0.3187,
+      "phrases": [
+        "rate hike"
+      ],
+      "matched_articles": [
+        {
+          "ticker": "DHI",
+          "title": "D.R. Horton (DHI) Sees Stock Rise Amid Easing Rate Hike Expectat",
+          "source": "GuruFocus"
+        }
+      ]
     },
     "fed_dovish": {
       "label": "Fed dovish / rate-cut expectations",
@@ -206,25 +228,19 @@
     }
   },
   "sector_pressure": {
-    "Technology": 0.35,
+    "Technology": 0.5413,
     "Energy": 0.0,
     "Industrials": 0.04,
     "Health Care": 0.505,
-    "Financials": 0.04,
-    "Consumer Discretionary": 0.0,
-    "Consumer Staples": 0.0,
-    "Communication Services": 0.465,
-    "Real Estate": 0.0,
-    "Utilities": -0.04,
+    "Financials": 0.3187,
+    "Consumer Discretionary": 0.235,
+    "Consumer Staples": -0.235,
+    "Communication Services": 0.7,
+    "Real Estate": -0.2787,
+    "Utilities": -0.5537,
     "Materials": 0.0
   },
   "history": [
-    {
-      "cycle_ts": "2026-06-15T02:26:01.702418+00:00",
-      "dominant_narrative": "risk_on",
-      "regime_shift": "RISK_ON",
-      "score": 0.7
-    },
     {
       "cycle_ts": "2026-06-15T02:44:25.030649+00:00",
       "dominant_narrative": "oil_rally",
@@ -578,7 +594,13 @@
       "dominant_narrative": "risk_on",
       "regime_shift": "RISK_ON",
       "score": 0.465
+    },
+    {
+      "cycle_ts": "2026-06-15T21:26:24.233944+00:00",
+      "dominant_narrative": "risk_on",
+      "regime_shift": "RISK_ON",
+      "score": 0.7
     }
   ],
-  "headline_count": 315
+  "headline_count": 548
 }

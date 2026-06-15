@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-15T21:05:23.504217+00:00",
+  "generated_at": "2026-06-15T21:26:24.477422+00:00",
   "advisory_only": true,
   "note": "Advisory only \u2014 recommendations are NOT auto-executed in Alpha 3.0. Existing trailing-stop / momentum-exit logic still does the actual closing.",
   "summary": {
@@ -75,7 +75,7 @@
       {
         "ticker": "PNC",
         "recommendation": "HOLD",
-        "score": 0.3972,
+        "score": 0.3968,
         "rationale": "position stable \u00b7 score 0.40 @ aggression 0.50"
       },
       {
@@ -125,7 +125,7 @@
       {
         "ticker": "PNC",
         "recommendation": "HOLD",
-        "score": 0.4159,
+        "score": 0.4154,
         "rationale": "position stable \u00b7 score 0.42 @ aggression 0.50"
       },
       {
@@ -147,6 +147,12 @@
         "rationale": "position stable \u00b7 score 0.40 @ aggression 0.50"
       },
       {
+        "ticker": "MPWR",
+        "recommendation": "HOLD",
+        "score": 0.3949,
+        "rationale": "position stable \u00b7 score 0.39 @ aggression 0.50"
+      },
+      {
         "ticker": "EQIX",
         "recommendation": "HOLD",
         "score": 0.3933,
@@ -163,12 +169,6 @@
         "recommendation": "HOLD",
         "score": 0.388,
         "rationale": "flat from entry \u00b7 score 0.39 @ aggression 0.50"
-      },
-      {
-        "ticker": "MPWR",
-        "recommendation": "HOLD",
-        "score": 0.3811,
-        "rationale": "position stable \u00b7 score 0.38 @ aggression 0.50"
       },
       {
         "ticker": "FTNT",
@@ -201,8 +201,8 @@
       {
         "ticker": "PANW",
         "recommendation": "HOLD",
-        "score": 0.4085,
-        "rationale": "held 5d, +8.8% from entry, momentum decaying \u00b7 score 0.41 @ aggression 0.50"
+        "score": 0.3989,
+        "rationale": "held 5d, +9.2% from entry, momentum decaying \u00b7 score 0.40 @ aggression 0.50"
       }
     ],
     "WEAVER": [
@@ -258,7 +258,7 @@
         "ticker": "SOL-USD",
         "recommendation": "HOLD",
         "score": 0.1781,
-        "rationale": "+12.2% from entry \u00b7 score 0.18 @ aggression 0.50"
+        "rationale": "+12.0% from entry \u00b7 score 0.18 @ aggression 0.50"
       }
     ]
   },
@@ -438,19 +438,19 @@
       "owner": "HARVEST_3",
       "ticker": "PNC",
       "recommendation": "HOLD",
-      "score": 0.4159,
+      "score": 0.4154,
       "rationale": "position stable \u00b7 score 0.42 @ aggression 0.50",
       "components": {
         "age": 0.0,
-        "drift_flat": 0.8366,
-        "peak_giveback": 0.3269,
+        "drift_flat": 0.8383,
+        "peak_giveback": 0.3234,
         "decay": 0.5,
         "illiquidity": 1.0
       },
       "aggression": 0.5,
       "hold_age_days": 0.0,
-      "intraday_drift_pct": -0.0163,
-      "peak_drop_pct": -0.0163,
+      "intraday_drift_pct": -0.0162,
+      "peak_drop_pct": -0.0162,
       "advisory_only": true
     },
     {
@@ -470,25 +470,6 @@
       "hold_age_days": 0.0,
       "intraday_drift_pct": -0.0084,
       "peak_drop_pct": -0.0118,
-      "advisory_only": true
-    },
-    {
-      "owner": "VEIL",
-      "ticker": "PANW",
-      "recommendation": "HOLD",
-      "score": 0.4085,
-      "rationale": "held 5d, +8.8% from entry, momentum decaying \u00b7 score 0.41 @ aggression 0.50",
-      "components": {
-        "age": 0.7143,
-        "drift_flat": 0.1164,
-        "peak_giveback": 0.0,
-        "decay": 1.0,
-        "illiquidity": 0.3021
-      },
-      "aggression": 0.5,
-      "hold_age_days": 5.0,
-      "intraday_drift_pct": 0.0884,
-      "peak_drop_pct": 0.014,
       "advisory_only": true
     },
     {
@@ -530,6 +511,25 @@
       "advisory_only": true
     },
     {
+      "owner": "VEIL",
+      "ticker": "PANW",
+      "recommendation": "HOLD",
+      "score": 0.3989,
+      "rationale": "held 5d, +9.2% from entry, momentum decaying \u00b7 score 0.40 @ aggression 0.50",
+      "components": {
+        "age": 0.7143,
+        "drift_flat": 0.078,
+        "peak_giveback": 0.0,
+        "decay": 1.0,
+        "illiquidity": 0.3021
+      },
+      "aggression": 0.5,
+      "hold_age_days": 5.0,
+      "intraday_drift_pct": 0.0922,
+      "peak_drop_pct": 0.0176,
+      "advisory_only": true
+    },
+    {
       "owner": "HARVEST_3",
       "ticker": "EXR",
       "recommendation": "HOLD",
@@ -552,19 +552,38 @@
       "owner": "LEGACY",
       "ticker": "PNC",
       "recommendation": "HOLD",
-      "score": 0.3972,
+      "score": 0.3968,
       "rationale": "position stable \u00b7 score 0.40 @ aggression 0.50",
       "components": {
         "age": 0.0,
-        "drift_flat": 0.911,
-        "peak_giveback": 0.178,
+        "drift_flat": 0.9127,
+        "peak_giveback": 0.1746,
         "decay": 0.5,
         "illiquidity": 1.0
       },
       "aggression": 0.5,
       "hold_age_days": 0.0,
-      "intraday_drift_pct": -0.0089,
-      "peak_drop_pct": -0.0089,
+      "intraday_drift_pct": -0.0087,
+      "peak_drop_pct": -0.0087,
+      "advisory_only": true
+    },
+    {
+      "owner": "HARVEST_3",
+      "ticker": "MPWR",
+      "recommendation": "HOLD",
+      "score": 0.3949,
+      "rationale": "position stable \u00b7 score 0.39 @ aggression 0.50",
+      "components": {
+        "age": 0.0,
+        "drift_flat": 0.9356,
+        "peak_giveback": 0.1439,
+        "decay": 0.5,
+        "illiquidity": 1.0
+      },
+      "aggression": 0.5,
+      "hold_age_days": 0.0,
+      "intraday_drift_pct": 0.0064,
+      "peak_drop_pct": -0.0072,
       "advisory_only": true
     },
     {
@@ -679,25 +698,6 @@
       "hold_age_days": 0.0,
       "intraday_drift_pct": -0.0035,
       "peak_drop_pct": -0.004,
-      "advisory_only": true
-    },
-    {
-      "owner": "HARVEST_3",
-      "ticker": "MPWR",
-      "recommendation": "HOLD",
-      "score": 0.3811,
-      "rationale": "position stable \u00b7 score 0.38 @ aggression 0.50",
-      "components": {
-        "age": 0.0,
-        "drift_flat": 0.9356,
-        "peak_giveback": 0.0887,
-        "decay": 0.5,
-        "illiquidity": 1.0
-      },
-      "aggression": 0.5,
-      "hold_age_days": 0.0,
-      "intraday_drift_pct": 0.0064,
-      "peak_drop_pct": -0.0044,
       "advisory_only": true
     },
     {
@@ -933,7 +933,7 @@
       "ticker": "SOL-USD",
       "recommendation": "HOLD",
       "score": 0.1781,
-      "rationale": "+12.2% from entry \u00b7 score 0.18 @ aggression 0.50",
+      "rationale": "+12.0% from entry \u00b7 score 0.18 @ aggression 0.50",
       "components": {
         "age": 0.2857,
         "drift_flat": 0.0,
@@ -943,8 +943,8 @@
       },
       "aggression": 0.5,
       "hold_age_days": 2.0,
-      "intraday_drift_pct": 0.1221,
-      "peak_drop_pct": 0.0512,
+      "intraday_drift_pct": 0.1203,
+      "peak_drop_pct": 0.0495,
       "advisory_only": true
     }
   ]
