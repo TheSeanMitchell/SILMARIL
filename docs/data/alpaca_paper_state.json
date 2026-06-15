@@ -2,64 +2,20 @@
   "version": "2.2",
   "enabled": true,
   "account": {
-    "equity": 9608.88,
+    "equity": 9633.28,
     "cash": 5703.2
   },
   "principal_target": 10000.0,
-  "savings": 98.36,
-  "lifetime_realized_wins": 37,
+  "savings": 135.81681025349727,
+  "lifetime_realized_wins": 39,
   "lifetime_realized_losses": 19,
   "position_meta": {
-    "UNP": {
-      "entry_price": 269.83602,
-      "peak_price": 273.72,
-      "first_seen": "2026-06-11T19:34:55.273060+00:00",
-      "qty": 3.581294738,
-      "snapshots_30m": [
-        {
-          "ts": "2026-06-15T08:26:19.643230+00:00",
-          "price": 272.7
-        },
-        {
-          "ts": "2026-06-15T09:05:44.453518+00:00",
-          "price": 272.7
-        },
-        {
-          "ts": "2026-06-15T09:44:57.353653+00:00",
-          "price": 272.7
-        },
-        {
-          "ts": "2026-06-15T10:26:06.041243+00:00",
-          "price": 272.7
-        },
-        {
-          "ts": "2026-06-15T11:05:32.117839+00:00",
-          "price": 272.99
-        },
-        {
-          "ts": "2026-06-15T11:44:28.726253+00:00",
-          "price": 272.99
-        },
-        {
-          "ts": "2026-06-15T12:25:50.430533+00:00",
-          "price": 272.99
-        },
-        {
-          "ts": "2026-06-15T13:07:08.324279+00:00",
-          "price": 273.0
-        }
-      ]
-    },
     "MDLZ": {
       "entry_price": 62.68,
       "peak_price": 63.04,
       "first_seen": "2026-06-12T14:26:13.732701+00:00",
       "qty": 7.93696,
       "snapshots_30m": [
-        {
-          "ts": "2026-06-15T08:26:19.641007+00:00",
-          "price": 62.69
-        },
         {
           "ts": "2026-06-15T09:05:44.453268+00:00",
           "price": 62.69
@@ -87,6 +43,10 @@
         {
           "ts": "2026-06-15T13:07:08.322170+00:00",
           "price": 62.75
+        },
+        {
+          "ts": "2026-06-15T13:40:19.921875+00:00",
+          "price": 62.4
         }
       ]
     },
@@ -179,51 +139,19 @@
       },
       "tightened_stop_pct": 0.025,
       "tightened_stop_set_at": "2026-06-15T09:26:11.814152+00:00"
-    },
-    "ALGN": {
-      "entry_price": 175.03,
-      "peak_price": 175.25,
-      "first_seen": "2026-06-12T18:46:03.524318+00:00",
-      "qty": 4.833247378,
-      "snapshots_30m": [
-        {
-          "ts": "2026-06-15T08:44:33.677062+00:00",
-          "price": 174.84
-        },
-        {
-          "ts": "2026-06-15T09:26:13.357392+00:00",
-          "price": 174.84
-        },
-        {
-          "ts": "2026-06-15T10:05:15.238939+00:00",
-          "price": 174.84
-        },
-        {
-          "ts": "2026-06-15T10:44:27.409968+00:00",
-          "price": 174.84
-        },
-        {
-          "ts": "2026-06-15T11:26:06.118949+00:00",
-          "price": 172.3143
-        },
-        {
-          "ts": "2026-06-15T12:04:36.085772+00:00",
-          "price": 172.3143
-        },
-        {
-          "ts": "2026-06-15T12:46:56.119340+00:00",
-          "price": 172.3143
-        },
-        {
-          "ts": "2026-06-15T13:27:43.955783+00:00",
-          "price": 172.3143
-        }
-      ]
     }
   },
-  "tickers_traded_this_cycle": [],
+  "tickers_traded_this_cycle": [
+    "ALGN",
+    "UNP",
+    "MPWR",
+    "SGOV"
+  ],
   "recent_alpaca_tickers": [
-    "MPWR"
+    "MPWR",
+    "ALGN",
+    "UNP",
+    "SGOV"
   ],
   "orders": [
     {
@@ -4201,9 +4129,122 @@
       "time": "2026-06-15T09:26:11.814161+00:00",
       "timestamp": "2026-06-15T09:26:11.814164+00:00",
       "submitted": false
+    },
+    {
+      "action": "SCALE_IN",
+      "symbol": "MPWR",
+      "side": "buy",
+      "qty": 0.0811,
+      "directive": "SCALE_IN",
+      "trigger_reason": "healthy winner (3.9%, momentum 0.57); add 20% size",
+      "rationale": "healthy winner (3.9%, momentum 0.57); add 20% size",
+      "order_id": "ba5e172d-6340-42d5-a0b4-59231b89850f",
+      "time": "2026-06-15T13:40:17.991315+00:00",
+      "timestamp": "2026-06-15T13:40:17.991329+00:00",
+      "submitted": true,
+      "session": "regular",
+      "is_extended": false
+    },
+    {
+      "action": "CLOSE",
+      "symbol": "ALGN",
+      "side": "sell",
+      "qty": 4.833247378,
+      "trigger_reason": "GROCERY HARVEST (MINI): ALGN +4.05% \u2014 sweeping $13.69",
+      "realized_pnl": 34.22,
+      "entry_price": 175.03,
+      "exit_price": 182.11,
+      "order_id": "eb5a552c-307a-4bcb-b203-af7cf27edf2c",
+      "time": "2026-06-15T13:40:19.919767+00:00",
+      "timestamp": "2026-06-15T13:40:19.919770+00:00",
+      "session": "regular",
+      "is_extended": false
+    },
+    {
+      "action": "CLOSE",
+      "symbol": "UNP",
+      "side": "sell",
+      "qty": 3.581294738,
+      "trigger_reason": "GIVEBACK GUARD: UNP was +1.44% at peak, faded to +0.34% \u2014 banking the rest before it goes red",
+      "realized_pnl": 3.24,
+      "entry_price": 269.83602,
+      "exit_price": 270.74,
+      "order_id": "f1a361c4-a38f-4836-b503-20e46a2a0316",
+      "time": "2026-06-15T13:40:20.152127+00:00",
+      "timestamp": "2026-06-15T13:40:20.152130+00:00",
+      "session": "regular",
+      "is_extended": false
+    },
+    {
+      "action": "REDEPLOY_FROM_SGOV",
+      "symbol": "SGOV",
+      "side": "sell",
+      "qty": 0.9784,
+      "notional": 98.36,
+      "trigger_reason": "deployment_floor demands redeploy: equity below base by $98.36",
+      "order_id": "4e294f33-11e8-4a9b-998a-0ec87d25f1c8",
+      "time": "2026-06-15T13:40:22.900333+00:00",
+      "timestamp": "2026-06-15T13:40:22.900347+00:00"
     }
   ],
-  "orders_placed": [],
+  "orders_placed": [
+    {
+      "action": "SCALE_IN",
+      "symbol": "MPWR",
+      "side": "buy",
+      "qty": 0.0811,
+      "directive": "SCALE_IN",
+      "trigger_reason": "healthy winner (3.9%, momentum 0.57); add 20% size",
+      "rationale": "healthy winner (3.9%, momentum 0.57); add 20% size",
+      "order_id": "ba5e172d-6340-42d5-a0b4-59231b89850f",
+      "time": "2026-06-15T13:40:17.991315+00:00",
+      "timestamp": "2026-06-15T13:40:17.991329+00:00",
+      "submitted": true,
+      "session": "regular",
+      "is_extended": false
+    },
+    {
+      "action": "CLOSE",
+      "symbol": "ALGN",
+      "side": "sell",
+      "qty": 4.833247378,
+      "trigger_reason": "GROCERY HARVEST (MINI): ALGN +4.05% \u2014 sweeping $13.69",
+      "realized_pnl": 34.22,
+      "entry_price": 175.03,
+      "exit_price": 182.11,
+      "order_id": "eb5a552c-307a-4bcb-b203-af7cf27edf2c",
+      "time": "2026-06-15T13:40:19.919767+00:00",
+      "timestamp": "2026-06-15T13:40:19.919770+00:00",
+      "session": "regular",
+      "is_extended": false
+    },
+    {
+      "action": "CLOSE",
+      "symbol": "UNP",
+      "side": "sell",
+      "qty": 3.581294738,
+      "trigger_reason": "GIVEBACK GUARD: UNP was +1.44% at peak, faded to +0.34% \u2014 banking the rest before it goes red",
+      "realized_pnl": 3.24,
+      "entry_price": 269.83602,
+      "exit_price": 270.74,
+      "order_id": "f1a361c4-a38f-4836-b503-20e46a2a0316",
+      "time": "2026-06-15T13:40:20.152127+00:00",
+      "timestamp": "2026-06-15T13:40:20.152130+00:00",
+      "session": "regular",
+      "is_extended": false
+    },
+    {
+      "action": "REDEPLOY_FROM_SGOV",
+      "symbol": "SGOV",
+      "side": "sell",
+      "qty": 0.9784,
+      "notional": 98.36,
+      "trigger_reason": "deployment_floor demands redeploy: equity below base by $98.36",
+      "order_id": "4e294f33-11e8-4a9b-998a-0ec87d25f1c8",
+      "time": "2026-06-15T13:40:22.900333+00:00",
+      "timestamp": "2026-06-15T13:40:22.900347+00:00"
+    }
+  ],
   "errors": [
     {
       "time": "2026-06-02T22:37:58.484205+00:00",
@@ -4307,36 +4348,41 @@
     }
   ],
   "last_cycle_summary": {
-    "time": "2026-06-15T13:27:44.213224+00:00",
-    "timestamp": "2026-06-15T13:27:44.213236+00:00",
-    "closed": 0,
+    "time": "2026-06-15T13:40:23.141047+00:00",
+    "timestamp": "2026-06-15T13:40:23.141060+00:00",
+    "closed": 2,
     "opened": 0,
     "open_after": 6,
-    "equity": 9608.88,
-    "savings": 98.36,
-    "total_value": 9707.24,
-    "tickers_traded": [],
+    "equity": 9633.28,
+    "savings": 135.82,
+    "total_value": 9769.1,
+    "tickers_traded": [
+      "ALGN",
+      "UNP",
+      "MPWR",
+      "SGOV"
+    ],
     "bleed_exits_count": 0,
     "bleed_exits": [],
     "sgov_sweep_cap_applied": true,
     "sgov_sweep_cap_detail": {
-      "time": "2026-06-12T19:46:33.620060+00:00",
-      "intended": 10.21,
+      "time": "2026-06-15T13:40:22.374017+00:00",
+      "intended": 37.46,
       "actual": 0.0,
-      "trimmed": 10.21,
-      "cash_at_check": 1845.59,
+      "trimmed": 37.46,
+      "cash_at_check": 5568.81,
       "reason": "contract forbids sweep this cycle (max=$0)",
       "contract_max": 0.0
     },
-    "directives_consumed": 0,
+    "directives_consumed": 1,
     "rotations_executed": 0,
     "composite_halt": false,
-    "session": "pre-market",
-    "is_extended": true
+    "session": "regular",
+    "is_extended": false
   },
-  "last_run": "2026-06-15T13:27:44.213527+00:00",
-  "grocery_pending_harvest": 2707.5807999999965,
-  "trading_capital": 9510.52,
+  "last_run": "2026-06-15T13:40:23.141458+00:00",
+  "grocery_pending_harvest": 2721.2685999999967,
+  "trading_capital": 9534.92,
   "realized_savings": 98.36,
   "account_id": "LEGACY",
   "genesis_at": "2026-05-11T05:08:46.083334+00:00",
@@ -4345,17 +4391,17 @@
       {
         "symbol": "SGOV",
         "qty": 0.978445,
-        "market_value": 98.3582,
+        "market_value": 98.3564,
         "avg_entry_price": 100.5297,
-        "current_price": 100.525,
-        "unrealized_pl": -0.0046
+        "current_price": 100.5232,
+        "unrealized_pl": -0.0064
       }
     ],
-    "total_market_value": 98.3582,
+    "total_market_value": 98.3564,
     "primary_symbol": "SGOV",
     "primary_qty": 0.978445,
-    "primary_market_value": 98.3582,
-    "checked_at": "2026-06-15T13:27:43.950935+00:00"
+    "primary_market_value": 98.3564,
+    "checked_at": "2026-06-15T13:40:17.756488+00:00"
   },
   "sgov_sweep_last_cycle": {
     "attempted": false,
@@ -4394,11 +4440,13 @@
     "36e28ab542e6",
     "97fadc89c13a",
     "9cbd1c0f2fe0",
-    "e5be0dec18d9"
+    "e5be0dec18d9",
+    "0a8f0227196a",
+    "4b60e9880da4"
   ],
   "sweep_protection": {
     "version": "4.0",
-    "checked_at": "2026-06-15T13:27:45.993520+00:00",
+    "checked_at": "2026-06-15T13:40:25.132532+00:00",
     "market_mode": "ATTACK",
     "force_sweep_floor_resolved": 10500.0,
     "stale_close_age_days": 5,
@@ -4441,11 +4489,11 @@
   },
   "bleed_exits_this_cycle": [],
   "sgov_sweep_cap_applied": {
-    "time": "2026-06-12T19:46:33.620060+00:00",
-    "intended": 10.21,
+    "time": "2026-06-15T13:40:22.374017+00:00",
+    "intended": 37.46,
     "actual": 0.0,
-    "trimmed": 10.21,
-    "cash_at_check": 1845.59,
+    "trimmed": 37.46,
+    "cash_at_check": 5568.81,
     "reason": "contract forbids sweep this cycle (max=$0)",
     "contract_max": 0.0
   },
@@ -4454,13 +4502,13 @@
       "symbol": "ALGN",
       "ticker": "ALGN",
       "qty": 4.833247378,
-      "current_price": 172.3143,
+      "current_price": 182.11,
       "avg_entry_price": 175.03,
-      "peak_price": 175.25,
-      "market_value": 832.84,
-      "unrealized_pl": -13.13,
-      "unrealized_plpc": -0.0155,
-      "first_seen": "2026-06-12T18:46:03.524318+00:00",
+      "peak_price": 182.11,
+      "market_value": 880.18,
+      "unrealized_pl": 34.22,
+      "unrealized_plpc": 0.0405,
+      "first_seen": "",
       "scale_out_history": {},
       "stop_at_break_even": false,
       "tightened_stop_pct": null
@@ -4469,12 +4517,12 @@
       "symbol": "MDLZ",
       "ticker": "MDLZ",
       "qty": 7.93696,
-      "current_price": 62.98,
+      "current_price": 62.39,
       "avg_entry_price": 62.68,
       "peak_price": 63.04,
-      "market_value": 499.87,
-      "unrealized_pl": 2.38,
-      "unrealized_plpc": 0.0048,
+      "market_value": 495.19,
+      "unrealized_pl": -2.3,
+      "unrealized_plpc": -0.0046,
       "first_seen": "2026-06-12T14:26:13.732701+00:00",
       "scale_out_history": {},
       "stop_at_break_even": false,
@@ -4483,13 +4531,13 @@
     {
       "symbol": "MPWR",
       "ticker": "MPWR",
-      "qty": 0.405357634,
-      "current_price": 1646.01,
-      "avg_entry_price": 1584.126,
+      "qty": 0.486457634,
+      "current_price": 1651.85,
+      "avg_entry_price": 1596.299228,
       "peak_price": 1665.0,
-      "market_value": 667.22,
-      "unrealized_pl": 25.09,
-      "unrealized_plpc": 0.0391,
+      "market_value": 803.56,
+      "unrealized_pl": 27.02,
+      "unrealized_plpc": 0.0348,
       "first_seen": "2026-06-12T16:06:41.553127+00:00",
       "scale_out_history": {
         "scale_out_3": {
@@ -4504,12 +4552,12 @@
       "symbol": "NUE",
       "ticker": "NUE",
       "qty": 3.050460254,
-      "current_price": 271.99,
+      "current_price": 267.68,
       "avg_entry_price": 268.21,
       "peak_price": 272.0,
-      "market_value": 829.69,
-      "unrealized_pl": 11.53,
-      "unrealized_plpc": 0.0141,
+      "market_value": 816.55,
+      "unrealized_pl": -1.62,
+      "unrealized_plpc": -0.002,
       "first_seen": "2026-06-12T15:27:01.890044+00:00",
       "scale_out_history": {},
       "stop_at_break_even": false,
@@ -4519,19 +4567,19 @@
       "symbol": "UNP",
       "ticker": "UNP",
       "qty": 3.581294738,
-      "current_price": 273.0,
+      "current_price": 270.93,
       "avg_entry_price": 269.83602,
-      "peak_price": 273.72,
-      "market_value": 977.69,
-      "unrealized_pl": 11.33,
-      "unrealized_plpc": 0.0117,
-      "first_seen": "2026-06-11T19:34:55.273060+00:00",
+      "peak_price": 270.93,
+      "market_value": 970.28,
+      "unrealized_pl": 3.92,
+      "unrealized_plpc": 0.0041,
+      "first_seen": "",
       "scale_out_history": {},
       "stop_at_break_even": false,
       "tightened_stop_pct": null
     }
   ],
-  "market_session_open": false,
+  "market_session_open": true,
   "meta_pruned_last_cycle": {
     "count": 1,
     "at": "2026-06-12T22:44:01.579305+00:00",
@@ -4667,35 +4715,14 @@
     "open_seen": 1
   },
   "cycle_intents": {
-    "at": "2026-06-15T13:27:44.213261+00:00",
-    "session": "pre-market",
-    "session_open": false,
+    "at": "2026-06-15T13:40:23.141082+00:00",
+    "session": "regular",
+    "session_open": true,
     "composite_halt": false,
     "halt_reason": null,
-    "plans_offered": 1,
-    "buy_intents": [
-      {
-        "ticker": "TON-USD",
-        "signal": "BUY",
-        "conviction": 0.7519,
-        "originated": false,
-        "outcome": "blocked_not_equity_mission",
-        "intended_notional": 760.84,
-        "reason": "TON-USD is not a traditional equity \u2014 valuables trade in their own zone, never this account"
-      }
-    ],
-    "decisions_this_cycle": [
-      {
-        "ticker": "TON-USD",
-        "category": "blocked_not_equity_mission",
-        "reason": "TON-USD is not a traditional equity \u2014 valuables trade in their own zone, never this account"
-      },
-      {
-        "ticker": "TON-USD",
-        "category": "blocked_signal_not_sell",
-        "reason": "signal BUY is not SELL/STRONG_SELL"
-      }
-    ]
+    "plans_offered": 0,
+    "buy_intents": [],
+    "decisions_this_cycle": []
   },
   "stale_orders_cancelled": [
     {

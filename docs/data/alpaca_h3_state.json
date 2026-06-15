@@ -5135,7 +5135,7 @@
         "qty": 7.8e-05,
         "market_value": 0.0079,
         "avg_entry_price": 100.4887,
-        "current_price": 100.525,
+        "current_price": 100.52,
         "unrealized_pl": 0.0
       }
     ],
@@ -5143,14 +5143,14 @@
     "primary_symbol": "SGOV",
     "primary_qty": 7.8e-05,
     "primary_market_value": 0.0079,
-    "checked_at": "2026-06-15T13:27:44.888926+00:00"
+    "checked_at": "2026-06-15T13:40:24.020302+00:00"
   },
   "reason": "Live \u2014 configured; last run 2026-06-09T09:17:05",
   "seeded_at": "2026-05-11T05:00:26.087481+00:00",
   "genesis_at": "2026-05-11T05:08:52.354920+00:00",
   "last_cycle_summary": {
-    "time": "2026-06-15T13:27:45.110252+00:00",
-    "timestamp": "2026-06-15T13:27:45.110267+00:00",
+    "time": "2026-06-15T13:40:24.248291+00:00",
+    "timestamp": "2026-06-15T13:40:24.248309+00:00",
     "closed": 0,
     "opened": 0,
     "open_after": 1,
@@ -5173,13 +5173,13 @@
     "directives_consumed": 0,
     "rotations_executed": 0,
     "composite_halt": false,
-    "session": "pre-market",
-    "is_extended": true
+    "session": "regular",
+    "is_extended": false
   },
-  "last_run": "2026-06-15T13:27:45.110566+00:00",
+  "last_run": "2026-06-15T13:40:24.248503+00:00",
   "sweep_protection": {
     "version": "4.0",
-    "checked_at": "2026-06-15T13:27:46.406639+00:00",
+    "checked_at": "2026-06-15T13:40:25.566097+00:00",
     "market_mode": "ATTACK",
     "force_sweep_floor_resolved": 10500.0,
     "stale_close_age_days": 5,
@@ -5573,7 +5573,7 @@
     "cancelled": 3,
     "open_seen": 3
   },
-  "market_session_open": false,
+  "market_session_open": true,
   "meta_pruned_last_cycle": {
     "count": 5,
     "at": "2026-06-12T20:06:39.731364+00:00",
@@ -5634,50 +5634,50 @@
     }
   ],
   "cycle_intents": {
-    "at": "2026-06-15T13:27:45.110298+00:00",
-    "session": "pre-market",
-    "session_open": false,
+    "at": "2026-06-15T13:40:24.248349+00:00",
+    "session": "regular",
+    "session_open": true,
     "composite_halt": false,
     "halt_reason": null,
     "plans_offered": 2,
     "buy_intents": [
       {
-        "ticker": "FRT",
+        "ticker": "YUM",
         "signal": "BUY",
-        "conviction": 0.6441,
+        "conviction": 0.8339,
         "originated": false,
-        "outcome": "deferred_submit_market_closed",
+        "outcome": "deferred_order_quality",
         "intended_notional": 958.79,
-        "reason": "submission deferred by market-closed gate (will retry during regular hours)"
+        "reason": "DEFER: liquidity 5% < 10% of 30d avg \u2014 illiquid \u00b7 now is YUM's typical daily-LOW window (09:30 ET) \u2014 historically favorable entry"
       },
       {
-        "ticker": "MU",
+        "ticker": "HLT",
         "signal": "BUY",
-        "conviction": 0.7302,
+        "conviction": 0.5489,
         "originated": false,
-        "outcome": "blocked_no_session_match",
+        "outcome": "deferred_order_quality",
         "intended_notional": 958.79,
-        "reason": "no usable session for order"
+        "reason": "DEFER: liquidity 2% < 10% of 30d avg \u2014 illiquid \u00b7 resting toward HLT's ~336.49 floor (his low window is 12:30 ET) \u2014 limit 150bps below"
       }
     ],
     "decisions_this_cycle": [
       {
-        "ticker": "FRT",
-        "category": "deferred_submit_market_closed",
-        "reason": "submission deferred by market-closed gate (will retry during regular hours)"
+        "ticker": "YUM",
+        "category": "deferred_order_quality",
+        "reason": "DEFER: liquidity 5% < 10% of 30d avg \u2014 illiquid \u00b7 now is YUM's typical daily-LOW window (09:30 ET) \u2014 historically favorable entry"
       },
       {
-        "ticker": "MU",
-        "category": "blocked_no_session_match",
-        "reason": "no usable session for order"
+        "ticker": "HLT",
+        "category": "deferred_order_quality",
+        "reason": "DEFER: liquidity 2% < 10% of 30d avg \u2014 illiquid \u00b7 resting toward HLT's ~336.49 floor (his low window is 12:30 ET) \u2014 limit 150bps below"
       },
       {
-        "ticker": "FRT",
+        "ticker": "YUM",
         "category": "blocked_signal_not_sell",
         "reason": "signal BUY is not SELL/STRONG_SELL"
       },
       {
-        "ticker": "MU",
+        "ticker": "HLT",
         "category": "blocked_signal_not_sell",
         "reason": "signal BUY is not SELL/STRONG_SELL"
       }

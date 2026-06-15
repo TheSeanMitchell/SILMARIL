@@ -1,21 +1,21 @@
 {
   "version": "6.0",
-  "proposed_at": "2026-06-15T13:27:47.365132+00:00",
+  "proposed_at": "2026-06-15T13:40:26.629322+00:00",
   "status": "PENDING_REVIEW",
   "lineage": {
     "parent_a": {
       "codename": "AEGIS",
       "level": 11,
-      "win_rate": 0.7975,
-      "lifetime_calls": 14436
+      "win_rate": 0.7833,
+      "lifetime_calls": 14843
     },
     "parent_b": {
       "codename": "KESTREL+",
       "level": 10,
-      "win_rate": 0.8285,
-      "lifetime_calls": 6250
+      "win_rate": 0.8171,
+      "lifetime_calls": 6379
     },
-    "compatibility_score": 0.6268,
+    "compatibility_score": 0.6201,
     "compatibility_reasons": [
       "similar caliber"
     ]
@@ -34,7 +34,7 @@
       "archetypes": {}
     },
     "starting_capital": 10000.0,
-    "rationale": "PARENT_A=AEGIS(L11,80%) \u00d7 PARENT_B=KESTREL+(L10,83%) \u2014 similar caliber; compatibility=0.63"
+    "rationale": "PARENT_A=AEGIS(L11,78%) \u00d7 PARENT_B=KESTREL+(L10,82%) \u2014 similar caliber; compatibility=0.62"
   },
   "next_steps": "Review the offspring spec. If approved, scaffold the agent at silmaril/agents/phoenix.py inheriting from Agent base, applying the inherited_lifts inside _judge(). Then add it to silmaril/senate/candidates.py CANDIDATE_REGISTRY."
 }

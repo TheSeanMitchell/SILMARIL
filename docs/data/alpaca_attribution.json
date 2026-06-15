@@ -2,85 +2,96 @@
   "latest": {
     "tagged_orders": [
       {
-        "action": "STOP_ADJUST",
+        "action": "SCALE_IN",
         "symbol": "MPWR",
-        "directive": "TIGHTEN_STOP",
-        "new_stop_pct": 0.025,
-        "trigger_reason": "+5% reached; tighten trailing stop to 2.5% below peak",
-        "rationale": "+5% reached; tighten trailing stop to 2.5% below peak",
-        "time": "2026-06-15T09:26:11.814161+00:00",
-        "timestamp": "2026-06-15T09:26:11.814164+00:00",
-        "submitted": false,
+        "side": "buy",
+        "qty": 0.0811,
+        "directive": "SCALE_IN",
+        "trigger_reason": "healthy winner (3.9%, momentum 0.57); add 20% size",
+        "rationale": "healthy winner (3.9%, momentum 0.57); add 20% size",
+        "order_id": "ba5e172d-6340-42d5-a0b4-59231b89850f",
+        "time": "2026-06-15T13:40:17.991315+00:00",
+        "timestamp": "2026-06-15T13:40:17.991329+00:00",
+        "submitted": true,
+        "session": "regular",
+        "is_extended": false,
         "driving_agents": [
           "AEGIS",
           "ZENITH",
-          "WEAVER",
           "SYNTH",
           "SPECK",
           "FABLEBOY_5"
         ],
-        "attributed_at": "2026-06-15T09:26:14.424563+00:00"
+        "attributed_at": "2026-06-15T13:40:26.706810+00:00"
+      },
+      {
+        "action": "CLOSE",
+        "symbol": "ALGN",
+        "side": "sell",
+        "qty": 4.833247378,
+        "trigger_reason": "GROCERY HARVEST (MINI): ALGN +4.05% \u2014 sweeping $13.69",
+        "realized_pnl": 34.22,
+        "entry_price": 175.03,
+        "exit_price": 182.11,
+        "order_id": "eb5a552c-307a-4bcb-b203-af7cf27edf2c",
+        "time": "2026-06-15T13:40:19.919767+00:00",
+        "timestamp": "2026-06-15T13:40:19.919770+00:00",
+        "session": "regular",
+        "is_extended": false,
+        "driving_agents": [
+          "SPECK",
+          "FABLEBOY_5"
+        ],
+        "attributed_at": "2026-06-15T13:40:26.706822+00:00"
+      },
+      {
+        "action": "CLOSE",
+        "symbol": "UNP",
+        "side": "sell",
+        "qty": 3.581294738,
+        "trigger_reason": "GIVEBACK GUARD: UNP was +1.44% at peak, faded to +0.34% \u2014 banking the rest before it goes red",
+        "realized_pnl": 3.24,
+        "entry_price": 269.83602,
+        "exit_price": 270.74,
+        "order_id": "f1a361c4-a38f-4836-b503-20e46a2a0316",
+        "time": "2026-06-15T13:40:20.152127+00:00",
+        "timestamp": "2026-06-15T13:40:20.152130+00:00",
+        "session": "regular",
+        "is_extended": false,
+        "driving_agents": [
+          "ZENITH",
+          "WEAVER"
+        ],
+        "attributed_at": "2026-06-15T13:40:26.706826+00:00"
+      },
+      {
+        "action": "REDEPLOY_FROM_SGOV",
+        "symbol": "SGOV",
+        "side": "sell",
+        "qty": 0.9784,
+        "notional": 98.36,
+        "trigger_reason": "deployment_floor demands redeploy: equity below base by $98.36",
+        "order_id": "4e294f33-11e8-4a9b-998a-0ec87d25f1c8",
+        "time": "2026-06-15T13:40:22.900333+00:00",
+        "timestamp": "2026-06-15T13:40:22.900347+00:00",
+        "driving_agents": [
+          "CONSENSUS"
+        ],
+        "attributed_at": "2026-06-15T13:40:26.706830+00:00"
       }
     ],
     "gold": [],
     "orphans": [],
     "phantoms": [
-      "MPWR"
+      "ALGN",
+      "MPWR",
+      "SGOV",
+      "UNP"
     ],
-    "order_count": 1,
-    "generated_at": "2026-06-15T09:26:14.424576+00:00"
+    "order_count": 4,
+    "generated_at": "2026-06-15T13:40:26.706837+00:00"
   },
   "history": [
-    {
-      "tagged_orders": [
-        {
-          "action": "OPEN",
-          "symbol": "DD",
-          "side": "buy",
-          "notional": 866.76,
-          "conviction": 1.0274,
-          "signal": "BUY",
-          "order_id": "5ff29ff8-e855-4dc9-a39c-b4d1e4b1644b",
-          "elite": false,
-          "sizing_rationale": "base $695.28 \u00d7 conv 1.40 \u00d7 urg 0.89 \u00d7 mkt 1.00 \u00d7 elite 1.00 \u00d7 pressure 1.00 \u00d7 vol 1.00 \u00d7 concentration 1.00 \u00d7 catalyst 1.00 \u00d7 urgency_boost 1.00 \u2192 $866.76",
-          "time": "2026-05-18T16:28:14.301266+00:00",
-          "timestamp": "2026-05-18T16:28:14.301274+00:00",
-          "driving_agents": [
-            "OBSIDIAN",
-            "ZENITH"
-          ],
-          "attributed_at": "2026-05-18T16:28:17.793256+00:00"
-        },
-        {
-          "action": "OPEN",
-          "symbol": "MRVL",
-          "side": "buy",
-          "notional": 332.34,
-          "conviction": 0.8009,
-          "signal": "BUY",
-          "order_id": "640d8fc4-8233-423e-b2a9-47bed6d4095c",
-          "elite": false,
-          "sizing_rationale": "base $695.28 \u00d7 conv 1.32 \u00d7 urg 0.85 \u00d7 mkt 1.00 \u00d7 elite 1.00 \u00d7 pressure 1.00 \u00d7 vol 0.65 \u00d7 concentration 0.65 \u00d7 catalyst 1.00 \u00d7 urgency_boost 1.00 \u2192 $332.34",
-          "time": "2026-05-18T16:28:14.397728+00:00",
-          "timestamp": "2026-05-18T16:28:14.397738+00:00",
-          "driving_agents": [
-            "AEGIS",
-            "ZENITH",
-            "SYNTH",
-            "SPECK"
-          ],
-          "attributed_at": "2026-05-18T16:28:17.793265+00:00"
-        }
-      ],
-      "gold": [],
-      "orphans": [],
-      "phantoms": [
-        "DD",
-        "MRVL"
-      ],
-      "order_count": 2,
-      "generated_at": "2026-05-18T16:28:17.793272+00:00"
-    },
     {
       "tagged_orders": [
         {
@@ -4307,7 +4318,99 @@
       ],
       "order_count": 1,
       "generated_at": "2026-06-15T09:26:14.424576+00:00"
+    },
+    {
+      "tagged_orders": [
+        {
+          "action": "SCALE_IN",
+          "symbol": "MPWR",
+          "side": "buy",
+          "qty": 0.0811,
+          "directive": "SCALE_IN",
+          "trigger_reason": "healthy winner (3.9%, momentum 0.57); add 20% size",
+          "rationale": "healthy winner (3.9%, momentum 0.57); add 20% size",
+          "order_id": "ba5e172d-6340-42d5-a0b4-59231b89850f",
+          "time": "2026-06-15T13:40:17.991315+00:00",
+          "timestamp": "2026-06-15T13:40:17.991329+00:00",
+          "submitted": true,
+          "session": "regular",
+          "is_extended": false,
+          "driving_agents": [
+            "AEGIS",
+            "ZENITH",
+            "SYNTH",
+            "SPECK",
+            "FABLEBOY_5"
+          ],
+          "attributed_at": "2026-06-15T13:40:26.706810+00:00"
+        },
+        {
+          "action": "CLOSE",
+          "symbol": "ALGN",
+          "side": "sell",
+          "qty": 4.833247378,
+          "trigger_reason": "GROCERY HARVEST (MINI): ALGN +4.05% \u2014 sweeping $13.69",
+          "realized_pnl": 34.22,
+          "entry_price": 175.03,
+          "exit_price": 182.11,
+          "order_id": "eb5a552c-307a-4bcb-b203-af7cf27edf2c",
+          "time": "2026-06-15T13:40:19.919767+00:00",
+          "timestamp": "2026-06-15T13:40:19.919770+00:00",
+          "session": "regular",
+          "is_extended": false,
+          "driving_agents": [
+            "SPECK",
+            "FABLEBOY_5"
+          ],
+          "attributed_at": "2026-06-15T13:40:26.706822+00:00"
+        },
+        {
+          "action": "CLOSE",
+          "symbol": "UNP",
+          "side": "sell",
+          "qty": 3.581294738,
+          "trigger_reason": "GIVEBACK GUARD: UNP was +1.44% at peak, faded to +0.34% \u2014 banking the rest before it goes red",
+          "realized_pnl": 3.24,
+          "entry_price": 269.83602,
+          "exit_price": 270.74,
+          "order_id": "f1a361c4-a38f-4836-b503-20e46a2a0316",
+          "time": "2026-06-15T13:40:20.152127+00:00",
+          "timestamp": "2026-06-15T13:40:20.152130+00:00",
+          "session": "regular",
+          "is_extended": false,
+          "driving_agents": [
+            "ZENITH",
+            "WEAVER"
+          ],
+          "attributed_at": "2026-06-15T13:40:26.706826+00:00"
+        },
+        {
+          "action": "REDEPLOY_FROM_SGOV",
+          "symbol": "SGOV",
+          "side": "sell",
+          "qty": 0.9784,
+          "notional": 98.36,
+          "trigger_reason": "deployment_floor demands redeploy: equity below base by $98.36",
+          "order_id": "4e294f33-11e8-4a9b-998a-0ec87d25f1c8",
+          "time": "2026-06-15T13:40:22.900333+00:00",
+          "timestamp": "2026-06-15T13:40:22.900347+00:00",
+          "driving_agents": [
+            "CONSENSUS"
+          ],
+          "attributed_at": "2026-06-15T13:40:26.706830+00:00"
+        }
+      ],
+      "gold": [],
+      "orphans": [],
+      "phantoms": [
+        "ALGN",
+        "MPWR",
+        "SGOV",
+        "UNP"
+      ],
+      "order_count": 4,
+      "generated_at": "2026-06-15T13:40:26.706837+00:00"
     }
   ],
-  "updated_at": "2026-06-15T09:26:14.425301+00:00"
+  "updated_at": "2026-06-15T13:40:26.707679+00:00"
 }

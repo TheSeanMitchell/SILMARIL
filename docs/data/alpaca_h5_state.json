@@ -422,14 +422,14 @@
     "primary_symbol": null,
     "primary_qty": 0.0,
     "primary_market_value": 0.0,
-    "checked_at": "2026-06-15T13:27:45.741366+00:00"
+    "checked_at": "2026-06-15T13:40:24.861910+00:00"
   },
   "reason": "Live \u2014 configured; last run 2026-06-09T09:17:06",
   "seeded_at": "2026-05-11T05:00:26.087739+00:00",
   "genesis_at": "2026-05-11T05:08:53.396920+00:00",
   "last_cycle_summary": {
-    "time": "2026-06-15T13:27:45.989310+00:00",
-    "timestamp": "2026-06-15T13:27:45.989350+00:00",
+    "time": "2026-06-15T13:40:25.127655+00:00",
+    "timestamp": "2026-06-15T13:40:25.127673+00:00",
     "closed": 0,
     "opened": 0,
     "open_after": 0,
@@ -444,10 +444,10 @@
     "directives_consumed": 0,
     "rotations_executed": 0,
     "composite_halt": false,
-    "session": "pre-market",
-    "is_extended": true
+    "session": "regular",
+    "is_extended": false
   },
-  "last_run": "2026-06-15T13:27:45.989422+00:00",
+  "last_run": "2026-06-15T13:40:25.127755+00:00",
   "sgov_sweep_last_cycle": {
     "attempted": false,
     "reason": "below min sweep $5.00",
@@ -458,7 +458,7 @@
   ],
   "sweep_protection": {
     "version": "4.0",
-    "checked_at": "2026-06-15T13:27:46.810939+00:00",
+    "checked_at": "2026-06-15T13:40:26.006156+00:00",
     "market_mode": "ATTACK",
     "force_sweep_floor_resolved": 10500.0,
     "stale_close_age_days": 5,
@@ -501,7 +501,7 @@
   },
   "bleed_exits_this_cycle": [],
   "positions_snapshot": [],
-  "market_session_open": false,
+  "market_session_open": true,
   "meta_pruned_last_cycle": {
     "count": 2,
     "at": "2026-06-12T20:06:40.825141+00:00",
@@ -535,74 +535,74 @@
   "wordsmith": {
     "candidates": [
       {
+        "ticker": "FTNT",
+        "signal": "STRONG_BUY",
+        "conviction": 0.7901261259150064,
+        "why": "words +0.68 (5 arts); catalyst: analyst upgrade.",
+        "originated": true
+      },
+      {
         "ticker": "XLM-USD",
         "signal": "BUY",
-        "conviction": 0.86124886910443,
-        "why": "words +0.64 (4 arts).",
+        "conviction": 0.7696033693977335,
+        "why": "words +0.64 (5 arts).",
         "originated": true
       },
       {
-        "ticker": "BXP",
-        "signal": "STRONG_BUY",
-        "conviction": 0.8497655508497043,
-        "why": "words +0.63 (5 arts); catalyst: analyst upgrade.",
-        "originated": true
-      },
-      {
-        "ticker": "NRG",
+        "ticker": "MCD",
         "signal": "BUY",
-        "conviction": 0.8267989143402528,
-        "why": "words +0.60 (1 arts); catalyst: analyst upgrade.",
+        "conviction": 0.7696033693977335,
+        "why": "words +0.64 (1 arts).",
         "originated": true
       },
       {
         "ticker": "MPWR",
         "signal": "BUY",
-        "conviction": 0.8038322778308014,
+        "conviction": 0.7182964781045512,
         "why": "words +0.57 (5 arts).",
         "originated": true
       },
       {
-        "ticker": "LYV",
-        "signal": "BUY",
-        "conviction": 0.7693823230666242,
-        "why": "words +0.53 (2 arts); catalyst: positive catalyst.",
+        "ticker": "DELL",
+        "signal": "STRONG_BUY",
+        "conviction": 0.7080350998459147,
+        "why": "words +0.56 (3 arts); catalyst: positive catalyst.",
         "originated": true
       }
     ],
-    "fed_debate_rows": 593,
+    "fed_debate_rows": 594,
     "note": "headlines-only book: entries require a FABLEBOY_5 BUY/STRONG_BUY; all safety rails unchanged"
   },
   "cycle_intents": {
-    "at": "2026-06-15T13:27:45.989396+00:00",
-    "session": "pre-market",
-    "session_open": false,
+    "at": "2026-06-15T13:40:25.127723+00:00",
+    "session": "regular",
+    "session_open": true,
     "composite_halt": false,
     "halt_reason": null,
     "plans_offered": 5,
     "buy_intents": [
       {
+        "ticker": "FTNT",
+        "signal": "STRONG_BUY",
+        "conviction": 0.7901,
+        "originated": true,
+        "outcome": "blocked_signal_not_sell",
+        "intended_notional": 1159.36,
+        "reason": "signal HOLD is not SELL/STRONG_SELL"
+      },
+      {
         "ticker": "XLM-USD",
         "signal": "BUY",
-        "conviction": 0.8612,
+        "conviction": 0.7696,
         "originated": true,
         "outcome": "blocked_signal_not_sell",
         "intended_notional": 1159.36,
         "reason": "signal HOLD is not SELL/STRONG_SELL"
       },
       {
-        "ticker": "BXP",
-        "signal": "STRONG_BUY",
-        "conviction": 0.8498,
-        "originated": true,
-        "outcome": "blocked_signal_not_sell",
-        "intended_notional": 1159.36,
-        "reason": "signal HOLD is not SELL/STRONG_SELL"
-      },
-      {
-        "ticker": "NRG",
+        "ticker": "MCD",
         "signal": "BUY",
-        "conviction": 0.8268,
+        "conviction": 0.7696,
         "originated": true,
         "outcome": "blocked_signal_not_sell",
         "intended_notional": 1159.36,
@@ -611,16 +611,16 @@
       {
         "ticker": "MPWR",
         "signal": "BUY",
-        "conviction": 0.8038,
+        "conviction": 0.7183,
         "originated": true,
         "outcome": "blocked_signal_not_sell",
         "intended_notional": 1159.36,
         "reason": "signal HOLD is not SELL/STRONG_SELL"
       },
       {
-        "ticker": "LYV",
-        "signal": "BUY",
-        "conviction": 0.7694,
+        "ticker": "DELL",
+        "signal": "STRONG_BUY",
+        "conviction": 0.708,
         "originated": true,
         "outcome": "blocked_signal_not_sell",
         "intended_notional": 1159.36,
@@ -629,17 +629,17 @@
     ],
     "decisions_this_cycle": [
       {
+        "ticker": "FTNT",
+        "category": "blocked_signal_not_buy",
+        "reason": "signal HOLD is not BUY/STRONG_BUY"
+      },
+      {
         "ticker": "XLM-USD",
         "category": "blocked_signal_not_buy",
         "reason": "signal HOLD is not BUY/STRONG_BUY"
       },
       {
-        "ticker": "BXP",
-        "category": "blocked_signal_not_buy",
-        "reason": "signal HOLD is not BUY/STRONG_BUY"
-      },
-      {
-        "ticker": "NRG",
+        "ticker": "MCD",
         "category": "blocked_signal_not_buy",
         "reason": "signal HOLD is not BUY/STRONG_BUY"
       },
@@ -649,9 +649,14 @@
         "reason": "signal HOLD is not BUY/STRONG_BUY"
       },
       {
-        "ticker": "LYV",
+        "ticker": "DELL",
         "category": "blocked_signal_not_buy",
         "reason": "signal HOLD is not BUY/STRONG_BUY"
+      },
+      {
+        "ticker": "FTNT",
+        "category": "blocked_signal_not_sell",
+        "reason": "signal HOLD is not SELL/STRONG_SELL"
       },
       {
         "ticker": "XLM-USD",
@@ -659,12 +664,7 @@
         "reason": "signal HOLD is not SELL/STRONG_SELL"
       },
       {
-        "ticker": "BXP",
-        "category": "blocked_signal_not_sell",
-        "reason": "signal HOLD is not SELL/STRONG_SELL"
-      },
-      {
-        "ticker": "NRG",
+        "ticker": "MCD",
         "category": "blocked_signal_not_sell",
         "reason": "signal HOLD is not SELL/STRONG_SELL"
       },
@@ -674,7 +674,7 @@
         "reason": "signal HOLD is not SELL/STRONG_SELL"
       },
       {
-        "ticker": "LYV",
+        "ticker": "DELL",
         "category": "blocked_signal_not_sell",
         "reason": "signal HOLD is not SELL/STRONG_SELL"
       }
