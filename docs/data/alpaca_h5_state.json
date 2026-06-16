@@ -23,10 +23,6 @@
       "qty": 11.162209616,
       "snapshots_30m": [
         {
-          "ts": "2026-06-16T02:26:53.136270+00:00",
-          "price": 73.52
-        },
-        {
           "ts": "2026-06-16T03:05:17.704749+00:00",
           "price": 73.52
         },
@@ -53,6 +49,10 @@
         {
           "ts": "2026-06-16T08:04:53.715801+00:00",
           "price": 73.37
+        },
+        {
+          "ts": "2026-06-16T08:44:49.034277+00:00",
+          "price": 73.48
         }
       ]
     }
@@ -490,14 +490,14 @@
     "primary_symbol": null,
     "primary_qty": 0.0,
     "primary_market_value": 0.0,
-    "checked_at": "2026-06-16T08:26:09.070690+00:00"
+    "checked_at": "2026-06-16T08:44:49.034192+00:00"
   },
   "reason": "Live \u2014 configured; last run 2026-06-09T09:17:06",
   "seeded_at": "2026-05-11T05:00:26.087739+00:00",
   "genesis_at": "2026-05-11T05:08:53.396920+00:00",
   "last_cycle_summary": {
-    "time": "2026-06-16T08:26:09.205681+00:00",
-    "timestamp": "2026-06-16T08:26:09.205694+00:00",
+    "time": "2026-06-16T08:44:49.123002+00:00",
+    "timestamp": "2026-06-16T08:44:49.123012+00:00",
     "closed": 0,
     "opened": 0,
     "open_after": 1,
@@ -515,7 +515,7 @@
     "session": "pre-market",
     "is_extended": true
   },
-  "last_run": "2026-06-16T08:26:09.205778+00:00",
+  "last_run": "2026-06-16T08:44:49.123075+00:00",
   "sgov_sweep_last_cycle": {
     "attempted": false,
     "reason": "below min sweep $5.00",
@@ -526,7 +526,7 @@
   ],
   "sweep_protection": {
     "version": "4.0",
-    "checked_at": "2026-06-16T08:26:09.560290+00:00",
+    "checked_at": "2026-06-16T08:44:49.299964+00:00",
     "market_mode": "ATTACK",
     "force_sweep_floor_resolved": 10500.0,
     "stale_close_age_days": 5,
@@ -619,38 +619,38 @@
   "wordsmith": {
     "candidates": [
       {
-        "ticker": "DXCM",
-        "signal": "STRONG_BUY",
-        "conviction": 0.7962016301284824,
-        "why": "words +0.71 (5 arts); catalyst: FDA/trial win.",
-        "originated": true
-      },
-      {
         "ticker": "XLM-USD",
         "signal": "BUY",
-        "conviction": 0.7862491097518765,
+        "conviction": 0.8607506309267239,
         "why": "words +0.70 (5 arts); confirmed news-follower (3d horizon) \u2014 ride the words.",
         "originated": true
       },
       {
-        "ticker": "PAYX",
-        "signal": "STRONG_BUY",
-        "conviction": 0.7663440689986644,
-        "why": "words +0.67 (5 arts); catalyst: positive catalyst.",
+        "ticker": "UNI-USD",
+        "signal": "BUY",
+        "conviction": 0.7408992772533826,
+        "why": "words +0.54 (5 arts); anticipation +0.80.",
         "originated": true
       },
       {
-        "ticker": "BXP",
-        "signal": "STRONG_BUY",
-        "conviction": 0.7663440689986644,
-        "why": "words +0.67 (5 arts); catalyst: analyst upgrade.",
+        "ticker": "JTO-USD",
+        "signal": "BUY",
+        "conviction": 0.7191081220400478,
+        "why": "words +0.51 (5 arts).",
         "originated": true
       },
       {
-        "ticker": "EXR",
-        "signal": "STRONG_BUY",
-        "conviction": 0.7563915486220583,
-        "why": "words +0.66 (4 arts); catalyst: positive catalyst.",
+        "ticker": "XMR-USD",
+        "signal": "BUY",
+        "conviction": 0.7191081220400478,
+        "why": "words +0.51 (5 arts).",
+        "originated": true
+      },
+      {
+        "ticker": "HBAR-USD",
+        "signal": "BUY",
+        "conviction": 0.697316966826713,
+        "why": "words +0.48 (4 arts).",
         "originated": true
       }
     ],
@@ -658,7 +658,7 @@
     "note": "headlines-only book: entries require a FABLEBOY_5 BUY/STRONG_BUY; all safety rails unchanged"
   },
   "cycle_intents": {
-    "at": "2026-06-16T08:26:09.205745+00:00",
+    "at": "2026-06-16T08:44:49.123049+00:00",
     "session": "pre-market",
     "session_open": false,
     "composite_halt": false,
@@ -666,45 +666,45 @@
     "plans_offered": 5,
     "buy_intents": [
       {
-        "ticker": "BXP",
-        "signal": "STRONG_BUY",
-        "conviction": 0.7663,
-        "originated": true,
-        "outcome": "blocked_signal_not_sell",
-        "intended_notional": 1158.46,
-        "reason": "signal HOLD is not SELL/STRONG_SELL"
-      },
-      {
-        "ticker": "DXCM",
-        "signal": "STRONG_BUY",
-        "conviction": 0.7962,
-        "originated": true,
-        "outcome": "blocked_signal_not_sell",
-        "intended_notional": 1158.46,
-        "reason": "signal HOLD is not SELL/STRONG_SELL"
-      },
-      {
         "ticker": "XLM-USD",
         "signal": "BUY",
-        "conviction": 0.7862,
+        "conviction": 0.8608,
         "originated": true,
         "outcome": "blocked_signal_not_sell",
         "intended_notional": 1158.46,
         "reason": "signal HOLD is not SELL/STRONG_SELL"
       },
       {
-        "ticker": "PAYX",
-        "signal": "STRONG_BUY",
-        "conviction": 0.7663,
+        "ticker": "UNI-USD",
+        "signal": "BUY",
+        "conviction": 0.7409,
         "originated": true,
         "outcome": "blocked_signal_not_sell",
         "intended_notional": 1158.46,
         "reason": "signal HOLD is not SELL/STRONG_SELL"
       },
       {
-        "ticker": "EXR",
-        "signal": "STRONG_BUY",
-        "conviction": 0.7564,
+        "ticker": "JTO-USD",
+        "signal": "BUY",
+        "conviction": 0.7191,
+        "originated": true,
+        "outcome": "blocked_signal_not_sell",
+        "intended_notional": 1158.46,
+        "reason": "signal HOLD is not SELL/STRONG_SELL"
+      },
+      {
+        "ticker": "XMR-USD",
+        "signal": "BUY",
+        "conviction": 0.7191,
+        "originated": true,
+        "outcome": "blocked_signal_not_sell",
+        "intended_notional": 1158.46,
+        "reason": "signal HOLD is not SELL/STRONG_SELL"
+      },
+      {
+        "ticker": "HBAR-USD",
+        "signal": "BUY",
+        "conviction": 0.6973,
         "originated": true,
         "outcome": "blocked_signal_not_sell",
         "intended_notional": 1158.46,
@@ -713,39 +713,29 @@
     ],
     "decisions_this_cycle": [
       {
-        "ticker": "BXP",
-        "category": "blocked_signal_not_buy",
-        "reason": "signal HOLD is not BUY/STRONG_BUY"
-      },
-      {
-        "ticker": "DXCM",
-        "category": "blocked_signal_not_buy",
-        "reason": "signal HOLD is not BUY/STRONG_BUY"
-      },
-      {
         "ticker": "XLM-USD",
         "category": "blocked_signal_not_buy",
         "reason": "signal HOLD is not BUY/STRONG_BUY"
       },
       {
-        "ticker": "PAYX",
+        "ticker": "UNI-USD",
         "category": "blocked_signal_not_buy",
         "reason": "signal HOLD is not BUY/STRONG_BUY"
       },
       {
-        "ticker": "EXR",
+        "ticker": "JTO-USD",
         "category": "blocked_signal_not_buy",
         "reason": "signal HOLD is not BUY/STRONG_BUY"
       },
       {
-        "ticker": "BXP",
-        "category": "blocked_signal_not_sell",
-        "reason": "signal HOLD is not SELL/STRONG_SELL"
+        "ticker": "XMR-USD",
+        "category": "blocked_signal_not_buy",
+        "reason": "signal HOLD is not BUY/STRONG_BUY"
       },
       {
-        "ticker": "DXCM",
-        "category": "blocked_signal_not_sell",
-        "reason": "signal HOLD is not SELL/STRONG_SELL"
+        "ticker": "HBAR-USD",
+        "category": "blocked_signal_not_buy",
+        "reason": "signal HOLD is not BUY/STRONG_BUY"
       },
       {
         "ticker": "XLM-USD",
@@ -753,12 +743,22 @@
         "reason": "signal HOLD is not SELL/STRONG_SELL"
       },
       {
-        "ticker": "PAYX",
+        "ticker": "UNI-USD",
         "category": "blocked_signal_not_sell",
         "reason": "signal HOLD is not SELL/STRONG_SELL"
       },
       {
-        "ticker": "EXR",
+        "ticker": "JTO-USD",
+        "category": "blocked_signal_not_sell",
+        "reason": "signal HOLD is not SELL/STRONG_SELL"
+      },
+      {
+        "ticker": "XMR-USD",
+        "category": "blocked_signal_not_sell",
+        "reason": "signal HOLD is not SELL/STRONG_SELL"
+      },
+      {
+        "ticker": "HBAR-USD",
         "category": "blocked_signal_not_sell",
         "reason": "signal HOLD is not SELL/STRONG_SELL"
       }
