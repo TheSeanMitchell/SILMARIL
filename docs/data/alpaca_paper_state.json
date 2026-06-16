@@ -2,8 +2,8 @@
   "version": "2.2",
   "enabled": true,
   "account": {
-    "equity": 9585.26,
-    "cash": 3844.71
+    "equity": 9578.49,
+    "cash": 3725.48
   },
   "principal_target": 10000.0,
   "savings": 0.0,
@@ -171,15 +171,11 @@
       ]
     },
     "ANET": {
-      "entry_price": 167.196574,
+      "entry_price": 168.152511,
       "peak_price": 169.7,
       "first_seen": "2026-06-15T17:47:16.315384+00:00",
-      "qty": 2.919079124,
+      "qty": 4.203479124,
       "snapshots_30m": [
-        {
-          "ts": "2026-06-16T01:05:19.148312+00:00",
-          "price": 168.69
-        },
         {
           "ts": "2026-06-16T07:30:36.301266+00:00",
           "price": 168.6
@@ -207,6 +203,10 @@
         {
           "ts": "2026-06-16T13:27:46.592900+00:00",
           "price": 169.7
+        },
+        {
+          "ts": "2026-06-16T14:28:46.994491+00:00",
+          "price": 169.33
         }
       ]
     },
@@ -291,20 +291,16 @@
       ]
     }
   },
-  "tickers_traded_this_cycle": [
-    "ANET"
-  ],
+  "tickers_traded_this_cycle": [],
   "recent_alpaca_tickers": [
     "MPWR",
-    "NUE",
-    "GLW",
-    "AIZ",
     "IWM",
     "MDLZ",
     "DXCM",
     "VTI",
     "ANET",
-    "FRT"
+    "FRT",
+    "GLW"
   ],
   "orders": [
     {
@@ -4665,23 +4661,7 @@
       "is_extended": false
     }
   ],
-  "orders_placed": [
-    {
-      "action": "SCALE_IN",
-      "symbol": "ANET",
-      "side": "buy",
-      "qty": 0.7006,
-      "directive": "SCALE_IN",
-      "trigger_reason": "healthy winner (1.6%, momentum 0.56); add 20% size",
-      "rationale": "healthy winner (1.6%, momentum 0.56); add 20% size",
-      "order_id": "2c55659a-0c3d-477b-b096-9f66edbe5b25",
-      "time": "2026-06-16T14:07:45.984551+00:00",
-      "timestamp": "2026-06-16T14:07:45.984559+00:00",
-      "submitted": true,
-      "session": "regular",
-      "is_extended": false
-    }
-  ],
+  "orders_placed": [],
   "errors": [
     {
       "time": "2026-06-02T22:37:58.484205+00:00",
@@ -4785,17 +4765,15 @@
     }
   ],
   "last_cycle_summary": {
-    "time": "2026-06-16T14:07:47.902342+00:00",
-    "timestamp": "2026-06-16T14:07:47.902355+00:00",
+    "time": "2026-06-16T14:28:47.233567+00:00",
+    "timestamp": "2026-06-16T14:28:47.233575+00:00",
     "closed": 0,
     "opened": 0,
     "open_after": 8,
-    "equity": 9585.26,
+    "equity": 9578.49,
     "savings": 0.0,
-    "total_value": 9585.26,
-    "tickers_traded": [
-      "ANET"
-    ],
+    "total_value": 9578.49,
+    "tickers_traded": [],
     "bleed_exits_count": 0,
     "bleed_exits": [],
     "sgov_sweep_cap_applied": true,
@@ -4808,15 +4786,15 @@
       "reason": "contract forbids sweep this cycle (max=$0)",
       "contract_max": 0.0
     },
-    "directives_consumed": 1,
+    "directives_consumed": 0,
     "rotations_executed": 0,
     "composite_halt": false,
     "session": "regular",
     "is_extended": false
   },
-  "last_run": "2026-06-16T14:07:47.902605+00:00",
+  "last_run": "2026-06-16T14:28:47.233833+00:00",
   "grocery_pending_harvest": 2727.555099999997,
-  "trading_capital": 9585.26,
+  "trading_capital": 9578.49,
   "realized_savings": 0.0,
   "account_id": "LEGACY",
   "genesis_at": "2026-05-11T05:08:46.083334+00:00",
@@ -4827,7 +4805,7 @@
         "qty": 4.5e-05,
         "market_value": 0.0045,
         "avg_entry_price": 100.5297,
-        "current_price": 100.5399,
+        "current_price": 100.54,
         "unrealized_pl": 0.0
       }
     ],
@@ -4835,7 +4813,7 @@
     "primary_symbol": "SGOV",
     "primary_qty": 4.5e-05,
     "primary_market_value": 0.0045,
-    "checked_at": "2026-06-16T14:07:45.935567+00:00"
+    "checked_at": "2026-06-16T14:28:46.989220+00:00"
   },
   "sgov_sweep_last_cycle": {
     "attempted": false,
@@ -4881,7 +4859,7 @@
   ],
   "sweep_protection": {
     "version": "4.0",
-    "checked_at": "2026-06-16T14:07:48.479703+00:00",
+    "checked_at": "2026-06-16T14:28:53.074945+00:00",
     "market_mode": "ATTACK",
     "force_sweep_floor_resolved": 10500.0,
     "stale_close_age_days": 5,
@@ -4914,7 +4892,7 @@
     "force_close_targets": [],
     "blocked_count": 0,
     "vulnerable_count": 0,
-    "position_directives_count": 1,
+    "position_directives_count": 0,
     "forced_rotations_count": 0,
     "orch_objective": "RECOVER_FROM_DRAWDOWN",
     "deployment_floor_objective": "REDEPLOY_FROM_SGOV",
@@ -4937,12 +4915,12 @@
       "symbol": "AIZ",
       "ticker": "AIZ",
       "qty": 3.532562059,
-      "current_price": 259.83,
+      "current_price": 261.1,
       "avg_entry_price": 261.28,
       "peak_price": 261.28,
-      "market_value": 917.87,
-      "unrealized_pl": -5.12,
-      "unrealized_plpc": -0.0055,
+      "market_value": 922.35,
+      "unrealized_pl": -0.64,
+      "unrealized_plpc": -0.0007,
       "first_seen": "2026-06-15T14:47:37.723609+00:00",
       "scale_out_history": {},
       "stop_at_break_even": false,
@@ -4952,12 +4930,12 @@
       "symbol": "ANET",
       "ticker": "ANET",
       "qty": 4.203479124,
-      "current_price": 170.23,
+      "current_price": 169.33,
       "avg_entry_price": 168.152511,
-      "peak_price": 170.23,
-      "market_value": 715.56,
-      "unrealized_pl": 8.73,
-      "unrealized_plpc": 0.0124,
+      "peak_price": 169.7,
+      "market_value": 711.78,
+      "unrealized_pl": 4.95,
+      "unrealized_plpc": 0.007,
       "first_seen": "2026-06-15T17:47:16.315384+00:00",
       "scale_out_history": {},
       "stop_at_break_even": false,
@@ -4967,12 +4945,12 @@
       "symbol": "DXCM",
       "ticker": "DXCM",
       "qty": 15.288873858,
-      "current_price": 73.96,
+      "current_price": 74.0,
       "avg_entry_price": 74.355524,
       "peak_price": 75.5,
-      "market_value": 1130.77,
-      "unrealized_pl": -6.05,
-      "unrealized_plpc": -0.0053,
+      "market_value": 1131.38,
+      "unrealized_pl": -5.44,
+      "unrealized_plpc": -0.0048,
       "first_seen": "2026-06-15T16:47:57.460228+00:00",
       "scale_out_history": {},
       "stop_at_break_even": false,
@@ -4982,12 +4960,12 @@
       "symbol": "FRT",
       "ticker": "FRT",
       "qty": 5.975748359,
-      "current_price": 125.0,
+      "current_price": 124.99,
       "avg_entry_price": 124.94,
       "peak_price": 125.0,
-      "market_value": 746.97,
-      "unrealized_pl": 0.36,
-      "unrealized_plpc": 0.0005,
+      "market_value": 746.91,
+      "unrealized_pl": 0.3,
+      "unrealized_plpc": 0.0004,
       "first_seen": "2026-06-15T18:46:51.497810+00:00",
       "scale_out_history": {},
       "stop_at_break_even": false,
@@ -4997,12 +4975,12 @@
       "symbol": "IWM",
       "ticker": "IWM",
       "qty": 3.243874412,
-      "current_price": 296.07,
+      "current_price": 294.22,
       "avg_entry_price": 295.893083,
       "peak_price": 296.07,
-      "market_value": 960.41,
-      "unrealized_pl": 0.57,
-      "unrealized_plpc": 0.0006,
+      "market_value": 954.41,
+      "unrealized_pl": -5.43,
+      "unrealized_plpc": -0.0057,
       "first_seen": "2026-06-15T16:07:26.564738+00:00",
       "scale_out_history": {},
       "stop_at_break_even": false,
@@ -5012,12 +4990,12 @@
       "symbol": "PNC",
       "ticker": "PNC",
       "qty": 2.638806483,
-      "current_price": 233.48,
+      "current_price": 233.24,
       "avg_entry_price": 232.59,
       "peak_price": 233.79,
-      "market_value": 616.11,
-      "unrealized_pl": 2.35,
-      "unrealized_plpc": 0.0038,
+      "market_value": 615.48,
+      "unrealized_pl": 1.72,
+      "unrealized_plpc": 0.0028,
       "first_seen": "2026-06-15T17:47:16.315828+00:00",
       "scale_out_history": {},
       "stop_at_break_even": false,
@@ -5027,12 +5005,12 @@
       "symbol": "VTI",
       "ticker": "VTI",
       "qty": 2.071650506,
-      "current_price": 372.77,
+      "current_price": 372.01,
       "avg_entry_price": 373.13,
       "peak_price": 373.2369,
-      "market_value": 772.25,
-      "unrealized_pl": -0.75,
-      "unrealized_plpc": -0.001,
+      "market_value": 770.67,
+      "unrealized_pl": -2.32,
+      "unrealized_plpc": -0.003,
       "first_seen": "2026-06-15T17:07:19.491411+00:00",
       "scale_out_history": {},
       "stop_at_break_even": false,
@@ -5180,50 +5158,69 @@
     "open_seen": 1
   },
   "cycle_intents": {
-    "at": "2026-06-16T14:07:47.902389+00:00",
+    "at": "2026-06-16T14:28:47.233630+00:00",
     "session": "regular",
     "session_open": true,
     "composite_halt": false,
     "halt_reason": null,
-    "plans_offered": 2,
+    "plans_offered": 3,
     "buy_intents": [
       {
-        "ticker": "AMT",
+        "ticker": "FTNT",
         "signal": "BUY",
-        "conviction": 0.6261,
+        "conviction": 0.6497,
         "originated": false,
-        "outcome": "deferred_order_quality",
-        "intended_notional": 766.82,
-        "reason": "DEFER: liquidity 4% < 10% of 30d avg \u2014 illiquid \u00b7 now is AMT's typical daily-HIGH window (10:00 ET) \u2014 limit only, refusing to market-buy its top"
+        "outcome": "blocked_correlation_book",
+        "intended_notional": 766.28,
+        "reason": "correlation cluster HIGH severity"
       },
       {
-        "ticker": "ENPH",
+        "ticker": "DXCM",
         "signal": "BUY",
-        "conviction": 0.8675,
+        "conviction": 0.8907,
         "originated": false,
-        "outcome": "deferred_order_quality",
-        "intended_notional": 766.82,
-        "reason": "DEFER: ATR/price 10.0% \u2265 9% \u2014 untradeable \u00b7 now is ENPH's typical daily-LOW window (10:00 ET) \u2014 historically favorable entry"
+        "outcome": "blocked_already_held",
+        "intended_notional": 766.28,
+        "reason": "DXCM already held"
+      },
+      {
+        "ticker": "IWM",
+        "signal": "BUY",
+        "conviction": 0.8758,
+        "originated": false,
+        "outcome": "blocked_already_held",
+        "intended_notional": 766.28,
+        "reason": "IWM already held"
       }
     ],
     "decisions_this_cycle": [
       {
-        "ticker": "AMT",
-        "category": "deferred_order_quality",
-        "reason": "DEFER: liquidity 4% < 10% of 30d avg \u2014 illiquid \u00b7 now is AMT's typical daily-HIGH window (10:00 ET) \u2014 limit only, refusing to market-buy its top"
+        "ticker": "FTNT",
+        "category": "blocked_correlation_book",
+        "reason": "correlation cluster HIGH severity"
       },
       {
-        "ticker": "ENPH",
-        "category": "deferred_order_quality",
-        "reason": "DEFER: ATR/price 10.0% \u2265 9% \u2014 untradeable \u00b7 now is ENPH's typical daily-LOW window (10:00 ET) \u2014 historically favorable entry"
+        "ticker": "DXCM",
+        "category": "blocked_already_held",
+        "reason": "DXCM already held"
       },
       {
-        "ticker": "AMT",
+        "ticker": "IWM",
+        "category": "blocked_already_held",
+        "reason": "IWM already held"
+      },
+      {
+        "ticker": "FTNT",
         "category": "blocked_signal_not_sell",
         "reason": "signal BUY is not SELL/STRONG_SELL"
       },
       {
-        "ticker": "ENPH",
+        "ticker": "DXCM",
+        "category": "blocked_signal_not_sell",
+        "reason": "signal BUY is not SELL/STRONG_SELL"
+      },
+      {
+        "ticker": "IWM",
         "category": "blocked_signal_not_sell",
         "reason": "signal BUY is not SELL/STRONG_SELL"
       }

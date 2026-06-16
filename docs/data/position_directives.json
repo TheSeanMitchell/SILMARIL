@@ -1,50 +1,22 @@
 {
   "version": "5.1",
-  "generated_at": "2026-06-16T14:07:48.914528+00:00",
+  "generated_at": "2026-06-16T14:28:54.350427+00:00",
   "directives": [
-    {
-      "owner": "HARVEST_3",
-      "ticker": "TXN",
-      "action": "BREAK_EVEN_STOP",
-      "new_stop_pct": 0.0,
-      "trigger": "unrealized_plpc\u22652%",
-      "rationale": "move stop to entry \u2014 risk-free trade established",
-      "priority": 4
-    },
     {
       "owner": "HARVEST_3",
       "ticker": "CL",
       "action": "SCALE_IN",
       "size_pct": 0.2,
       "trigger": "unrealized_plpc\u22651.5% AND momentum\u22650.55 AND recommendation=HOLD",
-      "rationale": "healthy winner (1.6%, momentum 0.56); add 20% size",
-      "priority": 5
-    },
-    {
-      "owner": "HARVEST_3",
-      "ticker": "EQIX",
-      "action": "SCALE_IN",
-      "size_pct": 0.2,
-      "trigger": "unrealized_plpc\u22651.5% AND momentum\u22650.55 AND recommendation=HOLD",
-      "rationale": "healthy winner (2.2%, momentum 0.57); add 20% size",
-      "priority": 5
-    },
-    {
-      "owner": "HARVEST_3",
-      "ticker": "TXN",
-      "action": "SCALE_IN",
-      "size_pct": 0.2,
-      "trigger": "unrealized_plpc\u22651.5% AND momentum\u22650.55 AND recommendation=HOLD",
-      "rationale": "healthy winner (2.6%, momentum 0.58); add 20% size",
+      "rationale": "healthy winner (2.4%, momentum 0.58); add 20% size",
       "priority": 5
     }
   ],
   "summary": {
-    "directives": 4,
+    "directives": 1,
     "by_action": {
-      "BREAK_EVEN_STOP": 1,
-      "SCALE_IN": 3
+      "SCALE_IN": 1
     }
   },
-  "rationale": "4 directives issued \u00b7 3 scale-ins"
+  "rationale": "1 directives issued \u00b7 1 scale-ins"
 }

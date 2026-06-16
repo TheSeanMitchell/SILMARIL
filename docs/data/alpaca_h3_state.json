@@ -5,57 +5,17 @@
   "account_id": "HARVEST_3",
   "label": "3% Disciplined Harvester",
   "account": {
-    "equity": 9619.94,
+    "equity": 9608.66,
     "cash": -1046.37
   },
   "principal_target": 10000.0,
   "min_harvest_gain_pct": 0.03,
-  "savings": 0.01,
+  "savings": 41.595688595259915,
   "realized_savings": 0.01,
-  "trading_capital": 9619.93,
-  "lifetime_realized_wins": 15,
-  "lifetime_realized_losses": 24,
+  "trading_capital": 9608.65,
+  "lifetime_realized_wins": 16,
+  "lifetime_realized_losses": 25,
   "position_meta": {
-    "MPWR": {
-      "entry_price": 1641.944,
-      "peak_price": 1665.0,
-      "first_seen": "2026-06-15T14:27:43.074775+00:00",
-      "qty": 0.46540961,
-      "snapshots_30m": [
-        {
-          "ts": "2026-06-16T08:44:48.803918+00:00",
-          "price": 1651.0
-        },
-        {
-          "ts": "2026-06-16T09:26:48.682385+00:00",
-          "price": 1662.23
-        },
-        {
-          "ts": "2026-06-16T10:05:14.014244+00:00",
-          "price": 1662.23
-        },
-        {
-          "ts": "2026-06-16T10:45:25.894387+00:00",
-          "price": 1656.36
-        },
-        {
-          "ts": "2026-06-16T12:06:16.769236+00:00",
-          "price": 1665.0
-        },
-        {
-          "ts": "2026-06-16T12:48:17.652542+00:00",
-          "price": 1653.0
-        },
-        {
-          "ts": "2026-06-16T13:27:46.917829+00:00",
-          "price": 1659.39
-        },
-        {
-          "ts": "2026-06-16T14:07:48.159754+00:00",
-          "price": 1654.5
-        }
-      ]
-    },
     "BWA": {
       "entry_price": 74.52,
       "peak_price": 74.52,
@@ -254,11 +214,13 @@
           "ts": "2026-06-16T14:07:48.160068+00:00",
           "price": 318.85
         }
-      ]
+      ],
+      "stop_at_break_even": true,
+      "stop_at_break_even_set_at": "2026-06-16T14:28:47.846134+00:00"
     },
     "CL": {
       "entry_price": 89.51,
-      "peak_price": 91.03,
+      "peak_price": 91.625,
       "first_seen": "2026-06-15T16:07:28.353792+00:00",
       "qty": 9.274688425,
       "snapshots_30m": [
@@ -333,46 +295,6 @@
         {
           "ts": "2026-06-16T14:07:48.159965+00:00",
           "price": 233.48
-        }
-      ]
-    },
-    "EQIX": {
-      "entry_price": 1066.41,
-      "peak_price": 1090.265,
-      "first_seen": "2026-06-15T16:27:28.823565+00:00",
-      "qty": 1.077907947,
-      "snapshots_30m": [
-        {
-          "ts": "2026-06-16T08:44:48.803605+00:00",
-          "price": 1064.43
-        },
-        {
-          "ts": "2026-06-16T09:26:48.682079+00:00",
-          "price": 1064.43
-        },
-        {
-          "ts": "2026-06-16T10:05:14.013878+00:00",
-          "price": 1064.43
-        },
-        {
-          "ts": "2026-06-16T10:45:25.894064+00:00",
-          "price": 1064.43
-        },
-        {
-          "ts": "2026-06-16T12:06:16.768812+00:00",
-          "price": 1080.4
-        },
-        {
-          "ts": "2026-06-16T12:48:17.652218+00:00",
-          "price": 1072.91
-        },
-        {
-          "ts": "2026-06-16T13:27:46.917433+00:00",
-          "price": 1083.3267
-        },
-        {
-          "ts": "2026-06-16T14:07:48.159304+00:00",
-          "price": 1090.265
         }
       ]
     },
@@ -497,9 +419,11 @@
       ]
     }
   },
-  "tickers_traded_this_cycle": [],
-  "recent_alpaca_tickers": [
+  "tickers_traded_this_cycle": [
     "MPWR",
+    "EQIX"
+  ],
+  "recent_alpaca_tickers": [
     "STX",
     "BWA",
     "MAS",
@@ -511,7 +435,8 @@
     "EQIX",
     "PAYX",
     "BXP",
-    "EXR"
+    "EXR",
+    "MPWR"
   ],
   "orders": [
     {
@@ -5858,9 +5783,92 @@
       "submitted_at": "2026-06-15T17:07:20.967574367Z",
       "time": "2026-06-15T17:07:21.013066+00:00",
       "timestamp": "2026-06-15T17:07:21.013079+00:00"
+    },
+    {
+      "action": "STOP_ADJUST",
+      "symbol": "TXN",
+      "directive": "BREAK_EVEN_STOP",
+      "new_stop_pct": 0.0,
+      "trigger_reason": "move stop to entry \u2014 risk-free trade established",
+      "rationale": "move stop to entry \u2014 risk-free trade established",
+      "time": "2026-06-16T14:28:47.846139+00:00",
+      "timestamp": "2026-06-16T14:28:47.846141+00:00",
+      "submitted": false
+    },
+    {
+      "action": "CLOSE",
+      "symbol": "EQIX",
+      "side": "sell",
+      "qty": 1.077907947,
+      "trigger_reason": "GROCERY HARVEST (MINI): EQIX +3.62% \u2014 sweeping $16.63",
+      "realized_pnl": 41.59,
+      "entry_price": 1066.41,
+      "exit_price": 1104.99,
+      "order_id": "388b3a11-336e-492a-b90a-4d1ebe4774f5",
+      "time": "2026-06-16T14:28:49.836241+00:00",
+      "timestamp": "2026-06-16T14:28:49.836245+00:00",
+      "session": "regular",
+      "is_extended": false
+    },
+    {
+      "action": "CLOSE",
+      "symbol": "MPWR",
+      "side": "sell",
+      "qty": 0.46540961,
+      "trigger_reason": "TRAILING STOP: MPWR -3.01% from peak $1665.00 (eff 2.55%)",
+      "realized_pnl": -12.61,
+      "entry_price": 1641.944,
+      "exit_price": 1614.84,
+      "order_id": "d46da317-523c-40c2-9aaf-aed51fe2cf31",
+      "time": "2026-06-16T14:28:50.046249+00:00",
+      "timestamp": "2026-06-16T14:28:50.046255+00:00",
+      "session": "regular",
+      "is_extended": false
     }
   ],
-  "orders_placed": [],
+  "orders_placed": [
+    {
+      "action": "STOP_ADJUST",
+      "symbol": "TXN",
+      "directive": "BREAK_EVEN_STOP",
+      "new_stop_pct": 0.0,
+      "trigger_reason": "move stop to entry \u2014 risk-free trade established",
+      "rationale": "move stop to entry \u2014 risk-free trade established",
+      "time": "2026-06-16T14:28:47.846139+00:00",
+      "timestamp": "2026-06-16T14:28:47.846141+00:00",
+      "submitted": false
+    },
+    {
+      "action": "CLOSE",
+      "symbol": "EQIX",
+      "side": "sell",
+      "qty": 1.077907947,
+      "trigger_reason": "GROCERY HARVEST (MINI): EQIX +3.62% \u2014 sweeping $16.63",
+      "realized_pnl": 41.59,
+      "entry_price": 1066.41,
+      "exit_price": 1104.99,
+      "order_id": "388b3a11-336e-492a-b90a-4d1ebe4774f5",
+      "time": "2026-06-16T14:28:49.836241+00:00",
+      "timestamp": "2026-06-16T14:28:49.836245+00:00",
+      "session": "regular",
+      "is_extended": false
+    },
+    {
+      "action": "CLOSE",
+      "symbol": "MPWR",
+      "side": "sell",
+      "qty": 0.46540961,
+      "trigger_reason": "TRAILING STOP: MPWR -3.01% from peak $1665.00 (eff 2.55%)",
+      "realized_pnl": -12.61,
+      "entry_price": 1641.944,
+      "exit_price": 1614.84,
+      "order_id": "d46da317-523c-40c2-9aaf-aed51fe2cf31",
+      "time": "2026-06-16T14:28:50.046249+00:00",
+      "timestamp": "2026-06-16T14:28:50.046255+00:00",
+      "session": "regular",
+      "is_extended": false
+    }
+  ],
   "errors": [
     {
       "time": "2026-06-04T08:12:55.665522+00:00",
@@ -5970,7 +5978,7 @@
         "qty": 7.8e-05,
         "market_value": 0.0079,
         "avg_entry_price": 100.4887,
-        "current_price": 100.5399,
+        "current_price": 100.54,
         "unrealized_pl": 0.0
       }
     ],
@@ -5978,43 +5986,46 @@
     "primary_symbol": "SGOV",
     "primary_qty": 7.8e-05,
     "primary_market_value": 0.0079,
-    "checked_at": "2026-06-16T14:07:48.158705+00:00"
+    "checked_at": "2026-06-16T14:28:47.846032+00:00"
   },
   "reason": "Live \u2014 configured; last run 2026-06-09T09:17:05",
   "seeded_at": "2026-05-11T05:00:26.087481+00:00",
   "genesis_at": "2026-05-11T05:08:52.354920+00:00",
   "last_cycle_summary": {
-    "time": "2026-06-16T14:07:48.222547+00:00",
-    "timestamp": "2026-06-16T14:07:48.222554+00:00",
-    "closed": 0,
+    "time": "2026-06-16T14:28:52.288844+00:00",
+    "timestamp": "2026-06-16T14:28:52.288851+00:00",
+    "closed": 2,
     "opened": 0,
-    "open_after": 13,
-    "equity": 9619.94,
-    "savings": 0.01,
-    "total_value": 9619.95,
-    "tickers_traded": [],
+    "open_after": 11,
+    "equity": 9608.66,
+    "savings": 41.6,
+    "total_value": 9650.26,
+    "tickers_traded": [
+      "MPWR",
+      "EQIX"
+    ],
     "bleed_exits_count": 0,
     "bleed_exits": [],
     "sgov_sweep_cap_applied": true,
     "sgov_sweep_cap_detail": {
-      "time": "2026-06-12T19:46:36.974912+00:00",
-      "intended": 12.77,
+      "time": "2026-06-16T14:28:51.971331+00:00",
+      "intended": 41.59,
       "actual": 0.0,
-      "trimmed": 12.77,
-      "cash_at_check": 2410.74,
+      "trimmed": 41.59,
+      "cash_at_check": 892.46,
       "reason": "contract forbids sweep this cycle (max=$0)",
       "contract_max": 0.0
     },
-    "directives_consumed": 0,
+    "directives_consumed": 1,
     "rotations_executed": 0,
     "composite_halt": false,
     "session": "regular",
     "is_extended": false
   },
-  "last_run": "2026-06-16T14:07:48.222808+00:00",
+  "last_run": "2026-06-16T14:28:52.288964+00:00",
   "sweep_protection": {
     "version": "4.0",
-    "checked_at": "2026-06-16T14:07:48.568691+00:00",
+    "checked_at": "2026-06-16T14:28:53.453946+00:00",
     "market_mode": "ATTACK",
     "force_sweep_floor_resolved": 10500.0,
     "stale_close_age_days": 5,
@@ -6047,7 +6058,7 @@
     "force_close_targets": [],
     "blocked_count": 0,
     "vulnerable_count": 0,
-    "position_directives_count": 1,
+    "position_directives_count": 4,
     "forced_rotations_count": 0,
     "orch_objective": "RECOVER_FROM_DRAWDOWN",
     "deployment_floor_objective": "EMERGENCY_UNWIND_MARGIN",
@@ -6056,13 +6067,13 @@
     "cohort_safe_mode": false
   },
   "bleed_exits_this_cycle": [],
-  "grocery_pending_harvest": 1463.2278000000001,
+  "grocery_pending_harvest": 1479.8621,
   "sgov_sweep_cap_applied": {
-    "time": "2026-06-12T19:46:36.974912+00:00",
-    "intended": 12.77,
+    "time": "2026-06-16T14:28:51.971331+00:00",
+    "intended": 41.59,
     "actual": 0.0,
-    "trimmed": 12.77,
-    "cash_at_check": 2410.74,
+    "trimmed": 41.59,
+    "cash_at_check": 892.46,
     "reason": "contract forbids sweep this cycle (max=$0)",
     "contract_max": 0.0
   },
@@ -6086,19 +6097,20 @@
     "d33fe6a3e477",
     "56c4b40b9cae",
     "13e87167cbdc",
-    "9d40a1c6b64f"
+    "9d40a1c6b64f",
+    "c2ff84d8f0fe"
   ],
   "positions_snapshot": [
     {
       "symbol": "BWA",
       "ticker": "BWA",
       "qty": 9.758555898,
-      "current_price": 73.52,
+      "current_price": 73.08,
       "avg_entry_price": 74.52,
       "peak_price": 74.52,
-      "market_value": 717.45,
-      "unrealized_pl": -9.76,
-      "unrealized_plpc": -0.0134,
+      "market_value": 713.16,
+      "unrealized_pl": -14.05,
+      "unrealized_plpc": -0.0193,
       "first_seen": "2026-06-15T15:07:54.957849+00:00",
       "scale_out_history": {},
       "stop_at_break_even": false,
@@ -6108,12 +6120,12 @@
       "symbol": "BXP",
       "ticker": "BXP",
       "qty": 16.012827736,
-      "current_price": 66.385,
+      "current_price": 66.12,
       "avg_entry_price": 66.21,
       "peak_price": 66.665,
-      "market_value": 1063.01,
-      "unrealized_pl": 2.8,
-      "unrealized_plpc": 0.0026,
+      "market_value": 1058.77,
+      "unrealized_pl": -1.44,
+      "unrealized_plpc": -0.0014,
       "first_seen": "2026-06-15T17:20:49.776236+00:00",
       "scale_out_history": {},
       "stop_at_break_even": false,
@@ -6123,28 +6135,13 @@
       "symbol": "CL",
       "ticker": "CL",
       "qty": 9.274688425,
-      "current_price": 90.96,
+      "current_price": 91.625,
       "avg_entry_price": 89.51,
-      "peak_price": 91.03,
-      "market_value": 843.63,
-      "unrealized_pl": 13.45,
-      "unrealized_plpc": 0.0162,
+      "peak_price": 91.625,
+      "market_value": 849.79,
+      "unrealized_pl": 19.62,
+      "unrealized_plpc": 0.0236,
       "first_seen": "2026-06-15T16:07:28.353792+00:00",
-      "scale_out_history": {},
-      "stop_at_break_even": false,
-      "tightened_stop_pct": null
-    },
-    {
-      "symbol": "EQIX",
-      "ticker": "EQIX",
-      "qty": 1.077907947,
-      "current_price": 1090.265,
-      "avg_entry_price": 1066.41,
-      "peak_price": 1090.265,
-      "market_value": 1175.21,
-      "unrealized_pl": 25.71,
-      "unrealized_plpc": 0.0224,
-      "first_seen": "2026-06-15T16:27:28.823565+00:00",
       "scale_out_history": {},
       "stop_at_break_even": false,
       "tightened_stop_pct": null
@@ -6153,12 +6150,12 @@
       "symbol": "EXR",
       "ticker": "EXR",
       "qty": 4.999254591,
-      "current_price": 147.58,
+      "current_price": 148.03,
       "avg_entry_price": 147.72,
       "peak_price": 148.38,
-      "market_value": 737.79,
-      "unrealized_pl": -0.7,
-      "unrealized_plpc": -0.0009,
+      "market_value": 740.04,
+      "unrealized_pl": 1.55,
+      "unrealized_plpc": 0.0021,
       "first_seen": "2026-06-15T17:20:49.776486+00:00",
       "scale_out_history": {},
       "stop_at_break_even": false,
@@ -6168,7 +6165,7 @@
       "symbol": "FTNT",
       "ticker": "FTNT",
       "qty": 5.006822941,
-      "current_price": 147.42,
+      "current_price": 147.4199,
       "avg_entry_price": 148.22,
       "peak_price": 149.99,
       "market_value": 738.11,
@@ -6183,28 +6180,13 @@
       "symbol": "MAS",
       "ticker": "MAS",
       "qty": 12.384004272,
-      "current_price": 74.92,
+      "current_price": 74.98,
       "avg_entry_price": 74.93,
       "peak_price": 75.48,
-      "market_value": 927.81,
-      "unrealized_pl": -0.12,
-      "unrealized_plpc": -0.0001,
+      "market_value": 928.55,
+      "unrealized_pl": 0.62,
+      "unrealized_plpc": 0.0007,
       "first_seen": "2026-06-15T15:27:05.873872+00:00",
-      "scale_out_history": {},
-      "stop_at_break_even": false,
-      "tightened_stop_pct": null
-    },
-    {
-      "symbol": "MPWR",
-      "ticker": "MPWR",
-      "qty": 0.46540961,
-      "current_price": 1654.5,
-      "avg_entry_price": 1641.944,
-      "peak_price": 1665.0,
-      "market_value": 770.02,
-      "unrealized_pl": 5.84,
-      "unrealized_plpc": 0.0076,
-      "first_seen": "2026-06-15T14:27:43.074775+00:00",
       "scale_out_history": {},
       "stop_at_break_even": false,
       "tightened_stop_pct": null
@@ -6213,12 +6195,12 @@
       "symbol": "PAYX",
       "ticker": "PAYX",
       "qty": 10.014890282,
-      "current_price": 101.61,
+      "current_price": 101.535,
       "avg_entry_price": 102.05,
       "peak_price": 102.21,
-      "market_value": 1017.61,
-      "unrealized_pl": -4.41,
-      "unrealized_plpc": -0.0043,
+      "market_value": 1016.86,
+      "unrealized_pl": -5.16,
+      "unrealized_plpc": -0.005,
       "first_seen": "2026-06-15T17:07:20.501376+00:00",
       "scale_out_history": {},
       "stop_at_break_even": false,
@@ -6228,11 +6210,11 @@
       "symbol": "PNC",
       "ticker": "PNC",
       "qty": 3.945782103,
-      "current_price": 233.48,
+      "current_price": 233.49,
       "avg_entry_price": 234.35,
       "peak_price": 234.35,
-      "market_value": 921.26,
-      "unrealized_pl": -3.43,
+      "market_value": 921.3,
+      "unrealized_pl": -3.39,
       "unrealized_plpc": -0.0037,
       "first_seen": "2026-06-15T16:07:28.354236+00:00",
       "scale_out_history": {},
@@ -6243,27 +6225,27 @@
       "symbol": "TXN",
       "ticker": "TXN",
       "qty": 2.021878317,
-      "current_price": 318.85,
+      "current_price": 316.29,
       "avg_entry_price": 310.89,
       "peak_price": 318.85,
-      "market_value": 644.68,
-      "unrealized_pl": 16.09,
-      "unrealized_plpc": 0.0256,
+      "market_value": 639.5,
+      "unrealized_pl": 10.92,
+      "unrealized_plpc": 0.0174,
       "first_seen": "2026-06-15T15:46:56.107817+00:00",
       "scale_out_history": {},
-      "stop_at_break_even": false,
+      "stop_at_break_even": true,
       "tightened_stop_pct": null
     },
     {
       "symbol": "VTI",
       "ticker": "VTI",
       "qty": 2.97698944,
-      "current_price": 372.765,
+      "current_price": 371.95,
       "avg_entry_price": 372.64,
       "peak_price": 373.53,
-      "market_value": 1109.72,
-      "unrealized_pl": 0.37,
-      "unrealized_plpc": 0.0003,
+      "market_value": 1107.29,
+      "unrealized_pl": -2.05,
+      "unrealized_plpc": -0.0019,
       "first_seen": "2026-06-15T15:27:05.874043+00:00",
       "scale_out_history": {},
       "stop_at_break_even": false,
@@ -6650,7 +6632,7 @@
     }
   ],
   "cycle_intents": {
-    "at": "2026-06-16T14:07:48.222579+00:00",
+    "at": "2026-06-16T14:28:52.288876+00:00",
     "session": "regular",
     "session_open": true,
     "composite_halt": false,
@@ -6658,42 +6640,42 @@
     "plans_offered": 2,
     "buy_intents": [
       {
-        "ticker": "WMB",
-        "signal": "BUY",
-        "conviction": 1.1106,
+        "ticker": "TXN",
+        "signal": "STRONG_BUY",
+        "conviction": 0.7066,
         "originated": false,
-        "outcome": "blocked_negative_cash",
-        "intended_notional": 961.99,
-        "reason": "BLOCKED: account cash $-1046.37 < 0 (margin used) \u2014 refusing new opens until margin cleared"
+        "outcome": "blocked_correlation_book",
+        "intended_notional": 960.87,
+        "reason": "correlation cluster HIGH severity"
       },
       {
-        "ticker": "MAS",
+        "ticker": "MPWR",
         "signal": "BUY",
-        "conviction": 0.6562,
+        "conviction": 0.7157,
         "originated": false,
-        "outcome": "blocked_already_held",
-        "intended_notional": 961.99,
-        "reason": "MAS already held"
+        "outcome": "blocked_correlation_book",
+        "intended_notional": 960.87,
+        "reason": "correlation cluster HIGH severity"
       }
     ],
     "decisions_this_cycle": [
       {
-        "ticker": "WMB",
-        "category": "blocked_negative_cash",
-        "reason": "BLOCKED: account cash $-1046.37 < 0 (margin used) \u2014 refusing new opens until margin cleared"
+        "ticker": "TXN",
+        "category": "blocked_correlation_book",
+        "reason": "correlation cluster HIGH severity"
       },
       {
-        "ticker": "MAS",
-        "category": "blocked_already_held",
-        "reason": "MAS already held"
+        "ticker": "MPWR",
+        "category": "blocked_correlation_book",
+        "reason": "correlation cluster HIGH severity"
       },
       {
-        "ticker": "WMB",
+        "ticker": "TXN",
         "category": "blocked_signal_not_sell",
-        "reason": "signal BUY is not SELL/STRONG_SELL"
+        "reason": "signal STRONG_BUY is not SELL/STRONG_SELL"
       },
       {
-        "ticker": "MAS",
+        "ticker": "MPWR",
         "category": "blocked_signal_not_sell",
         "reason": "signal BUY is not SELL/STRONG_SELL"
       }

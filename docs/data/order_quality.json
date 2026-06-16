@@ -1,57 +1,79 @@
 {
   "version": "6.0",
-  "generated_at": "2026-06-16T14:07:45.778515+00:00",
+  "generated_at": "2026-06-16T14:28:46.325650+00:00",
   "tickers": {
-    "ENPH": {
-      "ticker": "ENPH",
-      "use_limit_order": true,
-      "limit_buffer_bps": 90,
-      "defer_to_next_cycle": true,
-      "opening_volatility": 0.1004,
-      "liquidity_score": 0.0951,
-      "extension_warning": false,
-      "timing_window": "now is ENPH's typical daily-LOW window (10:00 ET) \u2014 historically favorable entry",
-      "rationale": "DEFER: ATR/price 10.0% \u2265 9% \u2014 untradeable \u00b7 now is ENPH's typical daily-LOW window (10:00 ET) \u2014 historically favorable entry"
-    },
-    "WMB": {
-      "ticker": "WMB",
-      "use_limit_order": true,
-      "limit_buffer_bps": 40,
-      "defer_to_next_cycle": true,
-      "opening_volatility": 0.0224,
-      "liquidity_score": 0.0324,
-      "extension_warning": false,
-      "timing_window": null,
-      "rationale": "DEFER: liquidity 4% < 10% of 30d avg \u2014 illiquid"
-    },
-    "MAS": {
-      "ticker": "MAS",
+    "PAYX": {
+      "ticker": "PAYX",
       "use_limit_order": true,
       "limit_buffer_bps": 150,
       "defer_to_next_cycle": true,
-      "opening_volatility": 0.0282,
-      "liquidity_score": 0.0347,
+      "opening_volatility": 0.0279,
+      "liquidity_score": 0.0687,
       "extension_warning": false,
-      "timing_window": "resting toward MAS's ~73.67 floor (his low window is 15:30 ET) \u2014 limit 150bps below",
-      "rationale": "DEFER: liquidity 4% < 10% of 30d avg \u2014 illiquid \u00b7 resting toward MAS's ~73.67 floor (his low window is 15:30 ET) \u2014 limit 150bps below"
+      "timing_window": "resting toward PAYX's ~98.46 floor (his low window is 09:30 ET) \u2014 limit 150bps below",
+      "rationale": "DEFER: liquidity 8% < 10% of 30d avg \u2014 illiquid \u00b7 resting toward PAYX's ~98.46 floor (his low window is 09:30 ET) \u2014 limit 150bps below"
     },
-    "AMT": {
-      "ticker": "AMT",
+    "TXN": {
+      "ticker": "TXN",
+      "use_limit_order": true,
+      "limit_buffer_bps": 150,
+      "defer_to_next_cycle": true,
+      "opening_volatility": 0.0414,
+      "liquidity_score": 0.0811,
+      "extension_warning": false,
+      "timing_window": "resting toward TXN's ~282.1 floor (his low window is 11:30 ET) \u2014 limit 150bps below",
+      "rationale": "DEFER: liquidity 10% < 10% of 30d avg \u2014 illiquid \u00b7 resting toward TXN's ~282.1 floor (his low window is 11:30 ET) \u2014 limit 150bps below"
+    },
+    "DXCM": {
+      "ticker": "DXCM",
+      "use_limit_order": true,
+      "limit_buffer_bps": 46,
+      "defer_to_next_cycle": true,
+      "opening_volatility": 0.0373,
+      "liquidity_score": 0.0393,
+      "extension_warning": false,
+      "timing_window": null,
+      "rationale": "DEFER: liquidity 5% < 10% of 30d avg \u2014 illiquid"
+    },
+    "FTNT": {
+      "ticker": "FTNT",
+      "use_limit_order": true,
+      "limit_buffer_bps": 150,
+      "defer_to_next_cycle": false,
+      "opening_volatility": 0.0386,
+      "liquidity_score": 0.1224,
+      "extension_warning": false,
+      "timing_window": "resting toward FTNT's ~135.81 floor (his low window is 09:30 ET) \u2014 limit 150bps below",
+      "rationale": "limit 150bps \u00b7 ATR/px 3.9% \u00b7 liq 0.12 \u00b7 resting toward FTNT's ~135.81 floor (his low window is 09:30 ET) \u2014 limit 150bps below"
+    },
+    "IWM": {
+      "ticker": "IWM",
       "use_limit_order": true,
       "limit_buffer_bps": 45,
-      "defer_to_next_cycle": true,
-      "opening_volatility": 0.0245,
-      "liquidity_score": 0.0338,
+      "defer_to_next_cycle": false,
+      "opening_volatility": 0.0197,
+      "liquidity_score": 0.1578,
       "extension_warning": false,
-      "timing_window": "now is AMT's typical daily-HIGH window (10:00 ET) \u2014 limit only, refusing to market-buy its top",
-      "rationale": "DEFER: liquidity 4% < 10% of 30d avg \u2014 illiquid \u00b7 now is AMT's typical daily-HIGH window (10:00 ET) \u2014 limit only, refusing to market-buy its top"
+      "timing_window": "now is IWM's typical daily-HIGH window (10:00 ET) \u2014 limit only, refusing to market-buy its top",
+      "rationale": "limit 45bps \u00b7 ATR/px 2.0% \u00b7 liq 0.16 \u00b7 now is IWM's typical daily-HIGH window (10:00 ET) \u2014 limit only, refusing to market-buy its top"
+    },
+    "MPWR": {
+      "ticker": "MPWR",
+      "use_limit_order": true,
+      "limit_buffer_bps": 150,
+      "defer_to_next_cycle": false,
+      "opening_volatility": 0.0582,
+      "liquidity_score": 0.0901,
+      "extension_warning": false,
+      "timing_window": "resting toward MPWR's ~1573.83 floor (his low window is 10:30 ET) \u2014 limit 150bps below",
+      "rationale": "limit 150bps \u00b7 ATR/px 5.8% \u00b7 liq 0.09 \u00b7 resting toward MPWR's ~1573.83 floor (his low window is 10:30 ET) \u2014 limit 150bps below"
     }
   },
   "summary": {
-    "tickers": 4,
-    "deferred": 4,
-    "limit_recommended": 4,
-    "market_orders_ok": -4
+    "tickers": 6,
+    "deferred": 3,
+    "limit_recommended": 6,
+    "market_orders_ok": -3
   },
   "config": {
     "atr_defer_ratio": 0.05,
