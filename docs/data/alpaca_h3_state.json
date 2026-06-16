@@ -5,14 +5,14 @@
   "account_id": "HARVEST_3",
   "label": "3% Disciplined Harvester",
   "account": {
-    "equity": 9542.61,
+    "equity": 9542.58,
     "cash": -1046.35
   },
   "principal_target": 10000.0,
   "min_harvest_gain_pct": 0.03,
   "savings": 0.01,
   "realized_savings": 0.01,
-  "trading_capital": 9542.6,
+  "trading_capital": 9542.57,
   "lifetime_realized_wins": 15,
   "lifetime_realized_losses": 24,
   "position_meta": {
@@ -423,10 +423,6 @@
       "qty": 16.012827736,
       "snapshots_30m": [
         {
-          "ts": "2026-06-16T00:25:50.451708+00:00",
-          "price": 65.98
-        },
-        {
           "ts": "2026-06-16T01:05:20.118787+00:00",
           "price": 65.98
         },
@@ -452,6 +448,10 @@
         },
         {
           "ts": "2026-06-16T05:26:07.956020+00:00",
+          "price": 65.98
+        },
+        {
+          "ts": "2026-06-16T06:04:37.246377+00:00",
           "price": 65.98
         }
       ]
@@ -5978,20 +5978,20 @@
     "primary_symbol": "SGOV",
     "primary_qty": 7.8e-05,
     "primary_market_value": 0.0079,
-    "checked_at": "2026-06-16T05:44:35.815476+00:00"
+    "checked_at": "2026-06-16T06:04:37.246015+00:00"
   },
   "reason": "Live \u2014 configured; last run 2026-06-09T09:17:05",
   "seeded_at": "2026-05-11T05:00:26.087481+00:00",
   "genesis_at": "2026-05-11T05:08:52.354920+00:00",
   "last_cycle_summary": {
-    "time": "2026-06-16T05:44:36.064514+00:00",
-    "timestamp": "2026-06-16T05:44:36.064527+00:00",
+    "time": "2026-06-16T06:04:37.317308+00:00",
+    "timestamp": "2026-06-16T06:04:37.317319+00:00",
     "closed": 0,
     "opened": 0,
     "open_after": 13,
-    "equity": 9542.61,
+    "equity": 9542.58,
     "savings": 0.01,
-    "total_value": 9542.62,
+    "total_value": 9542.59,
     "tickers_traded": [],
     "bleed_exits_count": 0,
     "bleed_exits": [],
@@ -6011,10 +6011,10 @@
     "session": "closed",
     "is_extended": false
   },
-  "last_run": "2026-06-16T05:44:36.064726+00:00",
+  "last_run": "2026-06-16T06:04:37.317597+00:00",
   "sweep_protection": {
     "version": "4.0",
-    "checked_at": "2026-06-16T05:44:37.829914+00:00",
+    "checked_at": "2026-06-16T06:04:37.736286+00:00",
     "market_mode": "ATTACK",
     "force_sweep_floor_resolved": 10500.0,
     "stale_close_age_days": 5,
@@ -6258,12 +6258,12 @@
       "symbol": "VTI",
       "ticker": "VTI",
       "qty": 2.97698944,
-      "current_price": 372.14,
+      "current_price": 372.13,
       "avg_entry_price": 372.64,
       "peak_price": 373.53,
-      "market_value": 1107.86,
-      "unrealized_pl": -1.49,
-      "unrealized_plpc": -0.0013,
+      "market_value": 1107.83,
+      "unrealized_pl": -1.52,
+      "unrealized_plpc": -0.0014,
       "first_seen": "2026-06-15T15:27:05.874043+00:00",
       "scale_out_history": {},
       "stop_at_break_even": false,
@@ -6650,7 +6650,7 @@
     }
   ],
   "cycle_intents": {
-    "at": "2026-06-16T05:44:36.064550+00:00",
+    "at": "2026-06-16T06:04:37.317346+00:00",
     "session": "closed",
     "session_open": false,
     "composite_halt": false,
@@ -6658,42 +6658,42 @@
     "plans_offered": 2,
     "buy_intents": [
       {
+        "ticker": "TON-USD",
+        "signal": "BUY",
+        "conviction": 0.7404,
+        "originated": false,
+        "outcome": "blocked_not_equity_mission",
+        "intended_notional": 954.26,
+        "reason": "TON-USD is not a traditional equity \u2014 valuables trade in their own zone, never this account"
+      },
+      {
         "ticker": "KMX",
         "signal": "BUY",
-        "conviction": 1.0124,
+        "conviction": 0.9785,
         "originated": false,
         "outcome": "blocked_negative_cash",
         "intended_notional": 954.26,
         "reason": "BLOCKED: account cash $-1046.35 < 0 (margin used) \u2014 refusing new opens until margin cleared"
-      },
-      {
-        "ticker": "TXN",
-        "signal": "BUY",
-        "conviction": 0.9079,
-        "originated": false,
-        "outcome": "blocked_correlation_book",
-        "intended_notional": 954.26,
-        "reason": "correlation cluster HIGH severity"
       }
     ],
     "decisions_this_cycle": [
+      {
+        "ticker": "TON-USD",
+        "category": "blocked_not_equity_mission",
+        "reason": "TON-USD is not a traditional equity \u2014 valuables trade in their own zone, never this account"
+      },
       {
         "ticker": "KMX",
         "category": "blocked_negative_cash",
         "reason": "BLOCKED: account cash $-1046.35 < 0 (margin used) \u2014 refusing new opens until margin cleared"
       },
       {
-        "ticker": "TXN",
-        "category": "blocked_correlation_book",
-        "reason": "correlation cluster HIGH severity"
-      },
-      {
-        "ticker": "KMX",
+        "ticker": "TON-USD",
         "category": "blocked_signal_not_sell",
         "reason": "signal BUY is not SELL/STRONG_SELL"
       },
       {
-        "ticker": "TXN",
+        "ticker": "KMX",
         "category": "blocked_signal_not_sell",
         "reason": "signal BUY is not SELL/STRONG_SELL"
       }
