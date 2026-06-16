@@ -1,6 +1,6 @@
 {
   "version": "narrative-lifecycle-1.0",
-  "generated_at": "2026-06-16T01:45:34.207198+00:00",
+  "generated_at": "2026-06-16T02:05:37.610028+00:00",
   "date": "2026-06-16",
   "names": {
     "LRCX": {
@@ -1108,8 +1108,9 @@
       "days_tracked": 7
     },
     "SAND-USD": {
-      "phase": "QUIET",
-      "heat": 0.0,
+      "phase": "START",
+      "why": "signal after 6 quiet days",
+      "heat": 0.24,
       "last_date": "2026-06-15",
       "days_tracked": 7
     },
@@ -1122,7 +1123,7 @@
     "LDO-USD": {
       "phase": "PEAK",
       "why": "rolling-window max \u2014 a CANDIDATE peak; only the decline after proves a top, and tomorrow will say",
-      "heat": 1.05,
+      "heat": 1.04,
       "last_date": "2026-06-15",
       "days_tracked": 7
     },
@@ -1607,8 +1608,9 @@
       "days_tracked": 7
     },
     "STRK-USD": {
-      "phase": "STEADY",
-      "heat": 0.64,
+      "phase": "PEAK",
+      "why": "rolling-window max \u2014 a CANDIDATE peak; only the decline after proves a top, and tomorrow will say",
+      "heat": 0.84,
       "last_date": "2026-06-15",
       "days_tracked": 7
     },
@@ -1750,8 +1752,8 @@
     },
     "BTC-USD": {
       "phase": "ACCELERATION",
-      "why": "heat 0.44 vs 3d base 0.20 (x2.2)",
-      "heat": 0.44,
+      "why": "heat 0.60 vs 3d base 0.20 (x3.0)",
+      "heat": 0.6,
       "last_date": "2026-06-15",
       "days_tracked": 7
     },
@@ -1799,15 +1801,15 @@
       "days_tracked": 7
     },
     "ATOM-USD": {
-      "phase": "STEADY",
-      "heat": 0.25,
+      "phase": "PEAK",
+      "why": "rolling-window max \u2014 a CANDIDATE peak; only the decline after proves a top, and tomorrow will say",
+      "heat": 0.4,
       "last_date": "2026-06-15",
       "days_tracked": 7
     },
     "FIL-USD": {
-      "phase": "ACCELERATION",
-      "why": "heat 0.24 vs 3d base 0.12 (x2.0)",
-      "heat": 0.24,
+      "phase": "QUIET",
+      "heat": 0.0,
       "last_date": "2026-06-15",
       "days_tracked": 7
     },
@@ -1828,7 +1830,7 @@
     "XMR-USD": {
       "phase": "PEAK",
       "why": "rolling-window max \u2014 a CANDIDATE peak; only the decline after proves a top, and tomorrow will say",
-      "heat": 0.64,
+      "heat": 0.84,
       "last_date": "2026-06-15",
       "days_tracked": 7
     },
@@ -3601,11 +3603,11 @@
   },
   "counts": {
     "QUIET": 554,
-    "PEAK": 17,
+    "PEAK": 19,
     "DECAY": 6,
-    "STEADY": 8,
-    "ACCELERATION": 6,
-    "START": 2,
+    "STEADY": 6,
+    "ACCELERATION": 5,
+    "START": 3,
     "WARMING": 1
   },
   "heat_definition": "|sentiment| + |anticipation| + 1[catalyst] per day \u2014 attention intensity, direction-agnostic",
