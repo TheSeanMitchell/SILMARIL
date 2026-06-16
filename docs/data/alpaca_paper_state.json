@@ -2,7 +2,7 @@
   "version": "2.2",
   "enabled": true,
   "account": {
-    "equity": 9586.01,
+    "equity": 9584.79,
     "cash": 3451.47
   },
   "principal_target": 10000.0,
@@ -217,10 +217,6 @@
       "qty": 2.919079124,
       "snapshots_30m": [
         {
-          "ts": "2026-06-15T21:45:25.416678+00:00",
-          "price": 169.0
-        },
-        {
           "ts": "2026-06-15T22:25:57.459777+00:00",
           "price": 168.5
         },
@@ -246,6 +242,10 @@
         },
         {
           "ts": "2026-06-16T09:07:21.083517+00:00",
+          "price": 169.08
+        },
+        {
+          "ts": "2026-06-16T09:44:32.853464+00:00",
           "price": 169.08
         }
       ]
@@ -4765,14 +4765,14 @@
     }
   ],
   "last_cycle_summary": {
-    "time": "2026-06-16T09:26:48.257916+00:00",
-    "timestamp": "2026-06-16T09:26:48.257930+00:00",
+    "time": "2026-06-16T09:44:32.954783+00:00",
+    "timestamp": "2026-06-16T09:44:32.954792+00:00",
     "closed": 0,
     "opened": 0,
     "open_after": 9,
-    "equity": 9586.01,
+    "equity": 9584.79,
     "savings": 0.0,
-    "total_value": 9586.01,
+    "total_value": 9584.79,
     "tickers_traded": [],
     "bleed_exits_count": 0,
     "bleed_exits": [],
@@ -4792,9 +4792,9 @@
     "session": "pre-market",
     "is_extended": true
   },
-  "last_run": "2026-06-16T09:26:48.258176+00:00",
+  "last_run": "2026-06-16T09:44:32.955011+00:00",
   "grocery_pending_harvest": 2727.555099999997,
-  "trading_capital": 9586.01,
+  "trading_capital": 9584.79,
   "realized_savings": 0.0,
   "account_id": "LEGACY",
   "genesis_at": "2026-05-11T05:08:46.083334+00:00",
@@ -4805,7 +4805,7 @@
         "qty": 4.5e-05,
         "market_value": 0.0045,
         "avg_entry_price": 100.5297,
-        "current_price": 100.53,
+        "current_price": 100.54,
         "unrealized_pl": 0.0
       }
     ],
@@ -4813,7 +4813,7 @@
     "primary_symbol": "SGOV",
     "primary_qty": 4.5e-05,
     "primary_market_value": 0.0045,
-    "checked_at": "2026-06-16T09:26:48.082192+00:00"
+    "checked_at": "2026-06-16T09:44:32.847765+00:00"
   },
   "sgov_sweep_last_cycle": {
     "attempted": false,
@@ -4859,7 +4859,7 @@
   ],
   "sweep_protection": {
     "version": "4.0",
-    "checked_at": "2026-06-16T09:26:49.586482+00:00",
+    "checked_at": "2026-06-16T09:44:33.928705+00:00",
     "market_mode": "ATTACK",
     "force_sweep_floor_resolved": 10500.0,
     "stale_close_age_days": 5,
@@ -4975,12 +4975,12 @@
       "symbol": "GLW",
       "ticker": "GLW",
       "qty": 2.656044835,
-      "current_price": 189.8,
+      "current_price": 189.18,
       "avg_entry_price": 187.0,
       "peak_price": 189.9,
-      "market_value": 504.12,
-      "unrealized_pl": 7.44,
-      "unrealized_plpc": 0.015,
+      "market_value": 502.47,
+      "unrealized_pl": 5.79,
+      "unrealized_plpc": 0.0117,
       "first_seen": "2026-06-15T14:27:42.718341+00:00",
       "scale_out_history": {},
       "stop_at_break_even": false,
@@ -4990,12 +4990,12 @@
       "symbol": "IWM",
       "ticker": "IWM",
       "qty": 3.243874412,
-      "current_price": 294.93,
+      "current_price": 294.63,
       "avg_entry_price": 295.893083,
       "peak_price": 296.03,
-      "market_value": 956.72,
-      "unrealized_pl": -3.12,
-      "unrealized_plpc": -0.0033,
+      "market_value": 955.74,
+      "unrealized_pl": -4.1,
+      "unrealized_plpc": -0.0043,
       "first_seen": "2026-06-15T16:07:26.564738+00:00",
       "scale_out_history": {},
       "stop_at_break_even": false,
@@ -5020,12 +5020,12 @@
       "symbol": "VTI",
       "ticker": "VTI",
       "qty": 2.071650506,
-      "current_price": 372.13,
+      "current_price": 372.8061,
       "avg_entry_price": 373.13,
       "peak_price": 373.2369,
-      "market_value": 770.92,
-      "unrealized_pl": -2.07,
-      "unrealized_plpc": -0.0027,
+      "market_value": 772.32,
+      "unrealized_pl": -0.67,
+      "unrealized_plpc": -0.0009,
       "first_seen": "2026-06-15T17:07:19.491411+00:00",
       "scale_out_history": {},
       "stop_at_break_even": false,
@@ -5173,31 +5173,50 @@
     "open_seen": 1
   },
   "cycle_intents": {
-    "at": "2026-06-16T09:26:48.257960+00:00",
+    "at": "2026-06-16T09:44:32.954823+00:00",
     "session": "pre-market",
     "session_open": false,
     "composite_halt": false,
     "halt_reason": null,
-    "plans_offered": 1,
+    "plans_offered": 2,
     "buy_intents": [
       {
-        "ticker": "FRT",
+        "ticker": "QRVO",
         "signal": "BUY",
-        "conviction": 0.6429,
+        "conviction": 0.8025,
         "originated": false,
-        "outcome": "blocked_correlation_book",
-        "intended_notional": 766.88,
-        "reason": "correlation cluster HIGH severity"
+        "outcome": "deferred_submit_market_closed",
+        "intended_notional": 766.78,
+        "reason": "submission deferred by market-closed gate (will retry during regular hours)"
+      },
+      {
+        "ticker": "TON-USD",
+        "signal": "BUY",
+        "conviction": 0.7273,
+        "originated": false,
+        "outcome": "blocked_not_equity_mission",
+        "intended_notional": 766.78,
+        "reason": "TON-USD is not a traditional equity \u2014 valuables trade in their own zone, never this account"
       }
     ],
     "decisions_this_cycle": [
       {
-        "ticker": "FRT",
-        "category": "blocked_correlation_book",
-        "reason": "correlation cluster HIGH severity"
+        "ticker": "QRVO",
+        "category": "deferred_submit_market_closed",
+        "reason": "submission deferred by market-closed gate (will retry during regular hours)"
       },
       {
-        "ticker": "FRT",
+        "ticker": "TON-USD",
+        "category": "blocked_not_equity_mission",
+        "reason": "TON-USD is not a traditional equity \u2014 valuables trade in their own zone, never this account"
+      },
+      {
+        "ticker": "QRVO",
+        "category": "blocked_signal_not_sell",
+        "reason": "signal BUY is not SELL/STRONG_SELL"
+      },
+      {
+        "ticker": "TON-USD",
         "category": "blocked_signal_not_sell",
         "reason": "signal BUY is not SELL/STRONG_SELL"
       }
