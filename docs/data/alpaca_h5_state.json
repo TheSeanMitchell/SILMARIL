@@ -490,14 +490,14 @@
     "primary_symbol": null,
     "primary_qty": 0.0,
     "primary_market_value": 0.0,
-    "checked_at": "2026-06-16T12:48:18.303844+00:00"
+    "checked_at": "2026-06-16T13:07:36.129519+00:00"
   },
   "reason": "Live \u2014 configured; last run 2026-06-09T09:17:06",
   "seeded_at": "2026-05-11T05:00:26.087739+00:00",
   "genesis_at": "2026-05-11T05:08:53.396920+00:00",
   "last_cycle_summary": {
-    "time": "2026-06-16T12:48:18.499133+00:00",
-    "timestamp": "2026-06-16T12:48:18.499145+00:00",
+    "time": "2026-06-16T13:07:36.218986+00:00",
+    "timestamp": "2026-06-16T13:07:36.218996+00:00",
     "closed": 0,
     "opened": 0,
     "open_after": 1,
@@ -515,7 +515,7 @@
     "session": "pre-market",
     "is_extended": true
   },
-  "last_run": "2026-06-16T12:48:18.499224+00:00",
+  "last_run": "2026-06-16T13:07:36.219048+00:00",
   "sgov_sweep_last_cycle": {
     "attempted": false,
     "reason": "below min sweep $5.00",
@@ -526,7 +526,7 @@
   ],
   "sweep_protection": {
     "version": "4.0",
-    "checked_at": "2026-06-16T12:48:19.154892+00:00",
+    "checked_at": "2026-06-16T13:07:36.618710+00:00",
     "market_mode": "ATTACK",
     "force_sweep_floor_resolved": 10500.0,
     "stale_close_age_days": 5,
@@ -619,148 +619,43 @@
   "wordsmith": {
     "candidates": [
       {
-        "ticker": "XLM-USD",
-        "signal": "BUY",
-        "conviction": 0.9812820769248259,
-        "why": "words +0.80 (5 arts); confirmed news-follower (3d horizon) \u2014 ride the words.",
-        "originated": true
-      },
-      {
-        "ticker": "DXCM",
+        "ticker": "UNI-USD",
         "signal": "STRONG_BUY",
-        "conviction": 0.923559601811601,
-        "why": "words +0.71 (5 arts); catalyst: FDA/trial win.",
-        "originated": true
-      },
-      {
-        "ticker": "PAYX",
-        "signal": "STRONG_BUY",
-        "conviction": 0.9120151067889559,
-        "why": "words +0.70 (4 arts); catalyst: positive catalyst.",
-        "originated": true
-      },
-      {
-        "ticker": "TXN",
-        "signal": "STRONG_BUY",
-        "conviction": 0.8658371266983759,
-        "why": "words +0.64 (5 arts); catalyst: analyst upgrade.",
-        "originated": true
-      },
-      {
-        "ticker": "WYNN",
-        "signal": "BUY",
-        "conviction": 0.8658371266983759,
-        "why": "words +0.64 (1 arts).",
-        "originated": true
+        "conviction": 0.8486802391349212,
+        "why": "words +0.67 (5 arts); anticipation +0.80."
       }
     ],
     "fed_debate_rows": 593,
     "note": "headlines-only book: entries require a FABLEBOY_5 BUY/STRONG_BUY; all safety rails unchanged"
   },
   "cycle_intents": {
-    "at": "2026-06-16T12:48:18.499189+00:00",
+    "at": "2026-06-16T13:07:36.219020+00:00",
     "session": "pre-market",
     "session_open": false,
     "composite_halt": false,
     "halt_reason": null,
-    "plans_offered": 5,
+    "plans_offered": 1,
     "buy_intents": [
       {
-        "ticker": "TXN",
+        "ticker": "UNI-USD",
         "signal": "STRONG_BUY",
-        "conviction": 0.8658,
-        "originated": true,
-        "outcome": "blocked_signal_not_sell",
+        "conviction": 1.1305,
+        "originated": false,
+        "outcome": "blocked_not_equity_mission",
         "intended_notional": 1158.38,
-        "reason": "signal HOLD is not SELL/STRONG_SELL"
-      },
-      {
-        "ticker": "XLM-USD",
-        "signal": "BUY",
-        "conviction": 0.9813,
-        "originated": true,
-        "outcome": "blocked_signal_not_sell",
-        "intended_notional": 1158.38,
-        "reason": "signal HOLD is not SELL/STRONG_SELL"
-      },
-      {
-        "ticker": "DXCM",
-        "signal": "STRONG_BUY",
-        "conviction": 0.9236,
-        "originated": true,
-        "outcome": "blocked_signal_not_sell",
-        "intended_notional": 1158.38,
-        "reason": "signal HOLD is not SELL/STRONG_SELL"
-      },
-      {
-        "ticker": "PAYX",
-        "signal": "STRONG_BUY",
-        "conviction": 0.912,
-        "originated": true,
-        "outcome": "blocked_signal_not_sell",
-        "intended_notional": 1158.38,
-        "reason": "signal HOLD is not SELL/STRONG_SELL"
-      },
-      {
-        "ticker": "WYNN",
-        "signal": "BUY",
-        "conviction": 0.8658,
-        "originated": true,
-        "outcome": "blocked_signal_not_sell",
-        "intended_notional": 1158.38,
-        "reason": "signal HOLD is not SELL/STRONG_SELL"
+        "reason": "UNI-USD is not a traditional equity \u2014 valuables trade in their own zone, never this account"
       }
     ],
     "decisions_this_cycle": [
       {
-        "ticker": "TXN",
-        "category": "blocked_signal_not_buy",
-        "reason": "signal HOLD is not BUY/STRONG_BUY"
+        "ticker": "UNI-USD",
+        "category": "blocked_not_equity_mission",
+        "reason": "UNI-USD is not a traditional equity \u2014 valuables trade in their own zone, never this account"
       },
       {
-        "ticker": "XLM-USD",
-        "category": "blocked_signal_not_buy",
-        "reason": "signal HOLD is not BUY/STRONG_BUY"
-      },
-      {
-        "ticker": "DXCM",
-        "category": "blocked_signal_not_buy",
-        "reason": "signal HOLD is not BUY/STRONG_BUY"
-      },
-      {
-        "ticker": "PAYX",
-        "category": "blocked_signal_not_buy",
-        "reason": "signal HOLD is not BUY/STRONG_BUY"
-      },
-      {
-        "ticker": "WYNN",
-        "category": "blocked_signal_not_buy",
-        "reason": "signal HOLD is not BUY/STRONG_BUY"
-      },
-      {
-        "ticker": "TXN",
+        "ticker": "UNI-USD",
         "category": "blocked_signal_not_sell",
-        "reason": "signal HOLD is not SELL/STRONG_SELL"
-      },
-      {
-        "ticker": "XLM-USD",
-        "category": "blocked_signal_not_sell",
-        "reason": "signal HOLD is not SELL/STRONG_SELL"
-      },
-      {
-        "ticker": "DXCM",
-        "category": "blocked_signal_not_sell",
-        "reason": "signal HOLD is not SELL/STRONG_SELL"
-      },
-      {
-        "ticker": "PAYX",
-        "category": "blocked_signal_not_sell",
-        "reason": "signal HOLD is not SELL/STRONG_SELL"
-      },
-      {
-        "ticker": "WYNN",
-        "category": "blocked_signal_not_sell",
-        "reason": "signal HOLD is not SELL/STRONG_SELL"
+        "reason": "signal STRONG_BUY is not SELL/STRONG_SELL"
       }
     ]
   }
