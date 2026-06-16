@@ -1,6 +1,6 @@
 {
   "version": "agent-scorecard-1.0",
-  "generated_at": "2026-06-15T23:44:58.712530+00:00",
+  "generated_at": "2026-06-16T00:05:18.973151+00:00",
   "agents_graded": 22,
   "outcomes_total": 3000,
   "outcomes_clean": 3000,
@@ -9,10 +9,10 @@
   "grade_counts": {
     "A": 1,
     "B": 0,
-    "C": 9,
-    "D": 0,
+    "C": 7,
+    "D": 1,
     "F": 0,
-    "I": 12
+    "I": 13
   },
   "cards": [
     {
@@ -24,8 +24,8 @@
         "BETA TRAP: 100% of clean calls are BUY, and the only observed regime so far is RISK_ON. An all-one-side agent in a rising tape is hard to distinguish from simply being long the market \u2014 this edge is untested when the tape turns."
       ],
       "samples": {
-        "total": 134,
-        "clean": 134,
+        "total": 130,
+        "clean": 130,
         "stale": 0,
         "clean_pct": 1.0,
         "clean_directional": 36
@@ -41,7 +41,7 @@
         "equity": 36
       },
       "action_mix": {
-        "HOLD": 98,
+        "HOLD": 94,
         "BUY": 36
       },
       "by_period": {
@@ -209,37 +209,37 @@
       "agent": "SYNTH",
       "grade": "C",
       "verdict": "NO EDGE",
-      "why": "mean +0.577% (t=+0.63) \u2014 indistinguishable from a coin flip.",
+      "why": "mean +0.311% (t=+0.32) \u2014 indistinguishable from a coin flip.",
       "caveats": [],
       "samples": {
-        "total": 103,
-        "clean": 103,
+        "total": 96,
+        "clean": 96,
         "stale": 0,
         "clean_pct": 1.0,
-        "clean_directional": 103
+        "clean_directional": 96
       },
       "clean_performance": {
-        "win_rate": 0.699,
-        "mean_signed_return": 0.5774,
-        "sum_signed_return": 59.475,
-        "t_stat": 0.631
+        "win_rate": 0.6875,
+        "mean_signed_return": 0.3109,
+        "sum_signed_return": 29.844,
+        "t_stat": 0.32
       },
       "direction_concentration": 1.0,
       "instrument_mix": {
-        "equity": 102,
+        "equity": 95,
         "broad_etf": 1
       },
       "action_mix": {
-        "BUY": 103
+        "BUY": 96
       },
       "by_period": {
         "daily": [
           {
             "period": "2026-06-11",
-            "n": 18,
-            "win_rate": 0.6111,
-            "mean_return": 1.574,
-            "sum_return": 28.332
+            "n": 11,
+            "win_rate": 0.4545,
+            "mean_return": -0.1181,
+            "sum_return": -1.299
           },
           {
             "period": "2026-06-12",
@@ -259,10 +259,10 @@
         "weekly": [
           {
             "period": "2026-W24",
-            "n": 42,
-            "win_rate": 0.5476,
-            "mean_return": -1.6213,
-            "sum_return": -68.095
+            "n": 35,
+            "win_rate": 0.4857,
+            "mean_return": -2.7922,
+            "sum_return": -97.726
           },
           {
             "period": "2026-W25",
@@ -275,10 +275,10 @@
         "monthly": [
           {
             "period": "2026-06",
-            "n": 103,
-            "win_rate": 0.699,
-            "mean_return": 0.5774,
-            "sum_return": 59.475
+            "n": 96,
+            "win_rate": 0.6875,
+            "mean_return": 0.3109,
+            "sum_return": 29.844
           }
         ]
       },
@@ -397,40 +397,40 @@
       "agent": "ZENITH",
       "grade": "C",
       "verdict": "NO EDGE",
-      "why": "mean +0.179% (t=+1.03) \u2014 indistinguishable from a coin flip.",
+      "why": "mean +0.069% (t=+0.41) \u2014 indistinguishable from a coin flip.",
       "caveats": [],
       "samples": {
-        "total": 261,
-        "clean": 261,
+        "total": 249,
+        "clean": 249,
         "stale": 0,
         "clean_pct": 1.0,
-        "clean_directional": 261
+        "clean_directional": 249
       },
       "clean_performance": {
-        "win_rate": 0.5594,
-        "mean_signed_return": 0.1789,
-        "sum_signed_return": 46.696,
-        "t_stat": 1.03
+        "win_rate": 0.5341,
+        "mean_signed_return": 0.0688,
+        "sum_signed_return": 17.126,
+        "t_stat": 0.409
       },
-      "direction_concentration": 0.709,
+      "direction_concentration": 0.679,
       "instrument_mix": {
-        "crypto": 30,
-        "equity": 209,
+        "equity": 191,
         "macro": 16,
+        "crypto": 36,
         "broad_etf": 6
       },
       "action_mix": {
-        "SELL": 76,
-        "BUY": 185
+        "BUY": 169,
+        "SELL": 80
       },
       "by_period": {
         "daily": [
           {
             "period": "2026-06-11",
-            "n": 52,
-            "win_rate": 0.5577,
-            "mean_return": 0.3858,
-            "sum_return": 20.063
+            "n": 30,
+            "win_rate": 0.4333,
+            "mean_return": -0.0686,
+            "sum_return": -2.059
           },
           {
             "period": "2026-06-12",
@@ -445,35 +445,132 @@
             "win_rate": 0.553,
             "mean_return": 0.278,
             "sum_return": 36.694
+          },
+          {
+            "period": "2026-06-16",
+            "n": 10,
+            "win_rate": 0.3,
+            "mean_return": -0.7448,
+            "sum_return": -7.448
           }
         ],
         "weekly": [
           {
             "period": "2026-W24",
-            "n": 129,
-            "win_rate": 0.5659,
-            "mean_return": 0.0775,
-            "sum_return": 10.002
+            "n": 107,
+            "win_rate": 0.5327,
+            "mean_return": -0.1133,
+            "sum_return": -12.12
           },
           {
             "period": "2026-W25",
-            "n": 132,
-            "win_rate": 0.553,
-            "mean_return": 0.278,
-            "sum_return": 36.694
+            "n": 142,
+            "win_rate": 0.5352,
+            "mean_return": 0.206,
+            "sum_return": 29.246
           }
         ],
         "monthly": [
           {
             "period": "2026-06",
-            "n": 261,
-            "win_rate": 0.5594,
-            "mean_return": 0.1789,
-            "sum_return": 46.696
+            "n": 249,
+            "win_rate": 0.5341,
+            "mean_return": 0.0688,
+            "sum_return": 17.126
           }
         ]
       },
       "recent_calls": [
+        {
+          "date": "2026-06-16",
+          "ticker": "NEAR-USD",
+          "signal": "BUY",
+          "conviction": 0.825,
+          "return_pct": 0.547,
+          "signed_return": 0.547,
+          "correct": true
+        },
+        {
+          "date": "2026-06-16",
+          "ticker": "JTO-USD",
+          "signal": "BUY",
+          "conviction": 0.825,
+          "return_pct": -0.096,
+          "signed_return": -0.096,
+          "correct": false
+        },
+        {
+          "date": "2026-06-16",
+          "ticker": "TON-USD",
+          "signal": "BUY",
+          "conviction": 0.821,
+          "return_pct": -6.682,
+          "signed_return": -6.682,
+          "correct": false
+        },
+        {
+          "date": "2026-06-16",
+          "ticker": "XMR-USD",
+          "signal": "SELL",
+          "conviction": 0.605,
+          "return_pct": -2.35,
+          "signed_return": 2.35,
+          "correct": true
+        },
+        {
+          "date": "2026-06-16",
+          "ticker": "ATOM-USD",
+          "signal": "SELL",
+          "conviction": 0.605,
+          "return_pct": -0.051,
+          "signed_return": 0.051,
+          "correct": true
+        },
+        {
+          "date": "2026-06-16",
+          "ticker": "BTC-USD",
+          "signal": "SELL",
+          "conviction": 0.605,
+          "return_pct": 0.111,
+          "signed_return": -0.111,
+          "correct": false
+        },
+        {
+          "date": "2026-06-16",
+          "ticker": "ALGO-USD",
+          "signal": "SELL",
+          "conviction": 0.605,
+          "return_pct": 0.105,
+          "signed_return": -0.105,
+          "correct": false
+        },
+        {
+          "date": "2026-06-16",
+          "ticker": "DOGE-USD",
+          "signal": "SELL",
+          "conviction": 0.605,
+          "return_pct": 0.045,
+          "signed_return": -0.045,
+          "correct": false
+        },
+        {
+          "date": "2026-06-16",
+          "ticker": "PNUT-USD",
+          "signal": "SELL",
+          "conviction": 0.605,
+          "return_pct": 0.445,
+          "signed_return": -0.445,
+          "correct": false
+        },
+        {
+          "date": "2026-06-16",
+          "ticker": "MKR-USD",
+          "signal": "SELL",
+          "conviction": 0.605,
+          "return_pct": 2.912,
+          "signed_return": -2.912,
+          "correct": false
+        },
         {
           "date": "2026-06-15",
           "ticker": "JTO-USD",
@@ -491,286 +588,6 @@
           "return_pct": 0.108,
           "signed_return": -0.108,
           "correct": false
-        },
-        {
-          "date": "2026-06-15",
-          "ticker": "MKR-USD",
-          "signal": "SELL",
-          "conviction": 0.549,
-          "return_pct": -2.746,
-          "signed_return": 2.746,
-          "correct": true
-        },
-        {
-          "date": "2026-06-15",
-          "ticker": "RUNE-USD",
-          "signal": "SELL",
-          "conviction": 0.549,
-          "return_pct": -1.325,
-          "signed_return": 1.325,
-          "correct": true
-        },
-        {
-          "date": "2026-06-15",
-          "ticker": "TIA-USD",
-          "signal": "SELL",
-          "conviction": 0.549,
-          "return_pct": 0.344,
-          "signed_return": -0.344,
-          "correct": false
-        },
-        {
-          "date": "2026-06-15",
-          "ticker": "DOGE-USD",
-          "signal": "SELL",
-          "conviction": 0.549,
-          "return_pct": 0.316,
-          "signed_return": -0.316,
-          "correct": false
-        },
-        {
-          "date": "2026-06-15",
-          "ticker": "BONK-USD",
-          "signal": "SELL",
-          "conviction": 0.549,
-          "return_pct": 1.304,
-          "signed_return": -1.304,
-          "correct": false
-        },
-        {
-          "date": "2026-06-15",
-          "ticker": "PNUT-USD",
-          "signal": "SELL",
-          "conviction": 0.549,
-          "return_pct": 0.665,
-          "signed_return": -0.665,
-          "correct": false
-        },
-        {
-          "date": "2026-06-15",
-          "ticker": "BTC-USD",
-          "signal": "SELL",
-          "conviction": 0.549,
-          "return_pct": 0.19,
-          "signed_return": -0.19,
-          "correct": false
-        },
-        {
-          "date": "2026-06-15",
-          "ticker": "EQR",
-          "signal": "BUY",
-          "conviction": 0.622,
-          "return_pct": 0.0,
-          "signed_return": 0.0,
-          "correct": true
-        },
-        {
-          "date": "2026-06-15",
-          "ticker": "DIA",
-          "signal": "BUY",
-          "conviction": 0.606,
-          "return_pct": 0.971,
-          "signed_return": 0.971,
-          "correct": true
-        },
-        {
-          "date": "2026-06-15",
-          "ticker": "TON-USD",
-          "signal": "BUY",
-          "conviction": 0.725,
-          "return_pct": 3.239,
-          "signed_return": 3.239,
-          "correct": true
-        }
-      ]
-    },
-    {
-      "agent": "FORGE",
-      "grade": "C",
-      "verdict": "NO EDGE",
-      "why": "mean +0.447% (t=+1.03) \u2014 indistinguishable from a coin flip.",
-      "caveats": [],
-      "samples": {
-        "total": 114,
-        "clean": 114,
-        "stale": 0,
-        "clean_pct": 1.0,
-        "clean_directional": 42
-      },
-      "clean_performance": {
-        "win_rate": 0.4524,
-        "mean_signed_return": 0.4467,
-        "sum_signed_return": 18.761,
-        "t_stat": 1.029
-      },
-      "direction_concentration": 0.786,
-      "instrument_mix": {
-        "equity": 42
-      },
-      "action_mix": {
-        "STRONG_BUY": 6,
-        "HOLD": 72,
-        "BUY": 3,
-        "SELL": 33
-      },
-      "by_period": {
-        "daily": [
-          {
-            "period": "2026-06-11",
-            "n": 18,
-            "win_rate": 0.7778,
-            "mean_return": 1.8806,
-            "sum_return": 33.85
-          },
-          {
-            "period": "2026-06-12",
-            "n": 14,
-            "win_rate": 0.3571,
-            "mean_return": 0.1829,
-            "sum_return": 2.561
-          },
-          {
-            "period": "2026-06-15",
-            "n": 10,
-            "win_rate": 0.0,
-            "mean_return": -1.765,
-            "sum_return": -17.65
-          }
-        ],
-        "weekly": [
-          {
-            "period": "2026-W24",
-            "n": 32,
-            "win_rate": 0.5938,
-            "mean_return": 1.1378,
-            "sum_return": 36.411
-          },
-          {
-            "period": "2026-W25",
-            "n": 10,
-            "win_rate": 0.0,
-            "mean_return": -1.765,
-            "sum_return": -17.65
-          }
-        ],
-        "monthly": [
-          {
-            "period": "2026-06",
-            "n": 42,
-            "win_rate": 0.4524,
-            "mean_return": 0.4467,
-            "sum_return": 18.761
-          }
-        ]
-      },
-      "recent_calls": [
-        {
-          "date": "2026-06-15",
-          "ticker": "TSM",
-          "signal": "HOLD",
-          "conviction": 0.439,
-          "return_pct": 3.442,
-          "signed_return": null,
-          "correct": false
-        },
-        {
-          "date": "2026-06-15",
-          "ticker": "AMD",
-          "signal": "HOLD",
-          "conviction": 0.439,
-          "return_pct": 4.672,
-          "signed_return": null,
-          "correct": false
-        },
-        {
-          "date": "2026-06-15",
-          "ticker": "MU",
-          "signal": "HOLD",
-          "conviction": 0.439,
-          "return_pct": 7.827,
-          "signed_return": null,
-          "correct": false
-        },
-        {
-          "date": "2026-06-15",
-          "ticker": "IBM",
-          "signal": "HOLD",
-          "conviction": 0.439,
-          "return_pct": 0.749,
-          "signed_return": null,
-          "correct": false
-        },
-        {
-          "date": "2026-06-15",
-          "ticker": "NOW",
-          "signal": "HOLD",
-          "conviction": 0.439,
-          "return_pct": 2.937,
-          "signed_return": null,
-          "correct": false
-        },
-        {
-          "date": "2026-06-15",
-          "ticker": "AAPL",
-          "signal": "HOLD",
-          "conviction": 0.439,
-          "return_pct": 0.642,
-          "signed_return": null,
-          "correct": false
-        },
-        {
-          "date": "2026-06-15",
-          "ticker": "MSFT",
-          "signal": "SELL",
-          "conviction": 0.549,
-          "return_pct": 1.625,
-          "signed_return": -1.625,
-          "correct": false
-        },
-        {
-          "date": "2026-06-15",
-          "ticker": "AVGO",
-          "signal": "SELL",
-          "conviction": 0.549,
-          "return_pct": 3.109,
-          "signed_return": -3.109,
-          "correct": false
-        },
-        {
-          "date": "2026-06-15",
-          "ticker": "CRWD",
-          "signal": "HOLD",
-          "conviction": 0.439,
-          "return_pct": 1.623,
-          "signed_return": null,
-          "correct": false
-        },
-        {
-          "date": "2026-06-15",
-          "ticker": "QQQ",
-          "signal": "HOLD",
-          "conviction": 0.439,
-          "return_pct": 2.11,
-          "signed_return": null,
-          "correct": false
-        },
-        {
-          "date": "2026-06-15",
-          "ticker": "SMH",
-          "signal": "HOLD",
-          "conviction": 0.439,
-          "return_pct": 3.566,
-          "signed_return": null,
-          "correct": false
-        },
-        {
-          "date": "2026-06-15",
-          "ticker": "SOXX",
-          "signal": "HOLD",
-          "conviction": 0.439,
-          "return_pct": 4.589,
-          "signed_return": null,
-          "correct": false
         }
       ]
     },
@@ -778,39 +595,39 @@
       "agent": "WEAVER",
       "grade": "C",
       "verdict": "NO EDGE",
-      "why": "mean +0.120% (t=+0.53) \u2014 indistinguishable from a coin flip.",
+      "why": "mean +0.077% (t=+0.31) \u2014 indistinguishable from a coin flip.",
       "caveats": [],
       "samples": {
-        "total": 124,
-        "clean": 124,
+        "total": 111,
+        "clean": 111,
         "stale": 0,
         "clean_pct": 1.0,
-        "clean_directional": 124
+        "clean_directional": 111
       },
       "clean_performance": {
-        "win_rate": 0.621,
-        "mean_signed_return": 0.1201,
-        "sum_signed_return": 14.89,
-        "t_stat": 0.53
+        "win_rate": 0.5856,
+        "mean_signed_return": 0.0772,
+        "sum_signed_return": 8.569,
+        "t_stat": 0.308
       },
       "direction_concentration": 1.0,
       "instrument_mix": {
-        "equity": 104,
-        "macro": 5,
+        "equity": 91,
         "broad_etf": 13,
-        "crypto": 2
+        "macro": 4,
+        "crypto": 3
       },
       "action_mix": {
-        "BUY": 124
+        "BUY": 111
       },
       "by_period": {
         "daily": [
           {
             "period": "2026-06-11",
-            "n": 33,
-            "win_rate": 0.7576,
-            "mean_return": 0.3964,
-            "sum_return": 13.08
+            "n": 19,
+            "win_rate": 0.6842,
+            "mean_return": 0.3562,
+            "sum_return": 6.767
           },
           {
             "period": "2026-06-12",
@@ -825,35 +642,51 @@
             "win_rate": 0.5439,
             "mean_return": -0.0423,
             "sum_return": -2.413
+          },
+          {
+            "period": "2026-06-16",
+            "n": 1,
+            "win_rate": 0.0,
+            "mean_return": -0.008,
+            "sum_return": -0.008
           }
         ],
         "weekly": [
           {
             "period": "2026-W24",
-            "n": 67,
-            "win_rate": 0.6866,
-            "mean_return": 0.2583,
-            "sum_return": 17.303
+            "n": 53,
+            "win_rate": 0.6415,
+            "mean_return": 0.2074,
+            "sum_return": 10.99
           },
           {
             "period": "2026-W25",
-            "n": 57,
-            "win_rate": 0.5439,
-            "mean_return": -0.0423,
-            "sum_return": -2.413
+            "n": 58,
+            "win_rate": 0.5345,
+            "mean_return": -0.0417,
+            "sum_return": -2.421
           }
         ],
         "monthly": [
           {
             "period": "2026-06",
-            "n": 124,
-            "win_rate": 0.621,
-            "mean_return": 0.1201,
-            "sum_return": 14.89
+            "n": 111,
+            "win_rate": 0.5856,
+            "mean_return": 0.0772,
+            "sum_return": 8.569
           }
         ]
       },
       "recent_calls": [
+        {
+          "date": "2026-06-16",
+          "ticker": "ARB-USD",
+          "signal": "BUY",
+          "conviction": 0.626,
+          "return_pct": -0.008,
+          "signed_return": -0.008,
+          "correct": false
+        },
         {
           "date": "2026-06-15",
           "ticker": "JTO-USD",
@@ -952,205 +785,6 @@
           "return_pct": -0.305,
           "signed_return": -0.305,
           "correct": false
-        },
-        {
-          "date": "2026-06-15",
-          "ticker": "QQQ",
-          "signal": "BUY",
-          "conviction": 0.556,
-          "return_pct": 2.11,
-          "signed_return": 2.11,
-          "correct": true
-        }
-      ]
-    },
-    {
-      "agent": "OBSIDIAN",
-      "grade": "C",
-      "verdict": "NO EDGE",
-      "why": "mean +0.080% (t=+0.30) \u2014 indistinguishable from a coin flip.",
-      "caveats": [],
-      "samples": {
-        "total": 169,
-        "clean": 169,
-        "stale": 0,
-        "clean_pct": 1.0,
-        "clean_directional": 45
-      },
-      "clean_performance": {
-        "win_rate": 0.7111,
-        "mean_signed_return": 0.0799,
-        "sum_signed_return": 3.596,
-        "t_stat": 0.305
-      },
-      "direction_concentration": 0.956,
-      "instrument_mix": {
-        "equity": 39,
-        "macro": 6
-      },
-      "action_mix": {
-        "BUY": 43,
-        "HOLD": 124,
-        "SELL": 2
-      },
-      "by_period": {
-        "daily": [
-          {
-            "period": "2026-06-11",
-            "n": 20,
-            "win_rate": 0.85,
-            "mean_return": 0.4957,
-            "sum_return": 9.914
-          },
-          {
-            "period": "2026-06-12",
-            "n": 9,
-            "win_rate": 0.8889,
-            "mean_return": 0.5924,
-            "sum_return": 5.332
-          },
-          {
-            "period": "2026-06-15",
-            "n": 16,
-            "win_rate": 0.4375,
-            "mean_return": -0.7281,
-            "sum_return": -11.65
-          }
-        ],
-        "weekly": [
-          {
-            "period": "2026-W24",
-            "n": 29,
-            "win_rate": 0.8621,
-            "mean_return": 0.5257,
-            "sum_return": 15.246
-          },
-          {
-            "period": "2026-W25",
-            "n": 16,
-            "win_rate": 0.4375,
-            "mean_return": -0.7281,
-            "sum_return": -11.65
-          }
-        ],
-        "monthly": [
-          {
-            "period": "2026-06",
-            "n": 45,
-            "win_rate": 0.7111,
-            "mean_return": 0.0799,
-            "sum_return": 3.596
-          }
-        ]
-      },
-      "recent_calls": [
-        {
-          "date": "2026-06-15",
-          "ticker": "CPER",
-          "signal": "BUY",
-          "conviction": 0.608,
-          "return_pct": 0.24,
-          "signed_return": 0.24,
-          "correct": true
-        },
-        {
-          "date": "2026-06-15",
-          "ticker": "UNG",
-          "signal": "HOLD",
-          "conviction": 0.332,
-          "return_pct": -1.322,
-          "signed_return": null,
-          "correct": false
-        },
-        {
-          "date": "2026-06-15",
-          "ticker": "SCO",
-          "signal": "HOLD",
-          "conviction": 0.332,
-          "return_pct": 5.387,
-          "signed_return": null,
-          "correct": false
-        },
-        {
-          "date": "2026-06-15",
-          "ticker": "DRIP",
-          "signal": "HOLD",
-          "conviction": 0.332,
-          "return_pct": 5.802,
-          "signed_return": null,
-          "correct": false
-        },
-        {
-          "date": "2026-06-15",
-          "ticker": "BOIL",
-          "signal": "HOLD",
-          "conviction": 0.332,
-          "return_pct": -3.307,
-          "signed_return": null,
-          "correct": false
-        },
-        {
-          "date": "2026-06-15",
-          "ticker": "KOLD",
-          "signal": "HOLD",
-          "conviction": 0.332,
-          "return_pct": 3.192,
-          "signed_return": null,
-          "correct": false
-        },
-        {
-          "date": "2026-06-15",
-          "ticker": "XLE",
-          "signal": "HOLD",
-          "conviction": 0.332,
-          "return_pct": -2.606,
-          "signed_return": null,
-          "correct": false
-        },
-        {
-          "date": "2026-06-15",
-          "ticker": "XOM",
-          "signal": "HOLD",
-          "conviction": 0.332,
-          "return_pct": -2.864,
-          "signed_return": null,
-          "correct": false
-        },
-        {
-          "date": "2026-06-15",
-          "ticker": "SLV",
-          "signal": "HOLD",
-          "conviction": 0.332,
-          "return_pct": 4.503,
-          "signed_return": null,
-          "correct": false
-        },
-        {
-          "date": "2026-06-15",
-          "ticker": "USO",
-          "signal": "HOLD",
-          "conviction": 0.332,
-          "return_pct": -4.178,
-          "signed_return": null,
-          "correct": false
-        },
-        {
-          "date": "2026-06-15",
-          "ticker": "DBC",
-          "signal": "HOLD",
-          "conviction": 0.332,
-          "return_pct": -1.191,
-          "signed_return": null,
-          "correct": false
-        },
-        {
-          "date": "2026-06-15",
-          "ticker": "SIVR",
-          "signal": "HOLD",
-          "conviction": 0.332,
-          "return_pct": 4.462,
-          "signed_return": null,
-          "correct": false
         }
       ]
     },
@@ -1158,39 +792,39 @@
       "agent": "KESTREL",
       "grade": "C",
       "verdict": "NO EDGE",
-      "why": "mean +0.031% (t=+0.31) \u2014 indistinguishable from a coin flip.",
+      "why": "mean +0.027% (t=+0.26) \u2014 indistinguishable from a coin flip.",
       "caveats": [],
       "samples": {
-        "total": 34,
-        "clean": 34,
+        "total": 33,
+        "clean": 33,
         "stale": 0,
         "clean_pct": 1.0,
-        "clean_directional": 34
+        "clean_directional": 33
       },
       "clean_performance": {
-        "win_rate": 0.5882,
-        "mean_signed_return": 0.0307,
-        "sum_signed_return": 1.044,
-        "t_stat": 0.309
+        "win_rate": 0.5758,
+        "mean_signed_return": 0.0268,
+        "sum_signed_return": 0.884,
+        "t_stat": 0.262
       },
-      "direction_concentration": 0.618,
+      "direction_concentration": 0.606,
       "instrument_mix": {
-        "macro": 15,
         "equity": 18,
+        "macro": 14,
         "broad_etf": 1
       },
       "action_mix": {
-        "BUY": 21,
+        "BUY": 20,
         "SELL": 13
       },
       "by_period": {
         "daily": [
           {
             "period": "2026-06-11",
-            "n": 10,
-            "win_rate": 0.7,
-            "mean_return": -0.0529,
-            "sum_return": -0.529
+            "n": 9,
+            "win_rate": 0.6667,
+            "mean_return": -0.0766,
+            "sum_return": -0.689
           },
           {
             "period": "2026-06-12",
@@ -1210,10 +844,10 @@
         "weekly": [
           {
             "period": "2026-W24",
-            "n": 20,
-            "win_rate": 0.7,
-            "mean_return": -0.0237,
-            "sum_return": -0.474
+            "n": 19,
+            "win_rate": 0.6842,
+            "mean_return": -0.0334,
+            "sum_return": -0.634
           },
           {
             "period": "2026-W25",
@@ -1226,10 +860,10 @@
         "monthly": [
           {
             "period": "2026-06",
-            "n": 34,
-            "win_rate": 0.5882,
-            "mean_return": 0.0307,
-            "sum_return": 1.044
+            "n": 33,
+            "win_rate": 0.5758,
+            "mean_return": 0.0268,
+            "sum_return": 0.884
           }
         ]
       },
@@ -1345,44 +979,234 @@
       ]
     },
     {
-      "agent": "FABLEBOY_5",
+      "agent": "FORGE",
       "grade": "C",
       "verdict": "NO EDGE",
-      "why": "mean -0.018% (t=-0.04) \u2014 indistinguishable from a coin flip.",
+      "why": "mean -0.102% (t=-0.29) \u2014 indistinguishable from a coin flip.",
       "caveats": [],
       "samples": {
-        "total": 172,
-        "clean": 172,
+        "total": 109,
+        "clean": 109,
         "stale": 0,
         "clean_pct": 1.0,
-        "clean_directional": 48
+        "clean_directional": 38
       },
       "clean_performance": {
-        "win_rate": 0.5417,
-        "mean_signed_return": -0.0185,
-        "sum_signed_return": -0.89,
-        "t_stat": -0.039
+        "win_rate": 0.3947,
+        "mean_signed_return": -0.1018,
+        "sum_signed_return": -3.868,
+        "t_stat": -0.286
       },
-      "direction_concentration": 0.771,
+      "direction_concentration": 0.868,
       "instrument_mix": {
-        "equity": 29,
-        "crypto": 19
+        "equity": 38
       },
       "action_mix": {
-        "STRONG_BUY": 4,
-        "BUY": 33,
-        "HOLD": 124,
-        "SELL": 9,
-        "STRONG_SELL": 2
+        "BUY": 1,
+        "HOLD": 71,
+        "SELL": 33,
+        "STRONG_BUY": 4
       },
       "by_period": {
         "daily": [
           {
             "period": "2026-06-11",
-            "n": 15,
-            "win_rate": 0.6,
-            "mean_return": 0.7356,
-            "sum_return": 11.034
+            "n": 14,
+            "win_rate": 0.7143,
+            "mean_return": 0.8015,
+            "sum_return": 11.221
+          },
+          {
+            "period": "2026-06-12",
+            "n": 14,
+            "win_rate": 0.3571,
+            "mean_return": 0.1829,
+            "sum_return": 2.561
+          },
+          {
+            "period": "2026-06-15",
+            "n": 10,
+            "win_rate": 0.0,
+            "mean_return": -1.765,
+            "sum_return": -17.65
+          }
+        ],
+        "weekly": [
+          {
+            "period": "2026-W24",
+            "n": 28,
+            "win_rate": 0.5357,
+            "mean_return": 0.4922,
+            "sum_return": 13.782
+          },
+          {
+            "period": "2026-W25",
+            "n": 10,
+            "win_rate": 0.0,
+            "mean_return": -1.765,
+            "sum_return": -17.65
+          }
+        ],
+        "monthly": [
+          {
+            "period": "2026-06",
+            "n": 38,
+            "win_rate": 0.3947,
+            "mean_return": -0.1018,
+            "sum_return": -3.868
+          }
+        ]
+      },
+      "recent_calls": [
+        {
+          "date": "2026-06-15",
+          "ticker": "TSM",
+          "signal": "HOLD",
+          "conviction": 0.439,
+          "return_pct": 3.442,
+          "signed_return": null,
+          "correct": false
+        },
+        {
+          "date": "2026-06-15",
+          "ticker": "AMD",
+          "signal": "HOLD",
+          "conviction": 0.439,
+          "return_pct": 4.672,
+          "signed_return": null,
+          "correct": false
+        },
+        {
+          "date": "2026-06-15",
+          "ticker": "MU",
+          "signal": "HOLD",
+          "conviction": 0.439,
+          "return_pct": 7.827,
+          "signed_return": null,
+          "correct": false
+        },
+        {
+          "date": "2026-06-15",
+          "ticker": "IBM",
+          "signal": "HOLD",
+          "conviction": 0.439,
+          "return_pct": 0.749,
+          "signed_return": null,
+          "correct": false
+        },
+        {
+          "date": "2026-06-15",
+          "ticker": "NOW",
+          "signal": "HOLD",
+          "conviction": 0.439,
+          "return_pct": 2.937,
+          "signed_return": null,
+          "correct": false
+        },
+        {
+          "date": "2026-06-15",
+          "ticker": "AAPL",
+          "signal": "HOLD",
+          "conviction": 0.439,
+          "return_pct": 0.642,
+          "signed_return": null,
+          "correct": false
+        },
+        {
+          "date": "2026-06-15",
+          "ticker": "MSFT",
+          "signal": "SELL",
+          "conviction": 0.549,
+          "return_pct": 1.625,
+          "signed_return": -1.625,
+          "correct": false
+        },
+        {
+          "date": "2026-06-15",
+          "ticker": "AVGO",
+          "signal": "SELL",
+          "conviction": 0.549,
+          "return_pct": 3.109,
+          "signed_return": -3.109,
+          "correct": false
+        },
+        {
+          "date": "2026-06-15",
+          "ticker": "CRWD",
+          "signal": "HOLD",
+          "conviction": 0.439,
+          "return_pct": 1.623,
+          "signed_return": null,
+          "correct": false
+        },
+        {
+          "date": "2026-06-15",
+          "ticker": "QQQ",
+          "signal": "HOLD",
+          "conviction": 0.439,
+          "return_pct": 2.11,
+          "signed_return": null,
+          "correct": false
+        },
+        {
+          "date": "2026-06-15",
+          "ticker": "SMH",
+          "signal": "HOLD",
+          "conviction": 0.439,
+          "return_pct": 3.566,
+          "signed_return": null,
+          "correct": false
+        },
+        {
+          "date": "2026-06-15",
+          "ticker": "SOXX",
+          "signal": "HOLD",
+          "conviction": 0.439,
+          "return_pct": 4.589,
+          "signed_return": null,
+          "correct": false
+        }
+      ]
+    },
+    {
+      "agent": "FABLEBOY_5",
+      "grade": "C",
+      "verdict": "NO EDGE",
+      "why": "mean -0.352% (t=-1.41) \u2014 indistinguishable from a coin flip.",
+      "caveats": [],
+      "samples": {
+        "total": 203,
+        "clean": 203,
+        "stale": 0,
+        "clean_pct": 1.0,
+        "clean_directional": 60
+      },
+      "clean_performance": {
+        "win_rate": 0.55,
+        "mean_signed_return": -0.3525,
+        "sum_signed_return": -21.148,
+        "t_stat": -1.412
+      },
+      "direction_concentration": 0.8,
+      "instrument_mix": {
+        "equity": 22,
+        "crypto": 38
+      },
+      "action_mix": {
+        "HOLD": 143,
+        "BUY": 47,
+        "SELL": 9,
+        "STRONG_BUY": 1,
+        "STRONG_SELL": 3
+      },
+      "by_period": {
+        "daily": [
+          {
+            "period": "2026-06-11",
+            "n": 8,
+            "win_rate": 0.375,
+            "mean_return": -0.913,
+            "sum_return": -7.304
           },
           {
             "period": "2026-06-12",
@@ -1397,142 +1221,149 @@
             "win_rate": 0.5263,
             "mean_return": -0.0086,
             "sum_return": -0.164
+          },
+          {
+            "period": "2026-06-16",
+            "n": 19,
+            "win_rate": 0.6842,
+            "mean_return": -0.1011,
+            "sum_return": -1.92
           }
         ],
         "weekly": [
           {
             "period": "2026-W24",
-            "n": 29,
-            "win_rate": 0.5517,
-            "mean_return": -0.025,
-            "sum_return": -0.726
+            "n": 22,
+            "win_rate": 0.4545,
+            "mean_return": -0.8665,
+            "sum_return": -19.064
           },
           {
             "period": "2026-W25",
-            "n": 19,
-            "win_rate": 0.5263,
-            "mean_return": -0.0086,
-            "sum_return": -0.164
+            "n": 38,
+            "win_rate": 0.6053,
+            "mean_return": -0.0548,
+            "sum_return": -2.084
           }
         ],
         "monthly": [
           {
             "period": "2026-06",
-            "n": 48,
-            "win_rate": 0.5417,
-            "mean_return": -0.0185,
-            "sum_return": -0.89
+            "n": 60,
+            "win_rate": 0.55,
+            "mean_return": -0.3525,
+            "sum_return": -21.148
           }
         ]
       },
       "recent_calls": [
         {
-          "date": "2026-06-15",
-          "ticker": "JTO-USD",
+          "date": "2026-06-16",
+          "ticker": "NEAR-USD",
           "signal": "BUY",
-          "conviction": 0.667,
-          "return_pct": 0.504,
-          "signed_return": 0.504,
+          "conviction": 0.675,
+          "return_pct": 0.547,
+          "signed_return": 0.547,
           "correct": true
         },
         {
-          "date": "2026-06-15",
+          "date": "2026-06-16",
+          "ticker": "JTO-USD",
+          "signal": "BUY",
+          "conviction": 0.742,
+          "return_pct": -0.096,
+          "signed_return": -0.096,
+          "correct": false
+        },
+        {
+          "date": "2026-06-16",
           "ticker": "XLM-USD",
           "signal": "BUY",
-          "conviction": 0.877,
-          "return_pct": -0.073,
-          "signed_return": -0.073,
-          "correct": false
+          "conviction": 0.776,
+          "return_pct": 0.637,
+          "signed_return": 0.637,
+          "correct": true
         },
         {
-          "date": "2026-06-15",
-          "ticker": "NEAR-USD",
+          "date": "2026-06-16",
+          "ticker": "ADA-USD",
           "signal": "BUY",
-          "conviction": 0.714,
-          "return_pct": -0.09,
-          "signed_return": -0.09,
-          "correct": false
+          "conviction": 0.664,
+          "return_pct": 0.056,
+          "signed_return": 0.056,
+          "correct": true
         },
         {
-          "date": "2026-06-15",
-          "ticker": "FET-USD",
+          "date": "2026-06-16",
+          "ticker": "PYTH-USD",
           "signal": "BUY",
-          "conviction": 0.702,
-          "return_pct": -0.236,
-          "signed_return": -0.236,
+          "conviction": 0.664,
+          "return_pct": 0.518,
+          "signed_return": 0.518,
+          "correct": true
+        },
+        {
+          "date": "2026-06-16",
+          "ticker": "ICP-USD",
+          "signal": "BUY",
+          "conviction": 0.54,
+          "return_pct": -0.083,
+          "signed_return": -0.083,
           "correct": false
         },
         {
-          "date": "2026-06-15",
+          "date": "2026-06-16",
           "ticker": "STRK-USD",
           "signal": "BUY",
-          "conviction": 0.667,
-          "return_pct": -0.812,
-          "signed_return": -0.812,
+          "conviction": 0.765,
+          "return_pct": -1.316,
+          "signed_return": -1.316,
           "correct": false
         },
         {
-          "date": "2026-06-15",
-          "ticker": "TRX-USD",
+          "date": "2026-06-16",
+          "ticker": "LDO-USD",
           "signal": "BUY",
-          "conviction": 0.538,
-          "return_pct": -0.881,
-          "signed_return": -0.881,
-          "correct": false
-        },
-        {
-          "date": "2026-06-15",
-          "ticker": "AAVE-USD",
-          "signal": "BUY",
-          "conviction": 0.667,
+          "conviction": 0.866,
           "return_pct": 0.368,
           "signed_return": 0.368,
           "correct": true
         },
         {
-          "date": "2026-06-15",
-          "ticker": "XMR-USD",
+          "date": "2026-06-16",
+          "ticker": "ENA-USD",
           "signal": "BUY",
-          "conviction": 0.643,
-          "return_pct": 0.474,
-          "signed_return": 0.474,
+          "conviction": 0.787,
+          "return_pct": 0.946,
+          "signed_return": 0.946,
           "correct": true
         },
         {
-          "date": "2026-06-15",
-          "ticker": "ICP-USD",
+          "date": "2026-06-16",
+          "ticker": "AAVE-USD",
           "signal": "BUY",
-          "conviction": 0.62,
-          "return_pct": 0.399,
-          "signed_return": 0.399,
+          "conviction": 0.742,
+          "return_pct": 0.245,
+          "signed_return": 0.245,
           "correct": true
         },
         {
-          "date": "2026-06-15",
-          "ticker": "XTZ-USD",
+          "date": "2026-06-16",
+          "ticker": "HBAR-USD",
           "signal": "BUY",
-          "conviction": 0.62,
-          "return_pct": 0.63,
-          "signed_return": 0.63,
+          "conviction": 0.72,
+          "return_pct": 0.121,
+          "signed_return": 0.121,
           "correct": true
         },
         {
-          "date": "2026-06-15",
-          "ticker": "LINK-USD",
-          "signal": "BUY",
-          "conviction": 0.585,
-          "return_pct": 0.677,
-          "signed_return": 0.677,
-          "correct": true
-        },
-        {
-          "date": "2026-06-15",
-          "ticker": "MANA-USD",
-          "signal": "BUY",
-          "conviction": 0.585,
-          "return_pct": 0.592,
-          "signed_return": 0.592,
-          "correct": true
+          "date": "2026-06-16",
+          "ticker": "TON-USD",
+          "signal": "HOLD",
+          "conviction": 0.337,
+          "return_pct": -6.682,
+          "signed_return": null,
+          "correct": false
         }
       ]
     },
@@ -1540,31 +1371,31 @@
       "agent": "HEX",
       "grade": "C",
       "verdict": "NO EDGE",
-      "why": "mean -0.233% (t=-1.36) \u2014 indistinguishable from a coin flip.",
+      "why": "mean -0.228% (t=-1.36) \u2014 indistinguishable from a coin flip.",
       "caveats": [],
       "samples": {
-        "total": 112,
-        "clean": 112,
+        "total": 114,
+        "clean": 114,
         "stale": 0,
         "clean_pct": 1.0,
-        "clean_directional": 112
+        "clean_directional": 114
       },
       "clean_performance": {
-        "win_rate": 0.4464,
-        "mean_signed_return": -0.2326,
-        "sum_signed_return": -26.054,
-        "t_stat": -1.363
+        "win_rate": 0.4561,
+        "mean_signed_return": -0.2276,
+        "sum_signed_return": -25.95,
+        "t_stat": -1.358
       },
-      "direction_concentration": 0.732,
+      "direction_concentration": 0.737,
       "instrument_mix": {
         "broad_etf": 1,
         "equity": 103,
         "macro": 7,
-        "crypto": 1
+        "crypto": 3
       },
       "action_mix": {
         "BUY": 30,
-        "SELL": 82
+        "SELL": 84
       },
       "by_period": {
         "daily": [
@@ -1588,6 +1419,13 @@
             "win_rate": 0.36,
             "mean_return": -0.572,
             "sum_return": -28.601
+          },
+          {
+            "period": "2026-06-16",
+            "n": 2,
+            "win_rate": 1.0,
+            "mean_return": 0.052,
+            "sum_return": 0.104
           }
         ],
         "weekly": [
@@ -1600,23 +1438,41 @@
           },
           {
             "period": "2026-W25",
-            "n": 50,
-            "win_rate": 0.36,
-            "mean_return": -0.572,
-            "sum_return": -28.601
+            "n": 52,
+            "win_rate": 0.3846,
+            "mean_return": -0.548,
+            "sum_return": -28.497
           }
         ],
         "monthly": [
           {
             "period": "2026-06",
-            "n": 112,
-            "win_rate": 0.4464,
-            "mean_return": -0.2326,
-            "sum_return": -26.054
+            "n": 114,
+            "win_rate": 0.4561,
+            "mean_return": -0.2276,
+            "sum_return": -25.95
           }
         ]
       },
       "recent_calls": [
+        {
+          "date": "2026-06-16",
+          "ticker": "JTO-USD",
+          "signal": "SELL",
+          "conviction": 0.537,
+          "return_pct": -0.096,
+          "signed_return": 0.096,
+          "correct": true
+        },
+        {
+          "date": "2026-06-16",
+          "ticker": "ARB-USD",
+          "signal": "SELL",
+          "conviction": 0.666,
+          "return_pct": -0.008,
+          "signed_return": 0.008,
+          "correct": true
+        },
         {
           "date": "2026-06-15",
           "ticker": "AMAT",
@@ -1706,401 +1562,196 @@
           "return_pct": 5.763,
           "signed_return": -5.763,
           "correct": false
-        },
-        {
-          "date": "2026-06-15",
-          "ticker": "STT",
-          "signal": "SELL",
-          "conviction": 0.505,
-          "return_pct": 1.5,
-          "signed_return": -1.5,
-          "correct": false
-        },
-        {
-          "date": "2026-06-15",
-          "ticker": "CVS",
-          "signal": "SELL",
-          "conviction": 0.529,
-          "return_pct": -2.226,
-          "signed_return": 2.226,
-          "correct": true
         }
       ]
     },
     {
-      "agent": "SPECK",
-      "grade": "C",
-      "verdict": "NO EDGE",
-      "why": "mean -2.299% (t=-0.76) \u2014 indistinguishable from a coin flip.",
+      "agent": "OBSIDIAN",
+      "grade": "D",
+      "verdict": "WIN-RATE MIRAGE",
+      "why": "wins 66% but mean signed return -0.015% \u2014 right often, profitable never.",
       "caveats": [],
       "samples": {
-        "total": 30,
-        "clean": 30,
+        "total": 162,
+        "clean": 162,
         "stale": 0,
         "clean_pct": 1.0,
-        "clean_directional": 30
+        "clean_directional": 38
       },
       "clean_performance": {
-        "win_rate": 0.5,
-        "mean_signed_return": -2.2994,
-        "sum_signed_return": -68.983,
-        "t_stat": -0.755
+        "win_rate": 0.6579,
+        "mean_signed_return": -0.0152,
+        "sum_signed_return": -0.576,
+        "t_stat": -0.049
       },
-      "direction_concentration": 1.0,
+      "direction_concentration": 0.947,
       "instrument_mix": {
-        "equity": 23,
-        "crypto": 7
+        "equity": 32,
+        "macro": 6
       },
       "action_mix": {
-        "BUY": 30
+        "BUY": 36,
+        "HOLD": 124,
+        "SELL": 2
       },
       "by_period": {
         "daily": [
           {
             "period": "2026-06-11",
             "n": 13,
-            "win_rate": 0.6923,
-            "mean_return": 2.077,
-            "sum_return": 27.001
+            "win_rate": 0.7692,
+            "mean_return": 0.4417,
+            "sum_return": 5.742
           },
           {
             "period": "2026-06-12",
-            "n": 10,
-            "win_rate": 0.1,
-            "mean_return": -10.016,
-            "sum_return": -100.16
-          },
-          {
-            "period": "2026-06-15",
-            "n": 7,
-            "win_rate": 0.7143,
-            "mean_return": 0.5966,
-            "sum_return": 4.176
-          }
-        ],
-        "weekly": [
-          {
-            "period": "2026-W24",
-            "n": 23,
-            "win_rate": 0.4348,
-            "mean_return": -3.1808,
-            "sum_return": -73.159
-          },
-          {
-            "period": "2026-W25",
-            "n": 7,
-            "win_rate": 0.7143,
-            "mean_return": 0.5966,
-            "sum_return": 4.176
-          }
-        ],
-        "monthly": [
-          {
-            "period": "2026-06",
-            "n": 30,
-            "win_rate": 0.5,
-            "mean_return": -2.2994,
-            "sum_return": -68.983
-          }
-        ]
-      },
-      "recent_calls": [
-        {
-          "date": "2026-06-15",
-          "ticker": "JTO-USD",
-          "signal": "BUY",
-          "conviction": 0.596,
-          "return_pct": 0.504,
-          "signed_return": 0.504,
-          "correct": true
-        },
-        {
-          "date": "2026-06-15",
-          "ticker": "XLM-USD",
-          "signal": "BUY",
-          "conviction": 0.613,
-          "return_pct": -0.073,
-          "signed_return": -0.073,
-          "correct": false
-        },
-        {
-          "date": "2026-06-15",
-          "ticker": "NEAR-USD",
-          "signal": "BUY",
-          "conviction": 0.613,
-          "return_pct": -0.09,
-          "signed_return": -0.09,
-          "correct": false
-        },
-        {
-          "date": "2026-06-15",
-          "ticker": "INJ-USD",
-          "signal": "BUY",
-          "conviction": 0.499,
-          "return_pct": 0.345,
-          "signed_return": 0.345,
-          "correct": true
-        },
-        {
-          "date": "2026-06-15",
-          "ticker": "USDT-USD",
-          "signal": "BUY",
-          "conviction": 0.494,
-          "return_pct": 0.001,
-          "signed_return": 0.001,
-          "correct": true
-        },
-        {
-          "date": "2026-06-15",
-          "ticker": "ATOM-USD",
-          "signal": "BUY",
-          "conviction": 0.494,
-          "return_pct": 0.25,
-          "signed_return": 0.25,
-          "correct": true
-        },
-        {
-          "date": "2026-06-15",
-          "ticker": "TON-USD",
-          "signal": "BUY",
-          "conviction": 0.494,
-          "return_pct": 3.239,
-          "signed_return": 3.239,
-          "correct": true
-        },
-        {
-          "date": "2026-06-12",
-          "ticker": "INTC",
-          "signal": "BUY",
-          "conviction": 0.655,
-          "return_pct": -0.325,
-          "signed_return": -0.325,
-          "correct": false
-        },
-        {
-          "date": "2026-06-12",
-          "ticker": "MRVL",
-          "signal": "BUY",
-          "conviction": 0.655,
-          "return_pct": -1.742,
-          "signed_return": -1.742,
-          "correct": false
-        },
-        {
-          "date": "2026-06-12",
-          "ticker": "CRWD",
-          "signal": "BUY",
-          "conviction": 0.612,
-          "return_pct": 0.097,
-          "signed_return": 0.097,
-          "correct": true
-        },
-        {
-          "date": "2026-06-12",
-          "ticker": "DELL",
-          "signal": "BUY",
-          "conviction": 0.564,
-          "return_pct": -0.833,
-          "signed_return": -0.833,
-          "correct": false
-        },
-        {
-          "date": "2026-06-12",
-          "ticker": "TXN",
-          "signal": "BUY",
-          "conviction": 0.582,
-          "return_pct": -0.761,
-          "signed_return": -0.761,
-          "correct": false
-        }
-      ]
-    },
-    {
-      "agent": "AEGIS",
-      "grade": "I",
-      "verdict": "INSUFFICIENT",
-      "why": "only 18 clean directional samples (< 30); any win-rate here is noise.",
-      "caveats": [],
-      "samples": {
-        "total": 1197,
-        "clean": 1197,
-        "stale": 0,
-        "clean_pct": 1.0,
-        "clean_directional": 18
-      },
-      "clean_performance": {
-        "win_rate": 0.6111,
-        "mean_signed_return": 1.8966,
-        "sum_signed_return": 34.138,
-        "t_stat": 2.624
-      },
-      "direction_concentration": 1.0,
-      "instrument_mix": {
-        "equity": 16,
-        "crypto": 2
-      },
-      "action_mix": {
-        "HOLD": 1179,
-        "BUY": 18
-      },
-      "by_period": {
-        "daily": [
-          {
-            "period": "2026-06-11",
             "n": 9,
             "win_rate": 0.8889,
-            "mean_return": 4.0711,
-            "sum_return": 36.64
-          },
-          {
-            "period": "2026-06-12",
-            "n": 7,
-            "win_rate": 0.1429,
-            "mean_return": -0.8921,
-            "sum_return": -6.245
+            "mean_return": 0.5924,
+            "sum_return": 5.332
           },
           {
             "period": "2026-06-15",
-            "n": 2,
-            "win_rate": 1.0,
-            "mean_return": 1.8715,
-            "sum_return": 3.743
+            "n": 16,
+            "win_rate": 0.4375,
+            "mean_return": -0.7281,
+            "sum_return": -11.65
           }
         ],
         "weekly": [
           {
             "period": "2026-W24",
-            "n": 16,
-            "win_rate": 0.5625,
-            "mean_return": 1.8997,
-            "sum_return": 30.395
+            "n": 22,
+            "win_rate": 0.8182,
+            "mean_return": 0.5034,
+            "sum_return": 11.074
           },
           {
             "period": "2026-W25",
-            "n": 2,
-            "win_rate": 1.0,
-            "mean_return": 1.8715,
-            "sum_return": 3.743
+            "n": 16,
+            "win_rate": 0.4375,
+            "mean_return": -0.7281,
+            "sum_return": -11.65
           }
         ],
         "monthly": [
           {
             "period": "2026-06",
-            "n": 18,
-            "win_rate": 0.6111,
-            "mean_return": 1.8966,
-            "sum_return": 34.138
+            "n": 38,
+            "win_rate": 0.6579,
+            "mean_return": -0.0152,
+            "sum_return": -0.576
           }
         ]
       },
       "recent_calls": [
         {
           "date": "2026-06-15",
-          "ticker": "JTO-USD",
+          "ticker": "CPER",
           "signal": "BUY",
-          "conviction": 0.543,
-          "return_pct": 0.504,
-          "signed_return": 0.504,
+          "conviction": 0.608,
+          "return_pct": 0.24,
+          "signed_return": 0.24,
           "correct": true
         },
         {
           "date": "2026-06-15",
-          "ticker": "XLM-USD",
+          "ticker": "UNG",
           "signal": "HOLD",
-          "conviction": 0.395,
-          "return_pct": -0.073,
-          "signed_return": null,
-          "correct": true
-        },
-        {
-          "date": "2026-06-15",
-          "ticker": "NEAR-USD",
-          "signal": "HOLD",
-          "conviction": 0.395,
-          "return_pct": -0.09,
-          "signed_return": null,
-          "correct": true
-        },
-        {
-          "date": "2026-06-15",
-          "ticker": "FET-USD",
-          "signal": "HOLD",
-          "conviction": 0.395,
-          "return_pct": -0.236,
-          "signed_return": null,
-          "correct": true
-        },
-        {
-          "date": "2026-06-15",
-          "ticker": "STRK-USD",
-          "signal": "HOLD",
-          "conviction": 0.395,
-          "return_pct": -0.812,
+          "conviction": 0.332,
+          "return_pct": -1.322,
           "signed_return": null,
           "correct": false
         },
         {
           "date": "2026-06-15",
-          "ticker": "TRX-USD",
+          "ticker": "SCO",
           "signal": "HOLD",
-          "conviction": 0.395,
-          "return_pct": -0.881,
+          "conviction": 0.332,
+          "return_pct": 5.387,
           "signed_return": null,
           "correct": false
         },
         {
           "date": "2026-06-15",
-          "ticker": "AAVE-USD",
+          "ticker": "DRIP",
           "signal": "HOLD",
-          "conviction": 0.642,
-          "return_pct": 0.368,
-          "signed_return": null,
-          "correct": true
-        },
-        {
-          "date": "2026-06-15",
-          "ticker": "XMR-USD",
-          "signal": "HOLD",
-          "conviction": 0.642,
-          "return_pct": 0.474,
-          "signed_return": null,
-          "correct": true
-        },
-        {
-          "date": "2026-06-15",
-          "ticker": "ICP-USD",
-          "signal": "HOLD",
-          "conviction": 0.642,
-          "return_pct": 0.399,
-          "signed_return": null,
-          "correct": true
-        },
-        {
-          "date": "2026-06-15",
-          "ticker": "XTZ-USD",
-          "signal": "HOLD",
-          "conviction": 0.642,
-          "return_pct": 0.63,
+          "conviction": 0.332,
+          "return_pct": 5.802,
           "signed_return": null,
           "correct": false
         },
         {
           "date": "2026-06-15",
-          "ticker": "LINK-USD",
+          "ticker": "BOIL",
           "signal": "HOLD",
-          "conviction": 0.642,
-          "return_pct": 0.677,
+          "conviction": 0.332,
+          "return_pct": -3.307,
           "signed_return": null,
           "correct": false
         },
         {
           "date": "2026-06-15",
-          "ticker": "MANA-USD",
+          "ticker": "KOLD",
           "signal": "HOLD",
-          "conviction": 0.642,
-          "return_pct": 0.592,
+          "conviction": 0.332,
+          "return_pct": 3.192,
           "signed_return": null,
-          "correct": true
+          "correct": false
+        },
+        {
+          "date": "2026-06-15",
+          "ticker": "XLE",
+          "signal": "HOLD",
+          "conviction": 0.332,
+          "return_pct": -2.606,
+          "signed_return": null,
+          "correct": false
+        },
+        {
+          "date": "2026-06-15",
+          "ticker": "XOM",
+          "signal": "HOLD",
+          "conviction": 0.332,
+          "return_pct": -2.864,
+          "signed_return": null,
+          "correct": false
+        },
+        {
+          "date": "2026-06-15",
+          "ticker": "SLV",
+          "signal": "HOLD",
+          "conviction": 0.332,
+          "return_pct": 4.503,
+          "signed_return": null,
+          "correct": false
+        },
+        {
+          "date": "2026-06-15",
+          "ticker": "USO",
+          "signal": "HOLD",
+          "conviction": 0.332,
+          "return_pct": -4.178,
+          "signed_return": null,
+          "correct": false
+        },
+        {
+          "date": "2026-06-15",
+          "ticker": "DBC",
+          "signal": "HOLD",
+          "conviction": 0.332,
+          "return_pct": -1.191,
+          "signed_return": null,
+          "correct": false
+        },
+        {
+          "date": "2026-06-15",
+          "ticker": "SIVR",
+          "signal": "HOLD",
+          "conviction": 0.332,
+          "return_pct": 4.462,
+          "signed_return": null,
+          "correct": false
         }
       ]
     },
@@ -2306,28 +1957,29 @@
       },
       "clean_performance": {
         "win_rate": 0.4615,
-        "mean_signed_return": 0.3953,
-        "sum_signed_return": 10.277,
-        "t_stat": 0.854
+        "mean_signed_return": 0.4153,
+        "sum_signed_return": 10.799,
+        "t_stat": 0.9
       },
       "direction_concentration": 0.5,
       "instrument_mix": {
-        "equity": 22,
-        "macro": 4
+        "equity": 21,
+        "macro": 4,
+        "crypto": 1
       },
       "action_mix": {
-        "STRONG_BUY": 1,
         "BUY": 12,
-        "SELL": 13
+        "SELL": 13,
+        "STRONG_BUY": 1
       },
       "by_period": {
         "daily": [
           {
             "period": "2026-06-11",
-            "n": 7,
-            "win_rate": 0.4286,
-            "mean_return": -0.7439,
-            "sum_return": -5.207
+            "n": 6,
+            "win_rate": 0.5,
+            "mean_return": -0.7648,
+            "sum_return": -4.589
           },
           {
             "period": "2026-06-12",
@@ -2342,22 +1994,29 @@
             "win_rate": 0.5714,
             "mean_return": 0.8016,
             "sum_return": 5.611
+          },
+          {
+            "period": "2026-06-16",
+            "n": 1,
+            "win_rate": 0.0,
+            "mean_return": -0.096,
+            "sum_return": -0.096
           }
         ],
         "weekly": [
           {
             "period": "2026-W24",
-            "n": 19,
-            "win_rate": 0.4211,
-            "mean_return": 0.2456,
-            "sum_return": 4.666
+            "n": 18,
+            "win_rate": 0.4444,
+            "mean_return": 0.2936,
+            "sum_return": 5.284
           },
           {
             "period": "2026-W25",
-            "n": 7,
-            "win_rate": 0.5714,
-            "mean_return": 0.8016,
-            "sum_return": 5.611
+            "n": 8,
+            "win_rate": 0.5,
+            "mean_return": 0.6894,
+            "sum_return": 5.515
           }
         ],
         "monthly": [
@@ -2365,12 +2024,21 @@
             "period": "2026-06",
             "n": 26,
             "win_rate": 0.4615,
-            "mean_return": 0.3953,
-            "sum_return": 10.277
+            "mean_return": 0.4153,
+            "sum_return": 10.799
           }
         ]
       },
       "recent_calls": [
+        {
+          "date": "2026-06-16",
+          "ticker": "JTO-USD",
+          "signal": "STRONG_BUY",
+          "conviction": 0.905,
+          "return_pct": -0.096,
+          "signed_return": -0.096,
+          "correct": false
+        },
         {
           "date": "2026-06-15",
           "ticker": "ADBE",
@@ -2469,15 +2137,6 @@
           "return_pct": -3.063,
           "signed_return": -3.063,
           "correct": false
-        },
-        {
-          "date": "2026-06-12",
-          "ticker": "ADBE",
-          "signal": "SELL",
-          "conviction": 0.631,
-          "return_pct": -8.208,
-          "signed_return": 8.208,
-          "correct": true
         }
       ]
     },
@@ -2586,83 +2245,6 @@
           "return_pct": 0.62,
           "signed_return": 0.62,
           "correct": true
-        }
-      ]
-    },
-    {
-      "agent": "CICADA",
-      "grade": "I",
-      "verdict": "INSUFFICIENT",
-      "why": "only 0 clean directional samples (< 30); any win-rate here is noise.",
-      "caveats": [],
-      "samples": {
-        "total": 5,
-        "clean": 5,
-        "stale": 0,
-        "clean_pct": 1.0,
-        "clean_directional": 0
-      },
-      "clean_performance": {
-        "win_rate": 0.0,
-        "mean_signed_return": 0.0,
-        "sum_signed_return": 0.0,
-        "t_stat": 0.0
-      },
-      "direction_concentration": 0.0,
-      "instrument_mix": {},
-      "action_mix": {
-        "HOLD": 5
-      },
-      "by_period": {
-        "daily": [],
-        "weekly": [],
-        "monthly": []
-      },
-      "recent_calls": [
-        {
-          "date": "2026-06-12",
-          "ticker": "ADBE",
-          "signal": "HOLD",
-          "conviction": 0.0,
-          "return_pct": -8.208,
-          "signed_return": null,
-          "correct": false
-        },
-        {
-          "date": "2026-06-12",
-          "ticker": "LEN",
-          "signal": "HOLD",
-          "conviction": 0.0,
-          "return_pct": -3.444,
-          "signed_return": null,
-          "correct": false
-        },
-        {
-          "date": "2026-06-11",
-          "ticker": "ORCL",
-          "signal": "HOLD",
-          "conviction": 0.0,
-          "return_pct": -11.08,
-          "signed_return": null,
-          "correct": false
-        },
-        {
-          "date": "2026-06-11",
-          "ticker": "LEN",
-          "signal": "HOLD",
-          "conviction": 0.0,
-          "return_pct": 1.475,
-          "signed_return": null,
-          "correct": false
-        },
-        {
-          "date": "2026-06-11",
-          "ticker": "ADBE",
-          "signal": "HOLD",
-          "conviction": 0.0,
-          "return_pct": -4.748,
-          "signed_return": null,
-          "correct": false
         }
       ]
     },
@@ -2807,117 +2389,69 @@
       ]
     },
     {
-      "agent": "JADE",
+      "agent": "CICADA",
       "grade": "I",
       "verdict": "INSUFFICIENT",
-      "why": "only 4 clean directional samples (< 30); any win-rate here is noise.",
+      "why": "only 0 clean directional samples (< 30); any win-rate here is noise.",
       "caveats": [],
       "samples": {
         "total": 4,
         "clean": 4,
         "stale": 0,
         "clean_pct": 1.0,
-        "clean_directional": 4
+        "clean_directional": 0
       },
       "clean_performance": {
-        "win_rate": 0.25,
-        "mean_signed_return": -0.062,
-        "sum_signed_return": -0.248,
-        "t_stat": -0.384
+        "win_rate": 0.0,
+        "mean_signed_return": 0.0,
+        "sum_signed_return": 0.0,
+        "t_stat": 0.0
       },
-      "direction_concentration": 1.0,
-      "instrument_mix": {
-        "equity": 1,
-        "macro": 3
-      },
+      "direction_concentration": 0.0,
+      "instrument_mix": {},
       "action_mix": {
-        "BUY": 4
+        "HOLD": 4
       },
       "by_period": {
-        "daily": [
-          {
-            "period": "2026-06-11",
-            "n": 2,
-            "win_rate": 0.5,
-            "mean_return": -0.01,
-            "sum_return": -0.02
-          },
-          {
-            "period": "2026-06-12",
-            "n": 1,
-            "win_rate": 0.0,
-            "mean_return": -0.214,
-            "sum_return": -0.214
-          },
-          {
-            "period": "2026-06-15",
-            "n": 1,
-            "win_rate": 0.0,
-            "mean_return": -0.014,
-            "sum_return": -0.014
-          }
-        ],
-        "weekly": [
-          {
-            "period": "2026-W24",
-            "n": 3,
-            "win_rate": 0.3333,
-            "mean_return": -0.078,
-            "sum_return": -0.234
-          },
-          {
-            "period": "2026-W25",
-            "n": 1,
-            "win_rate": 0.0,
-            "mean_return": -0.014,
-            "sum_return": -0.014
-          }
-        ],
-        "monthly": [
-          {
-            "period": "2026-06",
-            "n": 4,
-            "win_rate": 0.25,
-            "mean_return": -0.062,
-            "sum_return": -0.248
-          }
-        ]
+        "daily": [],
+        "weekly": [],
+        "monthly": []
       },
       "recent_calls": [
         {
-          "date": "2026-06-15",
-          "ticker": "FXC",
-          "signal": "BUY",
-          "conviction": 0.444,
-          "return_pct": -0.014,
-          "signed_return": -0.014,
+          "date": "2026-06-12",
+          "ticker": "ADBE",
+          "signal": "HOLD",
+          "conviction": 0.0,
+          "return_pct": -8.208,
+          "signed_return": null,
           "correct": false
         },
         {
           "date": "2026-06-12",
-          "ticker": "FXC",
-          "signal": "BUY",
-          "conviction": 0.684,
-          "return_pct": -0.214,
-          "signed_return": -0.214,
+          "ticker": "LEN",
+          "signal": "HOLD",
+          "conviction": 0.0,
+          "return_pct": -3.444,
+          "signed_return": null,
           "correct": false
         },
         {
           "date": "2026-06-11",
-          "ticker": "CTVA",
-          "signal": "BUY",
-          "conviction": 0.468,
-          "return_pct": 0.43,
-          "signed_return": 0.43,
-          "correct": true
+          "ticker": "LEN",
+          "signal": "HOLD",
+          "conviction": 0.0,
+          "return_pct": 1.475,
+          "signed_return": null,
+          "correct": false
         },
         {
           "date": "2026-06-11",
-          "ticker": "FXC",
-          "signal": "BUY",
-          "conviction": 0.468,
-          "return_pct": -0.45,
-          "signed_return": -0.45,
+          "ticker": "ADBE",
+          "signal": "HOLD",
+          "conviction": 0.0,
+          "return_pct": -4.748,
+          "signed_return": null,
           "correct": false
         }
       ]
@@ -2929,8 +2463,8 @@
       "why": "only 1 clean directional samples (< 30); any win-rate here is noise.",
       "caveats": [],
       "samples": {
-        "total": 382,
-        "clean": 382,
+        "total": 389,
+        "clean": 389,
         "stale": 0,
         "clean_pct": 1.0,
         "clean_directional": 1
@@ -2946,7 +2480,7 @@
         "crypto": 1
       },
       "action_mix": {
-        "HOLD": 381,
+        "HOLD": 388,
         "BUY": 1
       },
       "by_period": {
@@ -2980,110 +2514,110 @@
       },
       "recent_calls": [
         {
-          "date": "2026-06-15",
+          "date": "2026-06-16",
           "ticker": "XLM-USD",
           "signal": "HOLD",
           "conviction": 0.0,
-          "return_pct": -0.073,
+          "return_pct": 0.637,
           "signed_return": null,
-          "correct": true
+          "correct": false
         },
         {
-          "date": "2026-06-15",
-          "ticker": "AAVE-USD",
-          "signal": "HOLD",
-          "conviction": 0.0,
-          "return_pct": 0.368,
-          "signed_return": null,
-          "correct": true
-        },
-        {
-          "date": "2026-06-15",
-          "ticker": "INJ-USD",
-          "signal": "HOLD",
-          "conviction": 0.0,
-          "return_pct": 0.345,
-          "signed_return": null,
-          "correct": true
-        },
-        {
-          "date": "2026-06-15",
-          "ticker": "USDT-USD",
-          "signal": "HOLD",
-          "conviction": 0.0,
-          "return_pct": 0.001,
-          "signed_return": null,
-          "correct": true
-        },
-        {
-          "date": "2026-06-15",
+          "date": "2026-06-16",
           "ticker": "ADA-USD",
           "signal": "HOLD",
           "conviction": 0.0,
-          "return_pct": 3.024,
+          "return_pct": 0.056,
+          "signed_return": null,
+          "correct": true
+        },
+        {
+          "date": "2026-06-16",
+          "ticker": "ENA-USD",
+          "signal": "HOLD",
+          "conviction": 0.0,
+          "return_pct": 0.946,
           "signed_return": null,
           "correct": false
         },
         {
-          "date": "2026-06-15",
-          "ticker": "LTC-USD",
+          "date": "2026-06-16",
+          "ticker": "AAVE-USD",
           "signal": "HOLD",
           "conviction": 0.0,
-          "return_pct": 0.287,
+          "return_pct": 0.245,
           "signed_return": null,
           "correct": true
         },
         {
-          "date": "2026-06-15",
-          "ticker": "VET-USD",
+          "date": "2026-06-16",
+          "ticker": "TON-USD",
           "signal": "HOLD",
           "conviction": 0.0,
-          "return_pct": 0.197,
+          "return_pct": -6.682,
+          "signed_return": null,
+          "correct": false
+        },
+        {
+          "date": "2026-06-16",
+          "ticker": "BCH-USD",
+          "signal": "HOLD",
+          "conviction": 0.0,
+          "return_pct": 0.34,
           "signed_return": null,
           "correct": true
         },
         {
-          "date": "2026-06-15",
+          "date": "2026-06-16",
+          "ticker": "ARB-USD",
+          "signal": "HOLD",
+          "conviction": 0.0,
+          "return_pct": -0.008,
+          "signed_return": null,
+          "correct": true
+        },
+        {
+          "date": "2026-06-16",
+          "ticker": "ETC-USD",
+          "signal": "HOLD",
+          "conviction": 0.0,
+          "return_pct": 0.271,
+          "signed_return": null,
+          "correct": true
+        },
+        {
+          "date": "2026-06-16",
           "ticker": "SEI-USD",
           "signal": "HOLD",
           "conviction": 0.0,
-          "return_pct": 0.765,
-          "signed_return": null,
-          "correct": false
-        },
-        {
-          "date": "2026-06-15",
-          "ticker": "USDC-USD",
-          "signal": "HOLD",
-          "conviction": 0.0,
-          "return_pct": 0.006,
+          "return_pct": -0.019,
           "signed_return": null,
           "correct": true
         },
         {
-          "date": "2026-06-15",
-          "ticker": "WIF-USD",
+          "date": "2026-06-16",
+          "ticker": "DYM-USD",
           "signal": "HOLD",
           "conviction": 0.0,
-          "return_pct": 0.61,
+          "return_pct": 0.89,
           "signed_return": null,
           "correct": false
         },
         {
-          "date": "2026-06-15",
-          "ticker": "TURBO-USD",
+          "date": "2026-06-16",
+          "ticker": "USDT-USD",
           "signal": "HOLD",
           "conviction": 0.0,
-          "return_pct": 0.655,
+          "return_pct": -0.009,
           "signed_return": null,
-          "correct": false
+          "correct": true
         },
         {
-          "date": "2026-06-15",
-          "ticker": "SHIB-USD",
+          "date": "2026-06-16",
+          "ticker": "USDC-USD",
           "signal": "HOLD",
           "conviction": 0.0,
-          "return_pct": 0.599,
+          "return_pct": -0.009,
           "signed_return": null,
           "correct": true
         }
@@ -3093,29 +2627,30 @@
       "agent": "GOLDSMITH",
       "grade": "I",
       "verdict": "INSUFFICIENT",
-      "why": "only 2 clean directional samples (< 30); any win-rate here is noise.",
+      "why": "only 3 clean directional samples (< 30); any win-rate here is noise.",
       "caveats": [],
       "samples": {
-        "total": 3,
-        "clean": 3,
+        "total": 6,
+        "clean": 6,
         "stale": 0,
         "clean_pct": 1.0,
-        "clean_directional": 2
+        "clean_directional": 3
       },
       "clean_performance": {
-        "win_rate": 0.0,
-        "mean_signed_return": -0.256,
-        "sum_signed_return": -0.512,
-        "t_stat": -5.485
+        "win_rate": 0.3333,
+        "mean_signed_return": -0.1337,
+        "sum_signed_return": -0.401,
+        "t_stat": -1.278
       },
-      "direction_concentration": 1.0,
+      "direction_concentration": 0.667,
       "instrument_mix": {
-        "crypto": 2
+        "crypto": 3
       },
       "action_mix": {
-        "HOLD": 1,
+        "HOLD": 3,
         "SELL": 1,
-        "STRONG_SELL": 1
+        "STRONG_SELL": 1,
+        "BUY": 1
       },
       "by_period": {
         "daily": [
@@ -3125,28 +2660,62 @@
             "win_rate": 0.0,
             "mean_return": -0.256,
             "sum_return": -0.512
+          },
+          {
+            "period": "2026-06-16",
+            "n": 1,
+            "win_rate": 1.0,
+            "mean_return": 0.111,
+            "sum_return": 0.111
           }
         ],
         "weekly": [
           {
             "period": "2026-W25",
-            "n": 2,
-            "win_rate": 0.0,
-            "mean_return": -0.256,
-            "sum_return": -0.512
+            "n": 3,
+            "win_rate": 0.3333,
+            "mean_return": -0.1337,
+            "sum_return": -0.401
           }
         ],
         "monthly": [
           {
             "period": "2026-06",
-            "n": 2,
-            "win_rate": 0.0,
-            "mean_return": -0.256,
-            "sum_return": -0.512
+            "n": 3,
+            "win_rate": 0.3333,
+            "mean_return": -0.1337,
+            "sum_return": -0.401
           }
         ]
       },
       "recent_calls": [
+        {
+          "date": "2026-06-16",
+          "ticker": "ETH-USD",
+          "signal": "HOLD",
+          "conviction": 0.3,
+          "return_pct": 0.325,
+          "signed_return": null,
+          "correct": true
+        },
+        {
+          "date": "2026-06-16",
+          "ticker": "SOL-USD",
+          "signal": "HOLD",
+          "conviction": 0.3,
+          "return_pct": 0.014,
+          "signed_return": null,
+          "correct": true
+        },
+        {
+          "date": "2026-06-16",
+          "ticker": "BTC-USD",
+          "signal": "BUY",
+          "conviction": 0.46,
+          "return_pct": 0.111,
+          "signed_return": 0.111,
+          "correct": true
+        },
         {
           "date": "2026-06-15",
           "ticker": "SOL-USD",
@@ -3177,14 +2746,120 @@
       ]
     },
     {
+      "agent": "JADE",
+      "grade": "I",
+      "verdict": "INSUFFICIENT",
+      "why": "only 3 clean directional samples (< 30); any win-rate here is noise.",
+      "caveats": [],
+      "samples": {
+        "total": 3,
+        "clean": 3,
+        "stale": 0,
+        "clean_pct": 1.0,
+        "clean_directional": 3
+      },
+      "clean_performance": {
+        "win_rate": 0.0,
+        "mean_signed_return": -0.226,
+        "sum_signed_return": -0.678,
+        "t_stat": -2.197
+      },
+      "direction_concentration": 1.0,
+      "instrument_mix": {
+        "macro": 3
+      },
+      "action_mix": {
+        "BUY": 3
+      },
+      "by_period": {
+        "daily": [
+          {
+            "period": "2026-06-11",
+            "n": 1,
+            "win_rate": 0.0,
+            "mean_return": -0.45,
+            "sum_return": -0.45
+          },
+          {
+            "period": "2026-06-12",
+            "n": 1,
+            "win_rate": 0.0,
+            "mean_return": -0.214,
+            "sum_return": -0.214
+          },
+          {
+            "period": "2026-06-15",
+            "n": 1,
+            "win_rate": 0.0,
+            "mean_return": -0.014,
+            "sum_return": -0.014
+          }
+        ],
+        "weekly": [
+          {
+            "period": "2026-W24",
+            "n": 2,
+            "win_rate": 0.0,
+            "mean_return": -0.332,
+            "sum_return": -0.664
+          },
+          {
+            "period": "2026-W25",
+            "n": 1,
+            "win_rate": 0.0,
+            "mean_return": -0.014,
+            "sum_return": -0.014
+          }
+        ],
+        "monthly": [
+          {
+            "period": "2026-06",
+            "n": 3,
+            "win_rate": 0.0,
+            "mean_return": -0.226,
+            "sum_return": -0.678
+          }
+        ]
+      },
+      "recent_calls": [
+        {
+          "date": "2026-06-15",
+          "ticker": "FXC",
+          "signal": "BUY",
+          "conviction": 0.444,
+          "return_pct": -0.014,
+          "signed_return": -0.014,
+          "correct": false
+        },
+        {
+          "date": "2026-06-12",
+          "ticker": "FXC",
+          "signal": "BUY",
+          "conviction": 0.684,
+          "return_pct": -0.214,
+          "signed_return": -0.214,
+          "correct": false
+        },
+        {
+          "date": "2026-06-11",
+          "ticker": "FXC",
+          "signal": "BUY",
+          "conviction": 0.468,
+          "return_pct": -0.45,
+          "signed_return": -0.45,
+          "correct": false
+        }
+      ]
+    },
+    {
       "agent": "BARON",
       "grade": "I",
       "verdict": "INSUFFICIENT",
       "why": "only 4 clean directional samples (< 30); any win-rate here is noise.",
       "caveats": [],
       "samples": {
-        "total": 75,
-        "clean": 75,
+        "total": 71,
+        "clean": 71,
         "stale": 0,
         "clean_pct": 1.0,
         "clean_directional": 4
@@ -3200,7 +2875,7 @@
         "equity": 4
       },
       "action_mix": {
-        "HOLD": 71,
+        "HOLD": 67,
         "BUY": 4
       },
       "by_period": {
@@ -3351,41 +3026,307 @@
       ]
     },
     {
+      "agent": "AEGIS",
+      "grade": "I",
+      "verdict": "INSUFFICIENT",
+      "why": "only 11 clean directional samples (< 30); any win-rate here is noise.",
+      "caveats": [],
+      "samples": {
+        "total": 1216,
+        "clean": 1216,
+        "stale": 0,
+        "clean_pct": 1.0,
+        "clean_directional": 11
+      },
+      "clean_performance": {
+        "win_rate": 0.3636,
+        "mean_signed_return": -0.1865,
+        "sum_signed_return": -2.051,
+        "t_stat": -0.468
+      },
+      "direction_concentration": 1.0,
+      "instrument_mix": {
+        "equity": 7,
+        "crypto": 4
+      },
+      "action_mix": {
+        "HOLD": 1205,
+        "BUY": 11
+      },
+      "by_period": {
+        "daily": [
+          {
+            "period": "2026-06-12",
+            "n": 7,
+            "win_rate": 0.1429,
+            "mean_return": -0.8921,
+            "sum_return": -6.245
+          },
+          {
+            "period": "2026-06-15",
+            "n": 2,
+            "win_rate": 1.0,
+            "mean_return": 1.8715,
+            "sum_return": 3.743
+          },
+          {
+            "period": "2026-06-16",
+            "n": 2,
+            "win_rate": 0.5,
+            "mean_return": 0.2255,
+            "sum_return": 0.451
+          }
+        ],
+        "weekly": [
+          {
+            "period": "2026-W24",
+            "n": 7,
+            "win_rate": 0.1429,
+            "mean_return": -0.8921,
+            "sum_return": -6.245
+          },
+          {
+            "period": "2026-W25",
+            "n": 4,
+            "win_rate": 0.75,
+            "mean_return": 1.0485,
+            "sum_return": 4.194
+          }
+        ],
+        "monthly": [
+          {
+            "period": "2026-06",
+            "n": 11,
+            "win_rate": 0.3636,
+            "mean_return": -0.1865,
+            "sum_return": -2.051
+          }
+        ]
+      },
+      "recent_calls": [
+        {
+          "date": "2026-06-16",
+          "ticker": "NEAR-USD",
+          "signal": "BUY",
+          "conviction": 0.498,
+          "return_pct": 0.547,
+          "signed_return": 0.547,
+          "correct": true
+        },
+        {
+          "date": "2026-06-16",
+          "ticker": "JTO-USD",
+          "signal": "BUY",
+          "conviction": 0.498,
+          "return_pct": -0.096,
+          "signed_return": -0.096,
+          "correct": false
+        },
+        {
+          "date": "2026-06-16",
+          "ticker": "XLM-USD",
+          "signal": "HOLD",
+          "conviction": 0.362,
+          "return_pct": 0.637,
+          "signed_return": null,
+          "correct": false
+        },
+        {
+          "date": "2026-06-16",
+          "ticker": "ADA-USD",
+          "signal": "HOLD",
+          "conviction": 0.588,
+          "return_pct": 0.056,
+          "signed_return": null,
+          "correct": true
+        },
+        {
+          "date": "2026-06-16",
+          "ticker": "PYTH-USD",
+          "signal": "HOLD",
+          "conviction": 0.588,
+          "return_pct": 0.518,
+          "signed_return": null,
+          "correct": true
+        },
+        {
+          "date": "2026-06-16",
+          "ticker": "ICP-USD",
+          "signal": "HOLD",
+          "conviction": 0.588,
+          "return_pct": -0.083,
+          "signed_return": null,
+          "correct": true
+        },
+        {
+          "date": "2026-06-16",
+          "ticker": "STRK-USD",
+          "signal": "HOLD",
+          "conviction": 0.362,
+          "return_pct": -1.316,
+          "signed_return": null,
+          "correct": false
+        },
+        {
+          "date": "2026-06-16",
+          "ticker": "LDO-USD",
+          "signal": "HOLD",
+          "conviction": 0.588,
+          "return_pct": 0.368,
+          "signed_return": null,
+          "correct": true
+        },
+        {
+          "date": "2026-06-16",
+          "ticker": "ENA-USD",
+          "signal": "HOLD",
+          "conviction": 0.588,
+          "return_pct": 0.946,
+          "signed_return": null,
+          "correct": false
+        },
+        {
+          "date": "2026-06-16",
+          "ticker": "AAVE-USD",
+          "signal": "HOLD",
+          "conviction": 0.588,
+          "return_pct": 0.245,
+          "signed_return": null,
+          "correct": true
+        },
+        {
+          "date": "2026-06-16",
+          "ticker": "HBAR-USD",
+          "signal": "HOLD",
+          "conviction": 0.588,
+          "return_pct": 0.121,
+          "signed_return": null,
+          "correct": true
+        },
+        {
+          "date": "2026-06-16",
+          "ticker": "TON-USD",
+          "signal": "HOLD",
+          "conviction": 0.362,
+          "return_pct": -6.682,
+          "signed_return": null,
+          "correct": false
+        }
+      ]
+    },
+    {
+      "agent": "VESPA",
+      "grade": "I",
+      "verdict": "INSUFFICIENT",
+      "why": "only 1 clean directional samples (< 30); any win-rate here is noise.",
+      "caveats": [],
+      "samples": {
+        "total": 2,
+        "clean": 2,
+        "stale": 0,
+        "clean_pct": 1.0,
+        "clean_directional": 1
+      },
+      "clean_performance": {
+        "win_rate": 0.0,
+        "mean_signed_return": -8.208,
+        "sum_signed_return": -8.208,
+        "t_stat": 0.0
+      },
+      "direction_concentration": 1.0,
+      "instrument_mix": {
+        "equity": 1
+      },
+      "action_mix": {
+        "HOLD": 1,
+        "BUY": 1
+      },
+      "by_period": {
+        "daily": [
+          {
+            "period": "2026-06-12",
+            "n": 1,
+            "win_rate": 0.0,
+            "mean_return": -8.208,
+            "sum_return": -8.208
+          }
+        ],
+        "weekly": [
+          {
+            "period": "2026-W24",
+            "n": 1,
+            "win_rate": 0.0,
+            "mean_return": -8.208,
+            "sum_return": -8.208
+          }
+        ],
+        "monthly": [
+          {
+            "period": "2026-06",
+            "n": 1,
+            "win_rate": 0.0,
+            "mean_return": -8.208,
+            "sum_return": -8.208
+          }
+        ]
+      },
+      "recent_calls": [
+        {
+          "date": "2026-06-12",
+          "ticker": "ADBE",
+          "signal": "BUY",
+          "conviction": 0.314,
+          "return_pct": -8.208,
+          "signed_return": -8.208,
+          "correct": false
+        },
+        {
+          "date": "2026-06-11",
+          "ticker": "ADBE",
+          "signal": "HOLD",
+          "conviction": 0.385,
+          "return_pct": -4.748,
+          "signed_return": null,
+          "correct": false
+        }
+      ]
+    },
+    {
       "agent": "VEIL",
       "grade": "I",
       "verdict": "INSUFFICIENT",
-      "why": "only 9 clean directional samples (< 30); any win-rate here is noise.",
+      "why": "only 8 clean directional samples (< 30); any win-rate here is noise.",
       "caveats": [],
       "samples": {
-        "total": 9,
-        "clean": 9,
+        "total": 8,
+        "clean": 8,
         "stale": 0,
         "clean_pct": 1.0,
-        "clean_directional": 9
+        "clean_directional": 8
       },
       "clean_performance": {
-        "win_rate": 0.4444,
-        "mean_signed_return": -0.5213,
-        "sum_signed_return": -4.692,
-        "t_stat": -0.271
+        "win_rate": 0.375,
+        "mean_signed_return": -1.1651,
+        "sum_signed_return": -9.321,
+        "t_stat": -1.155
       },
-      "direction_concentration": 0.778,
+      "direction_concentration": 0.75,
       "instrument_mix": {
-        "equity": 8,
-        "crypto": 1
+        "equity": 4,
+        "crypto": 4
       },
       "action_mix": {
-        "BUY": 7,
+        "BUY": 6,
         "SELL": 2
       },
       "by_period": {
         "daily": [
           {
             "period": "2026-06-11",
-            "n": 6,
-            "win_rate": 0.5,
-            "mean_return": 0.3268,
-            "sum_return": 1.961
+            "n": 2,
+            "win_rate": 0.0,
+            "mean_return": -1.5795,
+            "sum_return": -3.159
           },
           {
             "period": "2026-06-12",
@@ -3400,35 +3341,69 @@
             "win_rate": 0.0,
             "mean_return": -0.22,
             "sum_return": -0.22
+          },
+          {
+            "period": "2026-06-16",
+            "n": 3,
+            "win_rate": 0.6667,
+            "mean_return": 0.1637,
+            "sum_return": 0.491
           }
         ],
         "weekly": [
           {
             "period": "2026-W24",
-            "n": 8,
-            "win_rate": 0.5,
-            "mean_return": -0.559,
-            "sum_return": -4.472
+            "n": 4,
+            "win_rate": 0.25,
+            "mean_return": -2.398,
+            "sum_return": -9.592
           },
           {
             "period": "2026-W25",
-            "n": 1,
-            "win_rate": 0.0,
-            "mean_return": -0.22,
-            "sum_return": -0.22
+            "n": 4,
+            "win_rate": 0.5,
+            "mean_return": 0.0677,
+            "sum_return": 0.271
           }
         ],
         "monthly": [
           {
             "period": "2026-06",
-            "n": 9,
-            "win_rate": 0.4444,
-            "mean_return": -0.5213,
-            "sum_return": -4.692
+            "n": 8,
+            "win_rate": 0.375,
+            "mean_return": -1.1651,
+            "sum_return": -9.321
           }
         ]
       },
       "recent_calls": [
+        {
+          "date": "2026-06-16",
+          "ticker": "ADA-USD",
+          "signal": "BUY",
+          "conviction": 0.788,
+          "return_pct": 0.056,
+          "signed_return": 0.056,
+          "correct": true
+        },
+        {
+          "date": "2026-06-16",
+          "ticker": "PYTH-USD",
+          "signal": "BUY",
+          "conviction": 0.788,
+          "return_pct": 0.518,
+          "signed_return": 0.518,
+          "correct": true
+        },
+        {
+          "date": "2026-06-16",
+          "ticker": "ICP-USD",
+          "signal": "BUY",
+          "conviction": 0.788,
+          "return_pct": -0.083,
+          "signed_return": -0.083,
+          "correct": false
+        },
         {
           "date": "2026-06-15",
           "ticker": "XRP-USD",
@@ -3458,42 +3433,6 @@
         },
         {
           "date": "2026-06-11",
-          "ticker": "MRVL",
-          "signal": "BUY",
-          "conviction": 0.675,
-          "return_pct": 5.412,
-          "signed_return": 5.412,
-          "correct": true
-        },
-        {
-          "date": "2026-06-11",
-          "ticker": "LRCX",
-          "signal": "BUY",
-          "conviction": 0.675,
-          "return_pct": 8.316,
-          "signed_return": 8.316,
-          "correct": true
-        },
-        {
-          "date": "2026-06-11",
-          "ticker": "ORCL",
-          "signal": "BUY",
-          "conviction": 0.675,
-          "return_pct": -11.08,
-          "signed_return": -11.08,
-          "correct": false
-        },
-        {
-          "date": "2026-06-11",
-          "ticker": "TXN",
-          "signal": "BUY",
-          "conviction": 0.675,
-          "return_pct": 2.472,
-          "signed_return": 2.472,
-          "correct": true
-        },
-        {
-          "date": "2026-06-11",
           "ticker": "SHOP",
           "signal": "BUY",
           "conviction": 0.675,
@@ -3513,95 +3452,197 @@
       ]
     },
     {
-      "agent": "VESPA",
+      "agent": "SPECK",
       "grade": "I",
       "verdict": "INSUFFICIENT",
-      "why": "only 2 clean directional samples (< 30); any win-rate here is noise.",
+      "why": "only 25 clean directional samples (< 30); any win-rate here is noise.",
       "caveats": [],
       "samples": {
-        "total": 3,
-        "clean": 3,
+        "total": 25,
+        "clean": 25,
         "stale": 0,
         "clean_pct": 1.0,
-        "clean_directional": 2
+        "clean_directional": 25
       },
       "clean_performance": {
-        "win_rate": 0.0,
-        "mean_signed_return": -9.644,
-        "sum_signed_return": -19.288,
-        "t_stat": -9.498
+        "win_rate": 0.36,
+        "mean_signed_return": -3.7484,
+        "sum_signed_return": -93.711,
+        "t_stat": -1.06
       },
       "direction_concentration": 1.0,
       "instrument_mix": {
-        "equity": 2
+        "equity": 13,
+        "crypto": 12
       },
       "action_mix": {
-        "BUY": 2,
-        "HOLD": 1
+        "BUY": 25
       },
       "by_period": {
         "daily": [
           {
             "period": "2026-06-11",
-            "n": 1,
-            "win_rate": 0.0,
-            "mean_return": -11.08,
-            "sum_return": -11.08
+            "n": 3,
+            "win_rate": 0.3333,
+            "mean_return": 0.4147,
+            "sum_return": 1.244
           },
           {
             "period": "2026-06-12",
-            "n": 1,
-            "win_rate": 0.0,
-            "mean_return": -8.208,
-            "sum_return": -8.208
+            "n": 10,
+            "win_rate": 0.1,
+            "mean_return": -10.016,
+            "sum_return": -100.16
+          },
+          {
+            "period": "2026-06-15",
+            "n": 7,
+            "win_rate": 0.7143,
+            "mean_return": 0.5966,
+            "sum_return": 4.176
+          },
+          {
+            "period": "2026-06-16",
+            "n": 5,
+            "win_rate": 0.4,
+            "mean_return": 0.2058,
+            "sum_return": 1.029
           }
         ],
         "weekly": [
           {
             "period": "2026-W24",
-            "n": 2,
-            "win_rate": 0.0,
-            "mean_return": -9.644,
-            "sum_return": -19.288
+            "n": 13,
+            "win_rate": 0.1538,
+            "mean_return": -7.6089,
+            "sum_return": -98.916
+          },
+          {
+            "period": "2026-W25",
+            "n": 12,
+            "win_rate": 0.5833,
+            "mean_return": 0.4337,
+            "sum_return": 5.205
           }
         ],
         "monthly": [
           {
             "period": "2026-06",
-            "n": 2,
-            "win_rate": 0.0,
-            "mean_return": -9.644,
-            "sum_return": -19.288
+            "n": 25,
+            "win_rate": 0.36,
+            "mean_return": -3.7484,
+            "sum_return": -93.711
           }
         ]
       },
       "recent_calls": [
         {
-          "date": "2026-06-12",
-          "ticker": "ADBE",
+          "date": "2026-06-16",
+          "ticker": "NEAR-USD",
           "signal": "BUY",
-          "conviction": 0.314,
-          "return_pct": -8.208,
-          "signed_return": -8.208,
+          "conviction": 0.626,
+          "return_pct": 0.547,
+          "signed_return": 0.547,
+          "correct": true
+        },
+        {
+          "date": "2026-06-16",
+          "ticker": "JTO-USD",
+          "signal": "BUY",
+          "conviction": 0.626,
+          "return_pct": -0.096,
+          "signed_return": -0.096,
           "correct": false
         },
         {
-          "date": "2026-06-11",
-          "ticker": "ORCL",
+          "date": "2026-06-16",
+          "ticker": "XLM-USD",
           "signal": "BUY",
-          "conviction": 0.625,
-          "return_pct": -11.08,
-          "signed_return": -11.08,
+          "conviction": 0.626,
+          "return_pct": 0.637,
+          "signed_return": 0.637,
+          "correct": true
+        },
+        {
+          "date": "2026-06-16",
+          "ticker": "ARB-USD",
+          "signal": "BUY",
+          "conviction": 0.583,
+          "return_pct": -0.008,
+          "signed_return": -0.008,
           "correct": false
         },
         {
-          "date": "2026-06-11",
-          "ticker": "ADBE",
-          "signal": "HOLD",
-          "conviction": 0.385,
-          "return_pct": -4.748,
-          "signed_return": null,
+          "date": "2026-06-16",
+          "ticker": "ATOM-USD",
+          "signal": "BUY",
+          "conviction": 0.518,
+          "return_pct": -0.051,
+          "signed_return": -0.051,
           "correct": false
+        },
+        {
+          "date": "2026-06-15",
+          "ticker": "JTO-USD",
+          "signal": "BUY",
+          "conviction": 0.596,
+          "return_pct": 0.504,
+          "signed_return": 0.504,
+          "correct": true
+        },
+        {
+          "date": "2026-06-15",
+          "ticker": "XLM-USD",
+          "signal": "BUY",
+          "conviction": 0.613,
+          "return_pct": -0.073,
+          "signed_return": -0.073,
+          "correct": false
+        },
+        {
+          "date": "2026-06-15",
+          "ticker": "NEAR-USD",
+          "signal": "BUY",
+          "conviction": 0.613,
+          "return_pct": -0.09,
+          "signed_return": -0.09,
+          "correct": false
+        },
+        {
+          "date": "2026-06-15",
+          "ticker": "INJ-USD",
+          "signal": "BUY",
+          "conviction": 0.499,
+          "return_pct": 0.345,
+          "signed_return": 0.345,
+          "correct": true
+        },
+        {
+          "date": "2026-06-15",
+          "ticker": "USDT-USD",
+          "signal": "BUY",
+          "conviction": 0.494,
+          "return_pct": 0.001,
+          "signed_return": 0.001,
+          "correct": true
+        },
+        {
+          "date": "2026-06-15",
+          "ticker": "ATOM-USD",
+          "signal": "BUY",
+          "conviction": 0.494,
+          "return_pct": 0.25,
+          "signed_return": 0.25,
+          "correct": true
+        },
+        {
+          "date": "2026-06-15",
+          "ticker": "TON-USD",
+          "signal": "BUY",
+          "conviction": 0.494,
+          "return_pct": 3.239,
+          "signed_return": 3.239,
+          "correct": true
         }
       ]
     }
@@ -3609,6 +3650,7 @@
   "notes": [
     "Agents with a real/soft clean edge: STEADFAST.",
     "READ THE CAVEAT before trusting these grades \u2014 possible market beta, not skill (all-one-side in a single RISK_ON regime): STEADFAST. The grade holds only if the edge survives a risk-off tape.",
-    "12 agents lack 30+ clean directional samples; their numbers are noise: AEGIS, ATLAS, THUNDERHEAD, TALON, CICADA, SHEPHERD, JADE, KESTREL+, GOLDSMITH, BARON\u2026."
+    "WIN-RATE MIRAGE (right often, not profitable): OBSIDIAN. Win-rate is misleading these.",
+    "13 agents lack 30+ clean directional samples; their numbers are noise: ATLAS, THUNDERHEAD, TALON, SHEPHERD, CICADA, KESTREL+, GOLDSMITH, JADE, BARON, AEGIS\u2026."
   ]
 }
