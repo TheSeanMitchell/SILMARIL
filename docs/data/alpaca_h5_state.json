@@ -23,10 +23,6 @@
       "qty": 11.162209616,
       "snapshots_30m": [
         {
-          "ts": "2026-06-16T07:30:37.634558+00:00",
-          "price": 73.48
-        },
-        {
           "ts": "2026-06-16T08:04:53.715801+00:00",
           "price": 73.37
         },
@@ -52,6 +48,10 @@
         },
         {
           "ts": "2026-06-16T12:48:18.303946+00:00",
+          "price": 73.42
+        },
+        {
+          "ts": "2026-06-16T13:27:47.135877+00:00",
           "price": 73.42
         }
       ]
@@ -490,14 +490,14 @@
     "primary_symbol": null,
     "primary_qty": 0.0,
     "primary_market_value": 0.0,
-    "checked_at": "2026-06-16T13:07:36.129519+00:00"
+    "checked_at": "2026-06-16T13:27:47.135767+00:00"
   },
   "reason": "Live \u2014 configured; last run 2026-06-09T09:17:06",
   "seeded_at": "2026-05-11T05:00:26.087739+00:00",
   "genesis_at": "2026-05-11T05:08:53.396920+00:00",
   "last_cycle_summary": {
-    "time": "2026-06-16T13:07:36.218986+00:00",
-    "timestamp": "2026-06-16T13:07:36.218996+00:00",
+    "time": "2026-06-16T13:27:47.289063+00:00",
+    "timestamp": "2026-06-16T13:27:47.289106+00:00",
     "closed": 0,
     "opened": 0,
     "open_after": 1,
@@ -515,7 +515,7 @@
     "session": "pre-market",
     "is_extended": true
   },
-  "last_run": "2026-06-16T13:07:36.219048+00:00",
+  "last_run": "2026-06-16T13:27:47.289184+00:00",
   "sgov_sweep_last_cycle": {
     "attempted": false,
     "reason": "below min sweep $5.00",
@@ -526,7 +526,7 @@
   ],
   "sweep_protection": {
     "version": "4.0",
-    "checked_at": "2026-06-16T13:07:36.618710+00:00",
+    "checked_at": "2026-06-16T13:27:47.799721+00:00",
     "market_mode": "ATTACK",
     "force_sweep_floor_resolved": 10500.0,
     "stale_close_age_days": 5,
@@ -619,43 +619,148 @@
   "wordsmith": {
     "candidates": [
       {
-        "ticker": "UNI-USD",
+        "ticker": "XLM-USD",
+        "signal": "BUY",
+        "conviction": 0.9583142800251478,
+        "why": "words +0.80 (5 arts); confirmed news-follower (3d horizon) \u2014 ride the words.",
+        "originated": true
+      },
+      {
+        "ticker": "DXCM",
         "signal": "STRONG_BUY",
-        "conviction": 0.8486802391349212,
-        "why": "words +0.67 (5 arts); anticipation +0.80."
+        "conviction": 0.9019428517883745,
+        "why": "words +0.71 (5 arts); catalyst: FDA/trial win.",
+        "originated": true
+      },
+      {
+        "ticker": "ROST",
+        "signal": "STRONG_BUY",
+        "conviction": 0.8906685661410197,
+        "why": "words +0.71 (4 arts); catalyst: positive catalyst.",
+        "originated": true
+      },
+      {
+        "ticker": "PAYX",
+        "signal": "STRONG_BUY",
+        "conviction": 0.8793942804936651,
+        "why": "words +0.69 (4 arts); catalyst: positive catalyst.",
+        "originated": true
+      },
+      {
+        "ticker": "TXN",
+        "signal": "STRONG_BUY",
+        "conviction": 0.845571423551601,
+        "why": "words +0.64 (5 arts); catalyst: analyst upgrade.",
+        "originated": true
       }
     ],
     "fed_debate_rows": 593,
     "note": "headlines-only book: entries require a FABLEBOY_5 BUY/STRONG_BUY; all safety rails unchanged"
   },
   "cycle_intents": {
-    "at": "2026-06-16T13:07:36.219020+00:00",
+    "at": "2026-06-16T13:27:47.289154+00:00",
     "session": "pre-market",
     "session_open": false,
     "composite_halt": false,
     "halt_reason": null,
-    "plans_offered": 1,
+    "plans_offered": 5,
     "buy_intents": [
       {
-        "ticker": "UNI-USD",
+        "ticker": "TXN",
         "signal": "STRONG_BUY",
-        "conviction": 1.1305,
-        "originated": false,
-        "outcome": "blocked_not_equity_mission",
+        "conviction": 0.8456,
+        "originated": true,
+        "outcome": "blocked_signal_not_sell",
         "intended_notional": 1158.38,
-        "reason": "UNI-USD is not a traditional equity \u2014 valuables trade in their own zone, never this account"
+        "reason": "signal HOLD is not SELL/STRONG_SELL"
+      },
+      {
+        "ticker": "XLM-USD",
+        "signal": "BUY",
+        "conviction": 0.9583,
+        "originated": true,
+        "outcome": "blocked_signal_not_sell",
+        "intended_notional": 1158.38,
+        "reason": "signal HOLD is not SELL/STRONG_SELL"
+      },
+      {
+        "ticker": "DXCM",
+        "signal": "STRONG_BUY",
+        "conviction": 0.9019,
+        "originated": true,
+        "outcome": "blocked_signal_not_sell",
+        "intended_notional": 1158.38,
+        "reason": "signal HOLD is not SELL/STRONG_SELL"
+      },
+      {
+        "ticker": "ROST",
+        "signal": "STRONG_BUY",
+        "conviction": 0.8907,
+        "originated": true,
+        "outcome": "blocked_signal_not_sell",
+        "intended_notional": 1158.38,
+        "reason": "signal HOLD is not SELL/STRONG_SELL"
+      },
+      {
+        "ticker": "PAYX",
+        "signal": "STRONG_BUY",
+        "conviction": 0.8794,
+        "originated": true,
+        "outcome": "blocked_signal_not_sell",
+        "intended_notional": 1158.38,
+        "reason": "signal HOLD is not SELL/STRONG_SELL"
       }
     ],
     "decisions_this_cycle": [
       {
-        "ticker": "UNI-USD",
-        "category": "blocked_not_equity_mission",
-        "reason": "UNI-USD is not a traditional equity \u2014 valuables trade in their own zone, never this account"
+        "ticker": "TXN",
+        "category": "blocked_signal_not_buy",
+        "reason": "signal HOLD is not BUY/STRONG_BUY"
       },
       {
-        "ticker": "UNI-USD",
+        "ticker": "XLM-USD",
+        "category": "blocked_signal_not_buy",
+        "reason": "signal HOLD is not BUY/STRONG_BUY"
+      },
+      {
+        "ticker": "DXCM",
+        "category": "blocked_signal_not_buy",
+        "reason": "signal HOLD is not BUY/STRONG_BUY"
+      },
+      {
+        "ticker": "ROST",
+        "category": "blocked_signal_not_buy",
+        "reason": "signal HOLD is not BUY/STRONG_BUY"
+      },
+      {
+        "ticker": "PAYX",
+        "category": "blocked_signal_not_buy",
+        "reason": "signal HOLD is not BUY/STRONG_BUY"
+      },
+      {
+        "ticker": "TXN",
         "category": "blocked_signal_not_sell",
-        "reason": "signal STRONG_BUY is not SELL/STRONG_SELL"
+        "reason": "signal HOLD is not SELL/STRONG_SELL"
+      },
+      {
+        "ticker": "XLM-USD",
+        "category": "blocked_signal_not_sell",
+        "reason": "signal HOLD is not SELL/STRONG_SELL"
+      },
+      {
+        "ticker": "DXCM",
+        "category": "blocked_signal_not_sell",
+        "reason": "signal HOLD is not SELL/STRONG_SELL"
+      },
+      {
+        "ticker": "ROST",
+        "category": "blocked_signal_not_sell",
+        "reason": "signal HOLD is not SELL/STRONG_SELL"
+      },
+      {
+        "ticker": "PAYX",
+        "category": "blocked_signal_not_sell",
+        "reason": "signal HOLD is not SELL/STRONG_SELL"
       }
     ]
   }
