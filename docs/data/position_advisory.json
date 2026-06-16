@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-16T10:25:58.731538+00:00",
+  "generated_at": "2026-06-16T10:45:28.685417+00:00",
   "advisory_only": true,
   "note": "Advisory only \u2014 recommendations are NOT auto-executed in Alpha 3.0. Existing trailing-stop / momentum-exit logic still does the actual closing.",
   "summary": {
@@ -147,7 +147,7 @@
       {
         "ticker": "TXN",
         "recommendation": "HOLD",
-        "score": 0.3982,
+        "score": 0.4007,
         "rationale": "position stable \u00b7 score 0.40 @ aggression 0.50"
       },
       {
@@ -274,7 +274,7 @@
         "ticker": "SOL-USD",
         "recommendation": "HOLD",
         "score": 0.1286,
-        "rationale": "+12.2% from entry \u00b7 score 0.13 @ aggression 0.50"
+        "rationale": "+12.3% from entry \u00b7 score 0.13 @ aggression 0.50"
       }
     ]
   },
@@ -774,6 +774,25 @@
       "advisory_only": true
     },
     {
+      "owner": "HARVEST_3",
+      "ticker": "TXN",
+      "recommendation": "HOLD",
+      "score": 0.4007,
+      "rationale": "position stable \u00b7 score 0.40 @ aggression 0.50",
+      "components": {
+        "age": 0.1429,
+        "drift_flat": 0.9212,
+        "peak_giveback": 0.0102,
+        "decay": 0.5,
+        "illiquidity": 1.0
+      },
+      "aggression": 0.5,
+      "hold_age_days": 1.0,
+      "intraday_drift_pct": 0.0079,
+      "peak_drop_pct": -0.0005,
+      "advisory_only": true
+    },
+    {
       "owner": "LEGACY",
       "ticker": "FRT",
       "recommendation": "HOLD",
@@ -790,25 +809,6 @@
       "hold_age_days": 1.0,
       "intraday_drift_pct": 0.0072,
       "peak_drop_pct": 0.0072,
-      "advisory_only": true
-    },
-    {
-      "owner": "HARVEST_3",
-      "ticker": "TXN",
-      "recommendation": "HOLD",
-      "score": 0.3982,
-      "rationale": "position stable \u00b7 score 0.40 @ aggression 0.50",
-      "components": {
-        "age": 0.1429,
-        "drift_flat": 0.9212,
-        "peak_giveback": 0.0,
-        "decay": 0.5,
-        "illiquidity": 1.0
-      },
-      "aggression": 0.5,
-      "hold_age_days": 1.0,
-      "intraday_drift_pct": 0.0079,
-      "peak_drop_pct": 0.0,
       "advisory_only": true
     },
     {
@@ -987,7 +987,7 @@
       "ticker": "SOL-USD",
       "recommendation": "HOLD",
       "score": 0.1286,
-      "rationale": "+12.2% from entry \u00b7 score 0.13 @ aggression 0.50",
+      "rationale": "+12.3% from entry \u00b7 score 0.13 @ aggression 0.50",
       "components": {
         "age": 0.4286,
         "drift_flat": 0.0,
@@ -997,8 +997,8 @@
       },
       "aggression": 0.5,
       "hold_age_days": 3.0,
-      "intraday_drift_pct": 0.1222,
-      "peak_drop_pct": 0.0153,
+      "intraday_drift_pct": 0.1227,
+      "peak_drop_pct": 0.0157,
       "advisory_only": true
     }
   ]
