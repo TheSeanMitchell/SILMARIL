@@ -2,36 +2,6 @@
   "version": "3.2",
   "rows": [
     {
-      "ts": "2026-06-15T13:07:08.911517+00:00",
-      "category": "blocked_signal_not_sell",
-      "ticker": "GLW",
-      "account_id": "HARVEST_3",
-      "reason": "signal BUY is not SELL/STRONG_SELL",
-      "detail": {
-        "signal": "BUY",
-        "conviction": 0.8048
-      }
-    },
-    {
-      "ts": "2026-06-15T13:07:08.916281+00:00",
-      "category": "blocked_signal_not_sell",
-      "ticker": "NDSN",
-      "account_id": "HARVEST_3",
-      "reason": "signal BUY is not SELL/STRONG_SELL",
-      "detail": {
-        "signal": "BUY",
-        "conviction": 0.6638
-      }
-    },
-    {
-      "ts": "2026-06-15T13:07:09.363311+00:00",
-      "category": "deferred_submit_market_closed",
-      "ticker": "BWA",
-      "account_id": "HARVEST_5",
-      "reason": "submission deferred by market-closed gate (will retry during regular hours)",
-      "detail": {}
-    },
-    {
       "ts": "2026-06-15T13:07:09.368849+00:00",
       "category": "blocked_signal_not_sell",
       "ticker": "BWA",
@@ -5290,6 +5260,42 @@
           "market_state: market_state=PRESERVATION: in danger window (overnight_thin)"
         ]
       }
+    },
+    {
+      "ts": "2026-06-16T01:26:21.842229+00:00",
+      "category": "blocked_composite_halt",
+      "ticker": "*",
+      "account_id": "LEGACY",
+      "reason": "Halt: market_state: market_state=PRESERVATION: in danger window (overnight_thin)",
+      "detail": {
+        "halt_reasons": [
+          "market_state: market_state=PRESERVATION: in danger window (overnight_thin)"
+        ]
+      }
+    },
+    {
+      "ts": "2026-06-16T01:26:22.094735+00:00",
+      "category": "blocked_composite_halt",
+      "ticker": "*",
+      "account_id": "HARVEST_3",
+      "reason": "Halt: market_state: market_state=PRESERVATION: in danger window (overnight_thin)",
+      "detail": {
+        "halt_reasons": [
+          "market_state: market_state=PRESERVATION: in danger window (overnight_thin)"
+        ]
+      }
+    },
+    {
+      "ts": "2026-06-16T01:26:22.333935+00:00",
+      "category": "blocked_composite_halt",
+      "ticker": "*",
+      "account_id": "HARVEST_5",
+      "reason": "Halt: market_state: market_state=PRESERVATION: in danger window (overnight_thin)",
+      "detail": {
+        "halt_reasons": [
+          "market_state: market_state=PRESERVATION: in danger window (overnight_thin)"
+        ]
+      }
     }
   ],
   "by_category": {
@@ -5302,7 +5308,7 @@
     "blocked_policy_halt": 54,
     "blocked_negative_cash": 144,
     "sgov_sweep_cap_enforced": 22,
-    "blocked_composite_halt": 234,
+    "blocked_composite_halt": 237,
     "deferred_order_quality": 137,
     "blocked_correlation_book": 80,
     "rejected_by_three_month": 12,
@@ -5328,7 +5334,7 @@
     "INTC": 26,
     "LRCX": 166,
     "AMAT": 33,
-    "*": 288,
+    "*": 291,
     "TIA-USD": 4,
     "NEAR-USD": 150,
     "ROSE-USD": 2,
@@ -5551,5 +5557,5 @@
     "AAVE-USD": 2,
     "WTW": 2
   },
-  "updated_at": "2026-06-16T01:05:20.916723+00:00"
+  "updated_at": "2026-06-16T01:26:22.334099+00:00"
 }
