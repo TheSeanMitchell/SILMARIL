@@ -1,48 +1,6 @@
 {
-  "generated_at": "2026-06-16T00:25:28.508227+00:00",
+  "generated_at": "2026-06-16T00:45:19.009823+00:00",
   "outcomes": [
-    {
-      "agent": "OBSIDIAN",
-      "ticker": "AMLP",
-      "signal": "BUY",
-      "conviction": 0.533,
-      "predicted_at": "2026-06-10",
-      "scored_at": "2026-06-11",
-      "entry_price": 52.77,
-      "exit_price": 52.955,
-      "return_pct": 0.351,
-      "correct": true,
-      "reward": 0.3506,
-      "tags": {
-        "market_regime": "RISK_ON",
-        "trend_state": "TRENDING",
-        "vol_state": "NORMAL",
-        "news_state": "NORMAL",
-        "liquidity_state": "LIQUID"
-      },
-      "stale_price_suspected": false
-    },
-    {
-      "agent": "WEAVER",
-      "ticker": "AMLP",
-      "signal": "BUY",
-      "conviction": 0.535,
-      "predicted_at": "2026-06-10",
-      "scored_at": "2026-06-11",
-      "entry_price": 52.77,
-      "exit_price": 52.955,
-      "return_pct": 0.351,
-      "correct": true,
-      "reward": 0.3506,
-      "tags": {
-        "market_regime": "RISK_ON",
-        "trend_state": "TRENDING",
-        "vol_state": "NORMAL",
-        "news_state": "NORMAL",
-        "liquidity_state": "LIQUID"
-      },
-      "stale_price_suspected": false
-    },
     {
       "agent": "AEGIS",
       "ticker": "DIA",
@@ -63000,10 +62958,52 @@
         "liquidity_state": "LIQUID"
       },
       "stale_price_suspected": false
+    },
+    {
+      "agent": "AEGIS",
+      "ticker": "MOG-USD",
+      "signal": "HOLD",
+      "conviction": 0.362,
+      "predicted_at": "2026-06-15",
+      "scored_at": "2026-06-16",
+      "entry_price": 0.0,
+      "exit_price": 0.0,
+      "return_pct": -8.333,
+      "correct": false,
+      "reward": -7.7333,
+      "tags": {
+        "market_regime": "RISK_ON",
+        "trend_state": "TRENDING",
+        "vol_state": "NORMAL",
+        "news_state": "NORMAL",
+        "liquidity_state": "LIQUID"
+      },
+      "stale_price_suspected": false
+    },
+    {
+      "agent": "KESTREL+",
+      "ticker": "MOG-USD",
+      "signal": "HOLD",
+      "conviction": 0.0,
+      "predicted_at": "2026-06-15",
+      "scored_at": "2026-06-16",
+      "entry_price": 0.0,
+      "exit_price": 0.0,
+      "return_pct": -8.333,
+      "correct": false,
+      "reward": -7.7333,
+      "tags": {
+        "market_regime": "RISK_ON",
+        "trend_state": "TRENDING",
+        "vol_state": "NORMAL",
+        "news_state": "NORMAL",
+        "liquidity_state": "LIQUID"
+      },
+      "stale_price_suspected": false
     }
   ],
   "summary": {
-    "generated_at": "2026-06-16T00:25:28.508025+00:00",
+    "generated_at": "2026-06-16T00:45:19.009548+00:00",
     "total_scored_calls": 3000,
     "total_clean_calls": 3000,
     "agents_with_track_record": 20,
@@ -63411,12 +63411,12 @@
       },
       {
         "agent": "WEAVER",
-        "scored_calls": 104,
-        "clean_calls": 104,
-        "wins": 63,
+        "scored_calls": 103,
+        "clean_calls": 103,
+        "wins": 62,
         "losses": 41,
-        "win_rate": 0.606,
-        "expected_value": 0.137,
+        "win_rate": 0.602,
+        "expected_value": 0.135,
         "max_drawdown_pct": -15.095,
         "best_call_pct": 5.485,
         "worst_call_pct": -15.095,
@@ -63424,16 +63424,16 @@
         "by_regime": {
           "market_regime": {
             "RISK_ON": {
-              "n": 104,
-              "win_rate": 0.606,
-              "ev": 0.137
+              "n": 103,
+              "win_rate": 0.602,
+              "ev": 0.135
             }
           },
           "trend_state": {
             "TRENDING": {
-              "n": 79,
-              "win_rate": 0.608,
-              "ev": 0.1
+              "n": 78,
+              "win_rate": 0.603,
+              "ev": 0.097
             },
             "UNCLEAR": {
               "n": 16,
@@ -63448,9 +63448,9 @@
           },
           "vol_state": {
             "NORMAL": {
-              "n": 87,
-              "win_rate": 0.586,
-              "ev": -0.04
+              "n": 86,
+              "win_rate": 0.581,
+              "ev": -0.045
             },
             "LOW_VOL": {
               "n": 3,
@@ -63465,15 +63465,15 @@
           },
           "news_state": {
             "NORMAL": {
-              "n": 104,
-              "win_rate": 0.606,
-              "ev": 0.137
+              "n": 103,
+              "win_rate": 0.602,
+              "ev": 0.135
             }
           }
         },
         "weight_multiplier": 1.263,
         "weight_explanation": "REGIME SPECIALIST: globally 1.07\u00d7 but 1.26\u00d7 in HIGH_VOL (vol_state, 14 calls, 71% win rate). Kill switch uses 1.26\u00d7 \u2014 protected from global-average dilution.",
-        "global_weight": 1.07,
+        "global_weight": 1.068,
         "regime_aware_weight": 1.263,
         "best_regime": {
           "dimension": "vol_state",
@@ -63935,29 +63935,29 @@
       },
       {
         "agent": "OBSIDIAN",
-        "scored_calls": 135,
-        "clean_calls": 135,
-        "wins": 42,
+        "scored_calls": 134,
+        "clean_calls": 134,
+        "wins": 41,
         "losses": 93,
-        "win_rate": 0.311,
-        "expected_value": -1.264,
+        "win_rate": 0.306,
+        "expected_value": -1.276,
         "max_drawdown_pct": -10.826,
         "best_call_pct": 3.991,
         "worst_call_pct": -10.826,
-        "avg_conviction": 0.386,
+        "avg_conviction": 0.385,
         "by_regime": {
           "market_regime": {
             "RISK_ON": {
-              "n": 135,
-              "win_rate": 0.311,
-              "ev": -1.264
+              "n": 134,
+              "win_rate": 0.306,
+              "ev": -1.276
             }
           },
           "trend_state": {
             "TRENDING": {
-              "n": 42,
-              "win_rate": 0.357,
-              "ev": -1.187
+              "n": 41,
+              "win_rate": 0.341,
+              "ev": -1.225
             },
             "UNCLEAR": {
               "n": 92,
@@ -63972,9 +63972,9 @@
           },
           "vol_state": {
             "NORMAL": {
-              "n": 96,
-              "win_rate": 0.354,
-              "ev": -0.836
+              "n": 95,
+              "win_rate": 0.347,
+              "ev": -0.848
             },
             "HIGH_VOL": {
               "n": 39,
@@ -63984,23 +63984,23 @@
           },
           "news_state": {
             "NORMAL": {
-              "n": 135,
-              "win_rate": 0.311,
-              "ev": -1.264
+              "n": 134,
+              "win_rate": 0.306,
+              "ev": -1.276
             }
           }
         },
-        "weight_multiplier": 0.823,
+        "weight_multiplier": 0.818,
         "weight_explanation": "UNDERPERFORMING: best regime (NORMAL) only 0.82\u00d7. Kill switch weight: 0.82\u00d7.",
-        "global_weight": 0.748,
-        "regime_aware_weight": 0.823,
+        "global_weight": 0.743,
+        "regime_aware_weight": 0.818,
         "best_regime": {
           "dimension": "vol_state",
           "label": "NORMAL",
-          "n": 96,
-          "win_rate": 0.354,
-          "ev": -0.836,
-          "multiplier": 0.823
+          "n": 95,
+          "win_rate": 0.347,
+          "ev": -0.848,
+          "multiplier": 0.818
         },
         "specialty": "none",
         "evidence": "clean"
