@@ -1,10 +1,10 @@
 {
   "version": "5.0",
-  "generated_at": "2026-06-16T14:48:26.821237+00:00",
+  "generated_at": "2026-06-16T15:08:14.480994+00:00",
   "cycles_observed": 60,
   "dominant_narrative": "risk_on",
   "regime_shift": "RISK_ON",
-  "regime_shift_confidence": 0.5576,
+  "regime_shift_confidence": 0.6809,
   "narratives": {
     "risk_on": {
       "label": "Risk-on sentiment returning",
@@ -18,18 +18,30 @@
         "Consumer Staples",
         "Utilities"
       ],
-      "frequency": 1,
+      "frequency": 3,
       "persistence": 60,
-      "acceleration": 0.0,
-      "score": 0.465,
+      "acceleration": 1.0,
+      "score": 0.775,
       "phrases": [
+        "all-time high",
+        "risk-on",
         "buying the dip"
       ],
       "matched_articles": [
         {
+          "ticker": "NFLX",
+          "title": "Buy, Hold, or Sell: Dropping 39% From Its All-Time High Under a Hawkish New Fed, Is Netflix an Absolute Buy at $81?",
+          "source": "Yahoo Finance"
+        },
+        {
+          "ticker": "XMR-USD",
+          "title": "Monero Rises 3.28% Amid Broad Crypto Risk-On Rally",
+          "source": "CoinMarketCap"
+        },
+        {
           "ticker": "LTC-USD",
           "title": "Litecoin Whales Are Buying the Dip \u2014 Can LTC Price Reclaim $60?",
-          "source": "Coinpedia"
+          "source": "TradingView"
         }
       ]
     },
@@ -46,7 +58,7 @@
         "Consumer Discretionary"
       ],
       "frequency": 0,
-      "persistence": 25,
+      "persistence": 24,
       "acceleration": 0.0,
       "score": 0.39,
       "phrases": [],
@@ -59,12 +71,26 @@
         "Technology"
       ],
       "sectors_out": [],
-      "frequency": 0,
-      "persistence": 9,
-      "acceleration": 0.0,
-      "score": 0.39,
-      "phrases": [],
-      "matched_articles": []
+      "frequency": 2,
+      "persistence": 10,
+      "acceleration": 1.0,
+      "score": 0.7,
+      "phrases": [
+        "ai boom",
+        "ai rally"
+      ],
+      "matched_articles": [
+        {
+          "ticker": "NVDA",
+          "title": "Nvidia plans to raise at least $20 billion in its first debt sale since start of AI boom",
+          "source": "CNBC"
+        },
+        {
+          "ticker": "PLTR",
+          "title": "Palantir Technologies (PLTR) Stock Could Be 25.9% Overvalued After AI Rally\u3011\u3010\u3002",
+          "source": "Yahoo Finance"
+        }
+      ]
     },
     "ai_cooldown": {
       "label": "AI rally cooling / stretched valuations",
@@ -198,25 +224,19 @@
     }
   },
   "sector_pressure": {
-    "Technology": 0.425,
+    "Technology": 1.0,
     "Energy": 0.0,
     "Industrials": 0.04,
     "Health Care": 0.43,
     "Financials": 0.04,
-    "Consumer Discretionary": 0.075,
-    "Consumer Staples": -0.075,
-    "Communication Services": 0.465,
+    "Consumer Discretionary": 0.385,
+    "Consumer Staples": -0.385,
+    "Communication Services": 0.775,
     "Real Estate": 0.0,
-    "Utilities": -0.115,
+    "Utilities": -0.425,
     "Materials": 0.0
   },
   "history": [
-    {
-      "cycle_ts": "2026-06-15T17:47:18.003833+00:00",
-      "dominant_narrative": "risk_off",
-      "regime_shift": "RISK_OFF",
-      "score": 0.7
-    },
     {
       "cycle_ts": "2026-06-15T17:57:22.578245+00:00",
       "dominant_narrative": "risk_on",
@@ -570,7 +590,13 @@
       "dominant_narrative": "risk_on",
       "regime_shift": "RISK_ON",
       "score": 0.465
+    },
+    {
+      "cycle_ts": "2026-06-16T15:08:14.480994+00:00",
+      "dominant_narrative": "risk_on",
+      "regime_shift": "RISK_ON",
+      "score": 0.775
     }
   ],
-  "headline_count": 574
+  "headline_count": 443
 }
