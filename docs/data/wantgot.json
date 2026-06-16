@@ -1,39 +1,39 @@
 {
   "version": "wantgot-2.0",
-  "generated_at": "2026-06-16T07:30:59.311112+00:00",
+  "generated_at": "2026-06-16T07:45:35.023996+00:00",
   "accounts": {
     "LEGACY": {
       "account_id": "LEGACY",
       "mode": "consensus",
-      "cycle_at": "2026-06-16T07:30:36.658312+00:00",
+      "cycle_at": "2026-06-16T07:45:14.676329+00:00",
       "session_open": false,
       "composite_halt": false,
       "halt_reason": null,
       "has_cycle_intents": true,
       "rows": [
         {
-          "ticker": "FRT",
+          "ticker": "TXN",
           "signal": "BUY",
-          "conviction": 0.6531,
+          "conviction": 0.91,
           "originated": false,
-          "intended_notional": 766.72,
+          "intended_notional": 766.75,
           "submitted": false,
           "order_status": null,
-          "held_market_value": 745.24,
+          "held_market_value": 0.0,
           "verdict": "BLOCKED:blocked_correlation_book",
           "reason": "correlation cluster HIGH severity"
         },
         {
-          "ticker": "ANET",
+          "ticker": "QRVO",
           "signal": "BUY",
-          "conviction": 0.6002,
+          "conviction": 0.7985,
           "originated": false,
-          "intended_notional": 766.72,
+          "intended_notional": 766.75,
           "submitted": false,
           "order_status": null,
-          "held_market_value": 492.16,
-          "verdict": "BLOCKED:blocked_correlation_book",
-          "reason": "correlation cluster HIGH severity"
+          "held_market_value": 0.0,
+          "verdict": "DEFERRED",
+          "reason": "off-session run \u2014 the session hard-gate parks orders until the next open (the off-hours-incident law working as designed)"
         }
       ],
       "held_no_intent": [
@@ -45,6 +45,13 @@
           "note": "held from a prior cycle \u2014 no fresh BUY intent this cycle"
         },
         {
+          "ticker": "ANET",
+          "market_value": 492.16,
+          "unrealized_pl": 4.1,
+          "first_seen": "2026-06-15T17:47:16.315384+00:00",
+          "note": "held from a prior cycle \u2014 no fresh BUY intent this cycle"
+        },
+        {
           "ticker": "DXCM",
           "market_value": 1139.02,
           "unrealized_pl": 2.21,
@@ -52,16 +59,23 @@
           "note": "held from a prior cycle \u2014 no fresh BUY intent this cycle"
         },
         {
+          "ticker": "FRT",
+          "market_value": 745.24,
+          "unrealized_pl": -1.37,
+          "first_seen": "2026-06-15T18:46:51.497810+00:00",
+          "note": "held from a prior cycle \u2014 no fresh BUY intent this cycle"
+        },
+        {
           "ticker": "GLW",
-          "market_value": 502.92,
-          "unrealized_pl": 6.24,
+          "market_value": 502.68,
+          "unrealized_pl": 6.0,
           "first_seen": "2026-06-15T14:27:42.718341+00:00",
           "note": "held from a prior cycle \u2014 no fresh BUY intent this cycle"
         },
         {
           "ticker": "IWM",
-          "market_value": 957.3,
-          "unrealized_pl": -2.54,
+          "market_value": 957.88,
+          "unrealized_pl": -1.96,
           "first_seen": "2026-06-15T16:07:26.564738+00:00",
           "note": "held from a prior cycle \u2014 no fresh BUY intent this cycle"
         },
@@ -81,46 +95,46 @@
         }
       ],
       "totals": {
-        "intended": 1533.44,
+        "intended": 1533.5,
         "submitted": 0.0,
-        "held": 6132.52,
-        "equity": 9584.01,
-        "deployment_gap": -4599.08
+        "held": 6132.86,
+        "equity": 9584.36,
+        "deployment_gap": -4599.36
       },
-      "narrative": "wanted 2 name(s) ($1533): 0 filled+held, 0 pending, 2 gated, 0 deferred"
+      "narrative": "wanted 2 name(s) ($1534): 0 filled+held, 0 pending, 1 gated, 1 deferred"
     },
     "HARVEST_3": {
       "account_id": "HARVEST_3",
       "mode": "consensus",
-      "cycle_at": "2026-06-16T07:30:37.030023+00:00",
+      "cycle_at": "2026-06-16T07:45:15.576735+00:00",
       "session_open": false,
       "composite_halt": false,
       "halt_reason": null,
       "has_cycle_intents": true,
       "rows": [
         {
-          "ticker": "BXP",
+          "ticker": "NEAR-USD",
           "signal": "BUY",
-          "conviction": 0.9334,
+          "conviction": 0.741,
           "originated": false,
           "intended_notional": 954.29,
           "submitted": false,
           "order_status": null,
-          "held_market_value": 1056.53,
-          "verdict": "BLOCKED:blocked_correlation_book",
-          "reason": "correlation cluster HIGH severity"
+          "held_market_value": 0.0,
+          "verdict": "BLOCKED:blocked_not_equity_mission",
+          "reason": "NEAR-USD is not a traditional equity \u2014 valuables trade in their own zone, never this account"
         },
         {
-          "ticker": "TXN",
-          "signal": "STRONG_BUY",
-          "conviction": 0.7024,
+          "ticker": "KMX",
+          "signal": "BUY",
+          "conviction": 0.9913,
           "originated": false,
           "intended_notional": 954.29,
           "submitted": false,
           "order_status": null,
-          "held_market_value": 632.24,
-          "verdict": "BLOCKED:blocked_correlation_book",
-          "reason": "correlation cluster HIGH severity"
+          "held_market_value": 0.0,
+          "verdict": "BLOCKED:blocked_negative_cash",
+          "reason": "BLOCKED: account cash $-1046.35 < 0 (margin used) \u2014 refusing new opens until margin cleared"
         }
       ],
       "held_no_intent": [
@@ -129,6 +143,13 @@
           "market_value": 717.06,
           "unrealized_pl": -10.15,
           "first_seen": "2026-06-15T15:07:54.957849+00:00",
+          "note": "held from a prior cycle \u2014 no fresh BUY intent this cycle"
+        },
+        {
+          "ticker": "BXP",
+          "market_value": 1056.53,
+          "unrealized_pl": -3.68,
+          "first_seen": "2026-06-15T17:20:49.776236+00:00",
           "note": "held from a prior cycle \u2014 no fresh BUY intent this cycle"
         },
         {
@@ -188,6 +209,13 @@
           "note": "held from a prior cycle \u2014 no fresh BUY intent this cycle"
         },
         {
+          "ticker": "TXN",
+          "market_value": 632.24,
+          "unrealized_pl": 3.66,
+          "first_seen": "2026-06-15T15:46:56.107817+00:00",
+          "note": "held from a prior cycle \u2014 no fresh BUY intent this cycle"
+        },
+        {
           "ticker": "VTI",
           "market_value": 1107.83,
           "unrealized_pl": -1.52,
@@ -207,52 +235,16 @@
     "HARVEST_5": {
       "account_id": "HARVEST_5",
       "mode": "wordsmith",
-      "cycle_at": "2026-06-16T07:30:37.917015+00:00",
+      "cycle_at": "2026-06-16T07:45:16.482565+00:00",
       "session_open": false,
       "composite_halt": false,
       "halt_reason": null,
       "has_cycle_intents": true,
       "rows": [
         {
-          "ticker": "BXP",
-          "signal": "STRONG_BUY",
-          "conviction": 0.885,
-          "originated": true,
-          "intended_notional": 1158.47,
-          "submitted": false,
-          "order_status": null,
-          "held_market_value": 0.0,
-          "verdict": "BLOCKED:blocked_signal_not_sell",
-          "reason": "signal HOLD is not SELL/STRONG_SELL"
-        },
-        {
-          "ticker": "TXN",
-          "signal": "STRONG_BUY",
-          "conviction": 0.862,
-          "originated": true,
-          "intended_notional": 1158.47,
-          "submitted": false,
-          "order_status": null,
-          "held_market_value": 0.0,
-          "verdict": "BLOCKED:blocked_signal_not_sell",
-          "reason": "signal HOLD is not SELL/STRONG_SELL"
-        },
-        {
-          "ticker": "DXCM",
-          "signal": "STRONG_BUY",
-          "conviction": 0.9195,
-          "originated": true,
-          "intended_notional": 1158.47,
-          "submitted": false,
-          "order_status": null,
-          "held_market_value": 0.0,
-          "verdict": "BLOCKED:blocked_signal_not_sell",
-          "reason": "signal HOLD is not SELL/STRONG_SELL"
-        },
-        {
           "ticker": "XLM-USD",
           "signal": "BUY",
-          "conviction": 0.908,
+          "conviction": 0.7976,
           "originated": true,
           "intended_notional": 1158.47,
           "submitted": false,
@@ -262,9 +254,45 @@
           "reason": "signal HOLD is not SELL/STRONG_SELL"
         },
         {
-          "ticker": "URI",
+          "ticker": "LDO-USD",
           "signal": "BUY",
-          "conviction": 0.862,
+          "conviction": 0.7572,
+          "originated": true,
+          "intended_notional": 1158.47,
+          "submitted": false,
+          "order_status": null,
+          "held_market_value": 0.0,
+          "verdict": "BLOCKED:blocked_signal_not_sell",
+          "reason": "signal HOLD is not SELL/STRONG_SELL"
+        },
+        {
+          "ticker": "UNI-USD",
+          "signal": "BUY",
+          "conviction": 0.6865,
+          "originated": true,
+          "intended_notional": 1158.47,
+          "submitted": false,
+          "order_status": null,
+          "held_market_value": 0.0,
+          "verdict": "BLOCKED:blocked_signal_not_sell",
+          "reason": "signal HOLD is not SELL/STRONG_SELL"
+        },
+        {
+          "ticker": "JTO-USD",
+          "signal": "BUY",
+          "conviction": 0.6663,
+          "originated": true,
+          "intended_notional": 1158.47,
+          "submitted": false,
+          "order_status": null,
+          "held_market_value": 0.0,
+          "verdict": "BLOCKED:blocked_signal_not_sell",
+          "reason": "signal HOLD is not SELL/STRONG_SELL"
+        },
+        {
+          "ticker": "XMR-USD",
+          "signal": "BUY",
+          "conviction": 0.6663,
           "originated": true,
           "intended_notional": 1158.47,
           "submitted": false,
