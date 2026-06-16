@@ -490,14 +490,14 @@
     "primary_symbol": null,
     "primary_qty": 0.0,
     "primary_market_value": 0.0,
-    "checked_at": "2026-06-16T03:44:20.623047+00:00"
+    "checked_at": "2026-06-16T04:04:42.915166+00:00"
   },
   "reason": "Live \u2014 configured; last run 2026-06-09T09:17:06",
   "seeded_at": "2026-05-11T05:00:26.087739+00:00",
   "genesis_at": "2026-05-11T05:08:53.396920+00:00",
   "last_cycle_summary": {
-    "time": "2026-06-16T03:44:20.668903+00:00",
-    "timestamp": "2026-06-16T03:44:20.668910+00:00",
+    "time": "2026-06-16T04:04:43.003574+00:00",
+    "timestamp": "2026-06-16T04:04:43.003584+00:00",
     "closed": 0,
     "opened": 0,
     "open_after": 1,
@@ -511,11 +511,11 @@
     "sgov_sweep_cap_detail": null,
     "directives_consumed": 0,
     "rotations_executed": 0,
-    "composite_halt": true,
+    "composite_halt": false,
     "session": "closed",
     "is_extended": false
   },
-  "last_run": "2026-06-16T03:44:20.668939+00:00",
+  "last_run": "2026-06-16T04:04:43.003672+00:00",
   "sgov_sweep_last_cycle": {
     "attempted": false,
     "reason": "below min sweep $5.00",
@@ -526,10 +526,10 @@
   ],
   "sweep_protection": {
     "version": "4.0",
-    "checked_at": "2026-06-16T03:44:21.041613+00:00",
-    "market_mode": "PRESERVATION",
+    "checked_at": "2026-06-16T04:04:43.183063+00:00",
+    "market_mode": "ATTACK",
     "force_sweep_floor_resolved": 10500.0,
-    "stale_close_age_days": 3,
+    "stale_close_age_days": 5,
     "instant_sweeps": [],
     "stale_closes": [],
     "news_boosts": [],
@@ -540,7 +540,7 @@
     },
     "evening_shield": {
       "triggered": false,
-      "reason": "danger window overnight_thin \u2014 no positive unrealized on non-spared book; skip"
+      "reason": ""
     },
     "danger_carve_outs": {
       "elite": [],
@@ -550,11 +550,11 @@
   },
   "policy_applied": {
     "version": "4.0",
-    "market_mode": "PRESERVATION",
-    "winner_engine": "market_state",
-    "halt_opens": true,
-    "effective_trail_pct": 0.06,
-    "effective_min_conv": 0.75,
+    "market_mode": "ATTACK",
+    "winner_engine": "default",
+    "halt_opens": false,
+    "effective_trail_pct": 0.034,
+    "effective_min_conv": 0.4,
     "elite_tickers": [],
     "force_close_targets": [],
     "blocked_count": 0,
@@ -621,55 +621,146 @@
       {
         "ticker": "LDO-USD",
         "signal": "BUY",
-        "conviction": 0.7353159591156175,
+        "conviction": 0.7758676563030784,
         "why": "words +0.68 (4 arts).",
         "originated": true
       },
       {
         "ticker": "XLM-USD",
         "signal": "BUY",
-        "conviction": 0.658919495830878,
+        "conviction": 0.6952580296741872,
         "why": "words +0.56 (5 arts).",
+        "originated": true
+      },
+      {
+        "ticker": "STRK-USD",
+        "signal": "BUY",
+        "conviction": 0.6851818263455758,
+        "why": "words +0.54 (5 arts).",
         "originated": true
       },
       {
         "ticker": "XMR-USD",
         "signal": "BUY",
-        "conviction": 0.6493699379202856,
+        "conviction": 0.6851818263455758,
         "why": "words +0.54 (5 arts).",
         "originated": true
       },
       {
         "ticker": "JTO-USD",
         "signal": "BUY",
-        "conviction": 0.6302708220991008,
+        "conviction": 0.6650294196883529,
         "why": "words +0.51 (5 arts).",
-        "originated": true
-      },
-      {
-        "ticker": "ICP-USD",
-        "signal": "BUY",
-        "conviction": 0.6302708220991008,
-        "why": "words +0.51 (4 arts).",
         "originated": true
       }
     ],
-    "fed_debate_rows": 594,
+    "fed_debate_rows": 593,
     "note": "headlines-only book: entries require a FABLEBOY_5 BUY/STRONG_BUY; all safety rails unchanged"
   },
   "cycle_intents": {
-    "at": "2026-06-16T03:44:20.668923+00:00",
+    "at": "2026-06-16T04:04:43.003649+00:00",
     "session": "closed",
     "session_open": false,
-    "composite_halt": true,
-    "halt_reason": "Halt: market_state: market_state=PRESERVATION: in danger window (overnight_thin)",
-    "plans_offered": 0,
-    "buy_intents": [],
+    "composite_halt": false,
+    "halt_reason": null,
+    "plans_offered": 5,
+    "buy_intents": [
+      {
+        "ticker": "LDO-USD",
+        "signal": "BUY",
+        "conviction": 0.7759,
+        "originated": true,
+        "outcome": "blocked_signal_not_sell",
+        "intended_notional": 1158.52,
+        "reason": "signal HOLD is not SELL/STRONG_SELL"
+      },
+      {
+        "ticker": "XLM-USD",
+        "signal": "BUY",
+        "conviction": 0.6953,
+        "originated": true,
+        "outcome": "blocked_signal_not_sell",
+        "intended_notional": 1158.52,
+        "reason": "signal HOLD is not SELL/STRONG_SELL"
+      },
+      {
+        "ticker": "STRK-USD",
+        "signal": "BUY",
+        "conviction": 0.6852,
+        "originated": true,
+        "outcome": "blocked_signal_not_sell",
+        "intended_notional": 1158.52,
+        "reason": "signal HOLD is not SELL/STRONG_SELL"
+      },
+      {
+        "ticker": "XMR-USD",
+        "signal": "BUY",
+        "conviction": 0.6852,
+        "originated": true,
+        "outcome": "blocked_signal_not_sell",
+        "intended_notional": 1158.52,
+        "reason": "signal HOLD is not SELL/STRONG_SELL"
+      },
+      {
+        "ticker": "JTO-USD",
+        "signal": "BUY",
+        "conviction": 0.665,
+        "originated": true,
+        "outcome": "blocked_signal_not_sell",
+        "intended_notional": 1158.52,
+        "reason": "signal HOLD is not SELL/STRONG_SELL"
+      }
+    ],
     "decisions_this_cycle": [
       {
-        "ticker": "*",
-        "category": "blocked_composite_halt",
-        "reason": "Halt: market_state: market_state=PRESERVATION: in danger window (overnight_thin)"
+        "ticker": "LDO-USD",
+        "category": "blocked_signal_not_buy",
+        "reason": "signal HOLD is not BUY/STRONG_BUY"
+      },
+      {
+        "ticker": "XLM-USD",
+        "category": "blocked_signal_not_buy",
+        "reason": "signal HOLD is not BUY/STRONG_BUY"
+      },
+      {
+        "ticker": "STRK-USD",
+        "category": "blocked_signal_not_buy",
+        "reason": "signal HOLD is not BUY/STRONG_BUY"
+      },
+      {
+        "ticker": "XMR-USD",
+        "category": "blocked_signal_not_buy",
+        "reason": "signal HOLD is not BUY/STRONG_BUY"
+      },
+      {
+        "ticker": "JTO-USD",
+        "category": "blocked_signal_not_buy",
+        "reason": "signal HOLD is not BUY/STRONG_BUY"
+      },
+      {
+        "ticker": "LDO-USD",
+        "category": "blocked_signal_not_sell",
+        "reason": "signal HOLD is not SELL/STRONG_SELL"
+      },
+      {
+        "ticker": "XLM-USD",
+        "category": "blocked_signal_not_sell",
+        "reason": "signal HOLD is not SELL/STRONG_SELL"
+      },
+      {
+        "ticker": "STRK-USD",
+        "category": "blocked_signal_not_sell",
+        "reason": "signal HOLD is not SELL/STRONG_SELL"
+      },
+      {
+        "ticker": "XMR-USD",
+        "category": "blocked_signal_not_sell",
+        "reason": "signal HOLD is not SELL/STRONG_SELL"
+      },
+      {
+        "ticker": "JTO-USD",
+        "category": "blocked_signal_not_sell",
+        "reason": "signal HOLD is not SELL/STRONG_SELL"
       }
     ]
   }

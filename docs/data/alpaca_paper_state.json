@@ -2,7 +2,7 @@
   "version": "2.2",
   "enabled": true,
   "account": {
-    "equity": 9576.67,
+    "equity": 9576.92,
     "cash": 3451.49
   },
   "principal_target": 10000.0,
@@ -137,10 +137,6 @@
       "qty": 15.288873858,
       "snapshots_30m": [
         {
-          "ts": "2026-06-15T22:44:47.683272+00:00",
-          "price": 74.3
-        },
-        {
           "ts": "2026-06-15T23:26:53.975072+00:00",
           "price": 74.3
         },
@@ -166,6 +162,10 @@
         },
         {
           "ts": "2026-06-16T03:25:59.312148+00:00",
+          "price": 74.5
+        },
+        {
+          "ts": "2026-06-16T04:04:42.449081+00:00",
           "price": 74.5
         }
       ]
@@ -297,10 +297,6 @@
       "qty": 5.975748359,
       "snapshots_30m": [
         {
-          "ts": "2026-06-15T22:44:47.683375+00:00",
-          "price": 124.71
-        },
-        {
           "ts": "2026-06-15T23:26:53.975189+00:00",
           "price": 124.71
         },
@@ -326,6 +322,10 @@
         },
         {
           "ts": "2026-06-16T03:25:59.312283+00:00",
+          "price": 124.71
+        },
+        {
+          "ts": "2026-06-16T04:04:42.449202+00:00",
           "price": 124.71
         }
       ]
@@ -4765,14 +4765,14 @@
     }
   ],
   "last_cycle_summary": {
-    "time": "2026-06-16T03:44:20.075778+00:00",
-    "timestamp": "2026-06-16T03:44:20.075786+00:00",
+    "time": "2026-06-16T04:04:42.516299+00:00",
+    "timestamp": "2026-06-16T04:04:42.516308+00:00",
     "closed": 0,
     "opened": 0,
     "open_after": 9,
-    "equity": 9576.67,
+    "equity": 9576.92,
     "savings": 0.0,
-    "total_value": 9576.67,
+    "total_value": 9576.92,
     "tickers_traded": [],
     "bleed_exits_count": 0,
     "bleed_exits": [],
@@ -4788,13 +4788,13 @@
     },
     "directives_consumed": 0,
     "rotations_executed": 0,
-    "composite_halt": true,
+    "composite_halt": false,
     "session": "closed",
     "is_extended": false
   },
-  "last_run": "2026-06-16T03:44:20.075981+00:00",
+  "last_run": "2026-06-16T04:04:42.516413+00:00",
   "grocery_pending_harvest": 2726.9322999999968,
-  "trading_capital": 9576.67,
+  "trading_capital": 9576.92,
   "realized_savings": 0.0,
   "account_id": "LEGACY",
   "genesis_at": "2026-05-11T05:08:46.083334+00:00",
@@ -4813,7 +4813,7 @@
     "primary_symbol": "SGOV",
     "primary_qty": 4.5e-05,
     "primary_market_value": 0.0045,
-    "checked_at": "2026-06-16T03:44:20.020786+00:00"
+    "checked_at": "2026-06-16T04:04:42.443224+00:00"
   },
   "sgov_sweep_last_cycle": {
     "attempted": false,
@@ -4859,10 +4859,10 @@
   ],
   "sweep_protection": {
     "version": "4.0",
-    "checked_at": "2026-06-16T03:44:20.673204+00:00",
-    "market_mode": "PRESERVATION",
+    "checked_at": "2026-06-16T04:04:43.008471+00:00",
+    "market_mode": "ATTACK",
     "force_sweep_floor_resolved": 10500.0,
-    "stale_close_age_days": 3,
+    "stale_close_age_days": 5,
     "instant_sweeps": [],
     "stale_closes": [],
     "news_boosts": [],
@@ -4873,7 +4873,7 @@
     },
     "evening_shield": {
       "triggered": false,
-      "reason": "danger window overnight_thin \u2014 no positive unrealized on non-spared book; skip"
+      "reason": ""
     },
     "danger_carve_outs": {
       "elite": [],
@@ -4883,11 +4883,11 @@
   },
   "policy_applied": {
     "version": "4.0",
-    "market_mode": "PRESERVATION",
-    "winner_engine": "market_state",
-    "halt_opens": true,
-    "effective_trail_pct": 0.0375,
-    "effective_min_conv": 0.75,
+    "market_mode": "ATTACK",
+    "winner_engine": "default",
+    "halt_opens": false,
+    "effective_trail_pct": 0.0213,
+    "effective_min_conv": 0.4,
     "elite_tickers": [],
     "force_close_targets": [],
     "blocked_count": 0,
@@ -4975,12 +4975,12 @@
       "symbol": "GLW",
       "ticker": "GLW",
       "qty": 2.656044835,
-      "current_price": 187.4,
+      "current_price": 187.8,
       "avg_entry_price": 187.0,
       "peak_price": 188.2433,
-      "market_value": 497.74,
-      "unrealized_pl": 1.06,
-      "unrealized_plpc": 0.0021,
+      "market_value": 498.81,
+      "unrealized_pl": 2.12,
+      "unrealized_plpc": 0.0043,
       "first_seen": "2026-06-15T14:27:42.718341+00:00",
       "scale_out_history": {},
       "stop_at_break_even": false,
@@ -4990,12 +4990,12 @@
       "symbol": "IWM",
       "ticker": "IWM",
       "qty": 3.243874412,
-      "current_price": 295.31,
+      "current_price": 295.06,
       "avg_entry_price": 295.893083,
       "peak_price": 296.03,
-      "market_value": 957.95,
-      "unrealized_pl": -1.89,
-      "unrealized_plpc": -0.002,
+      "market_value": 957.14,
+      "unrealized_pl": -2.7,
+      "unrealized_plpc": -0.0028,
       "first_seen": "2026-06-15T16:07:26.564738+00:00",
       "scale_out_history": {},
       "stop_at_break_even": false,
@@ -5173,18 +5173,33 @@
     "open_seen": 1
   },
   "cycle_intents": {
-    "at": "2026-06-16T03:44:20.075802+00:00",
+    "at": "2026-06-16T04:04:42.516334+00:00",
     "session": "closed",
     "session_open": false,
-    "composite_halt": true,
-    "halt_reason": "Halt: market_state: market_state=PRESERVATION: in danger window (overnight_thin)",
-    "plans_offered": 0,
-    "buy_intents": [],
+    "composite_halt": false,
+    "halt_reason": null,
+    "plans_offered": 1,
+    "buy_intents": [
+      {
+        "ticker": "QRVO",
+        "signal": "BUY",
+        "conviction": 0.8063,
+        "originated": false,
+        "outcome": "blocked_no_session_match",
+        "intended_notional": 766.15,
+        "reason": "no usable session for order"
+      }
+    ],
     "decisions_this_cycle": [
       {
-        "ticker": "*",
-        "category": "blocked_composite_halt",
-        "reason": "Halt: market_state: market_state=PRESERVATION: in danger window (overnight_thin)"
+        "ticker": "QRVO",
+        "category": "blocked_no_session_match",
+        "reason": "no usable session for order"
+      },
+      {
+        "ticker": "QRVO",
+        "category": "blocked_signal_not_sell",
+        "reason": "signal BUY is not SELL/STRONG_SELL"
       }
     ]
   },
