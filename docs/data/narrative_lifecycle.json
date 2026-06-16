@@ -1,6 +1,6 @@
 {
   "version": "narrative-lifecycle-1.0",
-  "generated_at": "2026-06-16T07:45:35.126552+00:00",
+  "generated_at": "2026-06-16T08:05:02.315785+00:00",
   "date": "2026-06-16",
   "names": {
     "LRCX": {
@@ -1028,8 +1028,9 @@
       "days_tracked": 8
     },
     "ADA-USD": {
-      "phase": "QUIET",
-      "heat": 0.0,
+      "phase": "PEAK",
+      "why": "rolling-window max \u2014 a CANDIDATE peak; only the decline after proves a top, and tomorrow will say",
+      "heat": 0.36,
       "last_date": "2026-06-16",
       "days_tracked": 8
     },
@@ -1079,9 +1080,8 @@
       "days_tracked": 8
     },
     "XTZ-USD": {
-      "phase": "PEAK",
-      "why": "rolling-window max \u2014 a CANDIDATE peak; only the decline after proves a top, and tomorrow will say",
-      "heat": 0.55,
+      "phase": "STEADY",
+      "heat": 0.25,
       "last_date": "2026-06-16",
       "days_tracked": 8
     },
@@ -1092,8 +1092,9 @@
       "days_tracked": 8
     },
     "AAVE-USD": {
-      "phase": "STEADY",
-      "heat": 0.4091,
+      "phase": "DECAY",
+      "why": "two consecutive declines off a local max",
+      "heat": 0.1591,
       "last_date": "2026-06-16",
       "days_tracked": 8
     },
@@ -1118,7 +1119,7 @@
     },
     "LDO-USD": {
       "phase": "STEADY",
-      "heat": 1.0,
+      "heat": 0.6,
       "last_date": "2026-06-16",
       "days_tracked": 8
     },
@@ -1576,8 +1577,8 @@
     },
     "TRX-USD": {
       "phase": "DECAY",
-      "why": "two consecutive declines off a local max",
-      "heat": 0.2,
+      "why": "story went silent off a hot stretch",
+      "heat": 0.0,
       "last_date": "2026-06-16",
       "days_tracked": 8
     },
@@ -1590,7 +1591,7 @@
     "INJ-USD": {
       "phase": "DECAY",
       "why": "story went silent off a hot stretch",
-      "heat": 0.0222,
+      "heat": 0.0278,
       "last_date": "2026-06-16",
       "days_tracked": 8
     },
@@ -1786,7 +1787,7 @@
     },
     "ICP-USD": {
       "phase": "STEADY",
-      "heat": 0.6,
+      "heat": 0.4,
       "last_date": "2026-06-16",
       "days_tracked": 8
     },
@@ -1836,8 +1837,9 @@
       "days_tracked": 8
     },
     "RUNE-USD": {
-      "phase": "QUIET",
-      "heat": 0.0,
+      "phase": "ACCELERATION",
+      "why": "heat 0.20 vs 3d base 0.13 (x1.5)",
+      "heat": 0.2,
       "last_date": "2026-06-16",
       "days_tracked": 8
     },
@@ -1891,7 +1893,7 @@
     },
     "ENA-USD": {
       "phase": "STEADY",
-      "heat": 0.6,
+      "heat": 0.4,
       "last_date": "2026-06-16",
       "days_tracked": 8
     },
@@ -3589,11 +3591,11 @@
     }
   },
   "counts": {
-    "QUIET": 557,
+    "QUIET": 555,
     "PEAK": 9,
-    "ACCELERATION": 8,
+    "ACCELERATION": 9,
     "STEADY": 16,
-    "DECAY": 3,
+    "DECAY": 4,
     "WARMING": 1
   },
   "heat_definition": "|sentiment| + |anticipation| + 1[catalyst] per day \u2014 attention intensity, direction-agnostic",

@@ -1,17 +1,28 @@
 {
   "version": "6.0",
-  "generated_at": "2026-06-16T07:45:12.940177+00:00",
+  "generated_at": "2026-06-16T08:04:52.915070+00:00",
   "tickers": {
     "NEAR-USD": {
       "ticker": "NEAR-USD",
       "use_limit_order": true,
-      "limit_buffer_bps": 88,
+      "limit_buffer_bps": 86,
       "defer_to_next_cycle": true,
-      "opening_volatility": 0.0978,
-      "liquidity_score": 0.3508,
+      "opening_volatility": 0.0957,
+      "liquidity_score": 0.6463,
       "extension_warning": false,
       "timing_window": null,
-      "rationale": "DEFER: ATR/price 9.8% \u2265 9% \u2014 untradeable"
+      "rationale": "DEFER: ATR/price 9.6% \u2265 9% \u2014 untradeable"
+    },
+    "TON-USD": {
+      "ticker": "TON-USD",
+      "use_limit_order": true,
+      "limit_buffer_bps": 42,
+      "defer_to_next_cycle": false,
+      "opening_volatility": 0.0319,
+      "liquidity_score": 0.3597,
+      "extension_warning": false,
+      "timing_window": null,
+      "rationale": "limit 42bps \u00b7 ATR/px 3.2% \u00b7 liq 0.36"
     },
     "QRVO": {
       "ticker": "QRVO",
@@ -23,6 +34,17 @@
       "extension_warning": false,
       "timing_window": null,
       "rationale": "limit 49bps \u00b7 ATR/px 4.2% \u00b7 liq 0.56"
+    },
+    "STRK-USD": {
+      "ticker": "STRK-USD",
+      "use_limit_order": true,
+      "limit_buffer_bps": 81,
+      "defer_to_next_cycle": false,
+      "opening_volatility": 0.0874,
+      "liquidity_score": 0.8333,
+      "extension_warning": false,
+      "timing_window": null,
+      "rationale": "limit 81bps \u00b7 ATR/px 8.7% \u00b7 liq 0.83"
     },
     "KMX": {
       "ticker": "KMX",
@@ -48,9 +70,9 @@
     }
   },
   "summary": {
-    "tickers": 4,
+    "tickers": 6,
     "deferred": 1,
-    "limit_recommended": 4,
+    "limit_recommended": 6,
     "market_orders_ok": -1
   },
   "config": {
