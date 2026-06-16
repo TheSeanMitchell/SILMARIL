@@ -1,17 +1,17 @@
 {
   "version": "6.0",
-  "generated_at": "2026-06-16T15:08:11.271096+00:00",
+  "generated_at": "2026-06-16T15:27:30.219661+00:00",
   "tickers": {
-    "INVH": {
-      "ticker": "INVH",
+    "NEAR-USD": {
+      "ticker": "NEAR-USD",
       "use_limit_order": true,
-      "limit_buffer_bps": 40,
-      "defer_to_next_cycle": false,
-      "opening_volatility": 0.0183,
-      "liquidity_score": 0.128,
+      "limit_buffer_bps": 150,
+      "defer_to_next_cycle": true,
+      "opening_volatility": 0.1045,
+      "liquidity_score": 0.6539,
       "extension_warning": false,
-      "timing_window": null,
-      "rationale": "limit 40bps \u00b7 ATR/px 1.8% \u00b7 liq 0.13"
+      "timing_window": "resting toward NEAR-USD's ~1.97 floor (his low window is 10:00 ET) \u2014 limit 150bps below",
+      "rationale": "DEFER: ATR/price 10.5% \u2265 9% \u2014 untradeable \u00b7 resting toward NEAR-USD's ~1.97 floor (his low window is 10:00 ET) \u2014 limit 150bps below"
     },
     "URI": {
       "ticker": "URI",
@@ -19,17 +19,17 @@
       "limit_buffer_bps": 39,
       "defer_to_next_cycle": false,
       "opening_volatility": 0.0285,
-      "liquidity_score": 0.1425,
+      "liquidity_score": 0.1693,
       "extension_warning": false,
       "timing_window": null,
-      "rationale": "limit 39bps \u00b7 ATR/px 2.8% \u00b7 liq 0.14"
+      "rationale": "limit 39bps \u00b7 ATR/px 2.9% \u00b7 liq 0.17"
     }
   },
   "summary": {
     "tickers": 2,
-    "deferred": 0,
+    "deferred": 1,
     "limit_recommended": 2,
-    "market_orders_ok": 0
+    "market_orders_ok": -1
   },
   "config": {
     "atr_defer_ratio": 0.05,
