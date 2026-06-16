@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-16T06:04:38.464083+00:00",
+  "generated_at": "2026-06-16T07:30:39.024607+00:00",
   "advisory_only": true,
   "note": "Advisory only \u2014 recommendations are NOT auto-executed in Alpha 3.0. Existing trailing-stop / momentum-exit logic still does the actual closing.",
   "summary": {
@@ -41,6 +41,12 @@
         "rationale": "flat from entry \u00b7 score 0.50 @ aggression 0.50"
       },
       {
+        "ticker": "GLW",
+        "recommendation": "HOLD",
+        "score": 0.4449,
+        "rationale": "flat from entry \u00b7 score 0.44 @ aggression 0.50"
+      },
+      {
         "ticker": "PNC",
         "recommendation": "HOLD",
         "score": 0.4397,
@@ -62,12 +68,6 @@
         "ticker": "VTI",
         "recommendation": "HOLD",
         "score": 0.4233,
-        "rationale": "flat from entry \u00b7 score 0.42 @ aggression 0.50"
-      },
-      {
-        "ticker": "GLW",
-        "recommendation": "HOLD",
-        "score": 0.4164,
         "rationale": "flat from entry \u00b7 score 0.42 @ aggression 0.50"
       },
       {
@@ -273,8 +273,8 @@
       {
         "ticker": "SOL-USD",
         "recommendation": "HOLD",
-        "score": 0.136,
-        "rationale": "+10.4% from entry \u00b7 score 0.14 @ aggression 0.50"
+        "score": 0.1286,
+        "rationale": "+11.1% from entry \u00b7 score 0.13 @ aggression 0.50"
       }
     ]
   },
@@ -448,6 +448,25 @@
       "hold_age_days": 1.0,
       "intraday_drift_pct": -0.0113,
       "peak_drop_pct": -0.0113,
+      "advisory_only": true
+    },
+    {
+      "owner": "LEGACY",
+      "ticker": "GLW",
+      "recommendation": "HOLD",
+      "score": 0.4449,
+      "rationale": "flat from entry \u00b7 score 0.44 @ aggression 0.50",
+      "components": {
+        "age": 0.1429,
+        "drift_flat": 0.9529,
+        "peak_giveback": 0.1553,
+        "decay": 0.5,
+        "illiquidity": 1.0
+      },
+      "aggression": 0.5,
+      "hold_age_days": 1.0,
+      "intraday_drift_pct": 0.0047,
+      "peak_drop_pct": -0.0078,
       "advisory_only": true
     },
     {
@@ -718,25 +737,6 @@
     },
     {
       "owner": "LEGACY",
-      "ticker": "GLW",
-      "recommendation": "HOLD",
-      "score": 0.4164,
-      "rationale": "flat from entry \u00b7 score 0.42 @ aggression 0.50",
-      "components": {
-        "age": 0.1429,
-        "drift_flat": 0.9529,
-        "peak_giveback": 0.0414,
-        "decay": 0.5,
-        "illiquidity": 1.0
-      },
-      "aggression": 0.5,
-      "hold_age_days": 1.0,
-      "intraday_drift_pct": 0.0047,
-      "peak_drop_pct": -0.0021,
-      "advisory_only": true
-    },
-    {
-      "owner": "LEGACY",
       "ticker": "ANET",
       "recommendation": "HOLD",
       "score": 0.4055,
@@ -986,19 +986,19 @@
       "owner": "GOLDSMITH",
       "ticker": "SOL-USD",
       "recommendation": "HOLD",
-      "score": 0.136,
-      "rationale": "+10.4% from entry \u00b7 score 0.14 @ aggression 0.50",
+      "score": 0.1286,
+      "rationale": "+11.1% from entry \u00b7 score 0.13 @ aggression 0.50",
       "components": {
         "age": 0.4286,
         "drift_flat": 0.0,
-        "peak_giveback": 0.0298,
+        "peak_giveback": 0.0,
         "decay": 0.0,
         "illiquidity": 0.0
       },
       "aggression": 0.5,
       "hold_age_days": 3.0,
-      "intraday_drift_pct": 0.1036,
-      "peak_drop_pct": -0.0015,
+      "intraday_drift_pct": 0.1114,
+      "peak_drop_pct": 0.0056,
       "advisory_only": true
     }
   ]
