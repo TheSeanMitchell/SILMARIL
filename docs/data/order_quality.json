@@ -1,79 +1,35 @@
 {
   "version": "6.0",
-  "generated_at": "2026-06-16T14:28:46.325650+00:00",
+  "generated_at": "2026-06-16T14:48:16.723808+00:00",
   "tickers": {
-    "PAYX": {
-      "ticker": "PAYX",
-      "use_limit_order": true,
-      "limit_buffer_bps": 150,
-      "defer_to_next_cycle": true,
-      "opening_volatility": 0.0279,
-      "liquidity_score": 0.0687,
-      "extension_warning": false,
-      "timing_window": "resting toward PAYX's ~98.46 floor (his low window is 09:30 ET) \u2014 limit 150bps below",
-      "rationale": "DEFER: liquidity 8% < 10% of 30d avg \u2014 illiquid \u00b7 resting toward PAYX's ~98.46 floor (his low window is 09:30 ET) \u2014 limit 150bps below"
-    },
     "TXN": {
       "ticker": "TXN",
       "use_limit_order": true,
       "limit_buffer_bps": 150,
-      "defer_to_next_cycle": true,
-      "opening_volatility": 0.0414,
-      "liquidity_score": 0.0811,
+      "defer_to_next_cycle": false,
+      "opening_volatility": 0.0415,
+      "liquidity_score": 0.1078,
       "extension_warning": false,
       "timing_window": "resting toward TXN's ~282.1 floor (his low window is 11:30 ET) \u2014 limit 150bps below",
-      "rationale": "DEFER: liquidity 10% < 10% of 30d avg \u2014 illiquid \u00b7 resting toward TXN's ~282.1 floor (his low window is 11:30 ET) \u2014 limit 150bps below"
+      "rationale": "limit 150bps \u00b7 ATR/px 4.1% \u00b7 liq 0.11 \u00b7 resting toward TXN's ~282.1 floor (his low window is 11:30 ET) \u2014 limit 150bps below"
     },
-    "DXCM": {
-      "ticker": "DXCM",
+    "URI": {
+      "ticker": "URI",
       "use_limit_order": true,
-      "limit_buffer_bps": 46,
-      "defer_to_next_cycle": true,
-      "opening_volatility": 0.0373,
-      "liquidity_score": 0.0393,
+      "limit_buffer_bps": 39,
+      "defer_to_next_cycle": false,
+      "opening_volatility": 0.0284,
+      "liquidity_score": 0.1259,
       "extension_warning": false,
       "timing_window": null,
-      "rationale": "DEFER: liquidity 5% < 10% of 30d avg \u2014 illiquid"
-    },
-    "FTNT": {
-      "ticker": "FTNT",
-      "use_limit_order": true,
-      "limit_buffer_bps": 150,
-      "defer_to_next_cycle": false,
-      "opening_volatility": 0.0386,
-      "liquidity_score": 0.1224,
-      "extension_warning": false,
-      "timing_window": "resting toward FTNT's ~135.81 floor (his low window is 09:30 ET) \u2014 limit 150bps below",
-      "rationale": "limit 150bps \u00b7 ATR/px 3.9% \u00b7 liq 0.12 \u00b7 resting toward FTNT's ~135.81 floor (his low window is 09:30 ET) \u2014 limit 150bps below"
-    },
-    "IWM": {
-      "ticker": "IWM",
-      "use_limit_order": true,
-      "limit_buffer_bps": 45,
-      "defer_to_next_cycle": false,
-      "opening_volatility": 0.0197,
-      "liquidity_score": 0.1578,
-      "extension_warning": false,
-      "timing_window": "now is IWM's typical daily-HIGH window (10:00 ET) \u2014 limit only, refusing to market-buy its top",
-      "rationale": "limit 45bps \u00b7 ATR/px 2.0% \u00b7 liq 0.16 \u00b7 now is IWM's typical daily-HIGH window (10:00 ET) \u2014 limit only, refusing to market-buy its top"
-    },
-    "MPWR": {
-      "ticker": "MPWR",
-      "use_limit_order": true,
-      "limit_buffer_bps": 150,
-      "defer_to_next_cycle": false,
-      "opening_volatility": 0.0582,
-      "liquidity_score": 0.0901,
-      "extension_warning": false,
-      "timing_window": "resting toward MPWR's ~1573.83 floor (his low window is 10:30 ET) \u2014 limit 150bps below",
-      "rationale": "limit 150bps \u00b7 ATR/px 5.8% \u00b7 liq 0.09 \u00b7 resting toward MPWR's ~1573.83 floor (his low window is 10:30 ET) \u2014 limit 150bps below"
+      "rationale": "limit 39bps \u00b7 ATR/px 2.8% \u00b7 liq 0.13"
     }
   },
   "summary": {
-    "tickers": 6,
-    "deferred": 3,
-    "limit_recommended": 6,
-    "market_orders_ok": -3
+    "tickers": 2,
+    "deferred": 0,
+    "limit_recommended": 2,
+    "market_orders_ok": 0
   },
   "config": {
     "atr_defer_ratio": 0.05,

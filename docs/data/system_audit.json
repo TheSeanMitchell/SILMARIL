@@ -1,19 +1,19 @@
 {
   "version": "6.0",
-  "generated_at": "2026-06-16T14:28:54.395424+00:00",
-  "overall_status": "RED",
+  "generated_at": "2026-06-16T14:48:27.023051+00:00",
+  "overall_status": "YELLOW",
   "summary": {
-    "overall_status": "RED",
+    "overall_status": "YELLOW",
     "files_fresh": 24,
     "files_stale": 0,
     "files_missing": 0,
     "wiring_intact": 4,
     "wiring_total": 4,
     "accounts_green": 0,
-    "accounts_yellow": 2,
-    "accounts_red": 1
+    "accounts_yellow": 3,
+    "accounts_red": 0
   },
-  "rationale": "1 accounts RED: HARVEST_3",
+  "rationale": "system green",
   "files": [
     {
       "module": "orchestrator",
@@ -53,7 +53,7 @@
     {
       "module": "policy_router",
       "file": "execution_policy.json",
-      "age_minutes": 0.1,
+      "age_minutes": 0.2,
       "threshold_min": 90,
       "status": "FRESH"
     },
@@ -123,7 +123,7 @@
     {
       "module": "order_quality",
       "file": "order_quality.json",
-      "age_minutes": 0.1,
+      "age_minutes": 0.2,
       "threshold_min": 90,
       "status": "FRESH"
     },
@@ -137,14 +137,14 @@
     {
       "module": "agent_beliefs",
       "file": "agent_beliefs.json",
-      "age_minutes": 6.5,
+      "age_minutes": 6.4,
       "threshold_min": 1440,
       "status": "FRESH"
     },
     {
       "module": "agent_evolution_cards",
       "file": "agent_evolution_cards.json",
-      "age_minutes": 6.5,
+      "age_minutes": 6.4,
       "threshold_min": 1440,
       "status": "FRESH"
     },
@@ -158,21 +158,21 @@
     {
       "module": "senate_state",
       "file": "senate_state.json",
-      "age_minutes": 6.5,
+      "age_minutes": 6.4,
       "threshold_min": 20160,
       "status": "FRESH"
     },
     {
       "module": "senate_results",
       "file": "senate_results.json",
-      "age_minutes": 3208.2,
+      "age_minutes": 3227.7,
       "threshold_min": 20160,
       "status": "FRESH"
     },
     {
       "module": "run_health",
       "file": "run_health.json",
-      "age_minutes": 21.0,
+      "age_minutes": 19.5,
       "threshold_min": 90,
       "status": "FRESH"
     },
@@ -186,10 +186,10 @@
   ],
   "wiring": {
     "directive_flow": {
-      "directives_emitted_this_cycle": 1,
-      "directives_consumed_24h": 82,
+      "directives_emitted_this_cycle": 0,
+      "directives_consumed_24h": 83,
       "wired": true,
-      "rationale": "1 emitted, 82 consumed in last 24h"
+      "rationale": "0 emitted, 83 consumed in last 24h"
     },
     "forced_rotation_flow": {
       "emitted_this_cycle": 0,
@@ -214,10 +214,10 @@
   "accounts": [
     {
       "account_id": "LEGACY",
-      "live_equity": 9578.49,
+      "live_equity": 9574.32,
       "live_cash": 3725.48,
       "live_sgov": 0.0,
-      "deployed_ratio": 0.6111,
+      "deployed_ratio": 0.6109,
       "status": "YELLOW",
       "flags": [
         "BELOW_BASE"
@@ -226,26 +226,22 @@
     },
     {
       "account_id": "HARVEST_3",
-      "live_equity": 9608.66,
-      "live_cash": -1046.37,
+      "live_equity": 9579.61,
+      "live_cash": 892.46,
       "live_sgov": 0.01,
-      "deployed_ratio": 1.1089,
-      "status": "RED",
+      "deployed_ratio": 0.9068,
+      "status": "YELLOW",
       "flags": [
-        "NEGATIVE_CASH",
-        "BELOW_BASE",
-        "OVER_DEPLOYED_MARGIN",
-        "NEGATIVE_CASH",
-        "MARGIN_USED_SEVERE"
+        "BELOW_BASE"
       ],
-      "rationale": "MARGIN USED \u00b7 cash $-1046 \u00b7 redeploy $0 from SGOV \u00b7 OVER-DEPLOYED 111% \u00b7 VIOLATIONS: NEGATIVE_CASH, MARGIN_USED_SEVERE"
+      "rationale": "redeploy $0 from SGOV"
     },
     {
       "account_id": "HARVEST_5",
-      "live_equity": 9649.4,
+      "live_equity": 9649.68,
       "live_cash": 8833.67,
       "live_sgov": 0.0,
-      "deployed_ratio": 0.0845,
+      "deployed_ratio": 0.0846,
       "status": "YELLOW",
       "flags": [
         "BELOW_BASE"
