@@ -2,7 +2,7 @@
   "version": "2.2",
   "enabled": true,
   "account": {
-    "equity": 9585.19,
+    "equity": 9585.38,
     "cash": 3451.47
   },
   "principal_target": 10000.0,
@@ -217,10 +217,6 @@
       "qty": 2.919079124,
       "snapshots_30m": [
         {
-          "ts": "2026-06-15T22:25:57.459777+00:00",
-          "price": 168.5
-        },
-        {
           "ts": "2026-06-15T23:04:24.455444+00:00",
           "price": 168.35
         },
@@ -246,6 +242,10 @@
         },
         {
           "ts": "2026-06-16T09:44:32.853464+00:00",
+          "price": 169.08
+        },
+        {
+          "ts": "2026-06-16T10:25:56.595131+00:00",
           "price": 169.08
         }
       ]
@@ -4765,14 +4765,14 @@
     }
   ],
   "last_cycle_summary": {
-    "time": "2026-06-16T10:05:12.832498+00:00",
-    "timestamp": "2026-06-16T10:05:12.832510+00:00",
+    "time": "2026-06-16T10:25:56.772767+00:00",
+    "timestamp": "2026-06-16T10:25:56.772778+00:00",
     "closed": 0,
     "opened": 0,
     "open_after": 9,
-    "equity": 9585.19,
+    "equity": 9585.38,
     "savings": 0.0,
-    "total_value": 9585.19,
+    "total_value": 9585.38,
     "tickers_traded": [],
     "bleed_exits_count": 0,
     "bleed_exits": [],
@@ -4792,9 +4792,9 @@
     "session": "pre-market",
     "is_extended": true
   },
-  "last_run": "2026-06-16T10:05:12.832758+00:00",
+  "last_run": "2026-06-16T10:25:56.773052+00:00",
   "grocery_pending_harvest": 2727.555099999997,
-  "trading_capital": 9585.19,
+  "trading_capital": 9585.38,
   "realized_savings": 0.0,
   "account_id": "LEGACY",
   "genesis_at": "2026-05-11T05:08:46.083334+00:00",
@@ -4813,7 +4813,7 @@
     "primary_symbol": "SGOV",
     "primary_qty": 4.5e-05,
     "primary_market_value": 0.0045,
-    "checked_at": "2026-06-16T10:05:12.576115+00:00"
+    "checked_at": "2026-06-16T10:25:56.589647+00:00"
   },
   "sgov_sweep_last_cycle": {
     "attempted": false,
@@ -4859,7 +4859,7 @@
   ],
   "sweep_protection": {
     "version": "4.0",
-    "checked_at": "2026-06-16T10:05:15.321717+00:00",
+    "checked_at": "2026-06-16T10:25:57.693653+00:00",
     "market_mode": "ATTACK",
     "force_sweep_floor_resolved": 10500.0,
     "stale_close_age_days": 5,
@@ -4975,12 +4975,12 @@
       "symbol": "GLW",
       "ticker": "GLW",
       "qty": 2.656044835,
-      "current_price": 189.55,
+      "current_price": 189.5,
       "avg_entry_price": 187.0,
       "peak_price": 189.9,
-      "market_value": 503.45,
-      "unrealized_pl": 6.77,
-      "unrealized_plpc": 0.0136,
+      "market_value": 503.32,
+      "unrealized_pl": 6.64,
+      "unrealized_plpc": 0.0134,
       "first_seen": "2026-06-15T14:27:42.718341+00:00",
       "scale_out_history": {},
       "stop_at_break_even": false,
@@ -4990,12 +4990,12 @@
       "symbol": "IWM",
       "ticker": "IWM",
       "qty": 3.243874412,
-      "current_price": 294.73,
+      "current_price": 294.83,
       "avg_entry_price": 295.893083,
       "peak_price": 296.03,
-      "market_value": 956.07,
-      "unrealized_pl": -3.77,
-      "unrealized_plpc": -0.0039,
+      "market_value": 956.39,
+      "unrealized_pl": -3.45,
+      "unrealized_plpc": -0.0036,
       "first_seen": "2026-06-15T16:07:26.564738+00:00",
       "scale_out_history": {},
       "stop_at_break_even": false,
@@ -5173,7 +5173,7 @@
     "open_seen": 1
   },
   "cycle_intents": {
-    "at": "2026-06-16T10:05:12.832537+00:00",
+    "at": "2026-06-16T10:25:56.772805+00:00",
     "session": "pre-market",
     "session_open": false,
     "composite_halt": false,
@@ -5181,23 +5181,23 @@
     "plans_offered": 1,
     "buy_intents": [
       {
-        "ticker": "QRVO",
+        "ticker": "FRT",
         "signal": "BUY",
-        "conviction": 0.8009,
+        "conviction": 0.6257,
         "originated": false,
-        "outcome": "deferred_submit_market_closed",
-        "intended_notional": 766.81,
-        "reason": "submission deferred by market-closed gate (will retry during regular hours)"
+        "outcome": "blocked_correlation_book",
+        "intended_notional": 766.83,
+        "reason": "correlation cluster HIGH severity"
       }
     ],
     "decisions_this_cycle": [
       {
-        "ticker": "QRVO",
-        "category": "deferred_submit_market_closed",
-        "reason": "submission deferred by market-closed gate (will retry during regular hours)"
+        "ticker": "FRT",
+        "category": "blocked_correlation_book",
+        "reason": "correlation cluster HIGH severity"
       },
       {
-        "ticker": "QRVO",
+        "ticker": "FRT",
         "category": "blocked_signal_not_sell",
         "reason": "signal BUY is not SELL/STRONG_SELL"
       }

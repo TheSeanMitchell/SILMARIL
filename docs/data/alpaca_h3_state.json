@@ -5,14 +5,14 @@
   "account_id": "HARVEST_3",
   "label": "3% Disciplined Harvester",
   "account": {
-    "equity": 9554.46,
+    "equity": 9559.53,
     "cash": -1046.37
   },
   "principal_target": 10000.0,
   "min_harvest_gain_pct": 0.03,
   "savings": 0.01,
   "realized_savings": 0.01,
-  "trading_capital": 9554.45,
+  "trading_capital": 9559.52,
   "lifetime_realized_wins": 15,
   "lifetime_realized_losses": 24,
   "position_meta": {
@@ -103,10 +103,6 @@
       "qty": 12.384004272,
       "snapshots_30m": [
         {
-          "ts": "2026-06-16T02:26:52.338508+00:00",
-          "price": 74.33
-        },
-        {
           "ts": "2026-06-16T03:05:16.856594+00:00",
           "price": 74.33
         },
@@ -132,6 +128,10 @@
         },
         {
           "ts": "2026-06-16T09:26:48.682311+00:00",
+          "price": 74.33
+        },
+        {
+          "ts": "2026-06-16T10:25:57.401324+00:00",
           "price": 74.33
         }
       ]
@@ -458,7 +458,7 @@
     },
     "EXR": {
       "entry_price": 147.72,
-      "peak_price": 147.89,
+      "peak_price": 148.38,
       "first_seen": "2026-06-15T17:20:49.776486+00:00",
       "qty": 4.999254591,
       "snapshots_30m": [
@@ -5978,20 +5978,20 @@
     "primary_symbol": "SGOV",
     "primary_qty": 7.8e-05,
     "primary_market_value": 0.0079,
-    "checked_at": "2026-06-16T10:05:14.013304+00:00"
+    "checked_at": "2026-06-16T10:25:57.400475+00:00"
   },
   "reason": "Live \u2014 configured; last run 2026-06-09T09:17:05",
   "seeded_at": "2026-05-11T05:00:26.087481+00:00",
   "genesis_at": "2026-05-11T05:08:52.354920+00:00",
   "last_cycle_summary": {
-    "time": "2026-06-16T10:05:14.287926+00:00",
-    "timestamp": "2026-06-16T10:05:14.287937+00:00",
+    "time": "2026-06-16T10:25:57.465698+00:00",
+    "timestamp": "2026-06-16T10:25:57.465709+00:00",
     "closed": 0,
     "opened": 0,
     "open_after": 13,
-    "equity": 9554.46,
+    "equity": 9559.53,
     "savings": 0.01,
-    "total_value": 9554.47,
+    "total_value": 9559.54,
     "tickers_traded": [],
     "bleed_exits_count": 0,
     "bleed_exits": [],
@@ -6011,10 +6011,10 @@
     "session": "pre-market",
     "is_extended": true
   },
-  "last_run": "2026-06-16T10:05:14.288159+00:00",
+  "last_run": "2026-06-16T10:25:57.466029+00:00",
   "sweep_protection": {
     "version": "4.0",
-    "checked_at": "2026-06-16T10:05:15.874212+00:00",
+    "checked_at": "2026-06-16T10:25:57.814430+00:00",
     "market_mode": "ATTACK",
     "force_sweep_floor_resolved": 10500.0,
     "stale_close_age_days": 5,
@@ -6153,12 +6153,12 @@
       "symbol": "EXR",
       "ticker": "EXR",
       "qty": 4.999254591,
-      "current_price": 146.65,
+      "current_price": 148.38,
       "avg_entry_price": 147.72,
-      "peak_price": 147.89,
-      "market_value": 733.14,
-      "unrealized_pl": -5.35,
-      "unrealized_plpc": -0.0072,
+      "peak_price": 148.38,
+      "market_value": 741.79,
+      "unrealized_pl": 3.3,
+      "unrealized_plpc": 0.0045,
       "first_seen": "2026-06-15T17:20:49.776486+00:00",
       "scale_out_history": {},
       "stop_at_break_even": false,
@@ -6243,12 +6243,12 @@
       "symbol": "TXN",
       "ticker": "TXN",
       "qty": 2.021878317,
-      "current_price": 313.08,
+      "current_price": 311.31,
       "avg_entry_price": 310.89,
       "peak_price": 313.34,
-      "market_value": 633.01,
-      "unrealized_pl": 4.43,
-      "unrealized_plpc": 0.007,
+      "market_value": 629.43,
+      "unrealized_pl": 0.85,
+      "unrealized_plpc": 0.0014,
       "first_seen": "2026-06-15T15:46:56.107817+00:00",
       "scale_out_history": {},
       "stop_at_break_even": false,
@@ -6650,7 +6650,7 @@
     }
   ],
   "cycle_intents": {
-    "at": "2026-06-16T10:05:14.287965+00:00",
+    "at": "2026-06-16T10:25:57.465760+00:00",
     "session": "pre-market",
     "session_open": false,
     "composite_halt": false,
@@ -6658,29 +6658,29 @@
     "plans_offered": 2,
     "buy_intents": [
       {
-        "ticker": "KMX",
+        "ticker": "BXP",
         "signal": "BUY",
-        "conviction": 0.9948,
+        "conviction": 0.95,
         "originated": false,
-        "outcome": "blocked_negative_cash",
-        "intended_notional": 955.45,
-        "reason": "BLOCKED: account cash $-1046.37 < 0 (margin used) \u2014 refusing new opens until margin cleared"
+        "outcome": "blocked_correlation_book",
+        "intended_notional": 955.95,
+        "reason": "correlation cluster HIGH severity"
       },
       {
         "ticker": "TXN",
-        "signal": "BUY",
-        "conviction": 0.9338,
+        "signal": "STRONG_BUY",
+        "conviction": 0.7009,
         "originated": false,
         "outcome": "blocked_correlation_book",
-        "intended_notional": 955.45,
+        "intended_notional": 955.95,
         "reason": "correlation cluster HIGH severity"
       }
     ],
     "decisions_this_cycle": [
       {
-        "ticker": "KMX",
-        "category": "blocked_negative_cash",
-        "reason": "BLOCKED: account cash $-1046.37 < 0 (margin used) \u2014 refusing new opens until margin cleared"
+        "ticker": "BXP",
+        "category": "blocked_correlation_book",
+        "reason": "correlation cluster HIGH severity"
       },
       {
         "ticker": "TXN",
@@ -6688,14 +6688,14 @@
         "reason": "correlation cluster HIGH severity"
       },
       {
-        "ticker": "KMX",
+        "ticker": "BXP",
         "category": "blocked_signal_not_sell",
         "reason": "signal BUY is not SELL/STRONG_SELL"
       },
       {
         "ticker": "TXN",
         "category": "blocked_signal_not_sell",
-        "reason": "signal BUY is not SELL/STRONG_SELL"
+        "reason": "signal STRONG_BUY is not SELL/STRONG_SELL"
       }
     ]
   }

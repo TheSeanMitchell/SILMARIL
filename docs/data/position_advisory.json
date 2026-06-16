@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-16T10:05:17.081352+00:00",
+  "generated_at": "2026-06-16T10:25:58.731538+00:00",
   "advisory_only": true,
   "note": "Advisory only \u2014 recommendations are NOT auto-executed in Alpha 3.0. Existing trailing-stop / momentum-exit logic still does the actual closing.",
   "summary": {
@@ -97,6 +97,12 @@
         "rationale": "position stable \u00b7 score 0.46 @ aggression 0.50"
       },
       {
+        "ticker": "EXR",
+        "recommendation": "HOLD",
+        "score": 0.458,
+        "rationale": "position stable \u00b7 score 0.46 @ aggression 0.50"
+      },
+      {
         "ticker": "BWA",
         "recommendation": "HOLD",
         "score": 0.4514,
@@ -107,12 +113,6 @@
         "recommendation": "HOLD",
         "score": 0.446,
         "rationale": "position stable \u00b7 score 0.45 @ aggression 0.50"
-      },
-      {
-        "ticker": "EXR",
-        "recommendation": "HOLD",
-        "score": 0.4417,
-        "rationale": "position stable \u00b7 score 0.44 @ aggression 0.50"
       },
       {
         "ticker": "MPWR",
@@ -274,7 +274,7 @@
         "ticker": "SOL-USD",
         "recommendation": "HOLD",
         "score": 0.1286,
-        "rationale": "+12.1% from entry \u00b7 score 0.13 @ aggression 0.50"
+        "rationale": "+12.2% from entry \u00b7 score 0.13 @ aggression 0.50"
       }
     ]
   },
@@ -413,6 +413,25 @@
       "advisory_only": true
     },
     {
+      "owner": "HARVEST_3",
+      "ticker": "EXR",
+      "recommendation": "HOLD",
+      "score": 0.458,
+      "rationale": "position stable \u00b7 score 0.46 @ aggression 0.50",
+      "components": {
+        "age": 0.1429,
+        "drift_flat": 0.9276,
+        "peak_giveback": 0.2332,
+        "decay": 0.5,
+        "illiquidity": 1.0
+      },
+      "aggression": 0.5,
+      "hold_age_days": 1.0,
+      "intraday_drift_pct": -0.0072,
+      "peak_drop_pct": -0.0117,
+      "advisory_only": true
+    },
+    {
       "owner": "HARVEST_5",
       "ticker": "BWA",
       "recommendation": "HOLD",
@@ -467,25 +486,6 @@
       "hold_age_days": 1.0,
       "intraday_drift_pct": -0.0113,
       "peak_drop_pct": -0.0113,
-      "advisory_only": true
-    },
-    {
-      "owner": "HARVEST_3",
-      "ticker": "EXR",
-      "recommendation": "HOLD",
-      "score": 0.4417,
-      "rationale": "position stable \u00b7 score 0.44 @ aggression 0.50",
-      "components": {
-        "age": 0.1429,
-        "drift_flat": 0.9276,
-        "peak_giveback": 0.1677,
-        "decay": 0.5,
-        "illiquidity": 1.0
-      },
-      "aggression": 0.5,
-      "hold_age_days": 1.0,
-      "intraday_drift_pct": -0.0072,
-      "peak_drop_pct": -0.0084,
       "advisory_only": true
     },
     {
@@ -987,7 +987,7 @@
       "ticker": "SOL-USD",
       "recommendation": "HOLD",
       "score": 0.1286,
-      "rationale": "+12.1% from entry \u00b7 score 0.13 @ aggression 0.50",
+      "rationale": "+12.2% from entry \u00b7 score 0.13 @ aggression 0.50",
       "components": {
         "age": 0.4286,
         "drift_flat": 0.0,
@@ -997,8 +997,8 @@
       },
       "aggression": 0.5,
       "hold_age_days": 3.0,
-      "intraday_drift_pct": 0.1209,
-      "peak_drop_pct": 0.0141,
+      "intraday_drift_pct": 0.1222,
+      "peak_drop_pct": 0.0153,
       "advisory_only": true
     }
   ]
