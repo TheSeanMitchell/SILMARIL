@@ -1,48 +1,6 @@
 {
-  "generated_at": "2026-06-16T00:04:43.828944+00:00",
+  "generated_at": "2026-06-16T00:25:28.508227+00:00",
   "outcomes": [
-    {
-      "agent": "BARON",
-      "ticker": "UCO",
-      "signal": "HOLD",
-      "conviction": 0.4,
-      "predicted_at": "2026-06-10",
-      "scored_at": "2026-06-11",
-      "entry_price": 46.88,
-      "exit_price": 47.25,
-      "return_pct": 0.789,
-      "correct": false,
-      "reward": -0.1892,
-      "tags": {
-        "market_regime": "RISK_ON",
-        "trend_state": "TRENDING",
-        "vol_state": "HIGH_VOL",
-        "news_state": "NORMAL",
-        "liquidity_state": "LIQUID"
-      },
-      "stale_price_suspected": false
-    },
-    {
-      "agent": "AEGIS",
-      "ticker": "AMLP",
-      "signal": "HOLD",
-      "conviction": 0.313,
-      "predicted_at": "2026-06-10",
-      "scored_at": "2026-06-11",
-      "entry_price": 52.77,
-      "exit_price": 52.955,
-      "return_pct": 0.351,
-      "correct": true,
-      "reward": 0.2494,
-      "tags": {
-        "market_regime": "RISK_ON",
-        "trend_state": "TRENDING",
-        "vol_state": "NORMAL",
-        "news_state": "NORMAL",
-        "liquidity_state": "LIQUID"
-      },
-      "stale_price_suspected": false
-    },
     {
       "agent": "OBSIDIAN",
       "ticker": "AMLP",
@@ -63000,10 +62958,52 @@
         "liquidity_state": "LIQUID"
       },
       "stale_price_suspected": false
+    },
+    {
+      "agent": "AEGIS",
+      "ticker": "OP-USD",
+      "signal": "HOLD",
+      "conviction": 0.588,
+      "predicted_at": "2026-06-15",
+      "scored_at": "2026-06-16",
+      "entry_price": 0.108,
+      "exit_price": 0.109,
+      "return_pct": 0.926,
+      "correct": false,
+      "reward": -0.3259,
+      "tags": {
+        "market_regime": "RISK_ON",
+        "trend_state": "TRENDING",
+        "vol_state": "HIGH_VOL",
+        "news_state": "NORMAL",
+        "liquidity_state": "LIQUID"
+      },
+      "stale_price_suspected": false
+    },
+    {
+      "agent": "FABLEBOY_5",
+      "ticker": "OP-USD",
+      "signal": "HOLD",
+      "conviction": 0.337,
+      "predicted_at": "2026-06-15",
+      "scored_at": "2026-06-16",
+      "entry_price": 0.108,
+      "exit_price": 0.109,
+      "return_pct": 0.926,
+      "correct": false,
+      "reward": -0.3259,
+      "tags": {
+        "market_regime": "RISK_ON",
+        "trend_state": "TRENDING",
+        "vol_state": "HIGH_VOL",
+        "news_state": "NORMAL",
+        "liquidity_state": "LIQUID"
+      },
+      "stale_price_suspected": false
     }
   ],
   "summary": {
-    "generated_at": "2026-06-16T00:04:43.828754+00:00",
+    "generated_at": "2026-06-16T00:25:28.508025+00:00",
     "total_scored_calls": 3000,
     "total_clean_calls": 3000,
     "agents_with_track_record": 20,
@@ -63781,12 +63781,12 @@
       },
       {
         "agent": "AEGIS",
-        "scored_calls": 1006,
-        "clean_calls": 1006,
-        "wins": 365,
+        "scored_calls": 1005,
+        "clean_calls": 1005,
+        "wins": 364,
         "losses": 641,
-        "win_rate": 0.363,
-        "expected_value": -0.877,
+        "win_rate": 0.362,
+        "expected_value": -0.878,
         "max_drawdown_pct": -89.39,
         "best_call_pct": 0.6,
         "worst_call_pct": -89.39,
@@ -63794,16 +63794,16 @@
         "by_regime": {
           "market_regime": {
             "RISK_ON": {
-              "n": 1006,
-              "win_rate": 0.363,
-              "ev": -0.877
+              "n": 1005,
+              "win_rate": 0.362,
+              "ev": -0.878
             }
           },
           "trend_state": {
             "TRENDING": {
-              "n": 508,
-              "win_rate": 0.368,
-              "ev": -0.864
+              "n": 507,
+              "win_rate": 0.367,
+              "ev": -0.866
             },
             "UNCLEAR": {
               "n": 412,
@@ -63818,9 +63818,9 @@
           },
           "vol_state": {
             "NORMAL": {
-              "n": 771,
-              "win_rate": 0.402,
-              "ev": -0.52
+              "n": 770,
+              "win_rate": 0.401,
+              "ev": -0.521
             },
             "HIGH_VOL": {
               "n": 217,
@@ -63835,15 +63835,15 @@
           },
           "news_state": {
             "NORMAL": {
-              "n": 1006,
-              "win_rate": 0.363,
-              "ev": -0.877
+              "n": 1005,
+              "win_rate": 0.362,
+              "ev": -0.878
             }
           }
         },
         "weight_multiplier": 1.0,
         "weight_explanation": "PROFIT-GATED: strong win-rate in LOW_VOL (100%) but overall EV is -0.88 \u2014 loses money per call on average. Amplification removed: weight held at 1.00\u00d7 (not killed, not boosted). Win-rate is not profit.",
-        "global_weight": 0.822,
+        "global_weight": 0.821,
         "regime_aware_weight": 1.0,
         "best_regime": {
           "dimension": "vol_state",
@@ -64007,29 +64007,29 @@
       },
       {
         "agent": "BARON",
-        "scored_calls": 65,
-        "clean_calls": 65,
+        "scored_calls": 64,
+        "clean_calls": 64,
         "wins": 18,
-        "losses": 47,
-        "win_rate": 0.277,
-        "expected_value": -1.445,
+        "losses": 46,
+        "win_rate": 0.281,
+        "expected_value": -1.464,
         "max_drawdown_pct": -5.43,
         "best_call_pct": 0.573,
         "worst_call_pct": -5.43,
-        "avg_conviction": 0.388,
+        "avg_conviction": 0.387,
         "by_regime": {
           "market_regime": {
             "RISK_ON": {
-              "n": 65,
-              "win_rate": 0.277,
-              "ev": -1.445
+              "n": 64,
+              "win_rate": 0.281,
+              "ev": -1.464
             }
           },
           "trend_state": {
             "TRENDING": {
-              "n": 18,
-              "win_rate": 0.278,
-              "ev": -1.392
+              "n": 17,
+              "win_rate": 0.294,
+              "ev": -1.462
             },
             "UNCLEAR": {
               "n": 47,
@@ -64038,22 +64038,22 @@
             }
           },
           "vol_state": {
-            "HIGH_VOL": {
-              "n": 21,
-              "win_rate": 0.143,
-              "ev": -2.254
-            },
             "NORMAL": {
               "n": 44,
               "win_rate": 0.341,
               "ev": -1.058
+            },
+            "HIGH_VOL": {
+              "n": 20,
+              "win_rate": 0.15,
+              "ev": -2.357
             }
           },
           "news_state": {
             "NORMAL": {
-              "n": 65,
-              "win_rate": 0.277,
-              "ev": -1.445
+              "n": 64,
+              "win_rate": 0.281,
+              "ev": -1.464
             }
           }
         },
