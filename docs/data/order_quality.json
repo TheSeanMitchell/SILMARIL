@@ -1,46 +1,46 @@
 {
   "version": "6.0",
-  "generated_at": "2026-06-16T13:27:46.430373+00:00",
+  "generated_at": "2026-06-16T13:48:50.535434+00:00",
   "tickers": {
-    "TXN": {
-      "ticker": "TXN",
+    "PAYX": {
+      "ticker": "PAYX",
       "use_limit_order": true,
-      "limit_buffer_bps": 48,
-      "defer_to_next_cycle": false,
-      "opening_volatility": 0.0405,
-      "liquidity_score": 0.5641,
+      "limit_buffer_bps": 39,
+      "defer_to_next_cycle": true,
+      "opening_volatility": 0.0274,
+      "liquidity_score": 0.0181,
       "extension_warning": false,
-      "timing_window": null,
-      "rationale": "limit 48bps \u00b7 ATR/px 4.1% \u00b7 liq 0.56"
+      "timing_window": "now is PAYX's typical daily-LOW window (09:30 ET) \u2014 historically favorable entry",
+      "rationale": "DEFER: liquidity 2% < 10% of 30d avg \u2014 illiquid \u00b7 now is PAYX's typical daily-LOW window (09:30 ET) \u2014 historically favorable entry"
     },
     "FRT": {
       "ticker": "FRT",
-      "use_limit_order": false,
-      "limit_buffer_bps": 30,
-      "defer_to_next_cycle": false,
-      "opening_volatility": 0.0153,
-      "liquidity_score": 0.6692,
-      "extension_warning": false,
-      "timing_window": null,
-      "rationale": "clean entry \u00b7 ATR/px 1.5% \u00b7 liq 0.67"
-    },
-    "ANET": {
-      "ticker": "ANET",
       "use_limit_order": true,
-      "limit_buffer_bps": 54,
-      "defer_to_next_cycle": false,
-      "opening_volatility": 0.0487,
-      "liquidity_score": 0.5237,
+      "limit_buffer_bps": 45,
+      "defer_to_next_cycle": true,
+      "opening_volatility": 0.0151,
+      "liquidity_score": 0.0127,
       "extension_warning": false,
-      "timing_window": null,
-      "rationale": "limit 54bps \u00b7 ATR/px 4.9% \u00b7 liq 0.52"
+      "timing_window": "now is FRT's typical daily-HIGH window (09:30 ET) \u2014 limit only, refusing to market-buy its top",
+      "rationale": "DEFER: liquidity 2% < 10% of 30d avg \u2014 illiquid \u00b7 now is FRT's typical daily-HIGH window (09:30 ET) \u2014 limit only, refusing to market-buy its top"
+    },
+    "GLW": {
+      "ticker": "GLW",
+      "use_limit_order": true,
+      "limit_buffer_bps": 150,
+      "defer_to_next_cycle": true,
+      "opening_volatility": 0.0712,
+      "liquidity_score": 0.0397,
+      "extension_warning": false,
+      "timing_window": "resting toward GLW's ~173.97 floor (his low window is 10:30 ET) \u2014 limit 150bps below",
+      "rationale": "DEFER: liquidity 5% < 10% of 30d avg \u2014 illiquid \u00b7 resting toward GLW's ~173.97 floor (his low window is 10:30 ET) \u2014 limit 150bps below"
     }
   },
   "summary": {
     "tickers": 3,
-    "deferred": 0,
-    "limit_recommended": 2,
-    "market_orders_ok": 1
+    "deferred": 3,
+    "limit_recommended": 3,
+    "market_orders_ok": -3
   },
   "config": {
     "atr_defer_ratio": 0.05,
